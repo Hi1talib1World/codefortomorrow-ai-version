@@ -1,5 +1,5 @@
 
-import { Lesson, Badge, ProgrammingPath } from './types';
+import { LessonSection, Badge, ProgrammingPath } from './types';
 
 export const PATHS: ProgrammingPath[] = [
   { 
@@ -156,124 +156,500 @@ export const PATHS: ProgrammingPath[] = [
   },
 ];
 
-export const LESSONS_BY_PATH: { [key: string]: Lesson[] } = {
+export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
   block_coding: [
-    { id: 1, level: 1, titleKey: 'sequences', icon: '➡️', xp: 15, color: 'bg-green-400', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'loops', icon: '🔄', xp: 20, color: 'bg-blue-400', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'events', icon: '⚡️', xp: 20, color: 'bg-purple-400', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'maze_game', icon: '🗺️', xp: 50, color: 'bg-orange-400', type: 'project' },
+    {
+      id: 'bc_intro',
+      titleKey: 'sequences',
+      lessons: [
+        { 
+          id: 1, level: 1, titleKey: 'sequences', icon: 'brain', xp: 15, color: '#3498db', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'bc_challenge_1', 
+          hintKey: 'bc_hint_1',
+          starterCode: '// Move forward 3 times!\n// Log "forward" 3 times.\n', 
+          solutionCode: 'console.log("forward");\nconsole.log("forward");\nconsole.log("forward");', 
+          expectedOutput: 'forward\nforward\nforward' 
+        },
+        { 
+          id: 2, level: 2, titleKey: 'sequences', icon: 'brain', xp: 20, color: '#3498db', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'bc_challenge_2', 
+          hintKey: 'bc_hint_2',
+          starterCode: '// Turn left then move forward.\n', 
+          solutionCode: 'console.log("left");\nconsole.log("forward");', 
+          expectedOutput: 'left\nforward' 
+        },
+        { 
+          id: 3, level: 3, titleKey: 'sequences', icon: 'brain', xp: 20, color: '#3498db', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'bc_challenge_3', 
+          starterCode: '// Move forward, turn right, move forward.\n', 
+          solutionCode: 'console.log("forward");\nconsole.log("right");\nconsole.log("forward");', 
+          expectedOutput: 'forward\nright\nforward' 
+        },
+        { id: 4, level: 4, titleKey: 'maze_game', icon: 'trophy', xp: 50, color: '#3498db', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'bc_challenge_4', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    },
+    {
+      id: 'bc_loops',
+      titleKey: 'loops',
+      lessons: [
+        { id: 5, level: 5, titleKey: 'loops', icon: 'star', xp: 15, color: '#2ecc71', type: 'lesson', nodeType: 'quiz', challengeDescriptionKey: 'bc_challenge_5', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { 
+          id: 6, level: 6, titleKey: 'loops', icon: 'brain', xp: 20, color: '#2ecc71', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'bc_challenge_6', 
+          starterCode: '// Use a loop to log "jump" 5 times.\n', 
+          solutionCode: 'for(let i=0; i<5; i++) console.log("jump");', 
+          expectedOutput: 'jump\njump\njump\njump\njump' 
+        },
+        { 
+          id: 7, level: 7, titleKey: 'events', icon: 'brain', xp: 20, color: '#e67e22', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'bc_challenge_7', 
+          starterCode: '// Log "click" to simulate an event.\n', 
+          solutionCode: 'console.log("click");', 
+          expectedOutput: 'click' 
+        },
+        { id: 8, level: 8, titleKey: 'events', icon: 'star', xp: 50, color: '#e67e22', type: 'project', nodeType: 'quiz', challengeDescriptionKey: 'bc_challenge_8', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    },
+    {
+      id: 'bc_logic',
+      titleKey: 'logic',
+      lessons: [
+        { 
+          id: 9, level: 9, titleKey: 'conditionals', icon: 'brain', xp: 20, color: '#9b59b6', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'bc_challenge_9', 
+          starterCode: '// If 10 is greater than 5, log "yes".\n', 
+          solutionCode: 'if(10 > 5) console.log("yes");', 
+          expectedOutput: 'yes' 
+        },
+        { 
+          id: 10, level: 10, titleKey: 'variables', icon: 'brain', xp: 25, color: '#9b59b6', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'bc_challenge_10', 
+          starterCode: '// Create a variable x = 5 and log it.\n', 
+          solutionCode: 'let x = 5; console.log(x);', 
+          expectedOutput: '5' 
+        },
+        { id: 11, level: 11, titleKey: 'logic_master', icon: 'trophy', xp: 60, color: '#8e44ad', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'bc_challenge_11', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   python: [
-    { id: 1, level: 1, titleKey: 'python_vars_numbers', icon: '🔢', xp: 15, color: 'bg-green-500', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'python_loops', icon: '🔄', xp: 20, color: 'bg-blue-500', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'python_conditionals', icon: '🤔', xp: 25, color: 'bg-purple-500', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'python_functions', icon: '⚙️', xp: 30, color: 'bg-teal-500', type: 'lesson' },
-    { id: 5, level: 5, titleKey: 'python_quiz_game', icon: '❓', xp: 50, color: 'bg-orange-500', type: 'project' },
+    {
+      id: 'py_intro',
+      titleKey: 'python_vars_numbers',
+      lessons: [
+        { 
+          id: 1, level: 1, titleKey: 'python_vars_numbers', icon: 'brain', xp: 15, color: '#f1c40f', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'py_challenge_1', 
+          hintKey: 'py_hint_1',
+          starterCode: '# Create a variable named "age" and set it to 10.\n# Then print the variable.\n', 
+          solutionCode: 'age = 10\nprint(age)', 
+          expectedOutput: '10' 
+        },
+        { 
+          id: 2, level: 2, titleKey: 'python_loops', icon: 'brain', xp: 20, color: '#f1c40f', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'py_challenge_2', 
+          hintKey: 'py_hint_2',
+          starterCode: '# Use a for loop to print numbers from 1 to 3.\n', 
+          solutionCode: 'for i in range(1, 4):\n    print(i)', 
+          expectedOutput: '1\n2\n3' 
+        },
+        { id: 3, level: 3, titleKey: 'python_conditionals', icon: 'star', xp: 25, color: '#f1c40f', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'py_challenge_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { 
+          id: 4, level: 4, titleKey: 'python_functions', icon: 'brain', xp: 30, color: '#f1c40f', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'py_challenge_4', 
+          starterCode: '# Define a function named "greet" that prints "Hello!".\n# Then call the function.\n', 
+          solutionCode: 'def greet():\n    print("Hello!")\n\ngreet()', 
+          expectedOutput: 'Hello!' 
+        },
+        { id: 5, level: 5, titleKey: 'python_quiz_game', icon: 'trophy', xp: 50, color: '#f39c12', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'py_challenge_5', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    },
+    {
+      id: 'py_data_structures',
+      titleKey: 'python_data_structures',
+      lessons: [
+        { 
+          id: 6, level: 6, titleKey: 'python_lists', icon: 'brain', xp: 20, color: '#f1c40f', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'py_challenge_6', 
+          starterCode: '# Create a list named "fruits" with "apple" and "banana".\n# Print the list.\n', 
+          solutionCode: 'fruits = ["apple", "banana"]\nprint(fruits)', 
+          expectedOutput: "['apple', 'banana']" 
+        },
+        { 
+          id: 7, level: 7, titleKey: 'python_dicts', icon: 'brain', xp: 25, color: '#f1c40f', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'py_challenge_7', 
+          starterCode: '# Create a dictionary named "user" with key "name" and value "Alice".\n# Print the dictionary.\n', 
+          solutionCode: 'user = {"name": "Alice"}\nprint(user)', 
+          expectedOutput: "{'name': 'Alice'}" 
+        },
+        { id: 8, level: 8, titleKey: 'python_tuples', icon: 'star', xp: 30, color: '#f1c40f', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'py_challenge_8', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   javascript: [
-    { id: 1, level: 1, titleKey: 'js_vars_alerts', icon: '🔔', xp: 15, color: 'bg-green-600', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'js_dom', icon: '📄', xp: 25, color: 'bg-blue-600', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'js_loops_conditionals', icon: '🔀', xp: 25, color: 'bg-purple-600', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'js_functions_events', icon: '🖱️', xp: 30, color: 'bg-teal-600', type: 'lesson' },
-    { id: 5, level: 5, titleKey: 'js_interactive_story', icon: '📖', xp: 50, color: 'bg-orange-600', type: 'project' },
+    {
+      id: 'js_basics',
+      titleKey: 'javascript',
+      lessons: [
+        { 
+          id: 1, level: 1, titleKey: 'js_vars_alerts', icon: 'brain', xp: 15, color: '#f1e05a', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_1',
+          hintKey: 'js_hint_1',
+          starterCode: `// Use console.log() to print "Hello, JavaScript!".\n\n`, 
+          solutionCode: `console.log("Hello, JavaScript!");`, 
+          expectedOutput: "Hello, JavaScript!"
+        },
+        { 
+          id: 2, level: 2, titleKey: 'js_dom', icon: 'brain', xp: 20, color: '#f1e05a', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'js_challenge_2', 
+          hintKey: 'js_hint_2',
+          starterCode: '// Create a variable named "score" and set it to 100.\n// Then log it to the console.\n', 
+          solutionCode: 'let score = 100;\nconsole.log(score);', 
+          expectedOutput: "100" 
+        },
+        { id: 3, level: 3, titleKey: 'js_loops_conditionals', icon: 'star', xp: 25, color: '#f1e05a', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'js_challenge_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { 
+          id: 4, level: 4, titleKey: 'js_functions_events', icon: 'brain', xp: 30, color: '#f1e05a', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'js_challenge_4', 
+          starterCode: '// Write a function named "sayHi" that logs "Hi!" to the console.\n// Then call the function.\n', 
+          solutionCode: 'function sayHi() {\n  console.log("Hi!");\n}\nsayHi();', 
+          expectedOutput: "Hi!" 
+        },
+        { id: 5, level: 5, titleKey: 'js_interactive_story', icon: 'trophy', xp: 50, color: '#f39c12', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'js_challenge_5', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    },
+    {
+      id: 'js_async',
+      titleKey: 'js_async_title',
+      lessons: [
+        { 
+          id: 6, level: 6, titleKey: 'js_promises', icon: 'brain', xp: 25, color: '#f1e05a', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'js_challenge_6', 
+          starterCode: '// Create a resolved promise with the value "Done!".\n// Log the value using .then().\n', 
+          solutionCode: 'Promise.resolve("Done!").then(val => console.log(val));', 
+          expectedOutput: 'Done!' 
+        },
+        { 
+          id: 7, level: 7, titleKey: 'js_async_await', icon: 'brain', xp: 30, color: '#f1e05a', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'js_challenge_7', 
+          starterCode: '// Write an async function that returns "Async!".\n// Call it and log the result.\n', 
+          solutionCode: 'async function test() { return "Async!"; }\ntest().then(val => console.log(val));', 
+          expectedOutput: 'Async!' 
+        },
+        { id: 8, level: 8, titleKey: 'js_fetch_api', icon: 'star', xp: 35, color: '#f1e05a', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'js_challenge_8', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   lua: [
-    { id: 1, level: 1, titleKey: 'lua_intro', icon: '👋', xp: 15, color: 'bg-green-700', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'lua_logic', icon: '🧠', xp: 20, color: 'bg-blue-700', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'lua_functions', icon: '🛠️', xp: 25, color: 'bg-purple-700', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'lua_tables', icon: '📋', xp: 30, color: 'bg-teal-700', type: 'lesson' },
-    { id: 5, level: 5, titleKey: 'lua_text_adventure', icon: '🗺️', xp: 50, color: 'bg-orange-700', type: 'project' },
+    {
+      id: 'lua_basics',
+      titleKey: 'lua_intro',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'lua_intro', icon: 'brain', xp: 15, color: '#000080', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Hello Lua")', solutionCode: 'print("Hello Lua")', expectedOutput: 'Hello Lua' },
+        { id: 2, level: 2, titleKey: 'lua_logic', icon: 'brain', xp: 20, color: '#000080', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 3, titleKey: 'lua_functions', icon: 'star', xp: 25, color: '#000080', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'lua_tables', icon: 'brain', xp: 30, color: '#000080', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 5, level: 5, titleKey: 'lua_text_adventure', icon: 'trophy', xp: 50, color: '#000080', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   web_dev: [
-    { id: 1, level: 1, titleKey: 'web_html_basics', icon: '<h1>', xp: 15, color: 'bg-green-800', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'web_images_links', icon: '🔗', xp: 20, color: 'bg-blue-800', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'web_css_intro', icon: '🎨', xp: 25, color: 'bg-purple-800', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'web_css_layout', icon: '📰', xp: 30, color: 'bg-teal-800', type: 'lesson' },
-    { id: 5, level: 5, titleKey: 'web_animal_page', icon: '🦁', xp: 50, color: 'bg-orange-800', type: 'project' },
+    {
+      id: 'web_basics',
+      titleKey: 'web_dev',
+      lessons: [
+        { 
+          id: 1, level: 1, titleKey: 'web_html_basics', icon: 'brain', xp: 15, color: '#e34f26', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'web_challenge_1', 
+          hintKey: 'web_hint_1',
+          starterCode: '// In this world, we use console.log to simulate HTML tags!\n// Log "<h1>Hello World</h1>" to the console.\n', 
+          solutionCode: 'console.log("<h1>Hello World</h1>");', 
+          expectedOutput: '<h1>Hello World</h1>' 
+        },
+        { 
+          id: 2, level: 2, titleKey: 'web_images_links', icon: 'brain', xp: 20, color: '#e34f26', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'web_challenge_2', 
+          hintKey: 'web_hint_2',
+          starterCode: '// Log an <img> tag with src="magic.png".\n', 
+          solutionCode: 'console.log(\'<img src="magic.png">\');', 
+          expectedOutput: '<img src="magic.png">' 
+        },
+        { id: 3, level: 3, titleKey: 'web_css_intro', icon: 'star', xp: 25, color: '#1572b6', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'web_challenge_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { 
+          id: 4, level: 4, titleKey: 'web_css_layout', icon: 'brain', xp: 30, color: '#1572b6', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'web_challenge_4', 
+          starterCode: '// Log "display: flex" to simulate a CSS property.\n', 
+          solutionCode: 'console.log("display: flex");', 
+          expectedOutput: 'display: flex' 
+        },
+        { id: 5, level: 5, titleKey: 'web_animal_page', icon: 'trophy', xp: 50, color: '#333333', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'web_challenge_5', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    },
+    {
+      id: 'web_advanced',
+      titleKey: 'web_advanced_title',
+      lessons: [
+        { 
+          id: 6, level: 6, titleKey: 'web_flexbox', icon: 'brain', xp: 25, color: '#1572b6', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'web_challenge_6', 
+          starterCode: '// Log "justify-content: center".\n', 
+          solutionCode: 'console.log("justify-content: center");', 
+          expectedOutput: 'justify-content: center' 
+        },
+        { 
+          id: 7, level: 7, titleKey: 'web_grid', icon: 'brain', xp: 30, color: '#1572b6', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'web_challenge_7', 
+          starterCode: '// Log "grid-template-columns: 1fr 1fr".\n', 
+          solutionCode: 'console.log("grid-template-columns: 1fr 1fr");', 
+          expectedOutput: 'grid-template-columns: 1fr 1fr' 
+        },
+        { id: 8, level: 8, titleKey: 'web_responsive_design', icon: 'star', xp: 35, color: '#1572b6', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'web_challenge_8', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   c_plus_plus: [
-    { id: 1, level: 1, titleKey: 'cpp_pointers', icon: '👉', xp: 20, color: 'bg-gray-600', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'cpp_classes', icon: '🏛️', xp: 25, color: 'bg-gray-700', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'cpp_stl', icon: '📚', xp: 30, color: 'bg-gray-800', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'cpp_calculator', icon: '🧮', xp: 50, color: 'bg-gray-900', type: 'project' },
+    {
+      id: 'cpp_basics',
+      titleKey: 'c_plus_plus',
+      lessons: [
+        { 
+          id: 1, level: 1, titleKey: 'introduction', icon: '🐉', xp: 15, color: '#00599c', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'cpp_challenge_1', 
+          starterCode: '// Print "Hello C++!" using std::cout.\n#include <iostream>\n\nint main() {\n  \n  return 0;\n}', 
+          solutionCode: '#include <iostream>\n\nint main() {\n  std::cout << "Hello C++!";\n  return 0;\n}', 
+          expectedOutput: "Hello C++!" 
+        },
+        { 
+          id: 2, level: 2, titleKey: 'cpp_pointers', icon: 'brain', xp: 25, color: '#00599c', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'cpp_challenge_2', 
+          starterCode: '// Create an int pointer p pointing to x.\nint x = 10;\n', 
+          solutionCode: 'int x = 10; int* p = &x; console.log(*p);', 
+          expectedOutput: '10' 
+        },
+        { id: 3, level: 3, titleKey: 'cpp_classes', icon: 'star', xp: 30, color: '#00599c', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'cpp_challenge_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'cpp_stl', icon: 'brain', xp: 35, color: '#00599c', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'cpp_challenge_4', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 5, level: 5, titleKey: 'cpp_calculator', icon: 'trophy', xp: 60, color: '#004482', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'cpp_challenge_5', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    },
+    {
+      id: 'cpp_advanced',
+      titleKey: 'cpp_advanced_title',
+      lessons: [
+        { id: 6, level: 6, titleKey: 'cpp_templates', icon: 'brain', xp: 30, color: '#00599c', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 7, level: 7, titleKey: 'cpp_memory', icon: 'brain', xp: 35, color: '#00599c', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 8, level: 8, titleKey: 'cpp_quiz_adv', icon: 'star', xp: 40, color: '#00599c', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   c_sharp: [
-    { id: 1, level: 1, titleKey: 'csharp_dotnet', icon: '🌐', xp: 20, color: 'bg-purple-500', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'csharp_linq', icon: '🔍', xp: 25, color: 'bg-purple-600', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'csharp_async', icon: '⏳', xp: 30, color: 'bg-purple-700', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'csharp_todo_app', icon: '✅', xp: 50, color: 'bg-purple-800', type: 'project' },
+    {
+      id: 'csharp_basics',
+      titleKey: 'c_sharp',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'csharp_dotnet', icon: 'brain', xp: 15, color: '#9b4993', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 2, level: 2, titleKey: 'csharp_linq', icon: 'brain', xp: 25, color: '#9b4993', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 3, titleKey: 'csharp_async', icon: 'star', xp: 30, color: '#9b4993', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'csharp_todo_app', icon: 'trophy', xp: 50, color: '#68217a', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   java: [
-    { id: 1, level: 1, titleKey: 'java_jvm', icon: '⚙️', xp: 20, color: 'bg-orange-500', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'java_oop', icon: '🤝', xp: 25, color: 'bg-orange-600', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'java_collections', icon: '🗂️', xp: 30, color: 'bg-orange-700', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'java_bank_account', icon: '🏦', xp: 50, color: 'bg-orange-800', type: 'project' },
+    {
+      id: 'java_basics',
+      titleKey: 'java',
+      lessons: [
+        { 
+          id: 1, level: 1, titleKey: 'java_jvm', icon: 'brain', xp: 15, color: '#ea2d2e', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'java_challenge_1', 
+          starterCode: '// Print "Hello Java" using System.out.println.\n', 
+          solutionCode: 'System.out.println("Hello Java");', 
+          expectedOutput: 'Hello Java' 
+        },
+        { 
+          id: 2, level: 2, titleKey: 'java_oop', icon: 'brain', xp: 25, color: '#ea2d2e', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'java_challenge_2', 
+          starterCode: '// Create a class Person with a name.\n', 
+          solutionCode: 'class Person { String name = "Bob"; } Person p = new Person(); System.out.println(p.name);', 
+          expectedOutput: 'Bob' 
+        },
+        { id: 3, level: 3, titleKey: 'java_collections', icon: 'star', xp: 30, color: '#ea2d2e', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'java_challenge_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'java_bank_account', icon: 'trophy', xp: 50, color: '#5382a1', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'java_challenge_4', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    },
+    {
+      id: 'java_advanced',
+      titleKey: 'java_advanced_title',
+      lessons: [
+        { id: 5, level: 5, titleKey: 'java_streams', icon: 'brain', xp: 30, color: '#ea2d2e', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 6, level: 6, titleKey: 'java_lambdas', icon: 'brain', xp: 35, color: '#ea2d2e', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 7, level: 7, titleKey: 'java_multithreading', icon: 'star', xp: 40, color: '#ea2d2e', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   kotlin: [
-    { id: 1, level: 1, titleKey: 'kotlin_null_safety', icon: '🛡️', xp: 20, color: 'bg-blue-600', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'kotlin_coroutines', icon: '🏃', xp: 25, color: 'bg-blue-700', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'kotlin_data_classes', icon: '📦', xp: 30, color: 'bg-blue-800', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'kotlin_button_clicker', icon: '🖱️', xp: 50, color: 'bg-blue-900', type: 'project' },
+    {
+      id: 'kotlin_basics',
+      titleKey: 'kotlin',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'kotlin_null_safety', icon: 'brain', xp: 15, color: '#7f52ff', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 2, level: 2, titleKey: 'kotlin_coroutines', icon: 'brain', xp: 25, color: '#7f52ff', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 3, titleKey: 'kotlin_data_classes', icon: 'star', xp: 30, color: '#7f52ff', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'kotlin_button_clicker', icon: 'trophy', xp: 50, color: '#4d2ba4', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   swift: [
-    { id: 1, level: 1, titleKey: 'swift_optionals', icon: '❓', xp: 20, color: 'bg-red-500', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'swift_swiftui', icon: '🎨', xp: 25, color: 'bg-red-600', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'swift_closures', icon: '➡️', xp: 30, color: 'bg-red-700', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'swift_tip_calculator', icon: '💰', xp: 50, color: 'bg-red-800', type: 'project' },
+    {
+      id: 'swift_basics',
+      titleKey: 'swift',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'swift_optionals', icon: 'brain', xp: 15, color: '#f05138', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 2, level: 2, titleKey: 'swift_swiftui', icon: 'brain', xp: 25, color: '#f05138', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 3, titleKey: 'swift_closures', icon: 'star', xp: 30, color: '#f05138', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'swift_tip_calculator', icon: 'trophy', xp: 50, color: '#cc3f2b', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   go: [
-    { id: 1, level: 1, titleKey: 'go_goroutines', icon: '👯', xp: 20, color: 'bg-cyan-400', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'go_channels', icon: '📡', xp: 25, color: 'bg-cyan-500', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'go_structs', icon: '🧱', xp: 30, color: 'bg-cyan-600', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'go_web_scraper', icon: '🕷️', xp: 50, color: 'bg-cyan-700', type: 'project' },
+    {
+      id: 'go_basics',
+      titleKey: 'go',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'go_goroutines', icon: 'brain', xp: 20, color: '#00add8', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 2, level: 2, titleKey: 'go_channels', icon: 'brain', xp: 25, color: '#00add8', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 3, titleKey: 'go_structs', icon: 'star', xp: 30, color: '#00add8', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'go_web_scraper', icon: 'trophy', xp: 60, color: '#007d9c', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   rust: [
-    { id: 1, level: 1, titleKey: 'rust_ownership', icon: '🤝', xp: 20, color: 'bg-orange-700', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'rust_enums', icon: '📜', xp: 25, color: 'bg-orange-800', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'rust_lifetimes', icon: '⏳', xp: 30, color: 'bg-orange-900', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'rust_word_counter', icon: '📊', xp: 50, color: 'bg-yellow-900', type: 'project' },
+    {
+      id: 'rust_basics',
+      titleKey: 'rust',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'rust_ownership', icon: 'brain', xp: 25, color: '#000000', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 2, level: 2, titleKey: 'rust_enums', icon: 'brain', xp: 25, color: '#000000', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 3, titleKey: 'rust_lifetimes', icon: 'star', xp: 35, color: '#000000', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'rust_word_counter', icon: 'trophy', xp: 70, color: '#dea584', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   php: [
-    { id: 1, level: 1, titleKey: 'php_server_basics', icon: '🌐', xp: 20, color: 'bg-indigo-300', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'php_arrays', icon: '📚', xp: 25, color: 'bg-indigo-400', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'php_forms', icon: '📝', xp: 30, color: 'bg-indigo-500', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'php_contact_form', icon: '📨', xp: 50, color: 'bg-indigo-600', type: 'project' },
+    {
+      id: 'php_basics',
+      titleKey: 'php',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'php_server_basics', icon: 'brain', xp: 15, color: '#777bb4', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 2, level: 2, titleKey: 'php_arrays', icon: 'brain', xp: 20, color: '#777bb4', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 3, titleKey: 'php_forms', icon: 'star', xp: 25, color: '#777bb4', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'php_contact_form', icon: 'trophy', xp: 50, color: '#4f5b93', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   ruby: [
-    { id: 1, level: 1, titleKey: 'ruby_blocks', icon: '🧱', xp: 20, color: 'bg-red-600', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'ruby_gems', icon: '💎', xp: 25, color: 'bg-red-700', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'ruby_metaprogramming', icon: '✨', xp: 30, color: 'bg-red-800', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'ruby_blog_generator', icon: '📰', xp: 50, color: 'bg-red-900', type: 'project' },
+    {
+      id: 'ruby_basics',
+      titleKey: 'ruby',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'ruby_blocks', icon: 'brain', xp: 20, color: '#701516', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 2, level: 2, titleKey: 'ruby_gems', icon: 'brain', xp: 25, color: '#701516', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 3, titleKey: 'ruby_metaprogramming', icon: 'star', xp: 35, color: '#701516', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'ruby_blog_generator', icon: 'trophy', xp: 60, color: '#cc342d', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   typescript: [
-    { id: 1, level: 1, titleKey: 'ts_types', icon: '📝', xp: 20, color: 'bg-blue-500', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'ts_interfaces', icon: '📜', xp: 25, color: 'bg-blue-600', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'ts_generics', icon: '📦', xp: 30, color: 'bg-blue-700', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'ts_todo_list', icon: '✅', xp: 50, color: 'bg-blue-800', type: 'project' },
+    {
+      id: 'ts_basics',
+      titleKey: 'typescript',
+      lessons: [
+        { 
+          id: 1, level: 1, titleKey: 'ts_types', icon: 'brain', xp: 20, color: '#3178c6', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'ts_challenge_1', 
+          starterCode: '// Define a variable "name" as a string.\n', 
+          solutionCode: 'let name: string = "Alice"; console.log(name);', 
+          expectedOutput: 'Alice' 
+        },
+        { 
+          id: 2, level: 2, titleKey: 'ts_interfaces', icon: 'brain', xp: 25, color: '#3178c6', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'ts_challenge_2', 
+          starterCode: '// Create an interface User with a name property.\n', 
+          solutionCode: 'interface User { name: string; } let u: User = { name: "Bob" }; console.log(u.name);', 
+          expectedOutput: 'Bob' 
+        },
+        { id: 3, level: 3, titleKey: 'ts_generics', icon: 'star', xp: 35, color: '#3178c6', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'ts_challenge_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'ts_todo_list', icon: 'trophy', xp: 60, color: '#235a97', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'ts_challenge_4', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   sql: [
-    { id: 1, level: 1, titleKey: 'sql_select', icon: 'SELECT', xp: 20, color: 'bg-gray-400', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'sql_where', icon: 'WHERE', xp: 25, color: 'bg-gray-500', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'sql_joins', icon: 'JOIN', xp: 30, color: 'bg-gray-600', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'sql_query_db', icon: '❓', xp: 50, color: 'bg-gray-700', type: 'project' },
+    {
+      id: 'sql_basics',
+      titleKey: 'sql',
+      lessons: [
+        { 
+          id: 1, level: 1, titleKey: 'sql_select', icon: 'brain', xp: 15, color: '#336791', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'sql_challenge_1', 
+          starterCode: '-- Select everything from users table.\n', 
+          solutionCode: 'SELECT * FROM users;', 
+          expectedOutput: 'All Users' 
+        },
+        { 
+          id: 2, level: 2, titleKey: 'sql_where', icon: 'brain', xp: 20, color: '#336791', type: 'lesson', nodeType: 'standard', 
+          challengeDescriptionKey: 'sql_challenge_2', 
+          starterCode: '-- Select users where age > 18.\n', 
+          solutionCode: 'SELECT * FROM users WHERE age > 18;', 
+          expectedOutput: 'Adult Users' 
+        },
+        { id: 3, level: 3, titleKey: 'sql_joins', icon: 'star', xp: 30, color: '#336791', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'sql_challenge_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'sql_query_db', icon: 'trophy', xp: 50, color: '#2f5e85', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'sql_challenge_4', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    },
+    {
+      id: 'sql_advanced',
+      titleKey: 'sql_advanced_title',
+      lessons: [
+        { id: 5, level: 5, titleKey: 'sql_subqueries', icon: 'brain', xp: 25, color: '#336791', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 6, level: 6, titleKey: 'sql_transactions', icon: 'brain', xp: 30, color: '#336791', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 7, level: 7, titleKey: 'sql_indexing', icon: 'star', xp: 35, color: '#336791', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   r: [
-    { id: 1, level: 1, titleKey: 'r_data_frames', icon: '📋', xp: 20, color: 'bg-sky-500', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'r_vectors', icon: '➡️', xp: 25, color: 'bg-sky-600', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'r_plotting', icon: '📈', xp: 30, color: 'bg-sky-700', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'r_analyze_data', icon: '🔬', xp: 50, color: 'bg-sky-800', type: 'project' },
+    {
+      id: 'r_basics',
+      titleKey: 'r',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'r_data_frames', icon: 'brain', xp: 20, color: '#276dc3', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 2, level: 2, titleKey: 'r_vectors', icon: 'brain', xp: 25, color: '#276dc3', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 3, titleKey: 'r_plotting', icon: 'star', xp: 35, color: '#276dc3', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'r_analyze_data', icon: 'trophy', xp: 60, color: '#1a59a1', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   dart: [
-    { id: 1, level: 1, titleKey: 'dart_futures', icon: '⏳', xp: 20, color: 'bg-teal-400', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'dart_widgets', icon: '📱', xp: 25, color: 'bg-teal-500', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'dart_state', icon: '🔄', xp: 30, color: 'bg-teal-600', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'dart_counter_app', icon: '🔢', xp: 50, color: 'bg-teal-700', type: 'project' },
+    {
+      id: 'dart_basics',
+      titleKey: 'dart',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'dart_futures', icon: 'brain', xp: 20, color: '#00d2b8', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 2, level: 2, titleKey: 'dart_widgets', icon: 'brain', xp: 25, color: '#00d2b8', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 3, titleKey: 'dart_state', icon: 'star', xp: 35, color: '#00d2b8', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'dart_counter_app', icon: 'trophy', xp: 60, color: '#00a38d', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
   scala: [
-    { id: 1, level: 1, titleKey: 'scala_fp', icon: 'λ', xp: 20, color: 'bg-red-700', type: 'lesson' },
-    { id: 2, level: 2, titleKey: 'scala_case_classes', icon: '📦', xp: 25, color: 'bg-red-800', type: 'lesson' },
-    { id: 3, level: 3, titleKey: 'scala_futures', icon: '🚀', xp: 30, color: 'bg-red-900', type: 'lesson' },
-    { id: 4, level: 4, titleKey: 'scala_data_transformer', icon: '✨', xp: 50, color: 'bg-rose-900', type: 'project' },
+    {
+      id: 'scala_basics',
+      titleKey: 'scala',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'scala_fp', icon: 'brain', xp: 25, color: '#de3423', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 2, level: 2, titleKey: 'scala_case_classes', icon: 'brain', xp: 30, color: '#de3423', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 3, titleKey: 'scala_futures', icon: 'star', xp: 40, color: '#de3423', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'scala_data_transformer', icon: 'trophy', xp: 75, color: '#b22415', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    }
   ],
 };
 
