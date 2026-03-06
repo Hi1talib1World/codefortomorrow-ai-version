@@ -36,7 +36,7 @@ const api = {
     if (!response.ok) {
       throw new Error(data.message || 'Failed to register.');
     }
-    
+
     // Store the token and return the user object
     localStorage.setItem('authToken', data.token);
     return data;
@@ -56,7 +56,7 @@ const api = {
     if (!response.ok) {
       throw new Error(data.message || 'Failed to login.');
     }
-    
+
     localStorage.setItem('authToken', data.token);
     return data;
   },
@@ -65,26 +65,20 @@ const api = {
    * Google login is a complex flow. For now, we'll keep it mocked but show
    * how a real implementation would start.
    */
-  loginWithGoogle: (): Promise<User> => {
-    // In a real app, this would redirect to '/api/auth/google', which would
-    // handle the OAuth flow and eventually redirect back to the frontend with a token.
-    console.warn("Google Login is currently mocked. A real implementation requires a full OAuth flow.");
-    return new Promise((resolve) => {
-        const now = new Date().toISOString();
-        const guestUser: User = {
-          _id: `guest_${Date.now()}`,
-          name: 'Guest (Google)',
-          email: `guest_${Date.now()}@code-cubs.com`,
-          provider: 'google',
-          profilePictureUrl: `https://ui-avatars.com/api/?name=G&background=random&color=fff`,
-          progress: { xp: 0, streak: 0, completedLessons: {}, scores: {}, badgesEarned: {}, lastLessonCompletedDate: null },
-          currentPath: null,
-          role: null,
-          createdAt: now,
-          lastLogin: now,
-        };
-        resolve(guestUser);
+  loginWithGoogle: async (token: string): Promise<User> => {
+    const response = await fetch(`${API_BASE_URL}/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
     });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to login with Google.');
+    }
+
+    localStorage.setItem('authToken', data.token);
+    return data;
   },
 
   /**
@@ -113,12 +107,12 @@ const api = {
     if (response.ok) {
       return response.json();
     }
-    
+
     // If the token is invalid or expired, clear it
-    if(response.status === 401) {
-        localStorage.removeItem('authToken');
+    if (response.status === 401) {
+      localStorage.removeItem('authToken');
     }
-    
+
     return null;
   },
 
@@ -131,10 +125,10 @@ const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(updatedData),
     });
-    
+
     const data = await response.json();
     if (!response.ok) {
-        throw new Error(data.message || 'Failed to update profile.');
+      throw new Error(data.message || 'Failed to update profile.');
     }
     return data;
   },
@@ -144,14 +138,14 @@ const api = {
    */
   updateUserProgress: async (newProgress: Partial<UserProgress>): Promise<UserProgress> => {
     const response = await fetch(`${API_BASE_URL}/users/progress`, {
-        method: 'PUT',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(newProgress)
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(newProgress)
     });
 
     const data = await response.json();
     if (!response.ok) {
-        throw new Error(data.message || 'Failed to update progress.');
+      throw new Error(data.message || 'Failed to update progress.');
     }
     return data;
   },

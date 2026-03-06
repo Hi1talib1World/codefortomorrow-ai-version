@@ -13,11 +13,10 @@ const Mascot: React.FC = () => {
           animation: float 4s ease-in-out infinite;
         }
       `}</style>
-      <img 
-        src="https://cdn-icons-png.flaticon.com/512/3069/3069172.png" 
-        alt="Friendly cat mascot" 
+      <img
+        src="/mascot.png"
+        alt="Friendly cat mascot"
         className="w-full h-full object-contain mascot-animation drop-shadow-2xl"
-        referrerPolicy="no-referrer"
       />
     </div>
   );

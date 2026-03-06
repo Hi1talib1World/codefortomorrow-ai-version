@@ -12,19 +12,19 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#F8FDFF',
-          100: '#F0F9FF',
-          200: '#E0F2FE',
-          300: '#BAE6FD',
-          400: '#7DD3FC',
-          500: '#38BDF8', // Lighter, friendlier blue
-          600: '#0EA5E9',
-          700: '#0284C7',
-          800: '#0369A1',
-          900: '#075985',
-          DEFAULT: '#38BDF8',
-          light: '#7DD3FC',
-          dark: '#0EA5E9',
+          50: '#F4FAFA',
+          100: '#E4F3F3',
+          200: '#CBEBEB',
+          300: '#A1DBDB',
+          400: '#73C6C6',
+          500: '#58C6C8', // User Requested Main Color
+          600: '#40A0A3',
+          700: '#348083',
+          800: '#2D686B',
+          900: '#295759',
+          DEFAULT: '#58C6C8',
+          light: '#A1DBDB',
+          dark: '#348083',
         },
       },
       fontFamily: {

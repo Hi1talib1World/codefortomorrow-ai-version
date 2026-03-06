@@ -109,44 +109,82 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
+import { OAuth2Client } from 'google-auth-library';
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 /**
- * @desc    Google OAuth callback (conceptual)
- * @route   GET /api/auth/google/callback
+ * @desc    Google OAuth login (Receives token from frontend)
+ * @route   POST /api/auth/google
  * @access  Public
  */
-// Fix: Use Request, Response, NextFunction types from express to resolve property errors.
-export const googleCallback = async (req: Request, res: Response, next: NextFunction) => {
-    // @ts-ignore
-    const googleProfile = req.user;
+export const googleLogin = async (req: Request, res: Response, next: NextFunction) => {
+    const { token } = req.body;
+
+    if (!token) {
+       return next(new ApiError(400, 'Google token is required'));
+    }
 
     try {
-        // @ts-ignore
-        let user = await User.findOne({ googleId: googleProfile.id });
+        // 1. Verify the Google Token
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID, 
+        });
+        
+        const payload = ticket.getPayload();
+        if (!payload || !payload.email) {
+            throw new ApiError(400, 'Invalid Google token payload');
+        }
 
+        const { email, name, picture, sub: googleId } = payload;
+
+        // 2. Check if the user already exists by Google ID or Email
+        let user = await User.findOne({ 
+            $or: [{ googleId }, { email }] 
+        }).populate('progress');
+
+        // 3. Create the user if they don't exist
         if (!user) {
             const newProgress = await Progress.create({});
             user = await User.create({
-                // @ts-ignore
-                name: googleProfile.displayName,
-                // @ts-ignore
-                email: googleProfile.emails[0].value,
-                // @ts-ignore
-                googleId: googleProfile.id,
-                // @ts-ignore
-                profilePictureUrl: googleProfile.photos[0].value,
+                name,
+                email,
+                googleId,
+                profilePictureUrl: picture || `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`,
                 progress: newProgress._id,
             });
+            // Populate progress for the response
+            user = await user.populate('progress');
+        } else if (!user.googleId) {
+             // If user existed via email but now logs in via Google, link the account
+             user.googleId = googleId;
+             if (!user.profilePictureUrl && picture) {
+                 user.profilePictureUrl = picture;
+             }
+             await user.save();
         }
-        
-        const token = generateToken(user._id);
+
+        // 4. Generate backend JWT Token
+        const appToken = generateToken(user._id);
+
+        const userResponse = {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            profilePictureUrl: user.profilePictureUrl,
+            progress: user.progress,
+            currentPath: (user as any).currentPath,
+            role: (user as any).role,
+        };
 
         res.status(200).json({
-            message: "Google Auth successful",
-            token: token,
-            user: user,
+            ...userResponse,
+            token: appToken,
         });
 
     } catch (error) {
-        next(error);
+        console.error("Google Auth Error:", error);
+        next(new ApiError(401, 'Google authentication failed'));
     }
 };

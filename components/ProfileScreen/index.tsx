@@ -19,7 +19,7 @@ const LeagueIcon = ({ className }: { className?: string }) => (
 const HexagonBadgeIcon = ({ icon, earned }: { icon: React.ReactNode; earned: boolean }) => (
   <div className={`relative w-20 h-20 flex items-center justify-center flex-shrink-0 transition-all ${!earned ? 'grayscale opacity-30 scale-90' : 'drop-shadow-xl'}`}>
     <svg viewBox="0 0 100 115.47" className="absolute inset-0 w-full h-full transform transition-colors">
-      <path d="M50 0 L100 28.87 L100 86.6 L50 115.47 L0 86.6 L0 28.87 Z" fill={earned ? "#38BDF8" : "#cbd5e1"} className="dark:fill-slate-700" />
+      <path d="M50 0 L100 28.87 L100 86.6 L50 115.47 L0 86.6 L0 28.87 Z" fill={earned ? "#58C6C8" : "#cbd5e1"} className="dark:fill-slate-700" />
       <path d="M50 5 L95 31.7 L95 83.77 L50 110.47 L5 83.77 L5 31.7 Z" fill={earned ? "#0EA5E9" : "#94a3b8"} className="dark:fill-slate-600" />
     </svg>
     <div className="relative z-10 text-white text-4xl">
@@ -73,7 +73,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
       )}
       <div className="bg-brand-50 dark:bg-slate-900 min-h-full text-slate-800 dark:text-white font-sans p-4 sm:p-12 transition-colors">
         <div className="max-w-4xl mx-auto">
-          
+
           <div className="relative mb-20">
             <div className="h-60 bg-gradient-to-r from-brand-600 to-brand-700 rounded-[3rem] relative shadow-2xl overflow-hidden group">
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -180,7 +180,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
               <p className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-2">{t('xp')}</p>
             </div>
             <div className="bg-white dark:bg-slate-800 border-b-8 border-slate-200 dark:border-slate-950 rounded-[2.5rem] p-6 flex flex-col items-center justify-center shadow-lg transition-all">
-              <LeagueIcon className="w-14 h-14 text-green-500 mb-2 drop-shadow-sm"/>
+              <LeagueIcon className="w-14 h-14 text-green-500 mb-2 drop-shadow-sm" />
               <p className="font-black text-4xl leading-none uppercase italic tracking-tighter">{mockLeague}</p>
               <p className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-2">{t('league_label')}</p>
             </div>
@@ -191,29 +191,29 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
             <div className="bg-white dark:bg-slate-800 rounded-[3rem] p-8 border-b-[12px] border-slate-200 dark:border-slate-950 shadow-xl transition-colors">
               {pathBadges.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {pathBadges.map(badge => {
-                        const isEarned = earnedBadgeIds.includes(badge.id);
-                        return (
-                            <div key={badge.id} className={`flex items-center space-x-6 p-4 rounded-3xl transition-colors ${isEarned ? 'bg-brand-50 dark:bg-brand-900/10' : 'opacity-60'}`}>
-                                <HexagonBadgeIcon 
-                                    icon={<span>{badge.icon}</span>}
-                                    earned={isEarned}
-                                />
-                                <div className="min-w-0">
-                                    <p className={`font-black text-xl uppercase tracking-tight leading-tight ${isEarned ? 'text-slate-800 dark:text-white' : 'text-slate-400'}`}>
-                                        {t(badge.titleKey as any)}
-                                    </p>
-                                    <p className="text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest">
-                                        {isEarned ? t('unlocked_status') : t('locked_status')}
-                                    </p>
-                                </div>
-                            </div>
-                        )
-                    })}
+                  {pathBadges.map(badge => {
+                    const isEarned = earnedBadgeIds.includes(badge.id);
+                    return (
+                      <div key={badge.id} className={`flex items-center space-x-6 p-4 rounded-3xl transition-colors ${isEarned ? 'bg-brand-50 dark:bg-brand-900/10' : 'opacity-60'}`}>
+                        <HexagonBadgeIcon
+                          icon={<span>{badge.icon}</span>}
+                          earned={isEarned}
+                        />
+                        <div className="min-w-0">
+                          <p className={`font-black text-xl uppercase tracking-tight leading-tight ${isEarned ? 'text-slate-800 dark:text-white' : 'text-slate-400'}`}>
+                            {t(badge.titleKey as any)}
+                          </p>
+                          <p className="text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest">
+                            {isEarned ? t('unlocked_status') : t('locked_status')}
+                          </p>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               ) : (
                 <div className="text-center py-12">
-                    <p className="text-slate-400 font-bold text-xl">{t('no_content_saved')}</p>
+                  <p className="text-slate-400 font-bold text-xl">{t('no_content_saved')}</p>
                 </div>
               )}
             </div>

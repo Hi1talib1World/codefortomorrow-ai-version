@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { GoogleLogin } from '@react-oauth/google';
 import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { User, Language } from '../../types';
@@ -9,20 +9,6 @@ interface AuthScreenProps {
   onAuthSuccess: (user: User) => void;
   skipAuth: () => void;
 }
-
-const GoogleIcon = () => (
-    <svg className="w-5 h-5" viewBox="0 0 48 48">
-        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12
-	c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24
-	c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
-        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657
-	C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
-        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36
-	c-5.222,0-9.655-3.449-11.303-8l-6.571,4.819C9.656,39.663,16.318,44,24,44z"></path>
-        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238
-	C42.022,35.622,44,30.036,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
-    </svg>
-);
 
 const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
   const [isLoginView, setIsLoginView] = useState(true);
@@ -40,7 +26,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
     setPassword('');
     setError('');
   }
-  
+
   const handleViewChange = (isLogin: boolean) => {
     setIsLoginView(isLogin);
     clearForm();
@@ -65,18 +51,25 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
       setIsLoading(false);
     }
   };
-  
-  const handleGoogleAuth = async () => {
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
     setError('');
     setIsLoading(true);
     try {
-      const user = await api.loginWithGoogle();
+      if (!credentialResponse.credential) {
+        throw new Error('No credential received from Google');
+      }
+      const user = await api.loginWithGoogle(credentialResponse.credential);
       onAuthSuccess(user);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
+      setError(err instanceof Error ? err.message : 'Google Login failed.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGoogleError = () => {
+    setError('Google Login was unsuccessful.');
   };
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -91,8 +84,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
       {/* Top Bar with Language Selector */}
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
         <div className="relative">
-          <select 
-            value={language} 
+          <select
+            value={language}
             onChange={handleLanguageChange}
             className="appearance-none bg-white dark:bg-slate-800 dark:text-slate-200 rounded-xl p-3 pr-10 font-black border-b-4 border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all shadow-xl text-sm"
             aria-label="Select language"
@@ -112,7 +105,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
       <div className="max-w-sm w-full py-6">
         <div className="flex justify-center mb-8">
           <div className="w-24 h-24 transform hover:scale-110 transition-transform cursor-pointer drop-shadow-2xl">
-             <Mascot />
+            <Mascot />
           </div>
         </div>
 
@@ -140,12 +133,12 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
 
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
-                {!isLoginView && (
-                 <div>
-                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-1 px-2" htmlFor="name">{t('username')}</label>
-                    <input type="text" id="name" value={name} onChange={e => setName(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-brand-500/20 focus:border-brand-400 transition-all font-black text-base" required />
-                 </div>
-               )}
+              {!isLoginView && (
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-1 px-2" htmlFor="name">{t('username')}</label>
+                  <input type="text" id="name" value={name} onChange={e => setName(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-brand-500/20 focus:border-brand-400 transition-all font-black text-base" required />
+                </div>
+              )}
               <div>
                 <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-1 px-2" htmlFor="email">{t('email')}</label>
                 <input type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-brand-500/20 focus:border-brand-400 transition-all font-black text-base" required />
@@ -155,7 +148,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
                 <input type="password" id="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-brand-500/20 focus:border-brand-400 transition-all font-black text-base" required />
               </div>
             </div>
-            
+
             {error && <p className="text-red-500 text-[10px] text-center mt-4 font-black animate-shake">{error}</p>}
 
             <button
@@ -173,17 +166,21 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
             <div className="flex-grow border-t-2 border-slate-100 dark:border-slate-700"></div>
           </div>
 
-          <button 
-            onClick={handleGoogleAuth}
-            disabled={isLoading}
-            className="w-full flex justify-center items-center space-x-3 bg-white dark:bg-slate-700 dark:text-white text-slate-700 font-black py-3 px-4 rounded-xl border-2 border-b-4 border-slate-100 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-all active:border-b-0 active:translate-y-1 transform disabled:opacity-50 shadow-lg bubbly-btn"
-          >
-            <GoogleIcon />
-            <span className="uppercase tracking-tighter text-sm">{t('continue_with_google')}</span>
-          </button>
+          <div className="flex justify-center w-full">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              useOneTap
+              shape="rectangular"
+              theme="filled_blue"
+              text="continue_with"
+              size="large"
+              width="100%"
+            />
+          </div>
 
           <div className="text-center mt-10">
-            <button 
+            <button
               onClick={skipAuth}
               disabled={isLoading}
               className="text-slate-400 hover:text-brand-500 dark:text-slate-500 dark:hover:text-brand-400 font-black text-xs uppercase tracking-widest transition-all hover:scale-110 active:scale-95 disabled:opacity-50"
@@ -191,9 +188,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
               {t('skip_for_now')}
             </button>
           </div>
-        </div>
-      </div>
-    </div>
+        </div >
+      </div >
+    </div >
   );
 };
 

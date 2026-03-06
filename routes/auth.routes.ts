@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { register, login, getMe, googleCallback } from '../controllers/auth.controller';
+import { register, login, getMe, googleLogin } from '../controllers/auth.controller';
 import { protect } from '../middleware/auth.middleware';
 
 const router = express.Router();
@@ -20,12 +20,11 @@ router.post('/register', register);
 router.post('/login', login);
 
 /**
- * @route   GET /api/auth/google
- * @desc    Initiate Google OAuth flow (conceptual)
+ * @route   POST /api/auth/google
+ * @desc    Verify Google Token and login/register
  * @access  Public
  */
-// In a real app, this would use a library like Passport.js:
-// router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.post('/google', googleLogin);
 
 /**
  * @route   GET /api/auth/me
