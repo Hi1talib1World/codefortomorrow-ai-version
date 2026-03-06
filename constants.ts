@@ -1,5 +1,5 @@
 
-import { LessonSection, Badge, ProgrammingPath } from './types';
+import { LessonSection, Badge, ProgrammingPath, Module, Level } from './types';
 
 export const PATHS: ProgrammingPath[] = [
   { 
@@ -7,7 +7,7 @@ export const PATHS: ProgrammingPath[] = [
     titleKey: 'block_coding', 
     descriptionKey: 'block_coding_desc', 
     icon: '🧩',
-    color: 'bg-blue-500',
+    color: 'bg-brand-500',
     isAvailable: true 
   },
   { 
@@ -31,7 +31,7 @@ export const PATHS: ProgrammingPath[] = [
     titleKey: 'lua', 
     descriptionKey: 'lua_desc', 
     icon: '🎮',
-    color: 'bg-indigo-500',
+    color: 'bg-brand-500',
     isAvailable: true
   },
   {
@@ -71,7 +71,7 @@ export const PATHS: ProgrammingPath[] = [
     titleKey: 'kotlin', 
     descriptionKey: 'kotlin_desc', 
     icon: '🤖',
-    color: 'bg-blue-700',
+    color: 'bg-brand-700',
     isAvailable: true
   },
   { 
@@ -103,7 +103,7 @@ export const PATHS: ProgrammingPath[] = [
     titleKey: 'php', 
     descriptionKey: 'php_desc', 
     icon: '🐘',
-    color: 'bg-indigo-400',
+    color: 'bg-brand-400',
     isAvailable: true
   },
   { 
@@ -119,7 +119,7 @@ export const PATHS: ProgrammingPath[] = [
     titleKey: 'typescript', 
     descriptionKey: 'typescript_desc', 
     icon: '🔷',
-    color: 'bg-blue-600',
+    color: 'bg-brand-600',
     isAvailable: true
   },
   { 
@@ -135,7 +135,7 @@ export const PATHS: ProgrammingPath[] = [
     titleKey: 'r', 
     descriptionKey: 'r_desc', 
     icon: '📊',
-    color: 'bg-sky-600',
+    color: 'bg-brand-600',
     isAvailable: true
   },
   { 
@@ -155,6 +155,88 @@ export const PATHS: ProgrammingPath[] = [
     isAvailable: true
   },
 ];
+
+export const MODULES_BY_PATH: { [key: string]: Module[] } = {
+  block_coding: [
+    {
+      id: 'bc_mod_1',
+      titleKey: 'bc_mod_1_title',
+      descriptionKey: 'bc_mod_1_desc',
+      color: 'bg-brand-500',
+      levels: [
+        {
+          id: 'bc_lvl_1',
+          titleKey: 'bc_lvl_1_title',
+          isLocked: false,
+          lessons: [
+            { 
+              id: 1, level: 1, titleKey: 'sequences', icon: 'brain', xp: 15, color: '#3498db', type: 'lesson', nodeType: 'standard', 
+              challengeDescriptionKey: 'bc_challenge_1', 
+              hintKey: 'bc_hint_1',
+              starterCode: '// Move forward 3 times!\n// Log "forward" 3 times.\n', 
+              solutionCode: 'console.log("forward");\nconsole.log("forward");\nconsole.log("forward");', 
+              expectedOutput: 'forward\nforward\nforward' 
+            },
+            { 
+              id: 2, level: 2, titleKey: 'sequences', icon: 'brain', xp: 20, color: '#3498db', type: 'lesson', nodeType: 'standard', 
+              challengeDescriptionKey: 'bc_challenge_2', 
+              hintKey: 'bc_hint_2',
+              starterCode: '// Turn left then move forward.\n', 
+              solutionCode: 'console.log("left");\nconsole.log("forward");', 
+              expectedOutput: 'left\nforward' 
+            },
+            { 
+              id: 3, level: 3, titleKey: 'sequences', icon: 'brain', xp: 20, color: '#3498db', type: 'lesson', nodeType: 'standard', 
+              challengeDescriptionKey: 'bc_challenge_3', 
+              starterCode: '// Move forward, turn right, move forward.\n', 
+              solutionCode: 'console.log("forward");\nconsole.log("right");\nconsole.log("forward");', 
+              expectedOutput: 'forward\nright\nforward' 
+            },
+            { id: 4, level: 4, titleKey: 'maze_game', icon: 'trophy', xp: 50, color: '#3498db', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'bc_challenge_4', starterCode: '', solutionCode: '', expectedOutput: '' },
+          ]
+        },
+        {
+          id: 'bc_lvl_2',
+          titleKey: 'bc_lvl_2_title',
+          isLocked: false,
+          lessons: [
+            { id: 5, level: 5, titleKey: 'loops', icon: 'star', xp: 15, color: '#2ecc71', type: 'lesson', nodeType: 'quiz', challengeDescriptionKey: 'bc_challenge_5', starterCode: '', solutionCode: '', expectedOutput: '' },
+            { 
+              id: 6, level: 6, titleKey: 'loops', icon: 'brain', xp: 20, color: '#2ecc71', type: 'lesson', nodeType: 'standard', 
+              challengeDescriptionKey: 'bc_challenge_6', 
+              starterCode: '// Use a loop to log "jump" 5 times.\n', 
+              solutionCode: 'for(let i=0; i<5; i++) console.log("jump");', 
+              expectedOutput: 'jump\njump\njump\njump\njump' 
+            },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'bc_mod_2',
+      titleKey: 'bc_mod_2_title',
+      descriptionKey: 'bc_mod_2_desc',
+      color: 'bg-purple-500',
+      levels: [
+        {
+          id: 'bc_lvl_3',
+          titleKey: 'bc_lvl_3_title',
+          isLocked: true,
+          lessons: [
+            { 
+              id: 7, level: 7, titleKey: 'events', icon: 'brain', xp: 20, color: '#e67e22', type: 'lesson', nodeType: 'standard', 
+              challengeDescriptionKey: 'bc_challenge_7', 
+              starterCode: '// Log "click" to simulate an event.\n', 
+              solutionCode: 'console.log("click");', 
+              expectedOutput: 'click' 
+            },
+            { id: 8, level: 8, titleKey: 'events', icon: 'star', xp: 50, color: '#e67e22', type: 'project', nodeType: 'quiz', challengeDescriptionKey: 'bc_challenge_8', starterCode: '', solutionCode: '', expectedOutput: '' },
+          ]
+        }
+      ]
+    }
+  ]
+};
 
 export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
   block_coding: [

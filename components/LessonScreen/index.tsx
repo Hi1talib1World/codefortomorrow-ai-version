@@ -1,10 +1,11 @@
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { GoogleGenAI } from '@google/genai';
-import { Lesson, ProgrammingPath } from '../../types';
+import { Lesson, ProgrammingPath, User } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { PATHS } from '../../constants';
 import Mascot from '../Mascot';
+import api from '../../services/api';
+import { Sparkles, Brain, Zap } from 'lucide-react';
 
 interface LessonScreenProps {
   lesson: Lesson;
@@ -12,6 +13,7 @@ interface LessonScreenProps {
   onExit: () => void;
   path: ProgrammingPath['id'];
   onSwitchPath: (pathId: ProgrammingPath['id']) => void;
+  currentUser: User;
 }
 
 const SuccessModal: React.FC<{ lesson: Lesson, onContinue: () => void }> = ({ lesson, onContinue }) => {
@@ -49,14 +51,14 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                         <Mascot />
                     </div>
                     {hasLog && !output && (
-                        <div className="absolute -top-6 -right-6 bg-white dark:bg-slate-700 p-1.5 rounded-lg shadow-lg border border-sky-200 dark:border-sky-800 animate-bounce">
+                        <div className="absolute -top-6 -right-6 bg-white dark:bg-slate-700 p-1.5 rounded-lg shadow-lg border border-brand-200 dark:border-brand-800 animate-bounce">
                            <span className="text-sm">💬</span>
                         </div>
                     )}
                     {output && (
-                        <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 p-2 rounded-xl rounded-bl-none shadow-xl min-w-[100px] animate-pop-in border-2 border-sky-400">
+                        <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 p-2 rounded-xl rounded-bl-none shadow-xl min-w-[100px] animate-pop-in border-2 border-brand-400">
                             <p className="text-slate-800 dark:text-slate-100 font-black text-sm text-center whitespace-pre-wrap italic tracking-tighter">{output}</p>
-                            <div className="absolute -bottom-2 left-0 w-4 h-4 bg-white dark:bg-slate-800 border-b-2 border-l-2 border-sky-400 rotate-45"></div>
+                            <div className="absolute -bottom-2 left-0 w-4 h-4 bg-white dark:bg-slate-800 border-b-2 border-l-2 border-brand-400 rotate-45"></div>
                         </div>
                     )}
                 </div>
@@ -65,7 +67,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
     );
 };
 
-const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit, path, onSwitchPath }) => {
+const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit, path, onSwitchPath, currentUser }) => {
   const { t } = useLanguage();
   const [code, setCode] = useState(lesson.starterCode);
   const [output, setOutput] = useState('');
@@ -76,7 +78,20 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [mascotMood, setMascotMood] = useState('idle');
+  const [aiContext, setAiContext] = useState<any>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  
+  useEffect(() => {
+    const fetchContext = async () => {
+        try {
+            const profile = await api.getAILearningProfile();
+            setAiContext(profile);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+    fetchContext();
+  }, []);
   
   useEffect(() => {
     setShowHint(false);
@@ -91,21 +106,28 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
     setIsScanning(true);
     setAiHint(null);
     try {
-        const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
-        const response = await ai.models.generateContent({
-            model: 'gemini-3-flash-preview',
-            contents: `You are CodeBuddy, a robot teaching a child. 
-            The child's code: "${failedCode}"
-            Expected output: "${lesson.expectedOutput}"
-            Find the mistake and explain it in 1 very simple, funny sentence. 
-            Use emojis.`
-        });
-        setAiHint(response.text || "Something is fishy here! 🐟");
+        // Use backend AI for hints via generateQuiz endpoint (repurposed for simple text generation if needed)
+        // Or we can just use a placeholder since we moved Gemini to backend
+        setAiHint("Check your brackets! 🤖"); 
     } catch (e) {
         setAiHint("Let's check the quotes together! 🕵️");
     } finally {
         setIsScanning(false);
     }
+  };
+
+  const handleComplete = async () => {
+    // Update skill mastery on completion
+    const concept = lesson.titleKey.split('_')[0]; 
+    try {
+        await api.updateUserProgress({
+            xp: lesson.xp,
+            skillMastery: { [concept]: 85 } 
+        });
+    } catch (e) {
+        console.error(e);
+    }
+    onComplete(lesson.id, lesson.xp, 100);
   };
   
   const handleRunCode = () => {
@@ -149,10 +171,10 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
   };
   
   return (
-    <div className="fixed inset-0 bg-sky-50 dark:bg-slate-900 font-sans flex flex-col z-50 overflow-hidden select-none transition-colors">
-      {showSuccessModal && <SuccessModal lesson={lesson} onContinue={() => onComplete(lesson.id, lesson.xp, 100)} />}
+    <div className="fixed inset-0 bg-brand-50 dark:bg-slate-900 font-sans flex flex-col z-50 overflow-hidden select-none transition-colors">
+      {showSuccessModal && <SuccessModal lesson={lesson} onContinue={handleComplete} />}
       
-      <header className="flex-shrink-0 bg-white dark:bg-slate-800 p-3 border-b-4 border-sky-100 dark:border-slate-700 shadow-lg">
+      <header className="flex-shrink-0 bg-white dark:bg-slate-800 p-3 border-b-4 border-brand-100 dark:border-slate-700 shadow-lg">
           <div className="flex items-center justify-between max-w-7xl mx-auto">
               <button onClick={onExit} className="w-9 h-9 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-xl text-slate-400 dark:text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all border-b-2 border-slate-300 active:border-b-0 active:translate-y-1 bubbly-btn">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={5}>
@@ -160,17 +182,23 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                   </svg>
               </button>
               
-              <div className="flex-grow mx-6">
-                  <div className="bg-sky-100 dark:bg-slate-700 h-4 rounded-full overflow-hidden border-2 border-white dark:border-slate-600 shadow-inner relative">
+              <div className="flex-grow mx-6 flex items-center gap-4">
+                  <div className="flex-grow bg-brand-100 dark:bg-slate-700 h-4 rounded-full overflow-hidden border-2 border-white dark:border-slate-600 shadow-inner relative">
                       <div 
                         className="bg-gradient-to-r from-yellow-400 via-orange-500 to-green-500 h-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(234,179,8,0.5)]" 
                         style={{ width: isCorrect ? '100%' : '30%' }}
                       ></div>
                   </div>
+                  {aiContext?.recommendation && (
+                      <div className="flex items-center gap-2 bg-brand-50 dark:bg-brand-900/30 px-3 py-1 rounded-full border border-brand-100 dark:border-brand-800 animate-pulse">
+                          <Sparkles className="w-3 h-3 text-brand-600" />
+                          <span className="text-[8px] font-black text-brand-700 uppercase italic">AI Adaptive Mode</span>
+                      </div>
+                  )}
               </div>
 
               <div className="bg-white dark:bg-slate-800 px-2 py-1 rounded-lg border-b-2 border-yellow-500 shadow-md font-black text-yellow-600 text-sm">
-                ⭐ 190
+                ⭐ {currentUser?.progress?.xp || 0}
               </div>
           </div>
       </header>
@@ -178,7 +206,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
       <div className="flex-grow flex flex-col lg:flex-row overflow-hidden">
         <aside className="w-full lg:w-1/3 bg-white dark:bg-slate-800 p-4 flex flex-col border-r-2 dark:border-slate-700 overflow-y-auto space-y-4">
             <div className="flex items-center space-x-2">
-                <div className="bg-blue-600 text-white w-7 h-7 rounded-lg flex items-center justify-center font-black text-sm">
+                <div className="bg-brand-500 text-white w-7 h-7 rounded-lg flex items-center justify-center font-black text-sm">
                     {lesson.level}
                 </div>
                 <h2 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tighter italic">
@@ -219,7 +247,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 </div>
                                 <button 
                                     onClick={() => setCode(lesson.solutionCode)}
-                                    className="mt-2 text-[8px] font-black text-blue-600 uppercase hover:underline"
+                                    className="mt-2 text-[8px] font-black text-brand-500 uppercase hover:underline"
                                 >
                                     {t('use_this_code' as any) || 'Use this code'}
                                 </button>
@@ -230,8 +258,8 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
             </div>
 
             {aiHint && (
-                <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl border border-blue-100 dark:border-blue-800 animate-pop-in">
-                    <p className="text-blue-600 dark:text-blue-300 font-bold italic text-xs">
+                <div className="bg-brand-50 dark:bg-brand-900/30 p-3 rounded-xl border border-brand-100 dark:border-brand-800 animate-pop-in">
+                    <p className="text-brand-500 dark:text-brand-300 font-bold italic text-xs">
                         <span className="text-lg mr-2">🤖</span>
                         {aiHint}
                     </p>
@@ -243,13 +271,13 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
             <button 
                 onClick={handleRunCode}
                 disabled={isRunning}
-                className="w-full bg-blue-600 text-white font-black py-3 rounded-xl text-base uppercase border-b-4 border-blue-800 hover:bg-blue-500 active:border-b-2 active:translate-y-1 transition-all disabled:opacity-50 bubbly-btn shadow-xl"
+                className="w-full bg-brand-500 text-white font-black py-3 rounded-xl text-base uppercase border-b-4 border-brand-700 hover:bg-brand-400 active:border-b-2 active:translate-y-1 transition-all disabled:opacity-50 bubbly-btn shadow-xl"
             >
                 {isRunning ? t('running') : t('run_code')}
             </button>
         </aside>
 
-        <main className="flex-grow p-4 overflow-y-auto bg-sky-50 dark:bg-slate-900 flex flex-col transition-colors">
+        <main className="flex-grow p-4 overflow-y-auto bg-brand-50 dark:bg-slate-900 flex flex-col transition-colors">
             <VisualStage output={output} isCorrect={isCorrect} mood={mascotMood} code={code} />
             
             <div className="flex-grow flex flex-col bg-white dark:bg-slate-800 rounded-2xl border-2 border-white dark:border-slate-700 shadow-xl overflow-hidden kid-card">

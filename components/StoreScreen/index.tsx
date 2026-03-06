@@ -13,16 +13,16 @@ const StoreTabs = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTa
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`py-4 px-2 font-black text-sm sm:text-base transition-all relative ${activeTab === tab ? 'text-blue-500' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}
+                        className={`py-4 px-2 font-black text-sm sm:text-base transition-all relative ${activeTab === tab ? 'text-brand-500' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}
                     >
                         {tab.toUpperCase()}
                         {activeTab === tab && (
-                            <div className="absolute bottom-[-4px] left-0 right-0 h-1 bg-blue-500 rounded-full"></div>
+                            <div className="absolute bottom-[-4px] left-0 right-0 h-1 bg-brand-500 rounded-full"></div>
                         )}
                     </button>
                 ))}
             </div>
-            <button className="p-2 text-slate-400 hover:text-blue-500 transition-colors hidden sm:block">
+            <button className="p-2 text-slate-400 hover:text-brand-500 transition-colors hidden sm:block">
                  <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
@@ -41,7 +41,7 @@ const StoreItem: React.FC<{ item: any }> = ({ item }) => {
             case 'equip':
             case 'active':
                 return (
-                    <button className={`${baseClasses} bg-blue-600 border-blue-800 text-white hover:bg-blue-500 flex items-center space-x-2`}>
+                    <button className={`${baseClasses} bg-brand-600 border-brand-800 text-white hover:bg-brand-500 flex items-center space-x-2`}>
                         <span>{item.type === 'cost' ? 'OPEN' : item.type === 'equip' ? 'EQUIP' : 'ACTIVATE'}</span>
                         <span className="text-yellow-300 ml-1">{item.cost} <TokenIcon /></span>
                     </button>
@@ -49,7 +49,7 @@ const StoreItem: React.FC<{ item: any }> = ({ item }) => {
             case 'full':
                 return <button disabled className={`${baseClasses} bg-slate-200 dark:bg-slate-700 border-slate-400 dark:border-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-50`}>FULL</button>;
             case 'pro':
-                return <button className={`${baseClasses} bg-gradient-to-r from-purple-500 to-indigo-600 border-indigo-800 text-white hover:brightness-110`}>GO PRO</button>;
+                return <button className={`${baseClasses} bg-gradient-to-r from-purple-500 to-brand-600 border-brand-800 text-white hover:brightness-110`}>GO PRO</button>;
             default:
                 return null;
         }
@@ -74,8 +74,8 @@ const TokenPurchaseSection = () => {
         { icon: '🏦', title: 'Token Vault', amount: '2000', price: '$19.99' },
     ];
     return (
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-slate-800 dark:to-blue-900/30 rounded-[3rem] p-8 mt-12 border-4 border-white dark:border-slate-700 shadow-2xl transition-colors">
-            <h2 className="text-2xl font-black text-blue-600 dark:text-blue-300 uppercase tracking-tighter text-center mb-8 italic">Need more magic power?</h2>
+        <div className="bg-gradient-to-br from-brand-50 to-brand-100 dark:from-slate-800 dark:to-brand-900/30 rounded-[3rem] p-8 mt-12 border-4 border-white dark:border-slate-700 shadow-2xl transition-colors">
+            <h2 className="text-2xl font-black text-brand-600 dark:text-brand-300 uppercase tracking-tighter text-center mb-8 italic">Need more magic power?</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
                 {items.map(item => (
                     <div key={item.title} className="group cursor-pointer">
@@ -108,7 +108,7 @@ const StoreScreen: React.FC = () => {
     ];
 
     return (
-        <div className="bg-slate-100 dark:bg-slate-900 min-h-full transition-colors p-4 sm:p-12 font-sans">
+        <div className="bg-brand-50 dark:bg-slate-900 min-h-full transition-colors p-4 sm:p-12 font-sans">
             <div className="max-w-5xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                      <h1 className="text-5xl font-black text-slate-800 dark:text-white uppercase tracking-tighter italic">

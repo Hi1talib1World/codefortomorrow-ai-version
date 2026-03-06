@@ -22,7 +22,7 @@ const CreationToolCard: React.FC<CreationToolCardProps> = ({ tool, onClick }) =>
         green: 'from-green-500 to-emerald-600',
         pink: 'from-pink-500 to-fuchsia-500',
         orange: 'from-orange-400 to-amber-500',
-        blue: 'from-cyan-400 to-sky-500',
+        blue: 'from-brand-300 to-brand-500',
     };
 
     const buttonColorClasses: { [key: string]: string } = {
@@ -30,7 +30,7 @@ const CreationToolCard: React.FC<CreationToolCardProps> = ({ tool, onClick }) =>
         green: 'bg-green-600/80 hover:bg-green-700/90',
         pink: 'bg-pink-600/80 hover:bg-pink-700/90',
         orange: 'bg-orange-500/80 hover:bg-orange-600/90',
-        blue: 'bg-cyan-500/80 hover:bg-cyan-600/90',
+        blue: 'bg-brand-500/80 hover:bg-brand-600/90',
     }
 
     return (
@@ -71,8 +71,8 @@ const RecentContentDetails = ({ item, onOpen }: { item: Creation, onOpen: () => 
         <div className="bg-white dark:bg-slate-800 transition-colors rounded-[2rem] shadow-xl p-8 flex flex-col h-full border-b-[10px] border-slate-200 dark:border-slate-950">
             <div className="flex items-center space-x-5 mb-6">
                 <div className="relative shrink-0">
-                    <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center border-b-4 border-blue-200 dark:border-blue-800 shadow-inner">
-                        <span className="text-2xl font-black text-blue-600 dark:text-blue-400">{item.questionCount}</span>
+                    <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-2xl flex items-center justify-center border-b-4 border-brand-200 dark:border-brand-800 shadow-inner">
+                        <span className="text-2xl font-black text-brand-600 dark:text-brand-400">{item.questionCount}</span>
                     </div>
                 </div>
                 <div className="min-w-0 flex-1">
@@ -99,7 +99,7 @@ const RecentContentDetails = ({ item, onOpen }: { item: Creation, onOpen: () => 
                 ))}
             </div>
 
-            <button className="w-full text-center py-2.5 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-500 bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 rounded-xl my-4 transition-all active:scale-95 shadow-sm">
+            <button className="w-full text-center py-2.5 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-brand-500 bg-slate-50 dark:bg-slate-700/50 hover:bg-brand-50 rounded-xl my-4 transition-all active:scale-95 shadow-sm">
                 {t('view_learning_outcomes')}
             </button>
             
@@ -111,17 +111,17 @@ const RecentContentDetails = ({ item, onOpen }: { item: Creation, onOpen: () => 
                 </button>
                 <button 
                     onClick={onOpen} 
-                    className="py-4 bg-blue-600 text-white font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 border-b-4 border-blue-800 active:border-b-0 active:translate-y-1 transition text-xs"
+                    className="py-4 bg-brand-600 text-white font-black uppercase tracking-widest rounded-xl hover:bg-brand-500 border-b-4 border-brand-800 active:border-b-0 active:translate-y-1 transition text-xs"
                 >
                     {t('open_content')}
                 </button>
             </div>
             <div className="grid grid-cols-2 gap-3">
-                <button className="py-2.5 bg-transparent text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest rounded-xl hover:text-blue-500 transition text-[9px] flex items-center justify-center">
+                <button className="py-2.5 bg-transparent text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest rounded-xl hover:text-brand-500 transition text-[9px] flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L14.732 3.732z" /></svg>
                     {t('rename')}
                 </button>
-                <button className="py-2.5 bg-transparent text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest rounded-xl hover:text-blue-500 transition text-[9px] flex items-center justify-center">
+                <button className="py-2.5 bg-transparent text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest rounded-xl hover:text-brand-500 transition text-[9px] flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                     {t('share')}
                 </button>
@@ -185,7 +185,7 @@ const CreationsScreen: React.FC = () => {
     }
 
     return (
-        <div className="bg-transparent min-h-full pb-10">
+        <div className="bg-brand-50 dark:bg-slate-900 min-h-full pb-10 p-4 md:p-8 transition-colors">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                 {creationTools.map(tool => 
                     <CreationToolCard 
@@ -201,7 +201,7 @@ const CreationsScreen: React.FC = () => {
                         <h2 className="text-2xl font-black text-slate-800 dark:text-white italic uppercase tracking-tighter leading-none">{t('recent_contents')}</h2>
                         <p className="text-slate-400 font-bold mt-1.5 uppercase tracking-widest text-[9px]">Manage your magic creations</p>
                     </div>
-                    <button className="text-[10px] font-black uppercase tracking-widest text-blue-500 hover:underline mb-0.5">{t('view_all')}</button>
+                    <button className="text-[10px] font-black uppercase tracking-widest text-brand-500 hover:underline mb-0.5">{t('view_all')}</button>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-1">
@@ -223,7 +223,7 @@ const CreationsScreen: React.FC = () => {
                                 {creations.map(c => (
                                     <div 
                                         key={c.id} 
-                                        className={`group relative w-full flex items-center p-6 rounded-[1.5rem] border-4 transition-all transform active:scale-[0.98] ${selectedCreationId === c.id ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md' : 'border-slate-50 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-500'}`}
+                                        className={`group relative w-full flex items-center p-6 rounded-[1.5rem] border-4 transition-all transform active:scale-[0.98] ${selectedCreationId === c.id ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20 shadow-md' : 'border-slate-50 dark:border-slate-700 hover:border-brand-200 dark:hover:border-brand-500'}`}
                                     >
                                         <button 
                                             onClick={() => setSelectedCreationId(c.id)}
@@ -240,7 +240,7 @@ const CreationsScreen: React.FC = () => {
                                         
                                         <button 
                                             onClick={(e) => { e.stopPropagation(); setViewingCreation(c); }}
-                                            className="ml-4 bg-blue-600 hover:bg-blue-500 text-white w-10 h-10 rounded-xl shadow-lg border-b-4 border-blue-800 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center group/btn shrink-0"
+                                            className="ml-4 bg-brand-600 hover:bg-brand-500 text-white w-10 h-10 rounded-xl shadow-lg border-b-4 border-brand-800 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center group/btn shrink-0"
                                             title={t('open_content')}
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover/btn:scale-125 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>

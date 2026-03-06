@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { GoogleGenAI } from '@google/genai';
+import api from '../../services/api';
 import { QuizQuestion, Creation } from '../../types';
 
 interface ImportContentWizardProps {
@@ -29,7 +29,7 @@ const WizardStepper = ({ currentStep }: { currentStep: number }) => {
                 return (
                     <React.Fragment key={step.key}>
                         <div className="flex flex-col items-center">
-                            <div className={`w-full h-2 rounded-full ${isCompleted ? 'bg-green-500' : isActive ? 'bg-orange-500' : 'bg-gray-300 dark:bg-slate-700'}`}></div>
+                            <div className={`w-full h-2 rounded-full ${isCompleted ? 'bg-green-500' : isActive ? 'bg-brand-500' : 'bg-gray-300 dark:bg-slate-700'}`}></div>
                             <p className={`mt-2 text-xs font-bold ${isActive || isCompleted ? 'text-gray-800 dark:text-white' : 'text-gray-400 dark:text-slate-600'}`}>
                                 {t(step.key as any)}
                             </p>
@@ -103,7 +103,7 @@ const ImportContentWizard: React.FC<ImportContentWizardProps> = ({ onBack, onSav
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                     </svg>
                     <h1 className="text-xl md:text-2xl font-bold">
-                        <button onClick={onBack} className="text-indigo-600 dark:text-indigo-400 hover:underline">{t('game_studio')}</button>
+                        <button onClick={onBack} className="text-brand-600 dark:text-brand-400 hover:underline">{t('game_studio')}</button>
                         <span className="mx-2 text-gray-400">&gt;</span>
                         <span>{t('game_studio_import_title')}</span>
                     </h1>
@@ -121,7 +121,7 @@ const ImportContentWizard: React.FC<ImportContentWizardProps> = ({ onBack, onSav
                                 {t('back')}
                             </button>
                         )}
-                        <button onClick={nextStep} disabled={isNextDisabled()} className="py-3 px-8 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition disabled:bg-indigo-300 disabled:cursor-not-allowed">
+                        <button onClick={nextStep} disabled={isNextDisabled()} className="py-3 px-8 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition disabled:bg-brand-300 disabled:cursor-not-allowed">
                             {t('next')}
                         </button>
                     </div>
@@ -139,19 +139,19 @@ const SelectCurriculumStep = ({ formData, setFormData }: { formData: any, setFor
             <h2 className="text-xl font-bold mb-6 dark:text-white">{t('select_curriculum')}</h2>
             <button
                 onClick={() => handleSelect('MOROCCAN')}
-                className={`w-full text-left p-4 border-2 rounded-lg flex items-center space-x-3 transition ${formData.curriculum === 'MOROCCAN' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-gray-200 dark:border-slate-700 hover:border-indigo-300'}`}
+                className={`w-full text-left p-4 border-2 rounded-lg flex items-center space-x-3 transition ${formData.curriculum === 'MOROCCAN' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30' : 'border-gray-200 dark:border-slate-700 hover:border-brand-300'}`}
             >
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.curriculum === 'MOROCCAN' ? 'border-indigo-600' : 'border-gray-400'}`}>
-                    {formData.curriculum === 'MOROCCAN' && <div className="w-2.5 h-2.5 bg-indigo-600 rounded-full"></div>}
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.curriculum === 'MOROCCAN' ? 'border-brand-600' : 'border-gray-400'}`}>
+                    {formData.curriculum === 'MOROCCAN' && <div className="w-2.5 h-2.5 bg-brand-600 rounded-full"></div>}
                 </div>
                 <span className="font-bold dark:text-white">{t('curriculum_moroccan')}</span>
             </button>
             <button
                 onClick={() => handleSelect('IB')}
-                className={`w-full text-left p-4 border-2 rounded-lg flex items-center space-x-3 transition ${formData.curriculum === 'IB' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-gray-200 dark:border-slate-700 hover:border-indigo-300'}`}
+                className={`w-full text-left p-4 border-2 rounded-lg flex items-center space-x-3 transition ${formData.curriculum === 'IB' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30' : 'border-gray-200 dark:border-slate-700 hover:border-brand-300'}`}
             >
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.curriculum === 'IB' ? 'border-indigo-600' : 'border-gray-400'}`}>
-                    {formData.curriculum === 'IB' && <div className="w-2.5 h-2.5 bg-indigo-600 rounded-full"></div>}
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.curriculum === 'IB' ? 'border-brand-600' : 'border-gray-400'}`}>
+                    {formData.curriculum === 'IB' && <div className="w-2.5 h-2.5 bg-brand-600 rounded-full"></div>}
                 </div>
                 <span className="font-bold dark:text-white">{t('curriculum_ib')}</span>
             </button>
@@ -192,7 +192,7 @@ const SelectStageStep = ({ formData, setFormData }: { formData: any, setFormData
                     <button
                         key={option.id}
                         onClick={() => handleSelect(option.id)}
-                        className={`py-4 border-2 rounded-lg font-bold transition ${formData.stage === option.id ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300' : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:border-indigo-300'}`}
+                        className={`py-4 border-2 rounded-lg font-bold transition ${formData.stage === option.id ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-300' : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:border-brand-300'}`}
                     >
                         {t(option.titleKey as any)}
                     </button>
@@ -249,7 +249,7 @@ const UploadSourceStep = ({ formData, setFormData }: { formData: any, setFormDat
                 onDragLeave={handleDragLeave}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
-                className={`p-8 border-2 border-dashed rounded-lg text-center transition ${isDragging ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' : 'border-gray-300 dark:border-slate-700'}`}
+                className={`p-8 border-2 border-dashed rounded-lg text-center transition ${isDragging ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-300 dark:border-slate-700'}`}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M12 15v4m-3-3l3 3 3-3" />
@@ -289,7 +289,7 @@ const PreferencesStep = ({ formData, setFormData }: { formData: any, setFormData
                         <button
                             key={count}
                             onClick={() => setFormData({...formData, questionCount: count})}
-                            className={`py-3 px-6 border-2 rounded-lg font-bold transition ${formData.questionCount === count ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300' : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:border-indigo-300'}`}
+                            className={`py-3 px-6 border-2 rounded-lg font-bold transition ${formData.questionCount === count ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-300' : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:border-brand-300'}`}
                         >
                             {count}
                         </button>
@@ -301,7 +301,7 @@ const PreferencesStep = ({ formData, setFormData }: { formData: any, setFormData
                  <select 
                     value={formData.language}
                     onChange={(e) => setFormData({...formData, language: e.target.value})}
-                    className="w-full p-3 border-2 border-gray-200 dark:border-slate-700 bg-transparent dark:text-white rounded-lg focus:outline-none focus:border-indigo-500"
+                    className="w-full p-3 border-2 border-gray-200 dark:border-slate-700 bg-transparent dark:text-white rounded-lg focus:outline-none focus:border-brand-500"
                  >
                     {languages.map(lang => <option key={lang} value={lang}>{lang}</option>)}
                  </select>
@@ -322,8 +322,6 @@ const GeneratingPreviewStep = ({ formData, onComplete }: { formData: any; onComp
             try {
                 // Initial progress bump
                 setProgress(10);
-                
-                const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
                 
                 // Convert file to base64
                 const reader = new FileReader();
@@ -360,25 +358,8 @@ const GeneratingPreviewStep = ({ formData, onComplete }: { formData: any; onComp
 
                 setProgress(60);
 
-                const response = await ai.models.generateContent({
-                    model: 'gemini-3-flash-preview',
-                    contents: {
-                        parts: [
-                            { inlineData: { data: base64Data, mimeType: formData.file.type } },
-                            { text: prompt }
-                        ]
-                    },
-                    config: {
-                        responseMimeType: 'application/json'
-                    }
-                });
+                const questions = await api.generateQuizFromAI(prompt, { data: base64Data, mimeType: formData.file.type });
 
-                setProgress(90);
-
-                const text = response.text;
-                if (!text) throw new Error("No content generated.");
-                
-                const questions = JSON.parse(text);
                 setProgress(100);
                 
                 setTimeout(() => onComplete(questions), 500);
@@ -399,7 +380,7 @@ const GeneratingPreviewStep = ({ formData, onComplete }: { formData: any; onComp
                 <p className="text-gray-500 dark:text-slate-400 mt-2">{error}</p>
                 <button 
                     onClick={() => window.location.reload()} 
-                    className="mt-6 bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg"
+                    className="mt-6 bg-brand-600 text-white font-bold py-2 px-6 rounded-lg"
                 >
                     Try Again
                 </button>
@@ -411,7 +392,7 @@ const GeneratingPreviewStep = ({ formData, onComplete }: { formData: any; onComp
         <div className="fixed inset-0 bg-slate-800 flex flex-col items-center justify-center z-50 text-white p-4">
             <h2 className="text-4xl font-bold mb-4">code for tomorrow</h2>
             <div className="w-full max-w-md bg-slate-700 rounded-full h-2.5 mb-6 overflow-hidden">
-                <div className="bg-red-500 h-2.5 rounded-full transition-all duration-700 ease-out" style={{ width: `${progress}%` }}></div>
+                <div className="bg-red-500 h-2.5 rounded-full transition-all duration-700" style={{ width: `${progress}%` }}></div>
             </div>
             <h3 className="text-2xl font-semibold mb-2">{t('ai_creating_quiz')}</h3>
             <p className="text-slate-400 text-center max-w-lg">{t('ai_warning')}</p>
@@ -428,7 +409,7 @@ const PreviewStep = ({ questions, onBack, onSave }: { questions: QuizQuestion[];
         <div className="space-y-6">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{t('stepper_preview')}</h2>
-                <span className="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 px-3 py-1 rounded-full text-sm font-bold">
+                <span className="bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 px-3 py-1 rounded-full text-sm font-bold">
                     {questions.length} Questions
                 </span>
             </div>
@@ -439,7 +420,7 @@ const PreviewStep = ({ questions, onBack, onSave }: { questions: QuizQuestion[];
                     type="text" 
                     value={title} 
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full p-3 border-2 border-gray-200 dark:border-slate-700 bg-transparent rounded-lg focus:outline-none focus:border-indigo-500 font-bold text-gray-700 dark:text-white transition-colors"
+                    className="w-full p-3 border-2 border-gray-200 dark:border-slate-700 bg-transparent rounded-lg focus:outline-none focus:border-brand-500 font-bold text-gray-700 dark:text-white transition-colors"
                     placeholder="Enter a title for your creation..."
                 />
             </div>
@@ -452,7 +433,7 @@ const PreviewStep = ({ questions, onBack, onSave }: { questions: QuizQuestion[];
                             className="w-full text-left p-4 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-slate-700 transition"
                         >
                             <div className="flex items-center space-x-3">
-                                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">
+                                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm">
                                     {idx + 1}
                                 </span>
                                 <h3 className="font-bold text-gray-700 dark:text-white line-clamp-1">{q.question}</h3>

@@ -83,18 +83,18 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
     setLanguage(e.target.value as Language);
   };
 
-  const activeTabClasses = 'bg-white dark:bg-slate-800 text-blue-500 shadow-lg scale-105 z-10';
-  const inactiveTabClasses = 'bg-blue-400 text-white hover:bg-blue-300 dark:bg-slate-700 dark:hover:bg-slate-600 opacity-80';
+  const activeTabClasses = 'bg-white dark:bg-slate-800 text-brand-500 shadow-lg scale-105 z-10';
+  const inactiveTabClasses = 'bg-brand-300 text-white hover:bg-brand-200 dark:bg-slate-700 dark:hover:bg-slate-600 opacity-80';
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors flex flex-col items-center justify-center p-4 sm:p-6 relative">
+    <div className="min-h-screen bg-brand-50 dark:bg-slate-900 transition-colors flex flex-col items-center justify-center p-4 sm:p-6 relative">
       {/* Top Bar with Language Selector */}
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
         <div className="relative">
           <select 
             value={language} 
             onChange={handleLanguageChange}
-            className="appearance-none bg-white dark:bg-slate-800 dark:text-slate-200 rounded-xl p-3 pr-10 font-black border-b-4 border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-xl text-sm"
+            className="appearance-none bg-white dark:bg-slate-800 dark:text-slate-200 rounded-xl p-3 pr-10 font-black border-b-4 border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all shadow-xl text-sm"
             aria-label="Select language"
           >
             <option value={Language.EN}>🇬🇧 EN</option>
@@ -117,7 +117,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
         </div>
 
         <div className="bg-white dark:bg-slate-800 transition-colors rounded-2xl shadow-2xl p-6 md:p-8 border-b-8 border-slate-200 dark:border-slate-950 kid-card">
-          <div className="flex mb-6 rounded-xl bg-blue-500 dark:bg-slate-700 p-1.5 transition-colors shadow-inner">
+          <div className="flex mb-6 rounded-xl bg-brand-500 dark:bg-slate-700 p-1.5 transition-colors shadow-inner">
             <button
               onClick={() => handleViewChange(true)}
               disabled={isLoading}
@@ -140,19 +140,19 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
 
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
-               {!isLoginView && (
+                {!isLoginView && (
                  <div>
                     <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-1 px-2" htmlFor="name">{t('username')}</label>
-                    <input type="text" id="name" value={name} onChange={e => setName(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-400 transition-all font-black text-base" required />
+                    <input type="text" id="name" value={name} onChange={e => setName(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-brand-500/20 focus:border-brand-400 transition-all font-black text-base" required />
                  </div>
                )}
               <div>
                 <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-1 px-2" htmlFor="email">{t('email')}</label>
-                <input type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-400 transition-all font-black text-base" required />
+                <input type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-brand-500/20 focus:border-brand-400 transition-all font-black text-base" required />
               </div>
               <div>
                 <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-1 px-2" htmlFor="password">{t('password')}</label>
-                <input type="password" id="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-400 transition-all font-black text-base" required />
+                <input type="password" id="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-brand-500/20 focus:border-brand-400 transition-all font-black text-base" required />
               </div>
             </div>
             
@@ -186,7 +186,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
             <button 
               onClick={skipAuth}
               disabled={isLoading}
-              className="text-slate-400 hover:text-blue-500 dark:text-slate-500 dark:hover:text-blue-400 font-black text-xs uppercase tracking-widest transition-all hover:scale-110 active:scale-95 disabled:opacity-50"
+              className="text-slate-400 hover:text-brand-500 dark:text-slate-500 dark:hover:text-brand-400 font-black text-xs uppercase tracking-widest transition-all hover:scale-110 active:scale-95 disabled:opacity-50"
             >
               {t('skip_for_now')}
             </button>

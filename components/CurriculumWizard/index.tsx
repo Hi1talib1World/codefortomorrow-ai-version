@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { GoogleGenAI } from '@google/genai';
+import api from '../../services/api';
 import { QuizQuestion, Creation } from '../../types';
 
 interface CurriculumWizardProps {
@@ -26,7 +26,7 @@ const WizardStepper = ({ currentStep }: { currentStep: number }) => {
             <div className="flex justify-between relative">
                 <div className="absolute top-1/2 -translate-y-1/2 left-0 w-full h-1 bg-gray-200 dark:bg-slate-700"></div>
                 <div 
-                    className="absolute top-1/2 -translate-y-1/2 left-0 h-1 bg-orange-400 transition-all duration-500"
+                    className="absolute top-1/2 -translate-y-1/2 left-0 h-1 bg-brand-500 transition-all duration-500"
                     style={{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }}
                 ></div>
                 {steps.map((step, index) => {
@@ -39,7 +39,7 @@ const WizardStepper = ({ currentStep }: { currentStep: number }) => {
                             <p className={`text-xs mb-2 font-bold uppercase tracking-tighter ${isActive || isCompleted ? 'text-slate-800 dark:text-white' : 'text-gray-400 dark:text-slate-600'}`}>
                                 {t(step.key as any)}
                             </p>
-                            <div className={`w-4 h-4 rounded-full mx-auto border-2 ${isCompleted ? 'bg-orange-400 border-orange-400' : isActive ? 'bg-white dark:bg-slate-800 border-orange-400 ring-4 ring-orange-100 dark:ring-orange-900/30' : 'bg-gray-200 dark:bg-slate-700 border-gray-200 dark:border-slate-700'}`}></div>
+                            <div className={`w-4 h-4 rounded-full mx-auto border-2 ${isCompleted ? 'bg-brand-500 border-brand-500' : isActive ? 'bg-white dark:bg-slate-800 border-brand-500 ring-4 ring-brand-100 dark:ring-brand-900/30' : 'bg-gray-200 dark:bg-slate-700 border-gray-200 dark:border-slate-700'}`}></div>
                         </div>
                     );
                 })}
@@ -63,10 +63,10 @@ const SelectCurriculumStep = ({ formData, setFormData }: { formData: any, setFor
                 <button
                     key={option.id}
                     onClick={() => handleSelect(option.id)}
-                    className={`w-full text-left p-5 border-2 rounded-2xl flex items-center space-x-4 transition-all ${formData.curriculum === option.id ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' : 'border-gray-100 dark:border-slate-700 hover:border-indigo-200'}`}
+                    className={`w-full text-left p-5 border-2 rounded-2xl flex items-center space-x-4 transition-all ${formData.curriculum === option.id ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-100 dark:border-slate-700 hover:border-brand-200'}`}
                 >
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.curriculum === option.id ? 'border-indigo-600' : 'border-gray-300'}`}>
-                        {formData.curriculum === option.id && <div className="w-3 h-3 bg-indigo-600 rounded-full"></div>}
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.curriculum === option.id ? 'border-brand-600' : 'border-gray-300'}`}>
+                        {formData.curriculum === option.id && <div className="w-3 h-3 bg-brand-600 rounded-full"></div>}
                     </div>
                     <span className="font-bold text-slate-700 dark:text-slate-200">{t(option.titleKey as any)}</span>
                 </button>
@@ -87,7 +87,7 @@ const SelectStageStep = ({ formData, setFormData }: { formData: any, setFormData
                 <button
                     key={option.id}
                     onClick={() => setFormData({ ...formData, stage: option.id, outcomes: [] })}
-                    className={`p-6 border-2 rounded-2xl text-center transition-all font-black uppercase tracking-tighter ${formData.stage === option.id ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300' : 'border-gray-100 dark:border-slate-700 text-gray-500 hover:border-indigo-300'}`}
+                    className={`p-6 border-2 rounded-2xl text-center transition-all font-black uppercase tracking-tighter ${formData.stage === option.id ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300' : 'border-gray-100 dark:border-slate-700 text-gray-500 hover:border-brand-300'}`}
                 >
                     {t(option.key as any)}
                 </button>
@@ -136,7 +136,6 @@ const GeneratingStep = ({ subject, formData, onComplete }: { subject: string, fo
         const generate = async () => {
             try {
                 setProgress(20);
-                const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
                 const prompt = `You are a curriculum expert for the subject: ${subject}.
                 Targeting level: ${formData.stage} under ${formData.curriculum} curriculum.
                 Focus on these outcomes: ${formData.outcomes.join(', ')}.
@@ -146,13 +145,8 @@ const GeneratingStep = ({ subject, formData, onComplete }: { subject: string, fo
                 [{"id": 1, "question": "...", "options": ["A", "B", "C", "D"], "answer": "Exact text of correct option", "explanation": "..."}]`;
 
                 setProgress(50);
-                const response = await ai.models.generateContent({
-                    model: 'gemini-3-flash-preview',
-                    contents: prompt,
-                    config: { responseMimeType: 'application/json' }
-                });
-                setProgress(90);
-                const questions = JSON.parse(response.text || '[]');
+                const questions = await api.generateQuizFromAI(prompt);
+                setProgress(100);
                 onComplete(questions);
             } catch (err) {
                 console.error(err);
@@ -164,10 +158,10 @@ const GeneratingStep = ({ subject, formData, onComplete }: { subject: string, fo
 
     return (
         <div className="text-center py-12">
-            <div className="w-24 h-24 border-8 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-6"></div>
+            <div className="w-24 h-24 border-8 border-brand-200 border-t-brand-600 rounded-full animate-spin mx-auto mb-6"></div>
             <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase italic animate-pulse">{t('consulting_ai')}</h2>
             <div className="w-full max-w-xs bg-gray-200 dark:bg-slate-700 h-2 rounded-full mx-auto mt-6 overflow-hidden">
-                <div className="bg-indigo-600 h-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
+                <div className="bg-brand-600 h-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
             </div>
         </div>
     );
@@ -180,7 +174,7 @@ const PreviewStep = ({ questions, subject, onSave, onBack }: { questions: QuizQu
         <div className="space-y-6">
             <input 
                 type="text" value={title} onChange={e => setTitle(e.target.value)}
-                className="w-full p-4 border-b-4 border-indigo-500 text-2xl font-black dark:bg-slate-800 dark:text-white focus:outline-none"
+                className="w-full p-4 border-b-4 border-brand-500 text-2xl font-black dark:bg-slate-800 dark:text-white focus:outline-none"
             />
             <div className="max-h-96 overflow-y-auto space-y-3 pr-2">
                 {questions.map((q, i) => (
@@ -223,7 +217,7 @@ const CurriculumWizard: React.FC<CurriculumWizardProps> = ({ subjectTitleKey, on
                     <h2 className="text-xl font-bold dark:text-white">{t('last_details')}</h2>
                     <div className="flex space-x-4">
                         {[5, 10, 15].map(c => (
-                            <button key={c} onClick={() => setFormData({...formData, questionCount: c})} className={`flex-1 p-4 border-2 rounded-xl font-bold ${formData.questionCount === c ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-gray-100 dark:border-slate-700 dark:text-slate-400'}`}>{c} {t('questions_label')}</button>
+                            <button key={c} onClick={() => setFormData({...formData, questionCount: c})} className={`flex-1 p-4 border-2 rounded-xl font-bold ${formData.questionCount === c ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30' : 'border-gray-100 dark:border-slate-700 dark:text-slate-400'}`}>{c} {t('questions_label')}</button>
                         ))}
                     </div>
                     <select value={formData.language} onChange={e => setFormData({...formData, language: e.target.value})} className="w-full p-4 border-2 rounded-xl dark:bg-slate-800 dark:text-white dark:border-slate-700">
@@ -267,7 +261,7 @@ const CurriculumWizard: React.FC<CurriculumWizardProps> = ({ subjectTitleKey, on
                         <button 
                             onClick={nextStep} 
                             disabled={(currentStep === 1 && !formData.curriculum) || (currentStep === 2 && !formData.stage) || (currentStep === 3 && formData.outcomes.length === 0)}
-                            className="flex-[2] py-4 bg-indigo-600 text-white font-black rounded-2xl shadow-lg hover:bg-indigo-500 disabled:opacity-50 disabled:grayscale transition"
+                            className="flex-[2] py-4 bg-brand-600 text-white font-black rounded-2xl shadow-lg hover:bg-brand-500 disabled:opacity-50 disabled:grayscale transition"
                         >
                             {currentStep === 4 ? t('generate_magic') : t('continue_button')}
                         </button>

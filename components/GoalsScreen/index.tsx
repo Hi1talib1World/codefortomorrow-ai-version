@@ -15,7 +15,7 @@ const TreasureChestIcon = ({ className }: { className?: string }) => (
 const GoalItem: React.FC<{ title: string; progress: number; total: number }> = ({ title, progress, total }) => {
     const percentage = (progress / total) * 100;
     return (
-        <div className="flex items-center space-x-4 bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl border-2 border-transparent hover:border-blue-500/20 transition-all">
+        <div className="flex items-center space-x-4 bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl border-2 border-transparent hover:border-brand-500/20 transition-all">
             <div className="flex-grow">
                 <p className="text-slate-700 dark:text-slate-200 font-black text-lg leading-tight">{title}</p>
                 <div className="bg-slate-200 dark:bg-slate-800 rounded-full h-3 mt-3 overflow-hidden border border-white dark:border-slate-600">
@@ -41,7 +41,7 @@ const MotivationalQuote = () => {
                     <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Daily Inspiration</p>
                 </div>
                 <svg
-                    className={`w-6 h-6 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180 text-blue-500' : ''}`}
+                    className={`w-6 h-6 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180 text-brand-500' : ''}`}
                     fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}
                 >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -65,13 +65,13 @@ const GoalsScreen: React.FC = () => {
     ];
 
     return (
-        <div className="bg-slate-100 dark:bg-slate-900 min-h-full transition-colors p-4 sm:p-12">
+        <div className="bg-brand-50 dark:bg-slate-900 min-h-full transition-colors p-4 sm:p-12">
             <div className="max-w-3xl mx-auto space-y-10">
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                     <h1 className="text-5xl font-black text-slate-800 dark:text-white uppercase tracking-tighter italic">
                         {t('goals')}
                     </h1>
-                    <span className="text-sm font-black text-cyan-600 dark:text-cyan-400 bg-cyan-100 dark:bg-cyan-900/30 border-2 border-cyan-200 dark:border-cyan-800 rounded-2xl px-5 py-2 uppercase tracking-widest">
+                    <span className="text-sm font-black text-brand-600 dark:text-brand-400 bg-brand-100 dark:bg-brand-900/30 border-2 border-brand-200 dark:border-brand-800 rounded-2xl px-5 py-2 uppercase tracking-widest">
                         Time left: 22 hours
                     </span>
                 </div>

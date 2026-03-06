@@ -13,7 +13,7 @@ const SettingsScreen: React.FC = () => {
   };
 
   return (
-    <div className="p-4 md:p-12 bg-transparent min-h-full">
+    <div className="p-4 md:p-12 bg-brand-50 dark:bg-slate-900 min-h-full transition-colors">
       <div className="max-w-3xl mx-auto space-y-8">
         <h1 className="text-5xl font-black text-slate-800 dark:text-white mb-12 italic tracking-tighter uppercase">
           {t('settings')}
@@ -32,7 +32,7 @@ const SettingsScreen: React.FC = () => {
             <select
               value={language}
               onChange={handleLanguageChange}
-              className="w-full appearance-none bg-slate-100 dark:bg-slate-700 border-4 border-slate-200 dark:border-slate-600 text-slate-800 dark:text-white font-black py-5 px-6 rounded-2xl text-xl leading-tight focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all cursor-pointer"
+              className="w-full appearance-none bg-slate-100 dark:bg-slate-700 border-4 border-slate-200 dark:border-slate-600 text-slate-800 dark:text-white font-black py-5 px-6 rounded-2xl text-xl leading-tight focus:outline-none focus:ring-4 focus:ring-brand-500/20 transition-all cursor-pointer"
               aria-label={t('language_label')}
             >
               <option value={Language.EN}>🇬🇧 {t('language_english')}</option>
@@ -63,14 +63,14 @@ const SettingsScreen: React.FC = () => {
               onClick={() => theme === 'dark' && toggleTheme()}
               className={`relative flex flex-col items-center p-8 rounded-3xl border-4 transition-all transform active:scale-95 ${
                 theme === 'light' 
-                  ? 'bg-blue-50 border-blue-500 ring-4 ring-blue-100 dark:ring-0' 
+                  ? 'bg-brand-50 border-brand-500 ring-4 ring-brand-100 dark:ring-0' 
                   : 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 grayscale opacity-60'
               }`}
             >
               <div className="w-20 h-20 bg-yellow-400 rounded-2xl flex items-center justify-center text-5xl mb-4 shadow-lg animate-pulse">☀️</div>
               <span className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">{t('light_mode')}</span>
               {theme === 'light' && (
-                <div className="absolute -top-3 -right-3 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-black shadow-lg">✓</div>
+                <div className="absolute -top-3 -right-3 w-8 h-8 bg-brand-500 text-white rounded-full flex items-center justify-center font-black shadow-lg">✓</div>
               )}
             </button>
 
@@ -79,14 +79,14 @@ const SettingsScreen: React.FC = () => {
               onClick={() => theme === 'light' && toggleTheme()}
               className={`relative flex flex-col items-center p-8 rounded-3xl border-4 transition-all transform active:scale-95 ${
                 theme === 'dark' 
-                  ? 'bg-slate-700 border-blue-500 ring-4 ring-blue-900/50' 
+                  ? 'bg-slate-700 border-brand-500 ring-4 ring-brand-900/50' 
                   : 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 grayscale opacity-60'
               }`}
             >
               <div className="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center text-5xl mb-4 shadow-lg">🌙</div>
               <span className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">{t('dark_mode')}</span>
               {theme === 'dark' && (
-                <div className="absolute -top-3 -right-3 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-black shadow-lg">✓</div>
+                <div className="absolute -top-3 -right-3 w-8 h-8 bg-brand-500 text-white rounded-full flex items-center justify-center font-black shadow-lg">✓</div>
               )}
             </button>
           </div>

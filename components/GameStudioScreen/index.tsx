@@ -41,7 +41,7 @@ interface GameStudioCardProps {
 const GameStudioCard: React.FC<GameStudioCardProps> = ({ card, isPrimary, onClick }) => {
     const { t } = useLanguage();
     return (
-        <div className={`rounded-[2rem] shadow-lg p-6 flex flex-col transition-all transform hover:-translate-y-1 ${isPrimary ? 'bg-indigo-600 text-white border-b-8 border-indigo-800' : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white border-b-8 border-slate-200 dark:border-slate-950'}`}>
+        <div className={`rounded-[2rem] shadow-lg p-6 flex flex-col transition-all ${isPrimary ? 'bg-indigo-600 text-white border-b-8 border-indigo-800' : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white border-b-8 border-slate-200 dark:border-slate-950'}`}>
             <div className="mb-6 rounded-2xl overflow-hidden shadow-sm">
                 {card.illustration}
             </div>
@@ -111,7 +111,7 @@ const GameStudioScreen: React.FC<GameStudioScreenProps> = ({ onBack, onSave }) =
     }
 
     return (
-        <div className="p-4 md:p-8 bg-gray-50 dark:bg-slate-900 transition-colors min-h-full">
+        <div className="p-4 md:p-8 bg-brand-50 dark:bg-slate-900 transition-colors min-h-full">
             <header className="mb-10 flex items-center space-x-4">
                 <button onClick={onBack} className="p-3 bg-white dark:bg-slate-800 rounded-xl shadow-sm transition-colors text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>

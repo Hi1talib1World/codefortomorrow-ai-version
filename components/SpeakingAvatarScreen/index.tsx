@@ -25,7 +25,7 @@ const SpeakingAvatarScreen: React.FC<SpeakingAvatarScreenProps> = ({ onBack, wiz
     } = useAvatarChat(wizardData);
 
     return (
-        <div className="w-full h-screen bg-gradient-to-br from-purple-100 to-blue-200 flex flex-col relative">
+        <div className="w-full h-screen bg-gradient-to-br from-brand-50 to-brand-100 flex flex-col relative">
             <button onClick={onBack} className="absolute top-4 left-4 z-20 p-2 bg-white/50 rounded-full hover:bg-white transition">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />

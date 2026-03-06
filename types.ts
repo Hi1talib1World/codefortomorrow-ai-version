@@ -41,6 +41,21 @@ export interface LessonSection {
   lessons: Lesson[];
 }
 
+export interface Module {
+  id: string;
+  titleKey: string;
+  descriptionKey: string;
+  color: string;
+  levels: Level[];
+}
+
+export interface Level {
+  id: string;
+  titleKey: string;
+  lessons: Lesson[];
+  isLocked: boolean;
+}
+
 export interface UserProgress {
   xp: number;
   streak: number;
@@ -54,6 +69,19 @@ export interface UserProgress {
     [pathId: string]: string[]; // e.g., { block_coding: ['bc_badge1'], python: ['py_badge1'] }
   };
   lastLessonCompletedDate: string | null;
+  skillMastery?: {
+    [concept: string]: number;
+  };
+  learningProfile?: {
+    strengths: string[];
+    weaknesses: string[];
+    recommendation: string;
+    lastUpdated: string;
+  };
+  skillGraph?: {
+    nodes: Array<{ id: string; label: string; status: 'locked' | 'available' | 'mastered' }>;
+    edges: Array<{ from: string; to: string }>;
+  };
 }
 
 export enum Language {

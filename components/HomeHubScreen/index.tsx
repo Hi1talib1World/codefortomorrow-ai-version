@@ -43,9 +43,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                                     <div className="p-4 flex items-center justify-between">
                                         <div>
                                             <p className="text-[10px] font-bold text-rose-400 uppercase">Brain Training</p>
-                                            <p className="text-sm font-black text-blue-600 dark:text-blue-400">Challenges</p>
+                                            <p className="text-sm font-black text-brand-500 dark:text-brand-400">Challenges</p>
                                         </div>
-                                        <div className="w-8 h-8 rounded-full border-2 border-blue-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
+                                        <div className="w-8 h-8 rounded-full border-2 border-brand-100 dark:border-slate-700 flex items-center justify-center text-brand-500 dark:text-brand-400 group-hover:bg-brand-500 group-hover:text-white group-hover:border-brand-500 transition-all">
                                             <span className="text-lg">→</span>
                                         </div>
                                     </div>
@@ -57,9 +57,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                                     <div className="p-4 flex items-center justify-between">
                                         <div>
                                             <p className="text-[10px] font-bold text-rose-400 uppercase">Brain Training</p>
-                                            <p className="text-sm font-black text-blue-600 dark:text-blue-400">Workouts</p>
+                                            <p className="text-sm font-black text-brand-500 dark:text-brand-400">Workouts</p>
                                         </div>
-                                        <div className="w-8 h-8 rounded-full border-2 border-blue-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
+                                        <div className="w-8 h-8 rounded-full border-2 border-brand-100 dark:border-slate-700 flex items-center justify-center text-brand-500 dark:text-brand-400 group-hover:bg-brand-500 group-hover:text-white group-hover:border-brand-500 transition-all">
                                             <span className="text-lg">→</span>
                                         </div>
                                     </div>
@@ -71,7 +71,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                         <div className="space-y-4">
                             <h2 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">MentalUP - Educational Brain Games</h2>
                             <button className="group w-full bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700 text-left">
-                                <div className="aspect-[16/10] lg:aspect-square bg-indigo-700 flex items-center justify-center p-8 relative overflow-hidden">
+                                <div className="aspect-[16/10] lg:aspect-square bg-brand-700 flex items-center justify-center p-8 relative overflow-hidden">
                                     <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
                                     <div className="text-center space-y-4 relative z-10">
                                         <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center text-3xl shadow-lg transform group-hover:rotate-12 transition-transform">🧠</div>
@@ -79,8 +79,8 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                                     </div>
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
-                                    <p className="text-sm font-black text-blue-600 dark:text-blue-400">Play MentalUP</p>
-                                    <div className="w-8 h-8 rounded-full border-2 border-blue-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
+                                    <p className="text-sm font-black text-brand-500 dark:text-brand-400">Play MentalUP</p>
+                                    <div className="w-8 h-8 rounded-full border-2 border-brand-100 dark:border-slate-700 flex items-center justify-center text-brand-500 dark:text-brand-400 group-hover:bg-brand-500 group-hover:text-white group-hover:border-brand-500 transition-all">
                                         <span className="text-sm">↗</span>
                                     </div>
                                 </div>
@@ -102,19 +102,19 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                                     </div>
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
-                                    <p className="text-sm font-black text-blue-600 dark:text-blue-400">Pick & Play</p>
-                                    <div className="w-8 h-8 rounded-full border-2 border-blue-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
+                                    <p className="text-sm font-black text-brand-500 dark:text-brand-400">Pick & Play</p>
+                                    <div className="w-8 h-8 rounded-full border-2 border-brand-100 dark:border-slate-700 flex items-center justify-center text-brand-500 dark:text-brand-400 group-hover:bg-brand-500 group-hover:text-white group-hover:border-brand-500 transition-all">
                                         <span className="text-lg">→</span>
                                     </div>
                                 </div>
                             </button>
                             <button className="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700 text-left">
-                                <div className="aspect-[16/10] bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center">
+                                <div className="aspect-[16/10] bg-brand-50 dark:bg-brand-900/20 flex items-center justify-center">
                                     <div className="text-6xl transform group-hover:rotate-12 transition-transform">🎮</div>
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
-                                    <p className="text-sm font-black text-blue-600 dark:text-blue-400">Quick Play</p>
-                                    <div className="w-8 h-8 rounded-full border-2 border-blue-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
+                                    <p className="text-sm font-black text-brand-500 dark:text-brand-400">Quick Play</p>
+                                    <div className="w-8 h-8 rounded-full border-2 border-brand-100 dark:border-slate-700 flex items-center justify-center text-brand-500 dark:text-brand-400 group-hover:bg-brand-500 group-hover:text-white group-hover:border-brand-500 transition-all">
                                         <span className="text-lg">→</span>
                                     </div>
                                 </div>
@@ -166,10 +166,10 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                     </div>
 
                     <div className="text-center md:text-left space-y-4 max-w-lg">
-                        <div className="relative bg-white dark:bg-slate-800 p-6 rounded-2xl rounded-bl-none shadow-xl border-2 border-blue-100 dark:border-slate-700 animate-pop-in">
-                            <div className="absolute -bottom-3 left-0 w-6 h-6 bg-white dark:bg-slate-800 border-l-2 border-b-2 border-blue-100 dark:border-slate-700 rotate-45"></div>
+                        <div className="relative bg-white dark:bg-slate-800 p-6 rounded-2xl rounded-bl-none shadow-xl border-2 border-brand-100 dark:border-slate-700 animate-pop-in">
+                            <div className="absolute -bottom-3 left-0 w-6 h-6 bg-white dark:bg-slate-800 border-l-2 border-b-2 border-brand-100 dark:border-slate-700 rotate-45"></div>
                             <h1 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white leading-tight italic tracking-tight uppercase">
-                                {t('welcome_back').replace('!', '')}, <span className="text-blue-500">{userName}!</span>
+                                {t('welcome_back').replace('!', '')}, <span className="text-brand-500">{userName}!</span>
                             </h1>
                             <p className="text-sm font-bold text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                                 {t('welcome_message')} {t('magic_found')}
@@ -190,12 +190,12 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                     {/* Learn Card */}
                     <button 
                         onClick={() => onNavigate('learn')}
-                        className="group relative bg-white dark:bg-slate-800 border-b-[8px] border-blue-600 dark:border-blue-900 rounded-2xl p-6 text-center transition-all transform hover:-translate-y-2 hover:shadow-2xl active:translate-y-1 active:border-b-2 overflow-hidden kid-card bubbly-btn"
+                        className="group relative bg-white dark:bg-slate-800 border-b-[8px] border-brand-600 dark:border-brand-900 rounded-2xl p-6 text-center transition-all transform hover:-translate-y-2 hover:shadow-2xl active:translate-y-1 active:border-b-2 overflow-hidden kid-card bubbly-btn"
                     >
                         <div className="absolute -top-6 -right-6 p-2 opacity-5 group-hover:opacity-10 transition-opacity">
                             <span className="text-[8rem]">📖</span>
                         </div>
-                        <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-6 transition-all group-hover:rotate-12 group-hover:scale-105 shadow-inner">
+                        <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center mx-auto mb-6 transition-all group-hover:rotate-12 group-hover:scale-105 shadow-inner">
                             <span className="text-4xl">🚀</span>
                         </div>
                         <h2 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white mb-2 uppercase italic tracking-tighter">
@@ -204,7 +204,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                         <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mb-6 leading-snug">
                             {t('learn_adventure_desc')}
                         </p>
-                        <div className="py-3 px-6 bg-blue-500 text-white rounded-xl font-black text-base shadow-lg group-hover:bg-blue-400 transition-colors uppercase tracking-widest border-b-4 border-blue-700">
+                        <div className="py-3 px-6 bg-brand-500 text-white rounded-xl font-black text-base shadow-lg group-hover:bg-brand-400 transition-colors uppercase tracking-widest border-b-4 border-brand-700">
                             {t('start')}
                         </div>
                     </button>
@@ -212,12 +212,12 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                     {/* Create Card */}
                     <button 
                         onClick={() => onNavigate('creations')}
-                        className="group relative bg-white dark:bg-slate-800 border-b-[8px] border-indigo-600 dark:border-indigo-900 rounded-2xl p-6 text-center transition-all transform hover:-translate-y-2 hover:shadow-2xl active:translate-y-1 active:border-b-2 overflow-hidden kid-card bubbly-btn"
+                        className="group relative bg-white dark:bg-slate-800 border-b-[8px] border-brand-600 dark:border-brand-900 rounded-2xl p-6 text-center transition-all transform hover:-translate-y-2 hover:shadow-2xl active:translate-y-1 active:border-b-2 overflow-hidden kid-card bubbly-btn"
                     >
                         <div className="absolute -top-6 -right-6 p-2 opacity-5 group-hover:opacity-10 transition-opacity">
                             <span className="text-[8rem]">🧪</span>
                         </div>
-                        <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center mx-auto mb-6 transition-all group-hover:-rotate-12 group-hover:scale-105 shadow-inner">
+                        <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center mx-auto mb-6 transition-all group-hover:-rotate-12 group-hover:scale-105 shadow-inner">
                             <span className="text-4xl">🎨</span>
                         </div>
                         <h2 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white mb-2 uppercase italic tracking-tighter">
@@ -226,7 +226,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                         <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mb-6 leading-snug">
                             {t('create_adventure_desc')}
                         </p>
-                        <div className="py-3 px-6 bg-indigo-600 text-white rounded-xl font-black text-base shadow-lg group-hover:bg-indigo-500 transition-colors uppercase tracking-widest border-b-4 border-indigo-800">
+                        <div className="py-3 px-6 bg-brand-600 text-white rounded-xl font-black text-base shadow-lg group-hover:bg-brand-500 transition-colors uppercase tracking-widest border-b-4 border-brand-800">
                             {t('create')}
                         </div>
                     </button>

@@ -8,6 +8,14 @@ export interface IProgress extends Document {
   completedLessons: Map<string, number[]>;
   scores: Map<string, number>;
   badgesEarned: Map<string, string[]>;
+  skillMastery: Map<string, number>; // concept -> score (0-100)
+  learningProfile: {
+    strengths: string[];
+    weaknesses: string[];
+    recommendations: string[];
+    lastAIUpdate: Date;
+  };
+  skillGraph: any; // Store skill graph data
   lastLessonCompletedDate: Date | null;
 }
 
@@ -35,6 +43,21 @@ const progressSchema: Schema = new Schema({
   badgesEarned: {
     type: Map,
     of: [String],
+    default: {},
+  },
+  skillMastery: {
+    type: Map,
+    of: Number,
+    default: {},
+  },
+  learningProfile: {
+    strengths: { type: [String], default: [] },
+    weaknesses: { type: [String], default: [] },
+    recommendations: { type: [String], default: [] },
+    lastAIUpdate: { type: Date, default: Date.now },
+  },
+  skillGraph: {
+    type: Schema.Types.Mixed,
     default: {},
   },
   lastLessonCompletedDate: {

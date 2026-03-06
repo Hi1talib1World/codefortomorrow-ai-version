@@ -11,7 +11,7 @@ const RoleSelectionScreen: React.FC<RoleSelectionScreenProps> = ({ onSelect }) =
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-6 transition-colors duration-300">
+    <div className="min-h-screen bg-brand-50 dark:bg-slate-900 flex items-center justify-center p-6 transition-colors duration-300">
       <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Teacher Card */}
         <motion.button
@@ -20,7 +20,7 @@ const RoleSelectionScreen: React.FC<RoleSelectionScreenProps> = ({ onSelect }) =
           onClick={() => onSelect('teacher')}
           className="bg-white dark:bg-slate-800 rounded-[2rem] p-8 shadow-xl border-b-8 border-slate-200 dark:border-slate-950 flex flex-col items-center text-center group transition-all"
         >
-          <div className="w-full aspect-square mb-6 bg-blue-50 dark:bg-slate-700 rounded-2xl flex items-center justify-center overflow-hidden">
+          <div className="w-full aspect-square mb-6 bg-brand-50 dark:bg-slate-700 rounded-2xl flex items-center justify-center overflow-hidden">
             <img 
               src="https://img.freepik.com/free-vector/teacher-concept-illustration_114360-1638.jpg" 
               alt="Teacher" 

@@ -142,7 +142,7 @@ const api = {
   /**
    * Updates the user's learning progress on the backend.
    */
-  updateUserProgress: async (newProgress: UserProgress): Promise<UserProgress> => {
+  updateUserProgress: async (newProgress: Partial<UserProgress>): Promise<UserProgress> => {
     const response = await fetch(`${API_BASE_URL}/users/progress`, {
         method: 'PUT',
         headers: getAuthHeaders(),
@@ -152,6 +152,175 @@ const api = {
     const data = await response.json();
     if (!response.ok) {
         throw new Error(data.message || 'Failed to update progress.');
+    }
+    return data;
+  },
+
+  // --- Quiz Endpoints ---
+  createQuiz: async (quizData: any): Promise<any> => {
+    const response = await fetch(`${API_BASE_URL}/quizzes`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(quizData),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to create quiz.');
+    }
+    return data;
+  },
+
+  getTeacherQuizzes: async (): Promise<any[]> => {
+    const response = await fetch(`${API_BASE_URL}/quizzes/teacher`, {
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch quizzes.');
+    }
+    return data;
+  },
+
+  deleteQuiz: async (quizId: string): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/quizzes/${quizId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || 'Failed to delete quiz.');
+    }
+  },
+
+  // --- Activity Endpoints ---
+  createActivity: async (activityData: any): Promise<any> => {
+    const response = await fetch(`${API_BASE_URL}/activities`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(activityData),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to create activity.');
+    }
+    return data;
+  },
+
+  getTeacherActivities: async (): Promise<any[]> => {
+    const response = await fetch(`${API_BASE_URL}/activities/teacher`, {
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch activities.');
+    }
+    return data;
+  },
+
+  deleteActivity: async (activityId: string): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/activities/${activityId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || 'Failed to delete activity.');
+    }
+  },
+
+  // --- Message Endpoints ---
+  sendMessage: async (receiverId: string, content: string): Promise<any> => {
+    const response = await fetch(`${API_BASE_URL}/messages`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ receiverId, content }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to send message.');
+    }
+    return data;
+  },
+
+  getConversations: async (): Promise<any[]> => {
+    const response = await fetch(`${API_BASE_URL}/messages/conversations`, {
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch conversations.');
+    }
+    return data;
+  },
+
+  getConversation: async (userId: string): Promise<any[]> => {
+    const response = await fetch(`${API_BASE_URL}/messages/conversation/${userId}`, {
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch conversation.');
+    }
+    return data;
+  },
+
+  getTeachers: async (): Promise<any[]> => {
+    const response = await fetch(`${API_BASE_URL}/users/teachers`, {
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch teachers.');
+    }
+    return data;
+  },
+
+  // --- AI Endpoints ---
+  getAILearningProfile: async (): Promise<any> => {
+    const response = await fetch(`${API_BASE_URL}/ai/profile`, {
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch AI profile.');
+    }
+    return data;
+  },
+
+  getClassAnalytics: async (): Promise<any> => {
+    const response = await fetch(`${API_BASE_URL}/ai/analytics`, {
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch class analytics.');
+    }
+    return data;
+  },
+
+  generateQuizFromAI: async (prompt: string, fileData?: { data: string, mimeType: string }): Promise<any> => {
+    // This will call a new backend endpoint that handles the Gemini logic
+    const response = await fetch(`${API_BASE_URL}/ai/generate-quiz`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ prompt, fileData }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to generate quiz with AI.');
     }
     return data;
   }

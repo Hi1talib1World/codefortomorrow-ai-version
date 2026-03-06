@@ -4,6 +4,7 @@ import { User, Language, ProgrammingPath } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { PATHS } from '../../constants';
+import DbSetupGuide from '../DbSetupGuide';
 
 interface HeaderProps {
   currentUser: User;
@@ -15,7 +16,35 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
   const { language, setLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const [isPathDropdownOpen, setIsPathDropdownOpen] = useState(false);
+  const [isDbGuideOpen, setIsDbGuideOpen] = useState(false);
+  const [dbStatus, setDbStatus] = useState<'connected' | 'disconnected' | 'loading'>('loading');
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const checkDbStatus = async () => {
+      try {
+        const response = await fetch('/api/health');
+        const data = await response.json();
+        setDbStatus(data.database === 'connected' ? 'connected' : 'disconnected');
+      } catch (error) {
+        setDbStatus('disconnected');
+      }
+    };
+    checkDbStatus();
+    const interval = setInterval(checkDbStatus, 30000); // Check every 30s
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleRetryDb = async () => {
+    setDbStatus('loading');
+    try {
+      const response = await fetch('/api/health/retry', { method: 'POST' });
+      const data = await response.json();
+      setDbStatus(data.database === 'connected' ? 'connected' : 'disconnected');
+    } catch (error) {
+      setDbStatus('disconnected');
+    }
+  };
 
   const currentPath = currentUser.currentPath;
   const currentPathData = PATHS.find(p => p.id === currentPath);
@@ -37,16 +66,41 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
   }, []);
 
   return (
-    <header className="sticky top-0 bg-white dark:bg-slate-800 shadow-lg px-6 py-3 z-20 border-b-4 border-sky-100 dark:border-slate-700 transition-colors">
+    <header className="sticky top-0 bg-white dark:bg-slate-800 shadow-lg px-6 py-3 z-20 border-b-4 border-brand-100 dark:border-slate-700 transition-colors">
+      <DbSetupGuide 
+        isOpen={isDbGuideOpen} 
+        onClose={() => setIsDbGuideOpen(false)} 
+        onRetry={handleRetryDb}
+        isRetrying={dbStatus === 'loading'}
+      />
       <div className="container mx-auto flex justify-between items-center max-w-7xl">
-        <h1 className="text-2xl md:hidden font-black text-blue-500 dark:text-blue-400 leading-none italic tracking-tighter">C4T</h1>
+        <h1 className="text-2xl md:hidden font-black text-brand-500 dark:text-brand-400 leading-none italic tracking-tighter">C4T</h1>
         <div className="flex-grow md:hidden"></div>
         <div className="flex items-center space-x-3 sm:space-x-6 rtl:space-x-reverse">
           
+          {/* DB Status Indicator */}
+          <div className="flex items-center gap-2">
+            <div 
+              className={`w-3 h-3 rounded-full shadow-sm ${
+                dbStatus === 'connected' ? 'bg-green-500 animate-pulse' : 
+                dbStatus === 'loading' ? 'bg-yellow-400 animate-spin' : 'bg-red-500'
+              }`}
+              title={dbStatus === 'connected' ? 'Database Connected' : 'Database Disconnected - Check IP Whitelist'}
+            ></div>
+            {dbStatus === 'disconnected' && (
+              <button 
+                onClick={() => setIsDbGuideOpen(true)}
+                className="text-[10px] font-black text-red-500 uppercase hover:underline animate-bounce"
+              >
+                Fix Connection
+              </button>
+            )}
+          </div>
+
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="w-10 h-10 rounded-2xl bg-sky-50 dark:bg-slate-700 text-sky-600 dark:text-slate-300 hover:bg-sky-100 dark:hover:bg-slate-600 transition-all transform active:scale-90 flex items-center justify-center shadow-sm bubbly-btn border-b-2 border-sky-200 dark:border-slate-600"
+            className="w-10 h-10 rounded-2xl bg-brand-50 dark:bg-slate-700 text-brand-600 dark:text-slate-300 hover:bg-brand-100 dark:hover:bg-slate-600 transition-all transform active:scale-90 flex items-center justify-center shadow-sm bubbly-btn border-b-2 border-brand-200 dark:border-slate-600"
             aria-label="Toggle theme"
           >
             {theme === 'light' ? (
@@ -63,7 +117,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
           <div ref={dropdownRef} className="relative">
             <button
               onClick={() => setIsPathDropdownOpen(prev => !prev)}
-              className="flex items-center space-x-2 bg-sky-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-2xl hover:bg-sky-100 dark:hover:bg-slate-600 transition-all font-black italic shadow-sm bubbly-btn border-b-2 border-sky-200 dark:border-slate-600"
+              className="flex items-center space-x-2 bg-brand-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-2xl hover:bg-brand-100 dark:hover:bg-slate-600 transition-all font-black italic shadow-sm bubbly-btn border-b-2 border-brand-200 dark:border-slate-600"
             >
               <span className="text-xl flex items-center justify-center w-6 h-6">
                 {currentPathData?.icon.startsWith('http') ? (
@@ -78,7 +132,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
               </svg>
             </button>
             {isPathDropdownOpen && (
-              <div className="absolute top-full mt-4 w-64 max-h-[350px] overflow-y-auto right-0 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border-2 border-sky-100 dark:border-slate-700 z-30 no-scrollbar kid-card animate-pop-in">
+              <div className="absolute top-full mt-4 w-64 max-h-[350px] overflow-y-auto right-0 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border-2 border-brand-100 dark:border-slate-700 z-30 no-scrollbar kid-card animate-pop-in">
                 <div className="p-3 space-y-1">
                   {PATHS.map(path => (
                     <button
@@ -87,7 +141,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
                           onSwitchPath(path.id);
                           setIsPathDropdownOpen(false);
                         }}
-                        className="w-full text-left flex items-center space-x-3 p-3 hover:bg-sky-50 dark:hover:bg-slate-700 rounded-xl transition-all group bubbly-btn"
+                        className="w-full text-left flex items-center space-x-3 p-3 hover:bg-brand-50 dark:hover:bg-slate-700 rounded-xl transition-all group bubbly-btn"
                     >
                         <span className="text-2xl group-hover:scale-110 transition-transform flex items-center justify-center w-8 h-8">
                           {path.icon.startsWith('http') ? (
@@ -119,7 +173,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
               <select 
                 value={language} 
                 onChange={handleLanguageChange}
-                className="appearance-none bg-sky-50 dark:bg-slate-700 dark:text-slate-200 rounded-2xl px-4 py-2 pr-10 font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/20 shadow-sm transition-all border-b-2 border-sky-200 dark:border-slate-600 bubbly-btn text-sm"
+                className="appearance-none bg-brand-50 dark:bg-slate-700 dark:text-slate-200 rounded-2xl px-4 py-2 pr-10 font-bold focus:outline-none focus:ring-4 focus:ring-brand-500/20 shadow-sm transition-all border-b-2 border-brand-200 dark:border-slate-600 bubbly-btn text-sm"
                 aria-label="Select language"
               >
                 <option value={Language.EN}>EN</option>
@@ -133,7 +187,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
 
           <button
             onClick={onLogout}
-            className="w-10 h-10 bg-sky-50 dark:bg-slate-700 text-slate-500 dark:text-slate-400 flex items-center justify-center rounded-2xl hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-600 transition-all shadow-sm bubbly-btn border-b-2 border-sky-200 dark:border-slate-600"
+            className="w-10 h-10 bg-brand-50 dark:bg-slate-700 text-slate-500 dark:text-slate-400 flex items-center justify-center rounded-2xl hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-600 transition-all shadow-sm bubbly-btn border-b-2 border-brand-200 dark:border-slate-600"
             title={t('logout')}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>

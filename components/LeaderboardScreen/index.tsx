@@ -5,7 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 const LeaderboardScreen: React.FC = () => {
   const { t } = useLanguage();
   return (
-    <div className="p-4 md:p-12 bg-slate-50 dark:bg-slate-900 transition-colors min-h-full flex flex-col items-center justify-center text-center">
+    <div className="p-4 md:p-12 bg-brand-50 dark:bg-slate-900 transition-colors min-h-full flex flex-col items-center justify-center text-center">
       <h1 className="text-4xl font-black text-slate-800 dark:text-white uppercase tracking-tighter italic mb-4">
         {t('leaderboard')}
       </h1>

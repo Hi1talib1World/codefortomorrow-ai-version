@@ -13,7 +13,7 @@ const PathSelectionScreen: React.FC<PathSelectionScreenProps> = ({ onPathSelecte
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-brand-50 dark:bg-slate-900 transition-colors flex flex-col items-center justify-center p-4">
       <header className="text-center mb-8">
         <div className="w-24 h-24 mx-auto mb-4">
           <Mascot />
@@ -26,7 +26,7 @@ const PathSelectionScreen: React.FC<PathSelectionScreenProps> = ({ onPathSelecte
             key={path.id}
             onClick={() => onPathSelected(path.id)}
             disabled={!path.isAvailable}
-            className={`relative p-6 text-left rounded-2xl shadow-lg border-b-8 transition-all transform hover:-translate-y-1 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 ${
+            className={`relative p-6 text-left rounded-2xl shadow-lg border-b-8 transition-all disabled:opacity-60 disabled:cursor-not-allowed ${
               path.isAvailable ? `${path.color} text-white` : 'bg-gray-300 dark:bg-slate-700 border-b-gray-500 dark:border-b-slate-800 text-gray-600 dark:text-slate-400'
             }`}
             style={{

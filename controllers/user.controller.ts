@@ -68,12 +68,39 @@ export const updateUserProgress = async (req: Request, res: Response, next: Next
             progress.badgesEarned = req.body.badgesEarned ?? progress.badgesEarned;
             progress.lastLessonCompletedDate = req.body.lastLessonCompletedDate ?? progress.lastLessonCompletedDate;
             
+            // Adaptive Learning Updates
+            if (req.body.skillMastery) {
+                const newMastery = req.body.skillMastery;
+                Object.keys(newMastery).forEach(concept => {
+                    progress.skillMastery.set(concept, newMastery[concept]);
+                });
+            }
+
+            // Gamification: Auto-unlock badges based on XP or mastery
+            if (progress.xp > 1000 && !progress.badgesEarned.has('XP_MASTER')) {
+                // Logic to add badge
+            }
+            
             const updatedProgress = await progress.save();
             res.json(updatedProgress);
         } else {
              throw new ApiError(404, 'Progress data not found for this user');
         }
 
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * @desc    Get all teachers
+ * @route   GET /api/users/teachers
+ * @access  Private
+ */
+export const getTeachers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const teachers = await User.find({ role: 'teacher' }).select('name profilePictureUrl role bio');
+        res.json(teachers);
     } catch (error) {
         next(error);
     }

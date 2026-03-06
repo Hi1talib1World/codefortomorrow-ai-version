@@ -15,6 +15,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeView, setActiveView }) => {
     { id: 'home', label: t('home'), icon: '🏠' },
     { id: 'learn', label: t('learn'), icon: '📚' },
     { id: 'creations', label: t('creations'), icon: '📁' },
+    { id: 'messages', label: 'Chat', icon: '💬' },
     { id: 'store', label: t('store'), icon: '🛒' },
     { id: 'profile', label: t('profile'), icon: '👤' },
   ];
@@ -27,13 +28,13 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeView, setActiveView }) => {
             key={item.id}
             onClick={() => setActiveView(item.id as DashboardView)}
             className={`flex-1 flex flex-col items-center justify-center pt-3 pb-2 transition-all transform active:scale-95 ${
-              activeView === item.id ? 'text-blue-500' : 'text-slate-400 dark:text-slate-500'
+              activeView === item.id ? 'text-brand-500' : 'text-slate-400 dark:text-slate-500'
             }`}
           >
             <span className="text-3xl mb-1 filter grayscale-[0.5] group-hover:grayscale-0">{item.icon}</span>
             <span className="text-[10px] font-black uppercase tracking-widest">{item.label}</span>
             {activeView === item.id && (
-              <div className="w-8 h-1.5 bg-blue-500 rounded-full mt-1.5"></div>
+              <div className="w-8 h-1.5 bg-brand-500 rounded-full mt-1.5"></div>
             )}
           </button>
         ))}

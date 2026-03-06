@@ -43,7 +43,7 @@ const QuizPlayScreen: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =>
         return (
             <div className="fixed inset-0 bg-white dark:bg-slate-900 z-[60] flex flex-col items-center justify-center p-6 text-center transition-colors">
                 <div className="max-w-md w-full">
-                    <div className="w-40 h-40 mx-auto mb-8 transform hover:scale-110 transition-transform">
+                    <div className="w-40 h-40 mx-auto mb-8 transition-transform">
                         <Mascot />
                     </div>
                     <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase italic tracking-tighter mb-4">
@@ -51,7 +51,7 @@ const QuizPlayScreen: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =>
                     </h2>
                     <div className="bg-slate-100 dark:bg-slate-800 rounded-[2rem] p-8 border-b-8 border-slate-200 dark:border-slate-950 mb-8">
                         <p className="text-xl font-bold text-slate-600 dark:text-slate-300">{t('mission_accomplished')}</p>
-                        <p className="text-4xl font-black text-blue-500 mt-2">{score} / {questions.length}</p>
+                        <p className="text-4xl font-black text-brand-500 mt-2">{score} / {questions.length}</p>
                         <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-4">{t('questions_correct')}</p>
                     </div>
                     <button 
@@ -90,7 +90,7 @@ const QuizPlayScreen: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =>
 
             {/* Question Area */}
             <div className="flex-grow flex flex-col items-center justify-center p-6 max-w-3xl mx-auto w-full">
-                <div className="w-full mb-10 animate-pop-in">
+                <div className="w-full mb-10">
                     <h1 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white leading-tight mb-8">
                         {currentQuestion.question}
                     </h1>
@@ -110,8 +110,8 @@ const QuizPlayScreen: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =>
                                 }
                             } else {
                                 btnClasses += isSelected 
-                                    ? "bg-blue-50 border-blue-500 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300" 
-                                    : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-blue-300";
+                                    ? "bg-brand-50 border-brand-500 text-brand-600 dark:bg-brand-900/30 dark:text-brand-300" 
+                                    : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-brand-300";
                             }
 
                             return (
@@ -141,7 +141,7 @@ const QuizPlayScreen: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =>
                 <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
                     <div className="flex items-center space-x-4">
                         {isAnswered && (
-                            <div className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-lg animate-bounce ${isCorrect ? 'bg-white text-green-500' : 'bg-white text-red-500'}`}>
+                            <div className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-lg ${isCorrect ? 'bg-white text-green-500' : 'bg-white text-red-500'}`}>
                                 {isCorrect ? '✓' : '✗'}
                             </div>
                         )}
@@ -168,7 +168,7 @@ const QuizPlayScreen: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =>
                         disabled={!selectedOption}
                         className={`w-full md:w-44 py-3.5 rounded-2xl font-black text-lg uppercase border-b-8 transition-all active:border-b-0 active:translate-y-1 ${
                             !isAnswered 
-                                ? 'bg-blue-600 border-blue-800 text-white hover:bg-blue-500 disabled:bg-slate-200 disabled:border-slate-300 disabled:text-slate-400' 
+                                ? 'bg-brand-600 border-brand-800 text-white hover:bg-brand-500 disabled:bg-slate-200 disabled:border-slate-300 disabled:text-slate-400' 
                                 : isCorrect 
                                     ? 'bg-green-500 border-green-700 text-white hover:bg-green-400' 
                                     : 'bg-red-500 border-red-700 text-white hover:bg-red-400'

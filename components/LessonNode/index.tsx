@@ -57,12 +57,12 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
   const IconComponent = ICONS[lesson.icon] || ICONS['brain'];
   
   const iconColor = status === 'locked' ? 'stroke-gray-500' : 'stroke-white';
-  const nodeColor = isNext ? '#2563EB' : lesson.color;
+  const nodeColor = isNext ? '#59C6C9' : lesson.color;
 
   return (
     <div className="relative flex flex-col items-center">
       {isNext && (
-          <div className="absolute -top-6 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+          <div className="absolute -top-6 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
             {t('continue').toUpperCase()}
           </div>
       )}

@@ -12,9 +12,10 @@ import StoreScreen from '../StoreScreen';
 import SettingsScreen from '../SettingsScreen';
 import HomeHubScreen from '../HomeHubScreen';
 import PathSelectionScreen from '../PathSelectionScreen';
+import MessagingSystem from '../MessagingSystem';
 import { User, Lesson, ProgrammingPath } from '../../types';
 
-export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'goals' | 'leaderboard' | 'store' | 'settings';
+export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'goals' | 'leaderboard' | 'store' | 'settings' | 'messages';
 
 interface DashboardProps {
   currentUser: User;
@@ -57,17 +58,23 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
         return <StoreScreen />;
       case 'settings':
         return <SettingsScreen />;
+      case 'messages':
+        return (
+          <div className="h-[calc(100vh-12rem)]">
+            <MessagingSystem currentUser={currentUser} />
+          </div>
+        );
       default:
         return <HomeHubScreen onNavigate={setActiveView} userName={currentUser.name} role={currentUser.role} />;
     }
   };
 
   const mainContentBg = (activeView === 'learn' && path) 
-    ? 'bg-sky-50 dark:bg-slate-900' 
-    : (activeView === 'home' ? 'bg-transparent' : 'bg-sky-50 dark:bg-slate-900');
+    ? 'bg-brand-50 dark:bg-slate-900' 
+    : (activeView === 'home' ? 'bg-transparent' : 'bg-brand-50 dark:bg-slate-900');
 
   return (
-    <div className="flex h-screen bg-sky-50 dark:bg-slate-900 transition-colors duration-300">
+    <div className="flex h-screen bg-brand-50 dark:bg-slate-900 transition-colors duration-300">
       <Sidebar activeView={activeView} setActiveView={setActiveView} currentUser={currentUser} />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 

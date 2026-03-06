@@ -50,7 +50,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClo
                         <img src={profilePictureUrl} alt="Profile" className="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-slate-700 shadow-md" />
                         <button
                             onClick={() => fileInputRef.current?.click()}
-                            className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-1.5 hover:bg-blue-600 shadow-lg"
+                            className="absolute bottom-0 right-0 bg-brand-500 text-white rounded-full p-1.5 hover:bg-brand-600 shadow-lg"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
@@ -75,7 +75,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClo
                             id="name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                            className="w-full px-4 py-2 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors"
                         />
                     </div>
                     <div>
@@ -85,7 +85,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClo
                             value={bio}
                             onChange={(e) => setBio(e.target.value)}
                             rows={3}
-                            className="w-full px-4 py-2 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-transparent dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                            className="w-full px-4 py-2 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-transparent dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors"
                         />
                     </div>
                 </div>
@@ -99,7 +99,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClo
                     </button>
                     <button
                         onClick={handleSave}
-                        className="px-6 py-2 rounded-lg font-bold text-white bg-blue-500 hover:bg-blue-600 transition shadow-lg"
+                        className="px-6 py-2 rounded-lg font-bold text-white bg-brand-500 hover:bg-brand-600 transition shadow-lg"
                     >
                         Save
                     </button>

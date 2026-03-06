@@ -102,7 +102,7 @@ const QuestionLabScreen: React.FC<QuestionLabScreenProps> = ({ onBack, onSave })
     }
 
     return (
-        <div className="p-4 md:p-8 bg-slate-50 dark:bg-slate-900 transition-colors min-h-full">
+        <div className="p-4 md:p-8 bg-brand-50 dark:bg-slate-900 transition-colors min-h-full">
             <header className="mb-10 flex items-center space-x-4">
                 <button onClick={onBack} className="p-3 bg-white dark:bg-slate-800 rounded-xl shadow-sm transition-colors text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>

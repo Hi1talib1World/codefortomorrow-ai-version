@@ -269,6 +269,7 @@ export default function App() {
             onExit={exitLesson} 
             path={currentPath || 'javascript'}
             onSwitchPath={switchPath}
+            currentUser={currentUser}
           />
         ) : (
           <Dashboard 
