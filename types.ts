@@ -98,7 +98,7 @@ export interface Badge {
 }
 
 export type ProgrammingPath = {
-  id: 'block_coding' | 'python' | 'javascript' | 'lua' | 'web_dev' | 'c_plus_plus' | 'c_sharp' | 'java' | 'kotlin' | 'swift' | 'go' | 'rust' | 'php' | 'ruby' | 'typescript' | 'sql' | 'r' | 'dart' | 'scala';
+  id: 'block_coding' | 'python' | 'javascript' | 'lua' | 'web_dev' | 'c_plus_plus' | 'c_sharp' | 'java' | 'kotlin' | 'swift' | 'go' | 'rust' | 'php' | 'ruby' | 'typescript' | 'sql' | 'r' | 'dart' | 'scala' | 'math';
   titleKey: string;
   descriptionKey: string;
   icon: string;

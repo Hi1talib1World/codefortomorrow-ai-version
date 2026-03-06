@@ -9,6 +9,7 @@ import SplashScreen from './components/SplashScreen';
 import AuthScreen from './components/AuthScreen';
 import RoleSelectionScreen from './components/RoleSelectionScreen';
 import PathSelectionScreen from './components/PathSelectionScreen';
+import MathGameScreen from './components/MathGameScreen';
 import { Lesson, User, ProgrammingPath, UserProgress } from './types';
 import { BADGES_BY_PATH } from './constants';
 import api from './services/api';
@@ -40,7 +41,7 @@ export default function App() {
           if (!user.progress.scores) user.progress.scores = {};
           if (!user.progress.badgesEarned) user.progress.badgesEarned = {};
           if (user.progress.lastLessonCompletedDate === undefined) {
-               user.progress.lastLessonCompletedDate = null;
+            user.progress.lastLessonCompletedDate = null;
           }
 
           setCurrentUser(user);
@@ -50,10 +51,10 @@ export default function App() {
         }
       } catch (error) {
         console.error("Session check failed:", error);
-        setAppState('landing'); 
+        setAppState('landing');
       }
     };
-    
+
     checkUserSession();
   }, []);
 
@@ -62,7 +63,7 @@ export default function App() {
     const userWithRole = { ...user, role: roleToSet };
     setCurrentUser(userWithRole);
     setAppState('dashboard');
-    
+
     // Save role to profile if it wasn't there
     if (!user.role && selectedRole) {
       try {
@@ -72,25 +73,25 @@ export default function App() {
       }
     }
   }, [selectedRole]);
-  
+
   const handleSkipAuth = useCallback(() => {
-      const now = new Date().toISOString();
-      const guestUser: User = {
-          _id: `guest_${Date.now()}`,
-          name: 'Guest',
-          email: `guest_${Date.now()}@codefortomorrow.com`,
-          provider: 'email',
-          profilePictureUrl: `https://ui-avatars.com/api/?name=G&background=random&color=fff`,
-          progress: defaultProgress,
-          currentPath: null,
-          role: selectedRole || 'student',
-          createdAt: now,
-          lastLogin: now,
-      };
-      setCurrentUser(guestUser);
-      setAppState('dashboard');
+    const now = new Date().toISOString();
+    const guestUser: User = {
+      _id: `guest_${Date.now()}`,
+      name: 'Guest',
+      email: `guest_${Date.now()}@codefortomorrow.com`,
+      provider: 'email',
+      profilePictureUrl: `https://ui-avatars.com/api/?name=G&background=random&color=fff`,
+      progress: defaultProgress,
+      currentPath: null,
+      role: selectedRole || 'student',
+      createdAt: now,
+      lastLogin: now,
+    };
+    setCurrentUser(guestUser);
+    setAppState('dashboard');
   }, [selectedRole]);
-  
+
   const handleLogout = useCallback(async () => {
     await api.logout();
     setCurrentUser(null);
@@ -100,7 +101,7 @@ export default function App() {
 
   const onSplashFinish = useCallback(() => {
     if (appState === 'splash') {
-        setAppState('landing');
+      setAppState('landing');
     }
   }, [appState]);
 
@@ -111,7 +112,7 @@ export default function App() {
 
   const handlePathSelected = useCallback(async (pathId: ProgrammingPath['id']) => {
     if (!currentUser) return;
-    
+
     const updatedUser = { ...currentUser, currentPath: pathId };
     setCurrentUser(updatedUser);
 
@@ -121,13 +122,13 @@ export default function App() {
       console.error("Failed to update path:", error);
     }
   }, [currentUser]);
-  
+
   const updateUser = useCallback(async (updatedData: Partial<User>) => {
     if (!currentUser) return;
 
     const updatedUser = { ...currentUser, ...updatedData };
     setCurrentUser(updatedUser);
-    
+
     try {
       await api.updateUserProfile(updatedData);
     } catch (error) {
@@ -137,7 +138,7 @@ export default function App() {
 
   const switchPath = useCallback(async (pathId: ProgrammingPath['id']) => {
     if (!currentUser) return;
-    
+
     setCurrentUser({ ...currentUser, currentPath: pathId });
 
     try {
@@ -181,11 +182,11 @@ export default function App() {
       let newStreak = progress.streak;
       const today = new Date();
       const lastCompletion = progress.lastLessonCompletedDate ? new Date(progress.lastLessonCompletedDate) : null;
-      
+
       if (lastCompletion) {
         const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         const lastCompletionDateOnly = new Date(lastCompletion.getFullYear(), lastCompletion.getMonth(), lastCompletion.getDate());
-        
+
         const diffTime = todayDateOnly.getTime() - lastCompletionDateOnly.getTime();
         const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
@@ -222,11 +223,11 @@ export default function App() {
     setActiveLesson(null);
 
     if (updatedUser) {
-        try {
-            await api.updateUserProgress(updatedUser.progress);
-        } catch(error) {
-            console.error("Failed to save progress:", error);
-        }
+      try {
+        await api.updateUserProgress(updatedUser.progress);
+      } catch (error) {
+        console.error("Failed to save progress:", error);
+      }
     }
   }, [currentUser]);
 
@@ -237,42 +238,57 @@ export default function App() {
 
   const renderContent = () => {
     if (appState === 'splash') {
-       return <SplashScreen onFinish={onSplashFinish} />;
+      return <SplashScreen onFinish={onSplashFinish} />;
     }
     if (appState === 'landing') {
       return <LandingPage onGetStarted={() => setAppState('role_selection')} />;
     }
     if (appState === 'role_selection') {
-        return <RoleSelectionScreen onSelect={handleRoleSelect} />;
+      return <RoleSelectionScreen onSelect={handleRoleSelect} />;
     }
     if (!currentUser) {
-        return <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} />;
+      return <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} />;
     }
-    
+
     const { currentPath } = currentUser;
 
     switch (appState) {
       case 'dashboard':
         if (currentUser.role === 'teacher') {
           return (
-            <TeacherDashboard 
+            <TeacherDashboard
               currentUser={currentUser}
               onLogout={handleLogout}
             />
           );
         }
 
-        return activeLesson ? (
-          <LessonScreen 
-            lesson={activeLesson} 
-            onComplete={completeLesson} 
-            onExit={exitLesson} 
-            path={currentPath || 'javascript'}
-            onSwitchPath={switchPath}
-            currentUser={currentUser}
-          />
-        ) : (
-          <Dashboard 
+        if (activeLesson) {
+          if (currentPath === 'math') {
+            return (
+              <MathGameScreen
+                lesson={activeLesson}
+                onComplete={completeLesson}
+                onExit={exitLesson}
+                path={currentPath}
+                currentUser={currentUser}
+              />
+            );
+          }
+          return (
+            <LessonScreen
+              lesson={activeLesson}
+              onComplete={completeLesson}
+              onExit={exitLesson}
+              path={currentPath || 'javascript'}
+              onSwitchPath={switchPath}
+              currentUser={currentUser}
+            />
+          );
+        }
+
+        return (
+          <Dashboard
             currentUser={currentUser}
             onUpdateUser={updateUser}
             onStartLesson={startLesson}
