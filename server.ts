@@ -17,8 +17,9 @@ import { errorHandler } from './middleware/error.middleware';
 // Load environment variables from .env file
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Safely resolve __dirname in environments where import.meta.url might be malformed (e.g. tsx with spaces in paths)
+const _filename = typeof __filename !== 'undefined' ? __filename : fileURLToPath(import.meta.url.replace(/ /g, '%20'));
+const _dirname = path.dirname(_filename);
 
 async function startServer() {
   // Connect to the MongoDB database
@@ -36,7 +37,7 @@ async function startServer() {
   // Health check for database connection
   app.get('/api/health', async (req, res) => {
     const isConnected = mongoose.connection.readyState === 1;
-    res.json({ 
+    res.json({
       status: isConnected ? 'ok' : 'error',
       database: isConnected ? 'connected' : 'disconnected'
     });
@@ -46,7 +47,7 @@ async function startServer() {
   app.post('/api/health/retry', async (req, res) => {
     await connectDB();
     const isConnected = mongoose.connection.readyState === 1;
-    res.json({ 
+    res.json({
       status: isConnected ? 'ok' : 'error',
       database: isConnected ? 'connected' : 'disconnected'
     });
@@ -69,13 +70,27 @@ async function startServer() {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
+      configFile: false, // Explicitly tell Vite NOT to load the config file dynamically
+      plugins: [
+        (await import('@vitejs/plugin-react')).default(),
+        (await import('@tailwindcss/vite')).default(),
+      ],
+      define: {
+        'process.env.API_KEY': JSON.stringify(process.env.GEMINI_API_KEY),
+        'process.env.GEMINI_API_KEY': JSON.stringify(process.env.GEMINI_API_KEY)
+      },
+      resolve: {
+        alias: {
+          '@': path.resolve(_dirname, '.'),
+        }
+      }
     });
     app.use(vite.middlewares);
   } else {
     // In production, serve the built static files
-    const distPath = path.resolve(__dirname, 'dist');
+    const distPath = path.resolve(_dirname, 'dist');
     app.use(express.static(distPath));
-    
+
     // Fallback to index.html for SPA routing
     app.get('*', (req, res) => {
       res.sendFile(path.resolve(distPath, 'index.html'));
@@ -87,7 +102,7 @@ async function startServer() {
   app.use(errorHandler);
 
   // --- Server Initialization ---
-  const PORT = 3000; 
+  const PORT = 3000;
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server is running on http://0.0.0.0:${PORT}`);
