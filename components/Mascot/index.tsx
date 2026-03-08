@@ -14,7 +14,7 @@ const Mascot: React.FC = () => {
         }
       `}</style>
       <img
-        src="/mascot.png"
+        src="/assets/images/cofoto.png"
         alt="Friendly cat mascot"
         className="w-full h-full object-contain mascot-animation drop-shadow-2xl"
       />

@@ -959,12 +959,31 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (language: Language) => void;
   t: (key: TranslationKey) => string;
+  hasSelectedLanguage: boolean;
+  completeLanguageSelection: () => void;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>(Language.EN);
+  const [language, setLanguageState] = useState<Language>(() => {
+    const saved = localStorage.getItem('appLanguage');
+    return saved ? (saved as Language) : Language.EN;
+  });
+
+  const [hasSelectedLanguage, setHasSelectedLanguage] = useState<boolean>(() => {
+    return localStorage.getItem('appLanguageSelected') === 'true';
+  });
+
+  const setLanguage = (newLanguage: Language) => {
+    setLanguageState(newLanguage);
+    localStorage.setItem('appLanguage', newLanguage);
+  };
+
+  const completeLanguageSelection = () => {
+    setHasSelectedLanguage(true);
+    localStorage.setItem('appLanguageSelected', 'true');
+  };
 
   useEffect(() => {
     const dir = language === Language.AR ? 'rtl' : 'ltr';
@@ -977,7 +996,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, hasSelectedLanguage, completeLanguageSelection }}>
       {children}
     </LanguageContext.Provider>
   );

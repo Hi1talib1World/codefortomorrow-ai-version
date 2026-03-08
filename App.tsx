@@ -1,6 +1,5 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
-import { LanguageProvider } from './contexts/LanguageContext';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Dashboard from './components/Dashboard';
 import TeacherDashboard from './components/teacher/TeacherDashboard';
@@ -14,6 +13,8 @@ import { Lesson, User, ProgrammingPath, UserProgress } from './types';
 import { BADGES_BY_PATH } from './constants';
 import api from './services/api';
 import LandingPage from './components/LandingPage';
+import LanguageSelectionScreen from './components/LanguageSelectionScreen';
+import { useLanguage } from './contexts/LanguageContext';
 
 type AppState = 'splash' | 'landing' | 'role_selection' | 'auth' | 'path_selection' | 'dashboard';
 const defaultProgress: UserProgress = {
@@ -27,10 +28,13 @@ const defaultProgress: UserProgress = {
 
 
 export default function App() {
+  const navigate = useNavigate();
+  const { hasSelectedLanguage } = useLanguage();
   const [appState, setAppState] = useState<AppState>('splash');
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [selectedRole, setSelectedRole] = useState<'teacher' | 'student' | null>(null);
+  const [isSessionLoaded, setIsSessionLoaded] = useState(false);
 
   // Effect to check for an existing session on app load by calling the API
   useEffect(() => {
@@ -45,13 +49,14 @@ export default function App() {
           }
 
           setCurrentUser(user);
-          setAppState('dashboard');
         } else {
-          setAppState('landing');
+          // We do not auto-redirect to landing here, so the user can see splash screen 
+          // and the splash screen redirects them eventually if needed, or we let the Route logic handle it
         }
       } catch (error) {
         console.error("Session check failed:", error);
-        setAppState('landing');
+      } finally {
+        setIsSessionLoaded(true);
       }
     };
 
@@ -62,7 +67,7 @@ export default function App() {
     const roleToSet = user.role || selectedRole || 'student';
     const userWithRole = { ...user, role: roleToSet };
     setCurrentUser(userWithRole);
-    setAppState('dashboard');
+    navigate('/dashboard');
 
     // Save role to profile if it wasn't there
     if (!user.role && selectedRole) {
@@ -89,26 +94,30 @@ export default function App() {
       lastLogin: now,
     };
     setCurrentUser(guestUser);
-    setAppState('dashboard');
-  }, [selectedRole]);
+    navigate('/dashboard');
+  }, [selectedRole, navigate]);
 
   const handleLogout = useCallback(async () => {
     await api.logout();
     setCurrentUser(null);
     setActiveLesson(null);
-    setAppState('auth');
-  }, []);
+    navigate('/auth');
+  }, [navigate]);
 
   const onSplashFinish = useCallback(() => {
-    if (appState === 'splash') {
-      setAppState('landing');
+    if (currentUser) {
+      navigate('/dashboard');
+    } else if (!hasSelectedLanguage) {
+      navigate('/language-selection');
+    } else {
+      navigate('/welcome');
     }
-  }, [appState]);
+  }, [currentUser, navigate, hasSelectedLanguage]);
 
   const handleRoleSelect = useCallback((role: 'teacher' | 'student') => {
     setSelectedRole(role);
-    setAppState('auth');
-  }, []);
+    navigate('/auth');
+  }, [navigate]);
 
   const handlePathSelected = useCallback(async (pathId: ProgrammingPath['id']) => {
     if (!currentUser) return;
@@ -237,77 +246,81 @@ export default function App() {
   }, []);
 
   const renderContent = () => {
-    if (appState === 'splash') {
-      return <SplashScreen onFinish={onSplashFinish} />;
-    }
-    if (appState === 'landing') {
-      return <LandingPage onGetStarted={() => setAppState('role_selection')} />;
-    }
-    if (appState === 'role_selection') {
-      return <RoleSelectionScreen onSelect={handleRoleSelect} />;
-    }
-    if (!currentUser) {
-      return <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} />;
+    if (!isSessionLoaded) {
+      // Show splash screen while checking session
+      return <SplashScreen onFinish={() => { }} />;
     }
 
-    const { currentPath } = currentUser;
+    const { currentPath } = currentUser || {};
 
-    switch (appState) {
-      case 'dashboard':
-        if (currentUser.role === 'teacher') {
-          return (
-            <TeacherDashboard
-              currentUser={currentUser}
-              onLogout={handleLogout}
-            />
-          );
-        }
+    return (
+      <Routes>
+        <Route path="/" element={<SplashScreen onFinish={onSplashFinish} />} />
 
-        if (activeLesson) {
-          if (currentPath === 'math') {
-            return (
-              <MathGameScreen
-                lesson={activeLesson}
-                onComplete={completeLesson}
-                onExit={exitLesson}
-                path={currentPath}
+        <Route path="/language-selection" element={
+          currentUser ? <Navigate to="/dashboard" replace /> :
+            hasSelectedLanguage ? <Navigate to="/welcome" replace /> :
+              <LanguageSelectionScreen />
+        } />
+
+        <Route path="/welcome" element={
+          currentUser ? <Navigate to="/dashboard" replace /> :
+            !hasSelectedLanguage ? <Navigate to="/language-selection" replace /> :
+              <LandingPage onGetStarted={() => navigate('/role-selection')} />
+        } />
+
+        <Route path="/role-selection" element={
+          currentUser ? <Navigate to="/dashboard" replace /> : <RoleSelectionScreen onSelect={handleRoleSelect} />
+        } />
+
+        <Route path="/auth" element={
+          currentUser ? <Navigate to="/dashboard" replace /> : <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} />
+        } />
+
+        <Route path="/dashboard" element={
+          !currentUser ? <Navigate to="/auth" replace /> :
+            currentUser.role === 'teacher' ? (
+              <TeacherDashboard currentUser={currentUser} onLogout={handleLogout} />
+            ) : activeLesson ? (
+              currentPath === 'math' ? (
+                <MathGameScreen
+                  lesson={activeLesson}
+                  onComplete={completeLesson}
+                  onExit={exitLesson}
+                  path={currentPath}
+                  currentUser={currentUser}
+                />
+              ) : (
+                <LessonScreen
+                  lesson={activeLesson}
+                  onComplete={completeLesson}
+                  onExit={exitLesson}
+                  path={currentPath || 'javascript'}
+                  onSwitchPath={switchPath}
+                  currentUser={currentUser}
+                />
+              )
+            ) : (
+              <Dashboard
                 currentUser={currentUser}
+                onUpdateUser={updateUser}
+                onStartLesson={startLesson}
+                onLogout={handleLogout}
+                onSwitchPath={switchPath}
               />
-            );
-          }
-          return (
-            <LessonScreen
-              lesson={activeLesson}
-              onComplete={completeLesson}
-              onExit={exitLesson}
-              path={currentPath || 'javascript'}
-              onSwitchPath={switchPath}
-              currentUser={currentUser}
-            />
-          );
-        }
+            )
+        } />
 
-        return (
-          <Dashboard
-            currentUser={currentUser}
-            onUpdateUser={updateUser}
-            onStartLesson={startLesson}
-            onLogout={handleLogout}
-            onSwitchPath={switchPath}
-          />
-        );
-      default:
-        return <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} />;
-    }
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    );
   };
 
   return (
     <ThemeProvider>
-      <LanguageProvider>
-        <div className="min-h-screen text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
-          {renderContent()}
-        </div>
-      </LanguageProvider>
+      <div className="min-h-screen text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
+        {renderContent()}
+      </div>
     </ThemeProvider>
   );
 }
