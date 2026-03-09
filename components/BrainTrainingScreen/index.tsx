@@ -109,27 +109,28 @@ export default function BrainTrainingScreen() {
                     {challenges.map((challenge) => (
                         <div
                             key={challenge.id}
+                            onClick={() => navigate(`/brain-training/${challenge.id}`)}
                             className={`group rounded-2xl p-5 transition-all cursor-pointer ${challenge.unlocked
-                                    ? 'bg-violet-100 dark:bg-violet-900/30 border-2 border-violet-400 dark:border-violet-500 shadow-lg shadow-violet-200/50 dark:shadow-violet-900/30'
-                                    : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-violet-300 dark:hover:border-violet-600'
+                                ? 'bg-violet-100 dark:bg-violet-900/30 border-2 border-violet-400 dark:border-violet-500 shadow-lg shadow-violet-200/50 dark:shadow-violet-900/30'
+                                : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-violet-300 dark:hover:border-violet-600'
                                 }`}
                         >
                             <p className={`text-sm font-black mb-4 ${challenge.unlocked
-                                    ? 'text-violet-700 dark:text-violet-300'
-                                    : 'text-slate-400 dark:text-slate-500'
+                                ? 'text-violet-700 dark:text-violet-300'
+                                : 'text-slate-400 dark:text-slate-500'
                                 }`}>
                                 {challenge.title}
                             </p>
                             <div
                                 className={`w-full h-10 rounded-xl flex items-center justify-center transition-all ${challenge.unlocked
-                                        ? 'bg-violet-500 hover:bg-violet-600 shadow-md'
-                                        : 'bg-slate-100 dark:bg-slate-700 group-hover:bg-violet-100 dark:group-hover:bg-violet-900/30'
+                                    ? 'bg-violet-500 hover:bg-violet-600 shadow-md'
+                                    : 'bg-slate-100 dark:bg-slate-700 group-hover:bg-violet-100 dark:group-hover:bg-violet-900/30'
                                     }`}
                             >
                                 <svg
                                     className={`w-5 h-5 ${challenge.unlocked
-                                            ? 'text-white'
-                                            : 'text-slate-400 dark:text-slate-500 group-hover:text-violet-500 dark:group-hover:text-violet-400'
+                                        ? 'text-white'
+                                        : 'text-slate-400 dark:text-slate-500 group-hover:text-violet-500 dark:group-hover:text-violet-400'
                                         }`}
                                     fill="currentColor"
                                     viewBox="0 0 24 24"
