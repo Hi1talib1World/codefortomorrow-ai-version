@@ -18,7 +18,7 @@ export default function BrainTrainingScreen() {
             {/* Back Button */}
             <div className="max-w-7xl mx-auto px-4 md:px-8 pt-4">
                 <button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate('/dashboard')}
                     className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors group px-3 py-2 rounded-xl hover:bg-white dark:hover:bg-slate-800"
                 >
                     <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />

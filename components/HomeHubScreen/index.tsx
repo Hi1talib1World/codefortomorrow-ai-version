@@ -40,7 +40,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <button onClick={() => navigate('/brain-training')} className="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700 text-left">
                                     <div className="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-700">
-                                        <img src="https://picsum.photos/seed/brain-challenges/600/400" alt="Challenges" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
+                                        <img src="/brain_training_challenges.png" alt="Challenges" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                     </div>
                                     <div className="p-4 flex items-center justify-between">
                                         <div>
@@ -54,7 +54,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                                 </button>
                                 <button onClick={() => navigate('/brain-training')} className="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700 text-left">
                                     <div className="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-700">
-                                        <img src="https://picsum.photos/seed/brain-workouts/600/400" alt="Workouts" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
+                                        <img src="/brain_training_workouts.png" alt="Workouts" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                     </div>
                                     <div className="p-4 flex items-center justify-between">
                                         <div>
