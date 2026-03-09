@@ -178,6 +178,10 @@ const translations = {
     // Smart Books
     smart_books: 'Smart Books',
     smart_books_desc: 'Use AI to create your own book or access reading books in your language.',
+    smart_books_audiobooks_title: 'Listen to Audiobooks',
+    smart_books_audiobooks_desc: 'Discover new stories and spark your imagination along the way.',
+    smart_books_create_title: 'Create Your Own Book',
+    smart_books_create_desc: 'Use AI to write, illustrate, and publish your own magical stories.',
     open: 'Open',
     // Scientific Inquiry
     scientific_inquiry: 'Scientific Inquiry',
@@ -772,6 +776,10 @@ const translations = {
     // Smart Books
     smart_books: 'Livres Intelligents',
     smart_books_desc: 'Utilisez l\'IA pour créer votre livre ou lire dans votre langue.',
+    smart_books_audiobooks_title: 'Écouter des Livres Audio',
+    smart_books_audiobooks_desc: 'Découvrez de nouvelles histoires et stimulez votre imagination.',
+    smart_books_create_title: 'Créer Votre Propre Livre',
+    smart_books_create_desc: 'Rédigez, illustrez et publiez vos propres histoires magiques avec l\'IA.',
     open: 'Ouvrir',
     // Scientific Inquiry
     scientific_inquiry: 'Enquête Scientifique',
@@ -1166,7 +1174,11 @@ const translations = {
     question_lab_french_desc: 'أسئلة فرنسية على حساب المنهاج.',
     // Smart Books
     smart_books: 'الكتب الذكية',
-    smart_books_desc: 'استعمل الذكاء الاصطناعي باش تصاوب كتابك ولا تقرا باللغة ديالك.',
+    smart_books_desc: 'استخدم الذكاء الاصطناعي لكتابة كتابك أو قراءة كتب بلغتك.',
+    smart_books_audiobooks_title: 'استمع إلى الكتب الصوتية',
+    smart_books_audiobooks_desc: 'اكتشف قصصًا جديدة وأشعل خيالك على طول الطريق.',
+    smart_books_create_title: 'اصنع كتابك الخاص',
+    smart_books_create_desc: 'اكتب، ارسم، وانشر قصصك السحرية باستخدام الذكاء الاصطناعي.',
     open: 'حل',
     // Scientific Inquiry
     scientific_inquiry: 'البحث العلمي',
