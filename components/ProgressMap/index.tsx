@@ -1,11 +1,24 @@
 
+/**
+ * ProgressMap/index.tsx  (exported as LearnScreen)
+ * ──────────────────────────────────────────────────
+ * The lesson roadmap screen shown when a student navigates to "Learn".
+ *
+ * Visual Design:
+ *  - Duolingo-inspired winding snake path: lessons alternate left → right → left
+ *  - Each section (chapter) has a colourful header card
+ *  - A live progress bar shows how far through the path the student is
+ *  - The "next" lesson pulses with a bouncing arrow indicator
+ *  - Completed nodes are green ✓, locked nodes are dark grey 🔒
+ */
+
 import React, { useState, useMemo } from 'react';
+import { motion } from 'motion/react';
 import { MODULES_BY_PATH, LESSONS_BY_PATH, PATHS } from '../../constants';
-import { Lesson, ProgrammingPath, LessonSection, Module, Level } from '../../types';
+import { Lesson, ProgrammingPath } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import LessonNode from '../LessonNode';
-import { Search, X, Lock, ChevronRight, Star, Trophy, Sparkles } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Search, X, Lock } from 'lucide-react';
 
 interface LearnScreenProps {
   completedLessons: number[];
@@ -14,231 +27,294 @@ interface LearnScreenProps {
   onSwitchPath: (pathId: ProgrammingPath['id']) => void;
 }
 
-// NOTE: This file now exports the main LearnScreen component to match the new design.
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+
+/**
+ * Given a flat array of lessons, returns an alignment for each index.
+ * Pattern: left, center, right, center, left, center, right, ...
+ * This creates the Duolingo-style winding snake path.
+ */
+function getSnakeAlignment(index: number): 'left' | 'center' | 'right' {
+  const pattern: Array<'left' | 'center' | 'right'> = ['left', 'center', 'right', 'center'];
+  return pattern[index % pattern.length];
+}
+
+/** Background gradient for each section based on a colour palette index. */
+const SECTION_GRADIENTS = [
+  'from-brand-500 to-brand-700',
+  'from-purple-500 to-purple-700',
+  'from-rose-500 to-rose-700',
+  'from-amber-500 to-amber-700',
+  'from-teal-500 to-teal-700',
+  'from-indigo-500 to-indigo-700',
+];
+
+// ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
+
+/** Colourful chapter header banner shown at the start of each section/level. */
+const SectionBanner: React.FC<{ title: string; index: number; isLocked: boolean }> = ({ title, index, isLocked }) => {
+  const gradient = SECTION_GRADIENTS[index % SECTION_GRADIENTS.length];
+  return (
+    <div className={`relative mx-4 mb-6 rounded-2xl bg-gradient-to-r ${gradient} p-4 shadow-lg overflow-hidden`}>
+      {/* Decorative background shapes */}
+      <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10" />
+      <div className="absolute -right-2 -bottom-4 w-16 h-16 rounded-full bg-white/10" />
+      <div className="relative z-10 flex items-center gap-3">
+        {isLocked && <Lock className="w-4 h-4 text-white/70 shrink-0" />}
+        <div>
+          <p className="text-white/70 text-[9px] font-black uppercase tracking-[0.2em]">Chapter {index + 1}</p>
+          <h3 className="text-white font-black text-base uppercase tracking-tight italic leading-none mt-0.5">
+            {title}
+          </h3>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/** Overall progress bar shown at the top of the roadmap. */
+const ProgressHeader: React.FC<{ completed: number; total: number; pathLabel: string }> = ({ completed, total, pathLabel }) => {
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+  return (
+    <div className="px-4 pt-4 pb-3 bg-white/70 dark:bg-slate-800/70 backdrop-blur-md sticky top-0 z-20 border-b border-slate-100 dark:border-slate-700">
+      <div className="flex items-center justify-between mb-1.5">
+        <span className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{pathLabel}</span>
+        <span className="text-[11px] font-black text-brand-500">{completed}/{total} lessons</span>
+      </div>
+      <div className="h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+        <motion.div
+          className="h-full bg-gradient-to-r from-brand-400 to-brand-600 rounded-full"
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+        />
+      </div>
+    </div>
+  );
+};
+
+// ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
+
 const LearnScreen: React.FC<LearnScreenProps> = ({ completedLessons, onStartLesson, path, onSwitchPath }) => {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const modules = MODULES_BY_PATH[path] || [];
   const sections = LESSONS_BY_PATH[path] || [];
-  
+
+  // Flatten all lessons in order for next-lesson detection
   const allLessons = useMemo(() => {
-    if (modules.length > 0) {
-      return modules.flatMap(m => m.levels.flatMap(l => l.lessons));
-    }
+    if (modules.length > 0) return modules.flatMap(m => m.levels.flatMap(l => l.lessons));
     return sections.flatMap(s => s.lessons);
   }, [modules, sections]);
 
   const lastCompletedId = Math.max(0, ...completedLessons);
 
-  const filteredPaths = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    const query = searchQuery.toLowerCase();
-    return PATHS.filter(p => 
-      t(p.titleKey as any).toLowerCase().includes(query) && p.isAvailable
-    );
-  }, [searchQuery, t]);
+  // Find the next lesson to unlock
+  const nextLesson = useMemo(() => {
+    if (lastCompletedId === 0) return allLessons[0];
+    const idx = allLessons.findIndex(l => l.id === lastCompletedId);
+    return allLessons[idx + 1] || null;
+  }, [allLessons, lastCompletedId]);
+
+  // Search filtering
+  const filteredSections = useMemo(() => {
+    if (!searchQuery.trim()) return sections;
+    const q = searchQuery.toLowerCase();
+    return sections
+      .map(s => ({ ...s, lessons: s.lessons.filter(l => t(l.titleKey as any).toLowerCase().includes(q)) }))
+      .filter(s => s.lessons.length > 0);
+  }, [sections, searchQuery, t]);
 
   const filteredModules = useMemo(() => {
     if (!searchQuery.trim()) return modules;
-    const query = searchQuery.toLowerCase();
-    return modules.map(module => ({
-      ...module,
-      levels: module.levels.map(level => ({
-        ...level,
-        lessons: level.lessons.filter(lesson => 
-          t(lesson.titleKey as any).toLowerCase().includes(query) || 
-          t(lesson.challengeDescriptionKey as any).toLowerCase().includes(query)
-        )
-      })).filter(level => level.lessons.length > 0)
-    })).filter(module => module.levels.length > 0);
+    const q = searchQuery.toLowerCase();
+    return modules
+      .map(m => ({
+        ...m,
+        levels: m.levels
+          .map(lv => ({ ...lv, lessons: lv.lessons.filter(l => t(l.titleKey as any).toLowerCase().includes(q)) }))
+          .filter(lv => lv.lessons.length > 0),
+      }))
+      .filter(m => m.levels.length > 0);
   }, [modules, searchQuery, t]);
 
-  const filteredSections = useMemo(() => {
-    if (!searchQuery.trim()) return sections;
-    const query = searchQuery.toLowerCase();
-    return sections.map(section => ({
-      ...section,
-      lessons: section.lessons.filter(lesson => 
-        t(lesson.titleKey as any).toLowerCase().includes(query) || 
-        t(lesson.challengeDescriptionKey as any).toLowerCase().includes(query)
-      )
-    })).filter(section => section.lessons.length > 0);
-  }, [sections, searchQuery, t]);
+  // Current path metadata
+  const pathMeta = PATHS.find(p => p.id === path);
+  const pathLabel = pathMeta ? t(pathMeta.titleKey as any) : path;
 
-  if (modules.length === 0 && sections.length === 0) {
+  if (allLessons.length === 0) {
     return (
-      <div className="text-center text-slate-400 py-20">
-        <p>Lessons for this path are coming soon!</p>
+      <div className="text-center text-slate-400 py-20 px-6">
+        <div className="text-6xl mb-4">🚧</div>
+        <p className="font-black text-xl uppercase tracking-tighter italic">Coming soon!</p>
       </div>
     );
   }
 
-  const findNextLesson = () => {
-    if (lastCompletedId === 0) return allLessons[0];
-    const lastCompletedIndex = allLessons.findIndex(l => l.id === lastCompletedId);
-    return allLessons[lastCompletedIndex + 1] || null;
-  }
-  const nextLesson = findNextLesson();
+  // ── Render a flat list of lessons as a winding snake path ──────────────────
+  const renderSnakePath = (lessons: Lesson[], sectionIsLocked = false, globalOffset = 0) => (
+    <div className="relative flex flex-col items-stretch px-2">
+      {lessons.map((lesson, i) => {
+        const isCompleted = completedLessons.includes(lesson.id);
+        const isUnlocked = !sectionIsLocked && (lesson.id === allLessons[0]?.id || completedLessons.includes(lesson.id - 1));
+        const isNext = nextLesson?.id === lesson.id;
+
+        const alignment = getSnakeAlignment(globalOffset + i);
+
+        const justifyClass = alignment === 'left'
+          ? 'justify-start pl-6'
+          : alignment === 'right'
+            ? 'justify-end pr-6'
+            : 'justify-center';
+
+        // Draw a curved connector between nodes
+        const showConnector = i < lessons.length - 1;
+        const nextAlignment = getSnakeAlignment(globalOffset + i + 1);
+
+        return (
+          <div key={lesson.id}>
+            {/* Lesson node row */}
+            <div className={`flex ${justifyClass} py-2`}>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.6 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: Math.min(i * 0.06, 0.6), type: 'spring', stiffness: 260, damping: 22 }}
+              >
+                <LessonNode
+                  lesson={lesson}
+                  isCompleted={isCompleted}
+                  isUnlocked={isUnlocked}
+                  isNext={isNext}
+                  onStartLesson={onStartLesson}
+                />
+              </motion.div>
+            </div>
+
+            {/* Curved SVG connector to next node */}
+            {showConnector && (
+              <div className="relative h-10 w-full overflow-visible">
+                <svg
+                  viewBox="0 0 300 40"
+                  className="w-full h-full"
+                  preserveAspectRatio="none"
+                >
+                  {/* Determine curve direction based on alignment change */}
+                  {alignment === 'left' && nextAlignment === 'center' && (
+                    <path d="M 60 0 Q 150 40 150 40" stroke="#cbd5e1" strokeWidth="4" fill="none" strokeDasharray="6 4" strokeLinecap="round" />
+                  )}
+                  {alignment === 'center' && nextAlignment === 'right' && (
+                    <path d="M 150 0 Q 150 20 240 40" stroke="#cbd5e1" strokeWidth="4" fill="none" strokeDasharray="6 4" strokeLinecap="round" />
+                  )}
+                  {alignment === 'right' && nextAlignment === 'center' && (
+                    <path d="M 240 0 Q 150 20 150 40" stroke="#cbd5e1" strokeWidth="4" fill="none" strokeDasharray="6 4" strokeLinecap="round" />
+                  )}
+                  {alignment === 'center' && nextAlignment === 'left' && (
+                    <path d="M 150 0 Q 150 20 60 40" stroke="#cbd5e1" strokeWidth="4" fill="none" strokeDasharray="6 4" strokeLinecap="round" />
+                  )}
+                  {alignment === nextAlignment && (
+                    <path d="M 150 0 L 150 40" stroke="#cbd5e1" strokeWidth="4" fill="none" strokeDasharray="6 4" strokeLinecap="round" />
+                  )}
+                </svg>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
 
   return (
-    <div className="w-full min-h-full bg-brand-50 dark:bg-slate-900 transition-colors pb-20">
-      <div className="max-w-lg mx-auto pt-6 px-4 sticky top-0 z-10 bg-brand-50/80 dark:bg-slate-900/80 backdrop-blur-md pb-3">
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-brand-400 dark:text-slate-500 group-focus-within:text-brand-500 transition-colors" />
+    <div className="w-full min-h-full bg-gradient-to-b from-brand-50 to-white dark:from-slate-900 dark:to-slate-950 transition-colors pb-28">
+
+      {/* Progress header bar */}
+      <ProgressHeader completed={completedLessons.length} total={allLessons.length} pathLabel={pathLabel} />
+
+      {/* Search bar */}
+      <div className="px-4 pt-4 pb-2">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-slate-400" />
           </div>
           <input
             type="text"
-            placeholder={t('search_lessons' as any) || "Search lessons..."}
+            placeholder="Search lessons…"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="block w-full pl-10 pr-10 py-2.5 bg-white dark:bg-slate-800 border-2 border-brand-100 dark:border-slate-700 rounded-xl text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-brand-500/20 focus:border-brand-400 transition-all shadow-sm text-sm"
+            onChange={e => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-9 py-2.5 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl text-slate-700 dark:text-white placeholder-slate-400 text-sm font-semibold focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+              className="absolute inset-y-0 right-3 flex items-center text-slate-400 hover:text-slate-600"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </button>
           )}
         </div>
       </div>
 
-      <div className="relative max-w-lg mx-auto py-6 px-4">
-        {searchQuery.trim() && filteredPaths.length > 0 && (
-          <div className="mb-12">
-            <SectionTitle title={t('paths' as any) || 'Paths'} />
-            <div className="grid grid-cols-1 gap-4">
-              {filteredPaths.map(p => (
-                <button 
-                   key={p.id} 
-                   onClick={() => onSwitchPath(p.id)}
-                   className="flex items-center p-3 bg-white dark:bg-slate-800 rounded-xl hover:bg-brand-50 dark:hover:bg-slate-700 transition-all shadow-sm border-b-2 border-brand-100 dark:border-slate-700 bubbly-btn"
-                >
-                  <span className="text-2xl mr-3">{p.icon.startsWith('http') ? <img src={p.icon} alt="" className="w-8 h-8 object-contain" referrerPolicy="no-referrer" /> : p.icon}</span>
-                  <span className="font-bold text-slate-700 dark:text-white uppercase italic tracking-tighter text-sm">{t(p.titleKey as any)}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {modules.length > 0 ? (
-          filteredModules.map((module, moduleIndex) => (
-            <div key={module.id} className="mb-16">
-              <ModuleHeader module={module} />
-              {module.levels.map((level, levelIndex) => (
-                <div key={level.id} className="mb-12">
-                  <LevelTitle title={t(level.titleKey as any)} isLocked={level.isLocked} />
-                  <div className="relative flex flex-col items-center">
-                    {!searchQuery && <div className="absolute top-10 bottom-10 w-2 bg-brand-100 dark:bg-slate-800 rounded-full" />}
-                    {level.lessons.map((lesson) => {
-                      const isCompleted = completedLessons.includes(lesson.id);
-                      const isUnlocked = !level.isLocked && (lesson.id === allLessons[0].id || completedLessons.includes(lesson.id - 1));
-                      const isNext = nextLesson?.id === lesson.id;
-
-                      return (
-                        <div key={lesson.id} className="relative w-full my-8 flex justify-center">
-                          <LessonNode
-                            lesson={lesson}
-                            isCompleted={isCompleted}
-                            isUnlocked={isUnlocked}
-                            isNext={isNext}
-                            onStartLesson={onStartLesson}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ))
-        ) : (
-          filteredSections.map((section) => (
-            <div key={section.id} className="mb-12">
-              <SectionTitle title={t(section.titleKey as any)} />
-              <div className="relative flex flex-col items-center">
-                {!searchQuery && <div className="absolute top-10 bottom-10 w-2 bg-brand-100 dark:bg-slate-800 rounded-full" />}
-                {section.lessons.map((lesson) => {
-                  const isCompleted = completedLessons.includes(lesson.id);
-                  const isUnlocked = lesson.id === allLessons[0].id || completedLessons.includes(lesson.id - 1);
-                  const isNext = nextLesson?.id === lesson.id;
-
-                  return (
-                    <div key={lesson.id} className="relative w-full my-8 flex justify-center">
-                      <LessonNode
-                        lesson={lesson}
-                        isCompleted={isCompleted}
-                        isUnlocked={isUnlocked}
-                        isNext={isNext}
-                        onStartLesson={onStartLesson}
-                      />
-                    </div>
-                  );
-                })}
+      {/* ── Sections (most paths like Python, JS, Web) ── */}
+      {modules.length === 0 && (
+        <div className="mt-2">
+          {filteredSections.map((section, sectionIdx) => {
+            // Calculate global index offset so the snake continues across sections
+            const offset = sections.slice(0, sectionIdx).reduce((sum, s) => sum + s.lessons.length, 0);
+            return (
+              <div key={section.id} className="mb-4">
+                <SectionBanner
+                  title={t(section.titleKey as any)}
+                  index={sectionIdx}
+                  isLocked={false}
+                />
+                {renderSnakePath(section.lessons, false, offset)}
               </div>
-            </div>
-          ))
-        )}
+            );
+          })}
+        </div>
+      )}
 
-        {searchQuery.trim() && filteredPaths.length === 0 && filteredModules.length === 0 && filteredSections.length === 0 && (
-          <div className="text-center py-20 animate-fade-in">
-            <div className="text-7xl mb-6 animate-float">🔍</div>
-            <p className="text-slate-400 dark:text-slate-500 font-black text-xl italic uppercase tracking-tighter">No lessons found for "{searchQuery}"</p>
-            <button 
-              onClick={() => setSearchQuery('')}
-              className="mt-6 text-brand-500 hover:text-brand-400 font-black uppercase tracking-widest text-sm bg-brand-50 dark:bg-brand-900/20 px-6 py-3 rounded-2xl transition-all"
-            >
-              Clear Search
-            </button>
-          </div>
-        )}
-      </div>
+      {/* ── Modules (Block Coding path: has multiple levels) ── */}
+      {modules.length > 0 && (
+        <div className="mt-2">
+          {filteredModules.map((module, moduleIdx) =>
+            module.levels.map((level, levelIdx) => {
+              const offset = filteredModules
+                .slice(0, moduleIdx)
+                .reduce((s, m) => s + m.levels.reduce((ls, lv) => ls + lv.lessons.length, 0), 0)
+                + module.levels.slice(0, levelIdx).reduce((s, lv) => s + lv.lessons.length, 0);
+              return (
+                <div key={level.id} className="mb-4">
+                  <SectionBanner
+                    title={t(level.titleKey as any)}
+                    index={moduleIdx + levelIdx}
+                    isLocked={level.isLocked}
+                  />
+                  {renderSnakePath(level.lessons, level.isLocked, offset)}
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
+
+      {/* No results state */}
+      {searchQuery && filteredSections.length === 0 && filteredModules.length === 0 && (
+        <div className="text-center py-20 px-6">
+          <div className="text-6xl mb-4">🔍</div>
+          <p className="font-black text-slate-400 text-lg uppercase tracking-tighter italic">
+            No lessons found for "{searchQuery}"
+          </p>
+          <button
+            onClick={() => setSearchQuery('')}
+            className="mt-4 text-brand-500 font-black uppercase tracking-widest text-sm"
+          >
+            Clear Search
+          </button>
+        </div>
+      )}
     </div>
   );
 };
-
-const ModuleHeader = ({ module }: { module: Module }) => {
-  const { t } = useLanguage();
-  return (
-    <div className={`p-8 rounded-[2.5rem] ${module.color} text-white shadow-xl mb-10 relative overflow-hidden group`}>
-      <div className="absolute top-0 right-0 p-8 opacity-10 transform group-hover:scale-110 transition-transform">
-        <Sparkles className="w-32 h-32" />
-      </div>
-      <div className="relative z-10">
-        <h2 className="text-3xl font-black uppercase italic tracking-tighter mb-2">{t(module.titleKey as any)}</h2>
-        <p className="text-white/80 font-bold text-sm italic">{t(module.descriptionKey as any)}</p>
-        <button className="mt-6 px-6 py-2 bg-white/20 backdrop-blur-md rounded-xl font-black text-xs uppercase tracking-widest hover:bg-white/30 transition-all flex items-center gap-2">
-          Module Overview <ChevronRight className="w-4 h-4" />
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const LevelTitle = ({ title, isLocked }: { title: string; isLocked: boolean }) => (
-  <div className="flex items-center justify-center my-8">
-    <div className="flex-grow h-0.5 bg-brand-100 dark:bg-slate-800 rounded-full"></div>
-    <div className="mx-4 flex items-center gap-2">
-      {isLocked && <Lock className="w-3 h-3 text-slate-400" />}
-      <h3 className={`text-brand-400 dark:text-slate-500 font-black uppercase tracking-widest italic text-[10px] ${isLocked ? 'opacity-50' : ''}`}>
-        {title}
-      </h3>
-    </div>
-    <div className="flex-grow h-0.5 bg-brand-100 dark:bg-slate-800 rounded-full"></div>
-  </div>
-);
-
-const SectionTitle = ({ title }: { title: string }) => (
-    <div className="flex items-center justify-center my-6">
-        <div className="flex-grow h-0.5 bg-brand-100 dark:bg-slate-800 rounded-full"></div>
-        <h2 className="mx-4 text-brand-400 dark:text-slate-500 font-black uppercase tracking-widest italic text-[10px]">{title}</h2>
-        <div className="flex-grow h-0.5 bg-brand-100 dark:bg-slate-800 rounded-full"></div>
-    </div>
-);
-
 
 export default LearnScreen;

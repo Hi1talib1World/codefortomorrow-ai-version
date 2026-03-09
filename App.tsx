@@ -4,6 +4,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import Dashboard from './components/Dashboard';
 import TeacherDashboard from './components/teacher/TeacherDashboard';
 import LessonScreen from './components/LessonScreen';
+import QuizLessonScreen from './components/QuizLessonScreen';
 import SplashScreen from './components/SplashScreen';
 import AuthScreen from './components/AuthScreen';
 import RoleSelectionScreen from './components/RoleSelectionScreen';
@@ -16,13 +17,16 @@ import LandingPage from './components/LandingPage';
 import LanguageSelectionScreen from './components/LanguageSelectionScreen';
 import { useLanguage } from './contexts/LanguageContext';
 
+/** The internal navigation state machine steps used before React Router takes over. */
 type AppState = 'splash' | 'landing' | 'role_selection' | 'auth' | 'path_selection' | 'dashboard';
+
+/** Default blank progress object used when creating a guest/new user session. */
 const defaultProgress: UserProgress = {
   xp: 0,
   streak: 0,
-  completedLessons: {},
-  scores: {},
-  badgesEarned: {},
+  completedLessons: {}, // { pathId: [lessonId, ...] }
+  scores: {},           // { lessonId: score (0-100) }
+  badgesEarned: {},     // { pathId: [badgeId, ...] }
   lastLessonCompletedDate: null,
 };
 
@@ -31,10 +35,17 @@ export default function App() {
   const navigate = useNavigate();
   const { hasSelectedLanguage } = useLanguage();
   const [appState, setAppState] = useState<AppState>('splash');
+  /** The lesson currently being played. When null, the Dashboard is shown. */
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
+  /** The authenticated user. Null means the user is a guest or not logged in. */
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [selectedRole, setSelectedRole] = useState<'teacher' | 'student' | null>(null);
   const [isSessionLoaded, setIsSessionLoaded] = useState(false);
+  /**
+   * Set to true after completeLesson() runs so the Dashboard opens directly
+   * on the 'learn' (roadmap) tab instead of the default 'home' hub tab.
+   */
+  const [returnToLearnMap, setReturnToLearnMap] = useState(false);
 
   // Effect to check for an existing session on app load by calling the API
   useEffect(() => {
@@ -230,6 +241,7 @@ export default function App() {
     });
 
     setActiveLesson(null);
+    setReturnToLearnMap(true);
 
     if (updatedUser) {
       try {
@@ -282,12 +294,24 @@ export default function App() {
             currentUser.role === 'teacher' ? (
               <TeacherDashboard currentUser={currentUser} onLogout={handleLogout} />
             ) : activeLesson ? (
+              // ─── LESSON ROUTING DECISION ────────────────────────────────────────────
+              // Priority order when a lesson is active:
+              //  1. Math path         → MathGameScreen   (special interactive game UI)
+              //  2. Lesson has quiz   → QuizLessonScreen (read + multiple-choice format)
+              //  3. Everything else   → LessonScreen     (code editor + terminal output)
               currentPath === 'math' ? (
                 <MathGameScreen
                   lesson={activeLesson}
                   onComplete={completeLesson}
                   onExit={exitLesson}
                   path={currentPath}
+                  currentUser={currentUser}
+                />
+              ) : activeLesson.questions && activeLesson.questions.length > 0 ? (
+                <QuizLessonScreen
+                  lesson={activeLesson}
+                  onComplete={completeLesson}
+                  onExit={exitLesson}
                   currentUser={currentUser}
                 />
               ) : (
@@ -307,6 +331,8 @@ export default function App() {
                 onStartLesson={startLesson}
                 onLogout={handleLogout}
                 onSwitchPath={switchPath}
+                initialView={returnToLearnMap ? 'learn' : 'home'}
+                key={returnToLearnMap ? 'learn' : 'home'}
               />
             )
         } />

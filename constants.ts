@@ -1,6 +1,28 @@
 
+/**
+ * constants.ts
+ * ─────────────
+ * All static curriculum data for the app.
+ *
+ * Structure:
+ *  - PATHS                : The list of available programming paths (Python, JS, etc.).
+ *  - LESSONS_BY_PATH      : Flat lesson sections per path (used for most paths).
+ *  - MODULES_BY_PATH      : Structured modules/levels per path (used for Block Coding).
+ *  - BADGES_BY_PATH       : Badges that can be earned per path.
+ *
+ * Lesson content conventions:
+ *  - `starterCode`        : Pre-filled code shown to the student in the editor.
+ *  - `solutionCode`       : The canonical solution (not shown to the student).
+ *  - `expectedOutput`     : The exact string the student's code must print to pass.
+ *  - `questions`          : If present, the lesson uses the QuizLessonScreen (no editor).
+ *  - Translation keys     : All human-readable text is stored as keys (e.g. 'py_challenge_1')
+ *                           and resolved at runtime via useLanguage().t().
+ */
 import { LessonSection, Badge, ProgrammingPath, Module, Level } from './types';
 
+// ─── PATHS ───────────────────────────────────────────────────────────────────
+// Defines which programming paths exist and whether they are available.
+// Unavailable paths are shown on the path selection screen but cannot be started.
 export const PATHS: ProgrammingPath[] = [
   {
     id: 'block_coding',
@@ -43,9 +65,9 @@ export const PATHS: ProgrammingPath[] = [
     isAvailable: true
   },
   {
-    id: 'c_plus_plus',
-    titleKey: 'c_plus_plus',
-    descriptionKey: 'c_plus_plus_desc',
+    id: 'c++',
+    titleKey: 'c++',
+    descriptionKey: 'c++_desc',
     icon: '🐉',
     color: 'bg-gray-700',
     isAvailable: true
@@ -172,6 +194,7 @@ export const MODULES_BY_PATH: { [key: string]: Module[] } = {
             {
               id: 1, level: 1, titleKey: 'sequences', icon: 'brain', xp: 15, color: '#3498db', type: 'lesson', nodeType: 'standard',
               challengeDescriptionKey: 'bc_challenge_1',
+              explanationKey: 'bc_explain_1',
               hintKey: 'bc_hint_1',
               starterCode: '// Move forward 3 times!\n// Log "forward" 3 times.\n',
               solutionCode: 'console.log("forward");\nconsole.log("forward");\nconsole.log("forward");',
@@ -247,7 +270,13 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         {
           id: 1, level: 1, titleKey: 'sequences', icon: 'brain', xp: 15, color: '#3498db', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'bc_challenge_1',
+          explanationKey: 'bc_explain_1',
           hintKey: 'bc_hint_1',
+          estimatedMinutes: 5,
+          difficulty: 'Beginner',
+          tags: ['Basics', 'Logic'],
+          objectivesKey: 'bc_obj_1',
+          proTipKey: 'bc_tip_1',
           starterCode: '// Move forward 3 times!\n// Log "forward" 3 times.\n',
           solutionCode: 'console.log("forward");\nconsole.log("forward");\nconsole.log("forward");',
           expectedOutput: 'forward\nforward\nforward'
@@ -322,28 +351,93 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         {
           id: 1, level: 1, titleKey: 'python_vars_numbers', icon: 'brain', xp: 15, color: '#f1c40f', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'py_challenge_1',
+          explanationKey: 'py_explain_1',
           hintKey: 'py_hint_1',
+          estimatedMinutes: 10,
+          difficulty: 'Beginner',
+          tags: ['Variables', 'DataTypes'],
+          objectivesKey: 'py_obj_1',
+          proTipKey: 'py_tip_1',
           starterCode: '# Create a variable named "age" and set it to 10.\n# Then print the variable.\n',
           solutionCode: 'age = 10\nprint(age)',
-          expectedOutput: '10'
+          expectedOutput: '10',
+          questions: [
+            {
+              questionKey: 'py_q1_q1',
+              optionKeys: ['py_q1_o1a', 'py_q1_o1b', 'py_q1_o1c', 'py_q1_o1d'],
+              correctIndex: 0,
+              feedbackKey: 'py_q1_f1'
+            },
+            {
+              questionKey: 'py_q1_q2',
+              optionKeys: ['py_q1_o2a', 'py_q1_o2b', 'py_q1_o2c', 'py_q1_o2d'],
+              correctIndex: 2,
+              feedbackKey: 'py_q1_f2'
+            },
+            {
+              questionKey: 'py_q1_q3',
+              optionKeys: ['py_q1_o3a', 'py_q1_o3b', 'py_q1_o3c', 'py_q1_o3d'],
+              correctIndex: 1,
+              feedbackKey: 'py_q1_f3'
+            },
+          ]
         },
         {
           id: 2, level: 2, titleKey: 'python_loops', icon: 'brain', xp: 20, color: '#f1c40f', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'py_challenge_2',
+          explanationKey: 'py_explain_2',
           hintKey: 'py_hint_2',
-          starterCode: '# Use a for loop to print numbers from 1 to 3.\n',
+          estimatedMinutes: 12,
+          difficulty: 'Beginner',
+          tags: ['Loops', 'Iteration'],
+          objectivesKey: 'py_obj_2',
+          proTipKey: 'py_tip_2',
+          starterCode: '# Write a "for" loop to print numbers from 1 to 3\n# Use range(1, 4)\n\n',
           solutionCode: 'for i in range(1, 4):\n    print(i)',
           expectedOutput: '1\n2\n3'
         },
-        { id: 3, level: 3, titleKey: 'python_conditionals', icon: 'star', xp: 25, color: '#f1c40f', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'py_challenge_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        {
+          id: 3, level: 3, titleKey: 'python_conditionals', icon: 'star', xp: 25, color: '#f1c40f', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'py_challenge_3',
+          explanationKey: 'py_explain_3',
+          hintKey: 'py_hint_3',
+          estimatedMinutes: 10,
+          difficulty: 'Beginner',
+          tags: ['IfElse', 'Logic'],
+          objectivesKey: 'py_obj_3',
+          proTipKey: 'py_tip_3',
+          starterCode: '# Set age = 18\n# If age >= 18, print "Adult", else print "Minor"\n\n',
+          solutionCode: 'age = 18\nif age >= 18:\n    print("Adult")\nelse:\n    print("Minor")',
+          expectedOutput: 'Adult'
+        },
         {
           id: 4, level: 4, titleKey: 'python_functions', icon: 'brain', xp: 30, color: '#f1c40f', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'py_challenge_4',
-          starterCode: '# Define a function named "greet" that prints "Hello!".\n# Then call the function.\n',
-          solutionCode: 'def greet():\n    print("Hello!")\n\ngreet()',
-          expectedOutput: 'Hello!'
+          explanationKey: 'py_explain_4',
+          hintKey: 'py_hint_4',
+          estimatedMinutes: 15,
+          difficulty: 'Intermediate',
+          tags: ['Functions', 'Def'],
+          objectivesKey: 'py_obj_4',
+          proTipKey: 'py_tip_4',
+          starterCode: '# Define a function greet() that prints "Hello"\n# Then call it!\n\n',
+          solutionCode: 'def greet():\n    print("Hello")\ngreet()',
+          expectedOutput: 'Hello'
         },
-        { id: 5, level: 5, titleKey: 'python_quiz_game', icon: 'trophy', xp: 50, color: '#f39c12', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'py_challenge_5', starterCode: '', solutionCode: '', expectedOutput: '' },
+        {
+          id: 5, level: 5, titleKey: 'python_lists', icon: 'trophy', xp: 50, color: '#f39c12', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'py_challenge_5',
+          explanationKey: 'py_explain_5',
+          hintKey: 'py_hint_5',
+          estimatedMinutes: 20,
+          difficulty: 'Intermediate',
+          tags: ['Lists', 'Arrays'],
+          objectivesKey: 'py_obj_5',
+          proTipKey: 'py_tip_5',
+          starterCode: '# Create a list named fruits with "apple" and "banana"\n# Print the first item in the list\n\n',
+          solutionCode: 'fruits = ["apple", "banana"]\nprint(fruits[0])',
+          expectedOutput: 'apple'
+        },
       ],
     },
     {
@@ -366,7 +460,155 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         },
         { id: 8, level: 8, titleKey: 'python_tuples', icon: 'star', xp: 30, color: '#f1c40f', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'py_challenge_8', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
-    }
+    },
+    {
+      // ── Python Chapter 3: Code Like a Pro ────────────────────────────────
+      id: 'py_pro',
+      titleKey: 'py_ch3_title',
+      lessons: [
+        {
+          id: 9, level: 9, titleKey: 'python_oop', icon: 'brain', xp: 30, color: '#e67e22', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'py_challenge_9',
+          explanationKey: 'py_explain_9',
+          estimatedMinutes: 15,
+          difficulty: 'Intermediate',
+          tags: ['OOP', 'Classes'],
+          objectivesKey: 'py_obj_9',
+          proTipKey: 'py_tip_9',
+          hintKey: 'py_hint_9',
+          starterCode: '# Define a class Dog with a name attribute.\n# Create an instance and print its name.\n',
+          solutionCode: 'class Dog:\n  def __init__(self, name):\n    self.name = name\ndog = Dog("Rex")\nprint(dog.name)',
+          expectedOutput: 'Rex'
+        },
+        {
+          id: 10, level: 10, titleKey: 'python_string_methods', icon: 'brain', xp: 25, color: '#e67e22', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'py_challenge_10',
+          estimatedMinutes: 10,
+          difficulty: 'Beginner',
+          tags: ['Strings', 'Methods'],
+          hintKey: 'py_hint_10',
+          starterCode: '# Convert "hello world" to uppercase and print it.\n',
+          solutionCode: 'print("hello world".upper())',
+          expectedOutput: 'HELLO WORLD'
+        },
+        {
+          id: 11, level: 11, titleKey: 'python_error_handling', icon: 'star', xp: 35, color: '#e67e22', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'py_challenge_11',
+          estimatedMinutes: 12,
+          difficulty: 'Intermediate',
+          tags: ['Errors', 'Try/Except'],
+          hintKey: 'py_hint_11',
+          starterCode: '# Use try/except to catch a ZeroDivisionError.\nresult = 10 / 0\n',
+          solutionCode: 'try:\n  result = 10 / 0\nexcept ZeroDivisionError:\n  print("Cannot divide by zero!")',
+          expectedOutput: 'Cannot divide by zero!'
+        },
+        {
+          id: 12, level: 12, titleKey: 'python_list_comprehensions', icon: 'brain', xp: 35, color: '#e67e22', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'py_challenge_12',
+          estimatedMinutes: 12,
+          difficulty: 'Intermediate',
+          tags: ['Lists', 'Comprehension'],
+          hintKey: 'py_hint_12',
+          starterCode: '# Use a list comprehension to create a list of squares from 1 to 5.\n',
+          solutionCode: 'squares = [x**2 for x in range(1, 6)]\nprint(squares)',
+          expectedOutput: '[1, 4, 9, 16, 25]'
+        },
+        {
+          id: 13, level: 13, titleKey: 'python_recursion', icon: 'brain', xp: 40, color: '#e67e22', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'py_challenge_13',
+          estimatedMinutes: 15,
+          difficulty: 'Intermediate',
+          tags: ['Recursion', 'Functions'],
+          hintKey: 'py_hint_13',
+          starterCode: '# Write a recursive function to print numbers 1 to 3.\n',
+          solutionCode: 'def count(n):\n  if n > 3:\n    return\n  print(n)\n  count(n + 1)\ncount(1)',
+          expectedOutput: '1\n2\n3'
+        },
+        {
+          id: 14, level: 14, titleKey: 'python_modules', icon: 'brain', xp: 30, color: '#e67e22', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'py_challenge_14',
+          estimatedMinutes: 10,
+          difficulty: 'Intermediate',
+          tags: ['Modules', 'Import'],
+          hintKey: 'py_hint_14',
+          starterCode: '# Import math and print the square root of 16.\n',
+          solutionCode: 'import math\nprint(math.sqrt(16))',
+          expectedOutput: '4.0'
+        },
+        {
+          id: 15, level: 15, titleKey: 'python_final_project', icon: 'trophy', xp: 100, color: '#c0392b', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'py_challenge_15',
+          estimatedMinutes: 25,
+          difficulty: 'Advanced',
+          tags: ['Project', 'Python'],
+          hintKey: 'py_hint_15',
+          starterCode: '# Final challenge: Build a simple number guessing game.\n# Pick a secret number, compare it with a guess.\nsecret = 7\nguess = 7\n',
+          solutionCode: 'secret = 7\nguess = 7\nif guess == secret:\n  print("You guessed it!")',
+          expectedOutput: 'You guessed it!'
+        },
+      ],
+    },
+    {
+      // ── Python Chapter 4: Advanced Python ─────────────────────────────────
+      id: 'py_advanced',
+      titleKey: 'py_ch4_title',
+      lessons: [
+        {
+          id: 16, level: 16, titleKey: 'python_generators', icon: 'brain', xp: 40, color: '#8e44ad', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'py_challenge_16', estimatedMinutes: 15,
+          difficulty: 'Advanced', tags: ['Generators', 'yield'],
+          hintKey: 'py_hint_16',
+          starterCode: '# Write a generator that yields 1, 2, 3.\n# Use next() to get the first value and print it.\n',
+          solutionCode: 'def gen():\n  yield 1\n  yield 2\n  yield 3\ng = gen()\nprint(next(g))',
+          expectedOutput: '1'
+        },
+        {
+          id: 17, level: 17, titleKey: 'python_decorators', icon: 'brain', xp: 45, color: '#8e44ad', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'py_challenge_17', estimatedMinutes: 15,
+          difficulty: 'Advanced', tags: ['Decorators', 'Functions'],
+          hintKey: 'py_hint_17',
+          starterCode: '# Create a decorator that prints "Before" before any function runs.\n',
+          solutionCode: 'def before(fn):\n  def wrapper(*a):\n    print("Before")\n    fn(*a)\n  return wrapper\n\n@before\ndef greet():\n  print("Hi!")\ngreet()',
+          expectedOutput: 'Before\nHi!'
+        },
+        {
+          id: 18, level: 18, titleKey: 'python_file_io', icon: 'star', xp: 35, color: '#8e44ad', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'py_challenge_18', estimatedMinutes: 12,
+          difficulty: 'Advanced', tags: ['Files', 'I/O'],
+          hintKey: 'py_hint_18',
+          starterCode: '# Simulate file writing: build the string "Hello File!" and print it.\n',
+          solutionCode: 'content = "Hello File!"\nprint(content)',
+          expectedOutput: 'Hello File!'
+        },
+        {
+          id: 19, level: 19, titleKey: 'python_regex', icon: 'brain', xp: 45, color: '#8e44ad', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'py_challenge_19', estimatedMinutes: 15,
+          difficulty: 'Advanced', tags: ['Regex', 'Patterns'],
+          hintKey: 'py_hint_19',
+          starterCode: '# Use re.search() to find the word "Python" in a string.\nimport re\n',
+          solutionCode: 'import re\nm = re.search("Python", "I love Python!")\nprint(m.group())',
+          expectedOutput: 'Python'
+        },
+        {
+          id: 20, level: 20, titleKey: 'python_testing', icon: 'brain', xp: 40, color: '#8e44ad', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'py_challenge_20', estimatedMinutes: 12,
+          difficulty: 'Advanced', tags: ['Testing', 'assert'],
+          hintKey: 'py_hint_20',
+          starterCode: '# Use an assert statement to verify that 2 + 2 equals 4.\n# Then print "Tests passed!".\n',
+          solutionCode: 'assert 2 + 2 == 4\nprint("Tests passed!")',
+          expectedOutput: 'Tests passed!'
+        },
+        {
+          id: 21, level: 21, titleKey: 'python_master_project', icon: 'trophy', xp: 150, color: '#6c0032', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'py_challenge_21', estimatedMinutes: 40,
+          difficulty: 'Expert', tags: ['Project', 'Python', 'Expert'],
+          hintKey: 'py_hint_21',
+          starterCode: '# Master Project: Word frequency counter.\n# Count how many times each word appears in a sentence.\nsentence = "the cat sat on the mat the cat"\n',
+          solutionCode: 'sentence = "the cat sat on the mat the cat"\nwords = sentence.split()\ncounts = {}\nfor w in words:\n  counts[w] = counts.get(w, 0) + 1\nprint(counts["the"])',
+          expectedOutput: '3'
+        },
+      ],
+    },
   ],
   javascript: [
     {
@@ -376,28 +618,93 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         {
           id: 1, level: 1, titleKey: 'js_vars_alerts', icon: 'brain', xp: 15, color: '#f1e05a', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'js_challenge_1',
+          explanationKey: 'js_explain_1',
           hintKey: 'js_hint_1',
+          estimatedMinutes: 8,
+          difficulty: 'Beginner',
+          tags: ['Console', 'Output'],
+          objectivesKey: 'js_obj_1',
+          proTipKey: 'js_tip_1',
           starterCode: `// Use console.log() to print "Hello, JavaScript!".\n\n`,
           solutionCode: `console.log("Hello, JavaScript!");`,
-          expectedOutput: "Hello, JavaScript!"
+          expectedOutput: "Hello, JavaScript!",
+          questions: [
+            {
+              questionKey: 'js_q1_q1',
+              optionKeys: ['js_q1_o1a', 'js_q1_o1b', 'js_q1_o1c', 'js_q1_o1d'],
+              correctIndex: 1,
+              feedbackKey: 'js_q1_f1'
+            },
+            {
+              questionKey: 'js_q1_q2',
+              optionKeys: ['js_q1_o2a', 'js_q1_o2b', 'js_q1_o2c', 'js_q1_o2d'],
+              correctIndex: 0,
+              feedbackKey: 'js_q1_f2'
+            },
+            {
+              questionKey: 'js_q1_q3',
+              optionKeys: ['js_q1_o3a', 'js_q1_o3b', 'js_q1_o3c', 'js_q1_o3d'],
+              correctIndex: 3,
+              feedbackKey: 'js_q1_f3'
+            },
+          ]
         },
         {
           id: 2, level: 2, titleKey: 'js_dom', icon: 'brain', xp: 20, color: '#f1e05a', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'js_challenge_2',
+          explanationKey: 'js_explain_2',
           hintKey: 'js_hint_2',
-          starterCode: '// Create a variable named "score" and set it to 100.\n// Then log it to the console.\n',
+          estimatedMinutes: 10,
+          difficulty: 'Beginner',
+          tags: ['Variables', 'Types'],
+          objectivesKey: 'js_obj_2',
+          proTipKey: 'js_tip_2',
+          starterCode: '// Create a variable named "score" using "let" and set it to 100.\n// Then log it to the console.\n\n',
           solutionCode: 'let score = 100;\nconsole.log(score);',
           expectedOutput: "100"
         },
-        { id: 3, level: 3, titleKey: 'js_loops_conditionals', icon: 'star', xp: 25, color: '#f1e05a', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'js_challenge_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        {
+          id: 3, level: 3, titleKey: 'js_loops_conditionals', icon: 'star', xp: 25, color: '#f1e05a', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'js_challenge_3',
+          explanationKey: 'js_explain_3',
+          hintKey: 'js_hint_3',
+          estimatedMinutes: 12,
+          difficulty: 'Beginner',
+          tags: ['IfElse', 'Logic'],
+          objectivesKey: 'js_obj_3',
+          proTipKey: 'js_tip_3',
+          starterCode: '// Set let raining = true;\n// If it is raining, log "Take umbrella", else "Go walk"\n\n',
+          solutionCode: 'let raining = true;\nif (raining) {\n  console.log("Take umbrella");\n} else {\n  console.log("Go walk");\n}',
+          expectedOutput: 'Take umbrella'
+        },
         {
           id: 4, level: 4, titleKey: 'js_functions_events', icon: 'brain', xp: 30, color: '#f1e05a', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'js_challenge_4',
-          starterCode: '// Write a function named "sayHi" that logs "Hi!" to the console.\n// Then call the function.\n',
+          explanationKey: 'js_explain_4',
+          hintKey: 'js_hint_4',
+          estimatedMinutes: 15,
+          difficulty: 'Intermediate',
+          tags: ['Functions'],
+          objectivesKey: 'js_obj_4',
+          proTipKey: 'js_tip_4',
+          starterCode: '// Write a function named "sayHi" that logs "Hi!"\n// Then call it.\n\n',
           solutionCode: 'function sayHi() {\n  console.log("Hi!");\n}\nsayHi();',
           expectedOutput: "Hi!"
         },
-        { id: 5, level: 5, titleKey: 'js_interactive_story', icon: 'trophy', xp: 50, color: '#f39c12', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'js_challenge_5', starterCode: '', solutionCode: '', expectedOutput: '' },
+        {
+          id: 5, level: 5, titleKey: 'js_interactive_story', icon: 'trophy', xp: 50, color: '#f39c12', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'js_challenge_5',
+          explanationKey: 'js_explain_5',
+          hintKey: 'js_hint_5',
+          estimatedMinutes: 20,
+          difficulty: 'Intermediate',
+          tags: ['Arrays', 'Data'],
+          objectivesKey: 'js_obj_5',
+          proTipKey: 'js_tip_5',
+          starterCode: '// Create an array named "colors" with "red" and "blue"\n// Log the first color.\n\n',
+          solutionCode: 'let colors = ["red", "blue"];\nconsole.log(colors[0]);',
+          expectedOutput: 'red'
+        },
       ],
     },
     {
@@ -420,7 +727,152 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         },
         { id: 8, level: 8, titleKey: 'js_fetch_api', icon: 'star', xp: 35, color: '#f1e05a', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'js_challenge_8', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
-    }
+    },
+    {
+      // ── JavaScript Chapter 3: DOM, APIs & Beyond ──────────────────────────
+      id: 'js_pro',
+      titleKey: 'js_ch3_title',
+      lessons: [
+        {
+          id: 9, level: 9, titleKey: 'js_array_methods', icon: 'brain', xp: 30, color: '#f39c12', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_9',
+          estimatedMinutes: 12,
+          difficulty: 'Intermediate',
+          tags: ['Arrays', 'map', 'filter'],
+          hintKey: 'js_hint_9',
+          starterCode: '// Use .map() to double each number in [1, 2, 3].\n// Then log the result.\n',
+          solutionCode: 'const result = [1,2,3].map(n => n * 2);\nconsole.log(result);',
+          expectedOutput: '[2, 4, 6]'
+        },
+        {
+          id: 10, level: 10, titleKey: 'js_objects', icon: 'brain', xp: 30, color: '#f39c12', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_10',
+          estimatedMinutes: 10,
+          difficulty: 'Intermediate',
+          tags: ['Objects', 'OOP'],
+          hintKey: 'js_hint_10',
+          starterCode: '// Create an object car with brand "Toyota".\n// Log car.brand.\n',
+          solutionCode: 'const car = { brand: "Toyota" };\nconsole.log(car.brand);',
+          expectedOutput: 'Toyota'
+        },
+        {
+          id: 11, level: 11, titleKey: 'js_closures', icon: 'star', xp: 40, color: '#f39c12', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'js_challenge_11',
+          estimatedMinutes: 15,
+          difficulty: 'Intermediate',
+          tags: ['Closures', 'Scope'],
+          hintKey: 'js_hint_11',
+          starterCode: '// Write a counter function that increments on each call.\n',
+          solutionCode: 'function makeCounter() {\n  let count = 0;\n  return () => ++count;\n}\nconst c = makeCounter();\nconsole.log(c()); // 1\nconsole.log(c()); // 2',
+          expectedOutput: '1\n2'
+        },
+        {
+          id: 12, level: 12, titleKey: 'js_classes', icon: 'brain', xp: 40, color: '#f39c12', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_12',
+          estimatedMinutes: 15,
+          difficulty: 'Intermediate',
+          tags: ['Classes', 'OOP'],
+          hintKey: 'js_hint_12',
+          starterCode: '// Create a class Animal with a speak() method that logs "Grr!".\n// Instantiate it and call speak().\n',
+          solutionCode: 'class Animal {\n  speak() { console.log("Grr!"); }\n}\nnew Animal().speak();',
+          expectedOutput: 'Grr!'
+        },
+        {
+          id: 13, level: 13, titleKey: 'js_error_handling', icon: 'brain', xp: 35, color: '#f39c12', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_13',
+          estimatedMinutes: 12,
+          difficulty: 'Intermediate',
+          tags: ['Errors', 'try/catch'],
+          hintKey: 'js_hint_13',
+          starterCode: '// Use try/catch to catch an error when calling an undefined function.\n',
+          solutionCode: 'try {\n  undefinedFn();\n} catch (e) {\n  console.log("Error caught!");\n}',
+          expectedOutput: 'Error caught!'
+        },
+        {
+          id: 14, level: 14, titleKey: 'js_string_methods', icon: 'brain', xp: 30, color: '#f39c12', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_14',
+          estimatedMinutes: 10,
+          difficulty: 'Intermediate',
+          tags: ['Strings', 'Methods'],
+          hintKey: 'js_hint_14',
+          starterCode: '// Turn "hello world" into uppercase and log it.\n',
+          solutionCode: 'console.log("hello world".toUpperCase());',
+          expectedOutput: 'HELLO WORLD'
+        },
+        {
+          id: 15, level: 15, titleKey: 'js_final_project', icon: 'trophy', xp: 100, color: '#e67e22', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'js_challenge_15',
+          estimatedMinutes: 30,
+          difficulty: 'Advanced',
+          tags: ['Project', 'JavaScript'],
+          hintKey: 'js_hint_15',
+          starterCode: '// Final challenge: Score calculator!\n// Given an array of scores, log the highest score.\nconst scores = [72, 95, 88, 61, 100];\n',
+          solutionCode: 'const scores = [72, 95, 88, 61, 100];\nconsole.log(Math.max(...scores));',
+          expectedOutput: '100'
+        },
+      ],
+    },
+    {
+      // ── JavaScript Chapter 4: Advanced JS ─────────────────────────────────
+      id: 'js_advanced',
+      titleKey: 'js_ch4_title',
+      lessons: [
+        {
+          id: 16, level: 16, titleKey: 'js_destructuring', icon: 'brain', xp: 35, color: '#9b59b6', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_16', estimatedMinutes: 10,
+          difficulty: 'Advanced', tags: ['Destructuring', 'ES6'],
+          hintKey: 'js_hint_16',
+          starterCode: '// Destructure name and age from the object below.\n// Then log the name.\nconst person = { name: "Ali", age: 20 };\n',
+          solutionCode: 'const person = { name: "Ali", age: 20 };\nconst { name } = person;\nconsole.log(name);',
+          expectedOutput: 'Ali'
+        },
+        {
+          id: 17, level: 17, titleKey: 'js_spread_rest', icon: 'brain', xp: 35, color: '#9b59b6', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_17', estimatedMinutes: 10,
+          difficulty: 'Advanced', tags: ['Spread', 'Rest', 'ES6'],
+          hintKey: 'js_hint_17',
+          starterCode: '// Merge two arrays using spread syntax.\n// Then log the merged array length.\nconst a = [1, 2];\nconst b = [3, 4];\n',
+          solutionCode: 'const a = [1, 2];\nconst b = [3, 4];\nconst merged = [...a, ...b];\nconsole.log(merged.length);',
+          expectedOutput: '4'
+        },
+        {
+          id: 18, level: 18, titleKey: 'js_generators', icon: 'star', xp: 45, color: '#9b59b6', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'js_challenge_18', estimatedMinutes: 15,
+          difficulty: 'Advanced', tags: ['Generators', 'yield'],
+          hintKey: 'js_hint_18',
+          starterCode: '// Create a generator that yields "A" then "B".\n// Log the first yielded value.\n',
+          solutionCode: 'function* letters() { yield "A"; yield "B"; }\nconst gen = letters();\nconsole.log(gen.next().value);',
+          expectedOutput: 'A'
+        },
+        {
+          id: 19, level: 19, titleKey: 'js_regex', icon: 'brain', xp: 45, color: '#9b59b6', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_19', estimatedMinutes: 15,
+          difficulty: 'Advanced', tags: ['Regex', 'Patterns'],
+          hintKey: 'js_hint_19',
+          starterCode: '// Use a regex to test if "hello world" contains "world".\n// Log true or false.\n',
+          solutionCode: 'console.log(/world/.test("hello world"));',
+          expectedOutput: 'true'
+        },
+        {
+          id: 20, level: 20, titleKey: 'js_prototype', icon: 'brain', xp: 50, color: '#9b59b6', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_20', estimatedMinutes: 15,
+          difficulty: 'Expert', tags: ['Prototype', 'OOP'],
+          hintKey: 'js_hint_20',
+          starterCode: '// Add a greet() method to the prototype of a Person constructor.\nfunction Person(name) { this.name = name; }\n',
+          solutionCode: 'function Person(name) { this.name = name; }\nPerson.prototype.greet = function() { console.log("Hi, " + this.name); };\nnew Person("Sara").greet();',
+          expectedOutput: 'Hi, Sara'
+        },
+        {
+          id: 21, level: 21, titleKey: 'js_master_project', icon: 'trophy', xp: 150, color: '#a04000', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'js_challenge_21', estimatedMinutes: 40,
+          difficulty: 'Expert', tags: ['Project', 'JavaScript', 'Expert'],
+          hintKey: 'js_hint_21',
+          starterCode: '// Master Project: Find the most frequent word in a sentence.\nconst text = "code is great and code is fun";\n',
+          solutionCode: 'const text = "code is great and code is fun";\nconst freq = {};\ntext.split(" ").forEach(w => freq[w] = (freq[w]||0)+1);\nconst top = Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];\nconsole.log(top);',
+          expectedOutput: 'code'
+        },
+      ],
+    },
   ],
   lua: [
     {
@@ -443,28 +895,73 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         {
           id: 1, level: 1, titleKey: 'web_html_basics', icon: 'brain', xp: 15, color: '#e34f26', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'web_challenge_1',
+          explanationKey: 'web_explain_1',
           hintKey: 'web_hint_1',
-          starterCode: '// In this world, we use console.log to simulate HTML tags!\n// Log "<h1>Hello World</h1>" to the console.\n',
+          estimatedMinutes: 8,
+          difficulty: 'Beginner',
+          tags: ['HTML', 'Tags'],
+          objectivesKey: 'web_obj_1',
+          proTipKey: 'web_tip_1',
+          starterCode: '// In this world, we use console.log to simulate HTML tags!\n// Log "<h1>Hello World</h1>" to the console.\n\n',
           solutionCode: 'console.log("<h1>Hello World</h1>");',
           expectedOutput: '<h1>Hello World</h1>'
         },
         {
           id: 2, level: 2, titleKey: 'web_images_links', icon: 'brain', xp: 20, color: '#e34f26', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'web_challenge_2',
+          explanationKey: 'web_explain_2',
           hintKey: 'web_hint_2',
-          starterCode: '// Log an <img> tag with src="magic.png".\n',
+          estimatedMinutes: 10,
+          difficulty: 'Beginner',
+          tags: ['HTML', 'Images'],
+          objectivesKey: 'web_obj_2',
+          proTipKey: 'web_tip_2',
+          starterCode: '// Log an <img> tag with src="magic.png".\n\n',
           solutionCode: 'console.log(\'<img src="magic.png">\');',
           expectedOutput: '<img src="magic.png">'
         },
-        { id: 3, level: 3, titleKey: 'web_css_intro', icon: 'star', xp: 25, color: '#1572b6', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'web_challenge_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        {
+          id: 3, level: 3, titleKey: 'web_css_intro', icon: 'star', xp: 25, color: '#1572b6', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'web_challenge_3',
+          explanationKey: 'web_explain_3',
+          hintKey: 'web_hint_3',
+          estimatedMinutes: 10,
+          difficulty: 'Beginner',
+          tags: ['CSS', 'Style'],
+          objectivesKey: 'web_obj_3',
+          proTipKey: 'web_tip_3',
+          starterCode: '// We are styling a button! Log "color: blue;"\n\n',
+          solutionCode: 'console.log("color: blue;");',
+          expectedOutput: 'color: blue;'
+        },
         {
           id: 4, level: 4, titleKey: 'web_css_layout', icon: 'brain', xp: 30, color: '#1572b6', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'web_challenge_4',
-          starterCode: '// Log "display: flex" to simulate a CSS property.\n',
+          explanationKey: 'web_explain_4',
+          hintKey: 'web_hint_4',
+          estimatedMinutes: 12,
+          difficulty: 'Intermediate',
+          tags: ['CSS', 'Flexbox'],
+          objectivesKey: 'web_obj_4',
+          proTipKey: 'web_tip_4',
+          starterCode: '// Log "display: flex" to simulate a CSS layout property.\n\n',
           solutionCode: 'console.log("display: flex");',
           expectedOutput: 'display: flex'
         },
-        { id: 5, level: 5, titleKey: 'web_animal_page', icon: 'trophy', xp: 50, color: '#333333', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'web_challenge_5', starterCode: '', solutionCode: '', expectedOutput: '' },
+        {
+          id: 5, level: 5, titleKey: 'web_animal_page', icon: 'trophy', xp: 50, color: '#333333', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'web_challenge_5',
+          explanationKey: 'web_explain_5',
+          hintKey: 'web_hint_5',
+          estimatedMinutes: 20,
+          difficulty: 'Intermediate',
+          tags: ['HTML', 'Project'],
+          objectivesKey: 'web_obj_5',
+          proTipKey: 'web_tip_5',
+          starterCode: '// Create a full div!\n// Log "<div>Animal Page</div>"\n\n',
+          solutionCode: 'console.log("<div>Animal Page</div>");',
+          expectedOutput: '<div>Animal Page</div>'
+        },
       ],
     },
     {
@@ -487,12 +984,157 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         },
         { id: 8, level: 8, titleKey: 'web_responsive_design', icon: 'star', xp: 35, color: '#1572b6', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'web_challenge_8', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
-    }
+    },
+    {
+      // ── Web Dev Chapter 3: Interactive & Responsive Web ──────────────────
+      id: 'web_pro',
+      titleKey: 'web_ch3_title',
+      lessons: [
+        {
+          id: 9, level: 9, titleKey: 'web_forms', icon: 'brain', xp: 30, color: '#e74c3c', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'web_challenge_9',
+          estimatedMinutes: 12,
+          difficulty: 'Intermediate',
+          tags: ['HTML', 'Forms'],
+          hintKey: 'web_hint_9',
+          starterCode: '// Log an HTML form input tag.\n// Log: "<input type=\'text\' placeholder=\'Name\'>"\n',
+          solutionCode: "console.log(\"<input type='text' placeholder='Name'>\");",
+          expectedOutput: "<input type='text' placeholder='Name'>"
+        },
+        {
+          id: 10, level: 10, titleKey: 'web_css_variables', icon: 'brain', xp: 30, color: '#e74c3c', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'web_challenge_10',
+          estimatedMinutes: 10,
+          difficulty: 'Intermediate',
+          tags: ['CSS', 'Variables'],
+          hintKey: 'web_hint_10',
+          starterCode: '// CSS Custom Variables! Log "--primary-color: #3498db;"\n',
+          solutionCode: 'console.log("--primary-color: #3498db;");',
+          expectedOutput: '--primary-color: #3498db;'
+        },
+        {
+          id: 11, level: 11, titleKey: 'web_animations', icon: 'star', xp: 40, color: '#e74c3c', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'web_challenge_11',
+          estimatedMinutes: 15,
+          difficulty: 'Intermediate',
+          tags: ['CSS', 'Animation'],
+          hintKey: 'web_hint_11',
+          starterCode: '// Log a CSS transition rule: "transition: all 0.3s ease;"\n',
+          solutionCode: 'console.log("transition: all 0.3s ease;");',
+          expectedOutput: 'transition: all 0.3s ease;'
+        },
+        {
+          id: 12, level: 12, titleKey: 'web_semantic_html', icon: 'brain', xp: 30, color: '#e74c3c', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'web_challenge_12',
+          estimatedMinutes: 10,
+          difficulty: 'Intermediate',
+          tags: ['HTML', 'Semantics'],
+          hintKey: 'web_hint_12',
+          starterCode: '// Log a semantic nav element: "<nav>Menu</nav>"\n',
+          solutionCode: 'console.log("<nav>Menu</nav>");',
+          expectedOutput: '<nav>Menu</nav>'
+        },
+        {
+          id: 13, level: 13, titleKey: 'web_media_queries', icon: 'brain', xp: 40, color: '#e74c3c', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'web_challenge_13',
+          estimatedMinutes: 15,
+          difficulty: 'Intermediate',
+          tags: ['CSS', 'Responsive'],
+          hintKey: 'web_hint_13',
+          starterCode: '// Log a media query rule: "@media (max-width: 600px)"\n',
+          solutionCode: 'console.log("@media (max-width: 600px)");',
+          expectedOutput: '@media (max-width: 600px)'
+        },
+        {
+          id: 14, level: 14, titleKey: 'web_pseudo_selectors', icon: 'brain', xp: 35, color: '#e74c3c', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'web_challenge_14',
+          estimatedMinutes: 12,
+          difficulty: 'Intermediate',
+          tags: ['CSS', 'Selectors'],
+          hintKey: 'web_hint_14',
+          starterCode: '// Log a CSS hover pseudo-selector: "button:hover { ... }"\n',
+          solutionCode: 'console.log("button:hover { color: white; }");',
+          expectedOutput: 'button:hover { color: white; }'
+        },
+        {
+          id: 15, level: 15, titleKey: 'web_final_project', icon: 'trophy', xp: 100, color: '#8e44ad', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'web_challenge_15',
+          estimatedMinutes: 30,
+          difficulty: 'Advanced',
+          tags: ['Project', 'HTML', 'CSS'],
+          hintKey: 'web_hint_15',
+          starterCode: '// Final challenge: Complete a webpage structure!\n// Log the full HTML skeleton: "<html><head></head><body></body></html>"\n',
+          solutionCode: 'console.log("<html><head></head><body></body></html>");',
+          expectedOutput: '<html><head></head><body></body></html>'
+        },
+      ],
+    },
+    {
+      // ── Web Dev Chapter 4: Modern & Accessible Web ────────────────────────
+      id: 'web_modern',
+      titleKey: 'web_ch4_title',
+      lessons: [
+        {
+          id: 16, level: 16, titleKey: 'web_css_grid_advanced', icon: 'brain', xp: 35, color: '#c0392b', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'web_challenge_16', estimatedMinutes: 15,
+          difficulty: 'Advanced', tags: ['CSS', 'Grid', 'Layout'],
+          hintKey: 'web_hint_16',
+          starterCode: '// Log a CSS grid area definition: "grid-template-areas: \'header header\' \'sidebar main\'"\n',
+          solutionCode: "console.log(\"grid-template-areas: 'header header' 'sidebar main'\");",
+          expectedOutput: "grid-template-areas: 'header header' 'sidebar main'"
+        },
+        {
+          id: 17, level: 17, titleKey: 'web_js_events', icon: 'brain', xp: 35, color: '#c0392b', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'web_challenge_17', estimatedMinutes: 15,
+          difficulty: 'Advanced', tags: ['JavaScript', 'Events', 'DOM'],
+          hintKey: 'web_hint_17',
+          starterCode: '// Simulate an event: log "Button clicked!"\nconsole.log("Button clicked!");\n',
+          solutionCode: 'console.log("Button clicked!");',
+          expectedOutput: 'Button clicked!'
+        },
+        {
+          id: 18, level: 18, titleKey: 'web_accessibility', icon: 'star', xp: 30, color: '#c0392b', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'web_challenge_18', estimatedMinutes: 12,
+          difficulty: 'Advanced', tags: ['a11y', 'ARIA'],
+          hintKey: 'web_hint_18',
+          starterCode: '// Log an accessible image tag with an alt attribute.\n',
+          solutionCode: 'console.log(\"<img src=\'photo.png\' alt=\'A sunset\'>\");',
+          expectedOutput: "<img src='photo.png' alt='A sunset'>"
+        },
+        {
+          id: 19, level: 19, titleKey: 'web_local_storage', icon: 'brain', xp: 40, color: '#c0392b', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'web_challenge_19', estimatedMinutes: 12,
+          difficulty: 'Advanced', tags: ['Browser', 'Storage'],
+          hintKey: 'web_hint_19',
+          starterCode: '// Log the JS code to save a value to localStorage.\n',
+          solutionCode: 'console.log("localStorage.setItem(\'theme\', \'dark\')");',
+          expectedOutput: "localStorage.setItem('theme', 'dark')"
+        },
+        {
+          id: 20, level: 20, titleKey: 'web_performance', icon: 'brain', xp: 45, color: '#c0392b', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'web_challenge_20', estimatedMinutes: 15,
+          difficulty: 'Expert', tags: ['Performance', 'Optimization'],
+          hintKey: 'web_hint_20',
+          starterCode: '// Log a performance tip: "Use lazy loading for images: loading=\'lazy\'"\n',
+          solutionCode: 'console.log("Use lazy loading for images: loading=\'lazy\'");',
+          expectedOutput: "Use lazy loading for images: loading='lazy'"
+        },
+        {
+          id: 21, level: 21, titleKey: 'web_master_project', icon: 'trophy', xp: 150, color: '#4a235a', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'web_challenge_21', estimatedMinutes: 40,
+          difficulty: 'Expert', tags: ['Project', 'HTML', 'CSS', 'Expert'],
+          hintKey: 'web_hint_21',
+          starterCode: '// Master Project: Full page structure!\n// Log the HTML for a complete responsive page header.\n',
+          solutionCode: 'console.log("<header class=\'responsive-header\'><nav>Menu</nav></header>");',
+          expectedOutput: "<header class='responsive-header'><nav>Menu</nav></header>"
+        },
+      ],
+    },
   ],
-  c_plus_plus: [
+  'c++': [
     {
       id: 'cpp_basics',
-      titleKey: 'c_plus_plus',
+      titleKey: 'c++',
       lessons: [
         {
           id: 1, level: 1, titleKey: 'introduction', icon: '🐉', xp: 15, color: '#00599c', type: 'lesson', nodeType: 'standard',
@@ -790,7 +1432,7 @@ export const BADGES_BY_PATH: { [key: string]: Badge[] } = {
     { id: 'web_badge3', lessonId: 3, icon: '🎨', titleKey: 'web_styler_badge' },
     { id: 'web_badge4', lessonId: 5, icon: '🏆', titleKey: 'web_builder_badge' },
   ],
-  c_plus_plus: [
+  'c++': [
     { id: 'cpp_badge1', lessonId: 1, icon: '👉', titleKey: 'cpp_badge_pointer' },
     { id: 'cpp_badge2', lessonId: 2, icon: '🏛️', titleKey: 'cpp_badge_oop' },
     { id: 'cpp_badge3', lessonId: 3, icon: '📚', titleKey: 'cpp_badge_stl' },

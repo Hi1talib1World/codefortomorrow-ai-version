@@ -25,7 +25,7 @@ const WizardStepper = ({ currentStep }: { currentStep: number }) => {
         <div className="w-full max-w-4xl mx-auto mb-12">
             <div className="flex justify-between relative">
                 <div className="absolute top-1/2 -translate-y-1/2 left-0 w-full h-1 bg-gray-200 dark:bg-slate-700"></div>
-                <div 
+                <div
                     className="absolute top-1/2 -translate-y-1/2 left-0 h-1 bg-brand-500 transition-all duration-500"
                     style={{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }}
                 ></div>
@@ -77,10 +77,10 @@ const SelectCurriculumStep = ({ formData, setFormData }: { formData: any, setFor
 
 const SelectStageStep = ({ formData, setFormData }: { formData: any, setFormData: any }) => {
     const { t } = useLanguage();
-    let stageOptions = formData.curriculum === 'MOROCCAN' 
-        ? [ { id: 'preschool', key: 'stage_preschool' }, { id: 'primary', key: 'stage_primary' }, { id: 'lower_secondary', key: 'stage_lower_secondary' }, { id: 'upper_secondary', key: 'stage_upper_secondary' } ]
-        : [ { id: 'stage_1', key: 'stage_1' }, { id: 'stage_2', key: 'stage_2' }, { id: 'stage_3', key: 'stage_3' }, { id: 'stage_4', key: 'stage_4' }, { id: 'stage_5', key: 'stage_5' }, { id: 'stage_6', key: 'stage_6' } ];
-    
+    let stageOptions = formData.curriculum === 'MOROCCAN'
+        ? [{ id: 'preschool', key: 'stage_preschool' }, { id: 'primary', key: 'stage_primary' }, { id: 'lower_secondary', key: 'stage_lower_secondary' }, { id: 'upper_secondary', key: 'stage_upper_secondary' }]
+        : [{ id: 'stage_1', key: 'stage_1' }, { id: 'stage_2', key: 'stage_2' }, { id: 'stage_3', key: 'stage_3' }, { id: 'stage_4', key: 'stage_4' }, { id: 'stage_5', key: 'stage_5' }, { id: 'stage_6', key: 'stage_6' }];
+
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {stageOptions.map(option => (
@@ -99,8 +99,8 @@ const SelectStageStep = ({ formData, setFormData }: { formData: any, setFormData
 const OutcomesStep = ({ subject, formData, setFormData }: { subject: string, formData: any, setFormData: any }) => {
     const { t } = useLanguage();
     const isFrench = subject.toLowerCase().includes('french') || subject.toLowerCase().includes('français');
-    
-    const outcomesList = isFrench 
+
+    const outcomesList = isFrench
         ? ["Grammaire & Syntaxe", "Vocabulaire Thématique", "Conjugaison des Verbes", "Compréhension de l'Écrit", "Orthographe et Dictée"]
         : ["Problem Solving", "Core Concepts", "Advanced Theories", "Practical Application", "History of Subject"];
 
@@ -159,7 +159,7 @@ const GeneratingStep = ({ subject, formData, onComplete }: { subject: string, fo
     return (
         <div className="text-center py-12">
             <div className="w-24 h-24 border-8 border-brand-200 border-t-brand-600 rounded-full animate-spin mx-auto mb-6"></div>
-            <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase italic animate-pulse">{t('consulting_ai')}</h2>
+            <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase italic">{t('consulting_ai')}</h2>
             <div className="w-full max-w-xs bg-gray-200 dark:bg-slate-700 h-2 rounded-full mx-auto mt-6 overflow-hidden">
                 <div className="bg-brand-600 h-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
             </div>
@@ -172,14 +172,14 @@ const PreviewStep = ({ questions, subject, onSave, onBack }: { questions: QuizQu
     const [title, setTitle] = useState(`${subject} Mastery Quiz`);
     return (
         <div className="space-y-6">
-            <input 
+            <input
                 type="text" value={title} onChange={e => setTitle(e.target.value)}
                 className="w-full p-4 border-b-4 border-brand-500 text-2xl font-black dark:bg-slate-800 dark:text-white focus:outline-none"
             />
             <div className="max-h-96 overflow-y-auto space-y-3 pr-2">
                 {questions.map((q, i) => (
                     <div key={i} className="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border dark:border-slate-700">
-                        <p className="font-bold dark:text-white">{i+1}. {q.question}</p>
+                        <p className="font-bold dark:text-white">{i + 1}. {q.question}</p>
                         <p className="text-xs text-green-600 mt-1 font-bold">{t('correct_answer_label')} {q.answer}</p>
                     </div>
                 ))}
@@ -217,10 +217,10 @@ const CurriculumWizard: React.FC<CurriculumWizardProps> = ({ subjectTitleKey, on
                     <h2 className="text-xl font-bold dark:text-white">{t('last_details')}</h2>
                     <div className="flex space-x-4">
                         {[5, 10, 15].map(c => (
-                            <button key={c} onClick={() => setFormData({...formData, questionCount: c})} className={`flex-1 p-4 border-2 rounded-xl font-bold ${formData.questionCount === c ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30' : 'border-gray-100 dark:border-slate-700 dark:text-slate-400'}`}>{c} {t('questions_label')}</button>
+                            <button key={c} onClick={() => setFormData({ ...formData, questionCount: c })} className={`flex-1 p-4 border-2 rounded-xl font-bold ${formData.questionCount === c ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30' : 'border-gray-100 dark:border-slate-700 dark:text-slate-400'}`}>{c} {t('questions_label')}</button>
                         ))}
                     </div>
-                    <select value={formData.language} onChange={e => setFormData({...formData, language: e.target.value})} className="w-full p-4 border-2 rounded-xl dark:bg-slate-800 dark:text-white dark:border-slate-700">
+                    <select value={formData.language} onChange={e => setFormData({ ...formData, language: e.target.value })} className="w-full p-4 border-2 rounded-xl dark:bg-slate-800 dark:text-white dark:border-slate-700">
                         <option>Français</option><option>English</option><option>العربية</option>
                     </select>
                 </div>
@@ -252,14 +252,14 @@ const CurriculumWizard: React.FC<CurriculumWizardProps> = ({ subjectTitleKey, on
             </header>
 
             {currentStep <= 5 && <WizardStepper currentStep={currentStep} />}
-            
+
             <div className="w-full max-w-2xl mx-auto bg-white dark:bg-slate-800 p-10 rounded-[2.5rem] shadow-xl border-b-[12px] border-slate-200 dark:border-slate-950 transition-colors">
                 {renderStepContent()}
                 {currentStep < 5 && (
                     <div className="flex mt-10 justify-between space-x-4">
                         <button onClick={prevStep} className="flex-1 py-4 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 font-bold rounded-2xl hover:bg-slate-200 transition">{t('back_button')}</button>
-                        <button 
-                            onClick={nextStep} 
+                        <button
+                            onClick={nextStep}
                             disabled={(currentStep === 1 && !formData.curriculum) || (currentStep === 2 && !formData.stage) || (currentStep === 3 && formData.outcomes.length === 0)}
                             className="flex-[2] py-4 bg-brand-600 text-white font-black rounded-2xl shadow-lg hover:bg-brand-500 disabled:opacity-50 disabled:grayscale transition"
                         >

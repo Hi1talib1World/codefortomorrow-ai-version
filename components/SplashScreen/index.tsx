@@ -19,7 +19,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
       <div className="transform scale-150 mb-4">
         <Mascot />
       </div>
-      <h1 className="text-5xl font-black mb-4 animate-pulse italic tracking-tighter uppercase">code for tomorrow</h1>
+      <h1 className="text-5xl font-black mb-4 italic tracking-tighter uppercase">code for tomorrow</h1>
       <div className="flex space-x-2 justify-center">
         <div className="w-3 h-3 bg-brand-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
         <div className="w-3 h-3 bg-brand-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>

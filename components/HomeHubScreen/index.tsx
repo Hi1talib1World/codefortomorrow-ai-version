@@ -28,7 +28,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
             <div className="min-h-full w-full bg-transparent overflow-x-hidden relative p-4 md:p-8">
                 <div className="max-w-6xl mx-auto space-y-10 animate-pop-in relative z-10">
                     <h1 className="text-3xl font-black text-slate-800 dark:text-white flex items-center gap-3">
-                        <span className="animate-bounce">👋</span> Hello, {userName}!
+                        <span>👋</span> Hello, {userName}!
                     </h1>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -122,13 +122,13 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Animated Background Elements */}
                 <div className="absolute top-10 left-5 opacity-20 animate-float pointer-events-none text-4xl">☁️</div>
                 <div className="absolute top-20 right-10 opacity-20 animate-float-delayed pointer-events-none text-4xl">☁️</div>
                 <div className="absolute bottom-20 left-1/4 opacity-10 animate-pulse pointer-events-none text-3xl">⭐</div>
                 <div className="absolute top-1/3 right-5 opacity-10 animate-pulse pointer-events-none text-3xl">✨</div>
-                
+
                 <style>{`
                     @keyframes float {
                         0%, 100% { transform: translateY(0) translateX(0); }
@@ -147,7 +147,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
 
     return (
         <div className="min-h-full w-full bg-transparent overflow-x-hidden relative">
-            
+
             {/* Animated Background Elements */}
             <div className="absolute top-10 left-5 opacity-20 animate-float pointer-events-none text-4xl">☁️</div>
             <div className="absolute top-20 right-10 opacity-20 animate-float-delayed pointer-events-none text-4xl">☁️</div>
@@ -155,7 +155,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
             <div className="absolute top-1/3 right-5 opacity-10 animate-pulse pointer-events-none text-3xl">✨</div>
 
             <div className="max-w-5xl mx-auto space-y-12 relative z-10">
-                
+
                 {/* Hero Greeting Section */}
                 <div className="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-10">
                     <div className="relative group shrink-0">
@@ -175,7 +175,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                                 {t('welcome_message')} {t('magic_found')}
                             </p>
                         </div>
-                        
+
                         {/* Quick Stats Grid */}
                         <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto md:mx-0">
                             <FloatingStat icon="🔥" value="7" label={t('day_streak')} color="border-orange-500" />
@@ -186,9 +186,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
 
                 {/* Adventure Path Selection */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-                    
+
                     {/* Learn Card */}
-                    <button 
+                    <button
                         onClick={() => onNavigate('learn')}
                         className="group relative bg-white dark:bg-slate-800 border-b-[8px] border-brand-600 dark:border-brand-900 rounded-2xl p-6 text-center transition-all transform hover:-translate-y-2 hover:shadow-2xl active:translate-y-1 active:border-b-2 overflow-hidden kid-card bubbly-btn"
                     >
@@ -210,7 +210,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                     </button>
 
                     {/* Create Card */}
-                    <button 
+                    <button
                         onClick={() => onNavigate('creations')}
                         className="group relative bg-white dark:bg-slate-800 border-b-[8px] border-brand-600 dark:border-brand-900 rounded-2xl p-6 text-center transition-all transform hover:-translate-y-2 hover:shadow-2xl active:translate-y-1 active:border-b-2 overflow-hidden kid-card bubbly-btn"
                     >
@@ -232,7 +232,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                     </button>
 
                 </div>
-                
+
                 {/* Daily Tip Footer */}
                 <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md p-4 rounded-2xl border-2 border-yellow-200 dark:border-slate-700 flex items-center space-x-4 max-w-2xl mx-auto shadow-lg transition-all hover:shadow-xl group">
                     <div className="bg-yellow-400 text-white w-10 h-10 shrink-0 rounded-xl flex items-center justify-center text-xl shadow-md group-hover:animate-bounce transition-transform">💡</div>

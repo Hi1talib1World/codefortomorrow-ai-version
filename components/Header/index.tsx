@@ -67,9 +67,9 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
 
   return (
     <header className="sticky top-0 bg-white dark:bg-slate-800 shadow-lg px-6 py-3 z-20 border-b-4 border-brand-100 dark:border-slate-700 transition-colors">
-      <DbSetupGuide 
-        isOpen={isDbGuideOpen} 
-        onClose={() => setIsDbGuideOpen(false)} 
+      <DbSetupGuide
+        isOpen={isDbGuideOpen}
+        onClose={() => setIsDbGuideOpen(false)}
         onRetry={handleRetryDb}
         isRetrying={dbStatus === 'loading'}
       />
@@ -77,20 +77,19 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
         <h1 className="text-2xl md:hidden font-black text-brand-500 dark:text-brand-400 leading-none italic tracking-tighter">C4T</h1>
         <div className="flex-grow md:hidden"></div>
         <div className="flex items-center space-x-3 sm:space-x-6 rtl:space-x-reverse">
-          
+
           {/* DB Status Indicator */}
           <div className="flex items-center gap-2">
-            <div 
-              className={`w-3 h-3 rounded-full shadow-sm ${
-                dbStatus === 'connected' ? 'bg-green-500 animate-pulse' : 
-                dbStatus === 'loading' ? 'bg-yellow-400 animate-spin' : 'bg-red-500'
-              }`}
+            <div
+              className={`w-3 h-3 rounded-full shadow-sm ${dbStatus === 'connected' ? 'bg-green-500 animate-pulse' :
+                  dbStatus === 'loading' ? 'bg-yellow-400 animate-spin' : 'bg-red-500'
+                }`}
               title={dbStatus === 'connected' ? 'Database Connected' : 'Database Disconnected - Check IP Whitelist'}
             ></div>
             {dbStatus === 'disconnected' && (
-              <button 
+              <button
                 onClick={() => setIsDbGuideOpen(true)}
-                className="text-[10px] font-black text-red-500 uppercase hover:underline animate-bounce"
+                className="text-[10px] font-black text-red-500 uppercase hover:underline"
               >
                 Fix Connection
               </button>
@@ -136,53 +135,53 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
                 <div className="p-3 space-y-1">
                   {PATHS.map(path => (
                     <button
-                        key={path.id}
-                        onClick={() => {
-                          onSwitchPath(path.id);
-                          setIsPathDropdownOpen(false);
-                        }}
-                        className="w-full text-left flex items-center space-x-3 p-3 hover:bg-brand-50 dark:hover:bg-slate-700 rounded-xl transition-all group bubbly-btn"
+                      key={path.id}
+                      onClick={() => {
+                        onSwitchPath(path.id);
+                        setIsPathDropdownOpen(false);
+                      }}
+                      className="w-full text-left flex items-center space-x-3 p-3 hover:bg-brand-50 dark:hover:bg-slate-700 rounded-xl transition-all group bubbly-btn"
                     >
-                        <span className="text-2xl group-hover:scale-110 transition-transform flex items-center justify-center w-8 h-8">
-                          {path.icon.startsWith('http') ? (
-                            <img src={path.icon} alt="" className="w-8 h-8 object-contain" referrerPolicy="no-referrer" />
-                          ) : (
-                            path.icon
-                          )}
-                        </span>
-                        <span className="font-black text-slate-700 dark:text-slate-200 uppercase italic tracking-tighter text-sm">{t(path.titleKey as any)}</span>
+                      <span className="text-2xl group-hover:scale-110 transition-transform flex items-center justify-center w-8 h-8">
+                        {path.icon.startsWith('http') ? (
+                          <img src={path.icon} alt="" className="w-8 h-8 object-contain" referrerPolicy="no-referrer" />
+                        ) : (
+                          path.icon
+                        )}
+                      </span>
+                      <span className="font-black text-slate-700 dark:text-slate-200 uppercase italic tracking-tighter text-sm">{t(path.titleKey as any)}</span>
                     </button>
                   ))}
                 </div>
               </div>
             )}
           </div>
-          
+
           <div className="hidden sm:flex items-center space-x-3">
-              <div className="flex items-center space-x-2 rtl:space-x-reverse text-orange-500 font-black text-sm bg-orange-50 dark:bg-orange-900/20 px-3 py-1.5 rounded-2xl shadow-inner border border-orange-100 dark:border-orange-800/30">
-                <span className="animate-bounce">🔥</span>
-                <span>{currentUser.progress.streak}</span>
-              </div>
-              <div className="flex items-center space-x-2 rtl:space-x-reverse text-yellow-500 font-black text-sm bg-yellow-50 dark:bg-yellow-900/20 px-3 py-1.5 rounded-2xl shadow-inner border border-yellow-100 dark:border-yellow-800/30">
-                <span className="animate-pulse">⭐</span>
-                <span>{currentUser.progress.xp}</span>
-              </div>
+            <div className="flex items-center space-x-2 rtl:space-x-reverse text-orange-500 font-black text-sm bg-orange-50 dark:bg-orange-900/20 px-3 py-1.5 rounded-2xl shadow-inner border border-orange-100 dark:border-orange-800/30">
+              <span className="animate-bounce">🔥</span>
+              <span>{currentUser.progress.streak}</span>
+            </div>
+            <div className="flex items-center space-x-2 rtl:space-x-reverse text-yellow-500 font-black text-sm bg-yellow-50 dark:bg-yellow-900/20 px-3 py-1.5 rounded-2xl shadow-inner border border-yellow-100 dark:border-yellow-800/30">
+              <span className="animate-pulse">⭐</span>
+              <span>{currentUser.progress.xp}</span>
+            </div>
           </div>
-          
+
           <div className="relative group">
-              <select 
-                value={language} 
-                onChange={handleLanguageChange}
-                className="appearance-none bg-brand-50 dark:bg-slate-700 dark:text-slate-200 rounded-2xl px-4 py-2 pr-10 font-bold focus:outline-none focus:ring-4 focus:ring-brand-500/20 shadow-sm transition-all border-b-2 border-brand-200 dark:border-slate-600 bubbly-btn text-sm"
-                aria-label="Select language"
-              >
-                <option value={Language.EN}>EN</option>
-                <option value={Language.FR}>FR</option>
-                <option value={Language.AR}>AR</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
-              </div>
+            <select
+              value={language}
+              onChange={handleLanguageChange}
+              className="appearance-none bg-brand-50 dark:bg-slate-700 dark:text-slate-200 rounded-2xl px-4 py-2 pr-10 font-bold focus:outline-none focus:ring-4 focus:ring-brand-500/20 shadow-sm transition-all border-b-2 border-brand-200 dark:border-slate-600 bubbly-btn text-sm"
+              aria-label="Select language"
+            >
+              <option value={Language.EN}>EN</option>
+              <option value={Language.FR}>FR</option>
+              <option value={Language.AR}>AR</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+              <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
+            </div>
           </div>
 
           <button

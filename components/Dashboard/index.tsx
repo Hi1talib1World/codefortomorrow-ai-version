@@ -23,10 +23,11 @@ interface DashboardProps {
   onLogout: () => void;
   onSwitchPath: (pathId: ProgrammingPath['id']) => void;
   onUpdateUser: (updatedData: Partial<User>) => void;
+  initialView?: DashboardView;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLogout, onSwitchPath, onUpdateUser }) => {
-  const [activeView, setActiveView] = useState<DashboardView>('home');
+const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLogout, onSwitchPath, onUpdateUser, initialView = 'home' }) => {
+  const [activeView, setActiveView] = useState<DashboardView>(initialView);
   const path = currentUser.currentPath;
 
   const renderActiveView = () => {
@@ -40,12 +41,12 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
             setActiveView('learn');
           }} />;
         }
-        return <LearnScreen 
-                 completedLessons={currentUser.progress.completedLessons[path] || []} 
-                 onStartLesson={onStartLesson}
-                 path={path}
-                 onSwitchPath={onSwitchPath}
-               />;
+        return <LearnScreen
+          completedLessons={currentUser.progress.completedLessons[path] || []}
+          onStartLesson={onStartLesson}
+          path={path}
+          onSwitchPath={onSwitchPath}
+        />;
       case 'profile':
         return <ProfileScreen currentUser={currentUser} onUpdateUser={onUpdateUser} />;
       case 'creations':
@@ -69,15 +70,15 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
     }
   };
 
-  const mainContentBg = (activeView === 'learn' && path) 
-    ? 'bg-brand-50 dark:bg-slate-900' 
+  const mainContentBg = (activeView === 'learn' && path)
+    ? 'bg-brand-50 dark:bg-slate-900'
     : (activeView === 'home' ? 'bg-transparent' : 'bg-brand-50 dark:bg-slate-900');
 
   return (
     <div className="flex h-screen bg-brand-50 dark:bg-slate-900 transition-colors duration-300">
       <Sidebar activeView={activeView} setActiveView={setActiveView} currentUser={currentUser} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header 
+        <Header
           currentUser={currentUser}
           onLogout={onLogout}
           onSwitchPath={onSwitchPath}
