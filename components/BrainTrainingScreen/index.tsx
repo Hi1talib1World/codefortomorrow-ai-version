@@ -1,16 +1,27 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function BrainTrainingScreen() {
     const navigate = useNavigate();
+    const { t } = useLanguage();
 
     // Generate 100 challenges
     const challenges = Array.from({ length: 100 }, (_, i) => ({
         id: i + 1,
-        title: `Brain Challenge ${i + 1}`,
-        unlocked: i === 0, // Only first one is free/unlocked
+        title: `${t('brain_training_challenges')} ${i + 1}`,
+        unlocked: i === 0,
     }));
+
+    const features = [
+        { emoji: '💯', key: 'brain_training_unlimited_access' as const },
+        { emoji: '💪', key: 'brain_training_unlimited_workouts' as const },
+        { emoji: '📊', key: 'brain_training_strengths' as const },
+        { emoji: '🤖', key: 'brain_training_ai_tips' as const },
+        { emoji: '🎯', key: 'brain_training_new_puzzles' as const },
+        { emoji: '✨', key: 'brain_training_premium' as const },
+    ];
 
     return (
         <div className="min-h-screen bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans">
@@ -22,7 +33,7 @@ export default function BrainTrainingScreen() {
                     className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors group px-3 py-2 rounded-xl hover:bg-white dark:hover:bg-slate-800"
                 >
                     <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                    <span className="font-bold text-sm">Back</span>
+                    <span className="font-bold text-sm">{t('brain_training_back')}</span>
                 </button>
             </div>
 
@@ -40,7 +51,7 @@ export default function BrainTrainingScreen() {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-white text-sm md:text-base leading-snug">
-                                        <span className="font-black underline decoration-2 underline-offset-2">Challenges</span> help you see your progress and ranking. Each test reveals what you know and what to work on.
+                                        <span className="font-black underline decoration-2 underline-offset-2">{t('brain_training_challenges')}</span> {t('brain_training_challenges_info')}
                                     </p>
                                 </div>
                                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white shrink-0 group-hover:bg-white/30 transition-colors">
@@ -55,7 +66,7 @@ export default function BrainTrainingScreen() {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-white text-sm md:text-base leading-snug">
-                                        <span className="font-black underline decoration-2 underline-offset-2">Brain Workouts</span> improve your skills. Explore all categories for balanced progress.
+                                        <span className="font-black underline decoration-2 underline-offset-2">{t('brain_training_workouts')}</span> {t('brain_training_workouts_info')}
                                     </p>
                                 </div>
                                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white shrink-0 group-hover:bg-white/30 transition-colors">
@@ -67,25 +78,18 @@ export default function BrainTrainingScreen() {
                         {/* Right – Premium Upsell */}
                         <div className="flex-1 p-6 md:p-8 flex flex-col justify-center border-t lg:border-t-0 lg:border-l border-white/10">
                             <h2 className="text-2xl md:text-3xl font-black text-white leading-tight mb-6">
-                                Take Your Brain Training to the Next Level!
+                                {t('brain_training_next_level')}
                             </h2>
                             <ul className="space-y-3 mb-8">
-                                {[
-                                    { emoji: '💯', text: 'Get unlimited access to all challenges' },
-                                    { emoji: '💪', text: 'Train freely with unlimited brain workouts' },
-                                    { emoji: '📊', text: 'See your strengths and areas to improve' },
-                                    { emoji: '🤖', text: 'Get smart improvement tips from AI' },
-                                    { emoji: '🎯', text: 'Challenge yourself with new brain puzzles' },
-                                    { emoji: '✨', text: 'Enjoy all premium features across the platform' },
-                                ].map((item, idx) => (
+                                {features.map((item, idx) => (
                                     <li key={idx} className="flex items-center gap-3 text-white/90 text-sm md:text-base">
                                         <span className="text-lg shrink-0">{item.emoji}</span>
-                                        <span>{item.text}</span>
+                                        <span>{t(item.key)}</span>
                                     </li>
                                 ))}
                             </ul>
                             <button className="self-start px-8 py-3 bg-white text-violet-700 font-black rounded-2xl text-sm uppercase tracking-wider shadow-lg hover:shadow-xl hover:bg-violet-50 transition-all transform hover:scale-105 active:scale-95">
-                                Unlock All Features
+                                {t('brain_training_unlock')}
                             </button>
                         </div>
                     </div>
@@ -97,11 +101,11 @@ export default function BrainTrainingScreen() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-2">
                     <h3 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white">
-                        All Challenges <span className="text-slate-400 dark:text-slate-500">({challenges.length})</span>
+                        {t('brain_training_all_challenges')} <span className="text-slate-400 dark:text-slate-500">({challenges.length})</span>
                     </h3>
                 </div>
                 <p className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-6">
-                    Free Challenge Tries Left: <span className="text-violet-600 dark:text-violet-400">1</span>
+                    {t('brain_training_free_tries')}: <span className="text-violet-600 dark:text-violet-400">1</span>
                 </p>
 
                 {/* Challenge Grid */}

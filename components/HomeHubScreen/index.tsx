@@ -36,7 +36,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Brain Training Section */}
                         <div className="lg:col-span-2 space-y-4">
-                            <h2 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Brain Training</h2>
+                            <h2 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">{t('brain_training')}</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <button onClick={() => navigate('/brain-training')} className="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700 text-left">
                                     <div className="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-700">
@@ -44,8 +44,8 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                                     </div>
                                     <div className="p-4 flex items-center justify-between">
                                         <div>
-                                            <p className="text-[10px] font-bold text-rose-400 uppercase">Brain Training</p>
-                                            <p className="text-sm font-black text-brand-500 dark:text-brand-400">Challenges</p>
+                                            <p className="text-[10px] font-bold text-rose-400 uppercase">{t('brain_training')}</p>
+                                            <p className="text-sm font-black text-brand-500 dark:text-brand-400">{t('brain_training_challenges')}</p>
                                         </div>
                                         <div className="w-8 h-8 rounded-full border-2 border-brand-100 dark:border-slate-700 flex items-center justify-center text-brand-500 dark:text-brand-400 group-hover:bg-brand-500 group-hover:text-white group-hover:border-brand-500 transition-all">
                                             <span className="text-lg">→</span>
@@ -58,8 +58,8 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                                     </div>
                                     <div className="p-4 flex items-center justify-between">
                                         <div>
-                                            <p className="text-[10px] font-bold text-rose-400 uppercase">Brain Training</p>
-                                            <p className="text-sm font-black text-brand-500 dark:text-brand-400">Workouts</p>
+                                            <p className="text-[10px] font-bold text-rose-400 uppercase">{t('brain_training')}</p>
+                                            <p className="text-sm font-black text-brand-500 dark:text-brand-400">{t('brain_training_workouts')}</p>
                                         </div>
                                         <div className="w-8 h-8 rounded-full border-2 border-brand-100 dark:border-slate-700 flex items-center justify-center text-brand-500 dark:text-brand-400 group-hover:bg-brand-500 group-hover:text-white group-hover:border-brand-500 transition-all">
                                             <span className="text-lg">→</span>
@@ -245,13 +245,13 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                             <span className="text-4xl">🧩</span>
                         </div>
                         <h2 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white mb-2 uppercase italic tracking-tighter">
-                            Brain Training
+                            {t('brain_training')}
                         </h2>
                         <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mb-6 leading-snug">
-                            Train your mind with fun challenges!
+                            {t('brain_training_desc')}
                         </p>
                         <div className="py-3 px-6 bg-violet-600 text-white rounded-xl font-black text-base shadow-lg group-hover:bg-violet-500 transition-colors uppercase tracking-widest border-b-4 border-violet-800">
-                            Play
+                            {t('brain_training_play')}
                         </div>
                     </button>
 
