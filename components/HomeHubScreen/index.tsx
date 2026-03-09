@@ -3,6 +3,7 @@ import React from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { DashboardView } from '../Dashboard';
 import Mascot from '../Mascot';
+import { useNavigate } from 'react-router-dom';
 
 interface HomeHubScreenProps {
     onNavigate: (view: DashboardView) => void;
@@ -22,6 +23,7 @@ const FloatingStat: React.FC<{ icon: string, value: string | number, label: stri
 
 const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "Coder", role }) => {
     const { t } = useLanguage();
+    const navigate = useNavigate();
 
     if (role === 'student') {
         return (
@@ -36,7 +38,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                         <div className="lg:col-span-2 space-y-4">
                             <h2 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Brain Training</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <button onClick={() => onNavigate('learn')} className="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700 text-left">
+                                <button onClick={() => navigate('/brain-training')} className="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700 text-left">
                                     <div className="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-700">
                                         <img src="https://picsum.photos/seed/brain-challenges/600/400" alt="Challenges" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
                                     </div>
@@ -50,7 +52,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                                         </div>
                                     </div>
                                 </button>
-                                <button onClick={() => onNavigate('learn')} className="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700 text-left">
+                                <button onClick={() => navigate('/brain-training')} className="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700 text-left">
                                     <div className="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-700">
                                         <img src="https://picsum.photos/seed/brain-workouts/600/400" alt="Workouts" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
                                     </div>
@@ -185,7 +187,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                 </div>
 
                 {/* Adventure Path Selection */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
 
                     {/* Learn Card */}
                     <button
@@ -228,6 +230,28 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                         </p>
                         <div className="py-3 px-6 bg-brand-600 text-white rounded-xl font-black text-base shadow-lg group-hover:bg-brand-500 transition-colors uppercase tracking-widest border-b-4 border-brand-800">
                             {t('create')}
+                        </div>
+                    </button>
+
+                    {/* Brain Training Card */}
+                    <button
+                        onClick={() => navigate('/brain-training')}
+                        className="group relative bg-white dark:bg-slate-800 border-b-[8px] border-violet-600 dark:border-violet-900 rounded-2xl p-6 text-center transition-all transform hover:-translate-y-2 hover:shadow-2xl active:translate-y-1 active:border-b-2 overflow-hidden kid-card bubbly-btn"
+                    >
+                        <div className="absolute -top-6 -right-6 p-2 opacity-5 group-hover:opacity-10 transition-opacity">
+                            <span className="text-[8rem]">🧠</span>
+                        </div>
+                        <div className="w-16 h-16 bg-violet-100 dark:bg-violet-900/30 rounded-xl flex items-center justify-center mx-auto mb-6 transition-all group-hover:-rotate-12 group-hover:scale-105 shadow-inner">
+                            <span className="text-4xl">🧩</span>
+                        </div>
+                        <h2 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white mb-2 uppercase italic tracking-tighter">
+                            Brain Training
+                        </h2>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mb-6 leading-snug">
+                            Train your mind with fun challenges!
+                        </p>
+                        <div className="py-3 px-6 bg-violet-600 text-white rounded-xl font-black text-base shadow-lg group-hover:bg-violet-500 transition-colors uppercase tracking-widest border-b-4 border-violet-800">
+                            Play
                         </div>
                     </button>
 

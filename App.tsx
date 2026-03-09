@@ -16,6 +16,7 @@ import api from './services/api';
 import LandingPage from './components/LandingPage';
 import LanguageSelectionScreen from './components/LanguageSelectionScreen';
 import { useLanguage } from './contexts/LanguageContext';
+import BrainTrainingScreen from './components/BrainTrainingScreen';
 
 /** The internal navigation state machine steps used before React Router takes over. */
 type AppState = 'splash' | 'landing' | 'role_selection' | 'auth' | 'path_selection' | 'dashboard';
@@ -336,6 +337,8 @@ export default function App() {
               />
             )
         } />
+
+        <Route path="/brain-training" element={<BrainTrainingScreen />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
