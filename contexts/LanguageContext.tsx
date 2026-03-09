@@ -192,6 +192,10 @@ const translations = {
     speaking_wizard_duration: 'Duration',
     speaking_wizard_duration_mins: 'mins',
     speaking_wizard_topic_title: 'Topic',
+    speaking_hub_english_american: 'English (US)',
+    speaking_hub_english_british: 'English (UK)',
+    speaking_hub_french: 'French',
+    speaking_hub_arabic: 'Arabic',
     // ... paths ...
     // Paths
     paths: 'Paths',
@@ -781,6 +785,10 @@ const translations = {
     speaking_wizard_duration: 'Durée',
     speaking_wizard_duration_mins: 'min',
     speaking_wizard_topic_title: 'Sujet',
+    speaking_hub_english_american: 'Anglais (Américain)',
+    speaking_hub_english_british: 'Anglais (Britannique)',
+    speaking_hub_french: 'Français',
+    speaking_hub_arabic: 'Arabe',
     // ... paths ...
     // Paths
     paths: 'Parcours',
@@ -1172,6 +1180,10 @@ const translations = {
     speaking_wizard_duration: 'المدة',
     speaking_wizard_duration_mins: 'دقائق',
     speaking_wizard_topic_title: 'الموضوع',
+    speaking_hub_english_american: 'الإنجليزية (الأمريكية)',
+    speaking_hub_english_british: 'الإنجليزية (البريطانية)',
+    speaking_hub_french: 'الفرنسية',
+    speaking_hub_arabic: 'العربية',
     // ... paths ...
     // Paths
     paths: 'الطرق',

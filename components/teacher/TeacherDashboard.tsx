@@ -229,7 +229,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                   ].map((alert, i) => (
                     <div key={i} className="p-4 flex items-start space-x-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer">
                       <div className={`w-2 h-2 mt-2 rounded-full shrink-0 ${alert.type === 'success' ? 'bg-green-500' :
-                          alert.type === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
+                        alert.type === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
                         }`} />
                       <div className="flex-1">
                         <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
@@ -557,6 +557,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
   const AnalyticsView = () => {
     const [analytics, setAnalytics] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [contentSource, setContentSource] = useState('All');
 
     useEffect(() => {
       const fetchAnalytics = async () => {
@@ -578,12 +579,29 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">AI Performance Analytics</h2>
+            <h2 className="text-3xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Class-Level Reports</h2>
             <p className="text-slate-400 font-bold">Data-driven insights into student mastery and class trends</p>
           </div>
-          <div className="flex items-center space-x-2 bg-brand-50 dark:bg-brand-900/30 px-4 py-2 rounded-xl">
-            <Sparkles className="w-5 h-5 text-brand-600 dark:text-brand-400" />
-            <span className="text-xs font-black text-brand-700 dark:text-brand-300 uppercase italic">AI Powered</span>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-bold text-slate-500 dark:text-slate-400">Content Source:</span>
+              <select
+                value={contentSource}
+                onChange={(e) => setContentSource(e.target.value)}
+                className="bg-white dark:bg-slate-800 text-slate-800 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+              >
+                <option value="All">All Sources</option>
+                <option value="Game Studio">Game Studio</option>
+                <option value="Question Lab">Question Lab</option>
+                <option value="Smart Books">Smart Books</option>
+                <option value="Scientific Inquiry">Scientific Inquiry</option>
+                <option value="Speaking Hub">Speaking Hub</option>
+              </select>
+            </div>
+            <div className="flex items-center space-x-2 bg-brand-50 dark:bg-brand-900/30 px-4 py-2 rounded-xl">
+              <Sparkles className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+              <span className="text-xs font-black text-brand-700 dark:text-brand-300 uppercase italic">AI Powered</span>
+            </div>
           </div>
         </div>
 
@@ -686,8 +704,8 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                 setIsSidebarOpen(false);
               }}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-2xl font-black uppercase tracking-tight text-sm transition-all ${activeView === item.id
-                  ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400'
-                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+                ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400'
+                : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
                 }`}
             >
               <item.icon className="w-5 h-5" />
