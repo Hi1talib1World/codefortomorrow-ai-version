@@ -179,6 +179,9 @@ const translations = {
     smart_books: 'Smart Books',
     smart_books_desc: 'Use AI to create your own book or access reading books in your language.',
     open: 'Open',
+    // Scientific Inquiry
+    scientific_inquiry: 'Scientific Inquiry',
+    scientific_inquiry_desc: 'Explore the wonders of science with interactive experiments.',
     // Speaking Hub
     speaking_hub: 'Speaking Hub',
     speaking_hub_desc: 'Practice speaking a foreign language and improve your skills with AI.',
@@ -766,7 +769,9 @@ const translations = {
     smart_books: 'Livres Intelligents',
     smart_books_desc: 'Utilisez l\'IA pour créer votre livre ou lire dans votre langue.',
     open: 'Ouvrir',
-    // Speaking Hub
+    // Scientific Inquiry
+    scientific_inquiry: 'Enquête Scientifique',
+    scientific_inquiry_desc: 'Explorez les merveilles de la science avec des expériences interactives.',
     speaking_hub: 'Hub de Parole',
     speaking_hub_desc: 'Entraînez-vous à parler une langue étrangère avec l\'IA.',
     start_speaking: 'Commencer',
@@ -1155,7 +1160,9 @@ const translations = {
     smart_books: 'الكتب الذكية',
     smart_books_desc: 'استعمل الذكاء الاصطناعي باش تصاوب كتابك ولا تقرا باللغة ديالك.',
     open: 'حل',
-    // Speaking Hub
+    // Scientific Inquiry
+    scientific_inquiry: 'البحث العلمي',
+    scientific_inquiry_desc: 'اكتشف عجائب العلوم من خلال تجارب تفاعلية.',
     speaking_hub: 'مركز الهضرة',
     speaking_hub_desc: 'تدرب على الهضرة بلغة أجنبية مع الذكاء الاصطناعي.',
     start_speaking: 'بدا',
