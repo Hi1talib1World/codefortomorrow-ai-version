@@ -19,6 +19,8 @@ import { useLanguage } from './contexts/LanguageContext';
 import BrainTrainingScreen from './components/BrainTrainingScreen';
 import BrainChallengeGameScreen from './components/BrainChallengeGameScreen';
 import PageTransitionLoader from './components/PageTransitionLoader';
+import ConfettiCelebration from './components/ConfettiCelebration';
+import { ToastProvider } from './components/ToastNotification';
 
 /** Default blank progress object used when creating a guest/new user session. */
 const defaultProgress: UserProgress = {
@@ -136,6 +138,7 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [selectedRole, setSelectedRole] = useState<'teacher' | 'student' | null>(null);
   const [isSessionLoaded, setIsSessionLoaded] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Effect to check for an existing session on app load by calling the API
   useEffect(() => {
@@ -306,10 +309,13 @@ export default function App() {
             ...progress.badgesEarned,
             [path]: allEarnedForPath
           }
-        }
+        },
       };
       return updatedUser;
     });
+
+    // Trigger confetti celebration!
+    setShowConfetti(true);
 
     setActiveLesson(null);
 
@@ -403,10 +409,13 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
-        <PageTransitionLoader />
-        {renderContent()}
-      </div>
+      <ToastProvider>
+        <div className="min-h-screen text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
+          <PageTransitionLoader />
+          <ConfettiCelebration isActive={showConfetti} onComplete={() => setShowConfetti(false)} />
+          {renderContent()}
+        </div>
+      </ToastProvider>
     </ThemeProvider>
   );
 }
