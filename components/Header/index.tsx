@@ -66,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
   }, []);
 
   return (
-    <header className="sticky top-0 bg-white dark:bg-slate-800 shadow-lg px-6 py-3 z-20 border-b-4 border-brand-100 dark:border-slate-700 transition-colors">
+    <header className="sticky top-0 bg-white dark:bg-slate-800 shadow-sm px-6 py-3 z-20 border-b border-slate-200 dark:border-slate-700 transition-colors">
       <DbSetupGuide
         isOpen={isDbGuideOpen}
         onClose={() => setIsDbGuideOpen(false)}
@@ -74,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
         isRetrying={dbStatus === 'loading'}
       />
       <div className="container mx-auto flex justify-between items-center max-w-7xl">
-        <h1 className="text-2xl md:hidden font-black text-brand-500 dark:text-brand-400 leading-none italic tracking-tighter">C4T</h1>
+        <h1 className="text-2xl md:hidden font-bold text-[#4285F4] dark:text-[#8ab4f8] leading-none tracking-tight">C4T</h1>
         <div className="flex-grow md:hidden"></div>
         <div className="flex items-center space-x-3 sm:space-x-6 rtl:space-x-reverse">
 
@@ -82,7 +82,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
           <div className="flex items-center gap-2">
             <div
               className={`w-3 h-3 rounded-full shadow-sm ${dbStatus === 'connected' ? 'bg-green-500 animate-pulse' :
-                  dbStatus === 'loading' ? 'bg-yellow-400 animate-spin' : 'bg-red-500'
+                dbStatus === 'loading' ? 'bg-yellow-400 animate-spin' : 'bg-red-500'
                 }`}
               title={dbStatus === 'connected' ? 'Database Connected' : 'Database Disconnected - Check IP Whitelist'}
             ></div>
@@ -99,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="w-10 h-10 rounded-2xl bg-brand-50 dark:bg-slate-700 text-brand-600 dark:text-slate-300 hover:bg-brand-100 dark:hover:bg-slate-600 transition-all transform active:scale-90 flex items-center justify-center shadow-sm bubbly-btn border-b-2 border-brand-200 dark:border-slate-600"
+            className="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 transition-all flex items-center justify-center border border-slate-200 dark:border-slate-600"
             aria-label="Toggle theme"
           >
             {theme === 'light' ? (
@@ -116,7 +116,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
           <div ref={dropdownRef} className="relative">
             <button
               onClick={() => setIsPathDropdownOpen(prev => !prev)}
-              className="flex items-center space-x-2 bg-brand-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-2xl hover:bg-brand-100 dark:hover:bg-slate-600 transition-all font-black italic shadow-sm bubbly-btn border-b-2 border-brand-200 dark:border-slate-600"
+              className="flex items-center space-x-2 rtl:space-x-reverse bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-600 transition-all font-bold border border-slate-200 dark:border-slate-600"
             >
               <span className="text-xl flex items-center justify-center w-6 h-6">
                 {currentPathData?.icon.startsWith('http') ? (
@@ -125,14 +125,14 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
                   currentPathData?.icon
                 )}
               </span>
-              <span className="hidden md:inline uppercase tracking-tighter text-sm">{currentPathData ? t(currentPathData.titleKey as any) : '...'}</span>
+              <span className="hidden md:inline tracking-wide text-sm">{currentPathData ? t(currentPathData.titleKey as any) : '...'}</span>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
             {isPathDropdownOpen && (
-              <div className="absolute top-full mt-4 w-64 max-h-[350px] overflow-y-auto right-0 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border-2 border-brand-100 dark:border-slate-700 z-30 no-scrollbar kid-card animate-pop-in">
-                <div className="p-3 space-y-1">
+              <div className="absolute top-full mt-2 w-64 max-h-[350px] overflow-y-auto right-0 bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 z-30 no-scrollbar origin-top-right transition-all">
+                <div className="p-2 space-y-1">
                   {PATHS.map(path => (
                     <button
                       key={path.id}
@@ -140,7 +140,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
                         onSwitchPath(path.id);
                         setIsPathDropdownOpen(false);
                       }}
-                      className="w-full text-left flex items-center space-x-3 p-3 hover:bg-brand-50 dark:hover:bg-slate-700 rounded-xl transition-all group bubbly-btn"
+                      className="w-full text-left flex items-center space-x-3 rtl:space-x-reverse p-3 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-xl transition-all group"
                     >
                       <span className="text-2xl group-hover:scale-110 transition-transform flex items-center justify-center w-8 h-8">
                         {path.icon.startsWith('http') ? (
@@ -149,7 +149,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
                           path.icon
                         )}
                       </span>
-                      <span className="font-black text-slate-700 dark:text-slate-200 uppercase italic tracking-tighter text-sm">{t(path.titleKey as any)}</span>
+                      <span className="font-bold text-slate-700 dark:text-slate-200 tracking-wide text-sm">{t(path.titleKey as any)}</span>
                     </button>
                   ))}
                 </div>
@@ -158,12 +158,12 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
           </div>
 
           <div className="hidden sm:flex items-center space-x-3">
-            <div className="flex items-center space-x-2 rtl:space-x-reverse text-orange-500 font-black text-sm bg-orange-50 dark:bg-orange-900/20 px-3 py-1.5 rounded-2xl shadow-inner border border-orange-100 dark:border-orange-800/30">
-              <span className="animate-bounce">🔥</span>
+            <div className="flex items-center space-x-2 text-[#EA4335] font-bold text-sm bg-[#EA4335]/10 px-3 py-1.5 rounded-full border border-[#EA4335]/20">
+              <span>🔥</span>
               <span>{currentUser.progress.streak}</span>
             </div>
-            <div className="flex items-center space-x-2 rtl:space-x-reverse text-yellow-500 font-black text-sm bg-yellow-50 dark:bg-yellow-900/20 px-3 py-1.5 rounded-2xl shadow-inner border border-yellow-100 dark:border-yellow-800/30">
-              <span className="animate-pulse">⭐</span>
+            <div className="flex items-center space-x-2 text-[#F29900] dark:text-[#fde293] font-bold text-sm bg-[#FBBC05]/10 px-3 py-1.5 rounded-full border border-[#FBBC05]/20">
+              <span>⭐</span>
               <span>{currentUser.progress.xp}</span>
             </div>
           </div>
@@ -172,7 +172,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
             <select
               value={language}
               onChange={handleLanguageChange}
-              className="appearance-none bg-brand-50 dark:bg-slate-700 dark:text-slate-200 rounded-2xl px-4 py-2 pr-10 font-bold focus:outline-none focus:ring-4 focus:ring-brand-500/20 shadow-sm transition-all border-b-2 border-brand-200 dark:border-slate-600 bubbly-btn text-sm"
+              className="appearance-none bg-slate-50 dark:bg-slate-700 dark:text-slate-200 rounded-full pl-4 pr-10 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-[#4285F4]/50 transition-all border border-slate-200 dark:border-slate-600 text-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600"
               aria-label="Select language"
             >
               <option value={Language.EN}>EN</option>
@@ -186,7 +186,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
 
           <button
             onClick={onLogout}
-            className="w-10 h-10 bg-brand-50 dark:bg-slate-700 text-slate-500 dark:text-slate-400 flex items-center justify-center rounded-2xl hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-600 transition-all shadow-sm bubbly-btn border-b-2 border-brand-200 dark:border-slate-600"
+            className="w-10 h-10 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-400 flex items-center justify-center rounded-full hover:bg-red-50 dark:hover:bg-red-900/40 hover:text-red-600 transition-all border border-slate-200 dark:border-slate-600"
             title={t('logout')}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>

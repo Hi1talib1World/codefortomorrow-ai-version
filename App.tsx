@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate, useParams } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Dashboard from './components/Dashboard';
 import TeacherDashboard from './components/teacher/TeacherDashboard';
@@ -19,9 +19,6 @@ import { useLanguage } from './contexts/LanguageContext';
 import BrainTrainingScreen from './components/BrainTrainingScreen';
 import BrainChallengeGameScreen from './components/BrainChallengeGameScreen';
 
-/** The internal navigation state machine steps used before React Router takes over. */
-type AppState = 'splash' | 'landing' | 'role_selection' | 'auth' | 'path_selection' | 'dashboard';
-
 /** Default blank progress object used when creating a guest/new user session. */
 const defaultProgress: UserProgress = {
   xp: 0,
@@ -32,22 +29,112 @@ const defaultProgress: UserProgress = {
   lastLessonCompletedDate: null,
 };
 
+// ─── LESSON OVERLAY ──────────────────────────────────────────────────────────
+// Rendered on top of the dashboard when a lesson is active.
+interface LessonOverlayProps {
+  lesson: Lesson;
+  currentPath: ProgrammingPath['id'] | null;
+  currentUser: User;
+  onComplete: (lessonId: number, xpGained: number, score?: number) => void;
+  onExit: () => void;
+  onSwitchPath: (pathId: ProgrammingPath['id']) => void;
+}
+
+const LessonOverlay: React.FC<LessonOverlayProps> = ({
+  lesson, currentPath, currentUser, onComplete, onExit, onSwitchPath
+}) => {
+  if (currentPath === 'math') {
+    return (
+      <MathGameScreen
+        lesson={lesson}
+        onComplete={onComplete}
+        onExit={onExit}
+        path={currentPath}
+        currentUser={currentUser}
+      />
+    );
+  }
+  if (lesson.questions && lesson.questions.length > 0) {
+    return (
+      <QuizLessonScreen
+        lesson={lesson}
+        onComplete={onComplete}
+        onExit={onExit}
+        currentUser={currentUser}
+      />
+    );
+  }
+  return (
+    <LessonScreen
+      lesson={lesson}
+      onComplete={onComplete}
+      onExit={onExit}
+      path={currentPath || 'javascript'}
+      onSwitchPath={onSwitchPath}
+      currentUser={currentUser}
+    />
+  );
+};
+
+// ─── DASHBOARD ROUTE WRAPPER ──────────────────────────────────────────────────
+// Reads the optional :pathId param and switches the user's path if it changed.
+interface DashboardRouteProps {
+  currentUser: User;
+  activeLesson: Lesson | null;
+  onUpdateUser: (data: Partial<User>) => void;
+  onStartLesson: (lesson: Lesson) => void;
+  onLogout: () => void;
+  onSwitchPath: (pathId: ProgrammingPath['id']) => void;
+  onComplete: (lessonId: number, xpGained: number, score?: number) => void;
+  onExit: () => void;
+}
+
+const DashboardRoute: React.FC<DashboardRouteProps> = ({
+  currentUser, activeLesson, onUpdateUser, onStartLesson, onLogout,
+  onSwitchPath, onComplete, onExit
+}) => {
+  const { pathId } = useParams<{ pathId?: string }>();
+
+  // When the URL includes a :pathId, ensure the user's active path matches it
+  useEffect(() => {
+    if (pathId && pathId !== currentUser.currentPath) {
+      onSwitchPath(pathId as ProgrammingPath['id']);
+    }
+  }, [pathId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (activeLesson) {
+    return (
+      <LessonOverlay
+        lesson={activeLesson}
+        currentPath={currentUser.currentPath}
+        currentUser={currentUser}
+        onComplete={onComplete}
+        onExit={onExit}
+        onSwitchPath={onSwitchPath}
+      />
+    );
+  }
+
+  return (
+    <Dashboard
+      currentUser={currentUser}
+      onUpdateUser={onUpdateUser}
+      onStartLesson={onStartLesson}
+      onLogout={onLogout}
+      onSwitchPath={onSwitchPath}
+    />
+  );
+};
+
+// ─── APP ─────────────────────────────────────────────────────────────────────
 
 export default function App() {
   const navigate = useNavigate();
   const { hasSelectedLanguage } = useLanguage();
-  const [appState, setAppState] = useState<AppState>('splash');
-  /** The lesson currently being played. When null, the Dashboard is shown. */
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
-  /** The authenticated user. Null means the user is a guest or not logged in. */
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [selectedRole, setSelectedRole] = useState<'teacher' | 'student' | null>(null);
   const [isSessionLoaded, setIsSessionLoaded] = useState(false);
-  /**
-   * Set to true after completeLesson() runs so the Dashboard opens directly
-   * on the 'learn' (roadmap) tab instead of the default 'home' hub tab.
-   */
-  const [returnToLearnMap, setReturnToLearnMap] = useState(false);
 
   // Effect to check for an existing session on app load by calling the API
   useEffect(() => {
@@ -60,11 +147,7 @@ export default function App() {
           if (user.progress.lastLessonCompletedDate === undefined) {
             user.progress.lastLessonCompletedDate = null;
           }
-
           setCurrentUser(user);
-        } else {
-          // We do not auto-redirect to landing here, so the user can see splash screen 
-          // and the splash screen redirects them eventually if needed, or we let the Route logic handle it
         }
       } catch (error) {
         console.error("Session check failed:", error);
@@ -72,7 +155,6 @@ export default function App() {
         setIsSessionLoaded(true);
       }
     };
-
     checkUserSession();
   }, []);
 
@@ -82,7 +164,6 @@ export default function App() {
     setCurrentUser(userWithRole);
     navigate('/dashboard');
 
-    // Save role to profile if it wasn't there
     if (!user.role && selectedRole) {
       try {
         await api.updateUserProfile({ role: selectedRole });
@@ -90,7 +171,7 @@ export default function App() {
         console.error("Failed to save role to profile:", error);
       }
     }
-  }, [selectedRole]);
+  }, [selectedRole, navigate]);
 
   const handleSkipAuth = useCallback(() => {
     const now = new Date().toISOString();
@@ -132,41 +213,24 @@ export default function App() {
     navigate('/auth');
   }, [navigate]);
 
-  const handlePathSelected = useCallback(async (pathId: ProgrammingPath['id']) => {
+  const switchPath = useCallback(async (pathId: ProgrammingPath['id']) => {
     if (!currentUser) return;
-
-    const updatedUser = { ...currentUser, currentPath: pathId };
-    setCurrentUser(updatedUser);
-
+    setCurrentUser({ ...currentUser, currentPath: pathId });
     try {
       await api.updateUserProfile({ currentPath: pathId });
     } catch (error) {
-      console.error("Failed to update path:", error);
+      console.error("Failed to switch path:", error);
     }
   }, [currentUser]);
 
   const updateUser = useCallback(async (updatedData: Partial<User>) => {
     if (!currentUser) return;
-
     const updatedUser = { ...currentUser, ...updatedData };
     setCurrentUser(updatedUser);
-
     try {
       await api.updateUserProfile(updatedData);
     } catch (error) {
       console.error("Failed to update user profile:", error);
-    }
-  }, [currentUser]);
-
-  const switchPath = useCallback(async (pathId: ProgrammingPath['id']) => {
-    if (!currentUser) return;
-
-    setCurrentUser({ ...currentUser, currentPath: pathId });
-
-    try {
-      await api.updateUserProfile({ currentPath: pathId });
-    } catch (error) {
-      console.error("Failed to switch path:", error);
     }
   }, [currentUser]);
 
@@ -208,10 +272,8 @@ export default function App() {
       if (lastCompletion) {
         const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         const lastCompletionDateOnly = new Date(lastCompletion.getFullYear(), lastCompletion.getMonth(), lastCompletion.getDate());
-
         const diffTime = todayDateOnly.getTime() - lastCompletionDateOnly.getTime();
         const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-
         if (diffDays === 1) {
           newStreak += 1;
         } else if (diffDays > 1) {
@@ -243,17 +305,15 @@ export default function App() {
     });
 
     setActiveLesson(null);
-    setReturnToLearnMap(true);
 
     if (updatedUser) {
       try {
-        await api.updateUserProgress(updatedUser.progress);
+        await api.updateUserProgress((updatedUser as User).progress);
       } catch (error) {
         console.error("Failed to save progress:", error);
       }
     }
   }, [currentUser]);
-
 
   const exitLesson = useCallback(() => {
     setActiveLesson(null);
@@ -261,11 +321,20 @@ export default function App() {
 
   const renderContent = () => {
     if (!isSessionLoaded) {
-      // Show splash screen while checking session
       return <SplashScreen onFinish={() => { }} />;
     }
 
-    const { currentPath } = currentUser || {};
+    // Shared dashboard route props
+    const dashProps = currentUser ? {
+      currentUser,
+      activeLesson,
+      onUpdateUser: updateUser,
+      onStartLesson: startLesson,
+      onLogout: handleLogout,
+      onSwitchPath: switchPath,
+      onComplete: completeLesson,
+      onExit: exitLesson,
+    } : null;
 
     return (
       <Routes>
@@ -291,53 +360,31 @@ export default function App() {
           currentUser ? <Navigate to="/dashboard" replace /> : <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} />
         } />
 
-        <Route path="/dashboard" element={
-          !currentUser ? <Navigate to="/auth" replace /> :
-            currentUser.role === 'teacher' ? (
-              <TeacherDashboard currentUser={currentUser} onLogout={handleLogout} />
-            ) : activeLesson ? (
-              // ─── LESSON ROUTING DECISION ────────────────────────────────────────────
-              // Priority order when a lesson is active:
-              //  1. Math path         → MathGameScreen   (special interactive game UI)
-              //  2. Lesson has quiz   → QuizLessonScreen (read + multiple-choice format)
-              //  3. Everything else   → LessonScreen     (code editor + terminal output)
-              currentPath === 'math' ? (
-                <MathGameScreen
-                  lesson={activeLesson}
-                  onComplete={completeLesson}
-                  onExit={exitLesson}
-                  path={currentPath}
-                  currentUser={currentUser}
-                />
-              ) : activeLesson.questions && activeLesson.questions.length > 0 ? (
-                <QuizLessonScreen
-                  lesson={activeLesson}
-                  onComplete={completeLesson}
-                  onExit={exitLesson}
-                  currentUser={currentUser}
-                />
-              ) : (
-                <LessonScreen
-                  lesson={activeLesson}
-                  onComplete={completeLesson}
-                  onExit={exitLesson}
-                  path={currentPath || 'javascript'}
-                  onSwitchPath={switchPath}
-                  currentUser={currentUser}
-                />
-              )
-            ) : (
-              <Dashboard
-                currentUser={currentUser}
-                onUpdateUser={updateUser}
-                onStartLesson={startLesson}
-                onLogout={handleLogout}
-                onSwitchPath={switchPath}
-                initialView={returnToLearnMap ? 'learn' : 'home'}
-                key={returnToLearnMap ? 'learn' : 'home'}
-              />
-            )
-        } />
+        {/* ─── Teacher dashboard ───────────────────────────────────────── */}
+        {currentUser?.role === 'teacher' && (
+          <Route path="/dashboard/*" element={
+            <TeacherDashboard currentUser={currentUser} onLogout={handleLogout} />
+          } />
+        )}
+
+        {/* ─── Student dashboard sub-routes ────────────────────────────── */}
+        {currentUser?.role !== 'teacher' && dashProps && (
+          <>
+            {/* /dashboard/learn/:pathId  — specific language roadmap */}
+            <Route path="/dashboard/learn/:pathId" element={<DashboardRoute {...dashProps} />} />
+            {/* /dashboard/learn          — language picker (no path set) */}
+            <Route path="/dashboard/learn" element={<DashboardRoute {...dashProps} />} />
+            {/* /dashboard/:view          — profile, goals, creations, etc. */}
+            <Route path="/dashboard/:view" element={<DashboardRoute {...dashProps} />} />
+            {/* /dashboard                — home hub */}
+            <Route path="/dashboard" element={<DashboardRoute {...dashProps} />} />
+          </>
+        )}
+
+        {/* Redirect unauthenticated users */}
+        {!currentUser && (
+          <Route path="/dashboard/*" element={<Navigate to="/auth" replace />} />
+        )}
 
         <Route path="/brain-training" element={<BrainTrainingScreen />} />
         <Route path="/brain-training/:challengeId" element={<BrainChallengeGameScreen />} />

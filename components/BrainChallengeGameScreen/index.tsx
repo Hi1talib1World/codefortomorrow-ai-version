@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 /* ─── Question types ────────────────────────────────────────────── */
 interface Question {
@@ -105,10 +106,10 @@ function generateQuestions(challengeId: number): Question[] {
 }
 
 /* ─── Category badge colors ─────────────────────────────────────── */
-const categoryStyle: Record<string, { bg: string; text: string; label: string }> = {
-    'math': { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-300', label: '🔢 Math' },
-    'logic': { bg: 'bg-cyan-100 dark:bg-cyan-900/30', text: 'text-cyan-700 dark:text-cyan-300', label: '🧩 Logic' },
-    'problem-solving': { bg: 'bg-rose-100 dark:bg-rose-900/30', text: 'text-rose-700 dark:text-rose-300', label: '💡 Problem Solving' },
+const categoryStyleMap: Record<string, { bg: string; text: string; emoji: string; key: string }> = {
+    'math': { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-300', emoji: '🔢', key: 'brain_training_math' },
+    'logic': { bg: 'bg-cyan-100 dark:bg-cyan-900/30', text: 'text-cyan-700 dark:text-cyan-300', emoji: '🧩', key: 'brain_training_logic' },
+    'problem-solving': { bg: 'bg-rose-100 dark:bg-rose-900/30', text: 'text-rose-700 dark:text-rose-300', emoji: '💡', key: 'brain_training_problem_solving' },
 };
 
 /* ─── Component ─────────────────────────────────────────────────── */
@@ -116,6 +117,7 @@ export default function BrainChallengeGameScreen() {
     const navigate = useNavigate();
     const { challengeId } = useParams<{ challengeId: string }>();
     const cId = Number(challengeId) || 1;
+    const { t } = useLanguage();
 
     const questions = useMemo(() => generateQuestions(cId), [cId]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -123,7 +125,7 @@ export default function BrainChallengeGameScreen() {
 
     const current = questions[currentIndex];
     const totalQuestions = questions.length;
-    const cat = categoryStyle[current.category];
+    const cat = categoryStyleMap[current.category];
 
     const selectAnswer = useCallback(
         (questionId: number, value: string) => {
@@ -141,7 +143,7 @@ export default function BrainChallengeGameScreen() {
             {/* ── Left sidebar: question navigator ────────────────────── */}
             <aside className="w-44 shrink-0 border-r border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 flex flex-col overflow-hidden">
                 <h2 className="px-4 py-4 text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-wider border-b border-slate-200 dark:border-slate-700">
-                    Questions
+                    {t('brain_training_questions')}
                 </h2>
                 <div className="flex-1 overflow-y-auto py-2 px-2 space-y-1 scrollbar-thin">
                     {questions.map((q, idx) => {
@@ -188,10 +190,10 @@ export default function BrainChallengeGameScreen() {
                         onClick={() => navigate('/brain-training')}
                         className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors text-sm font-bold"
                     >
-                        <ChevronLeft className="w-5 h-5 inline -mt-0.5" /> Back
+                        <ChevronLeft className="w-5 h-5 inline -mt-0.5" /> {t('brain_training_back')}
                     </button>
                     <h1 className="text-lg font-black text-slate-800 dark:text-white">
-                        Brain Challenge {cId}
+                        {t('brain_training_challenges')} {cId}
                     </h1>
                     <div className="w-16" />
                 </div>
@@ -200,7 +202,7 @@ export default function BrainChallengeGameScreen() {
                 <div className="flex-1 overflow-y-auto px-6 md:px-16 lg:px-28 py-8 flex flex-col items-center">
                     {/* Category badge */}
                     <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full ${cat.bg} ${cat.text} text-xs font-black uppercase tracking-wider mb-6`}>
-                        {cat.label}
+                        {cat.emoji} {t(cat.key as any)}
                     </div>
 
                     {/* Question visual / text */}
@@ -249,14 +251,14 @@ export default function BrainChallengeGameScreen() {
                                 className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-violet-200 dark:hover:bg-violet-800/40 transition-colors"
                             >
                                 <ChevronLeft className="w-4 h-4" />
-                                Previous
+                                {t('brain_training_previous')}
                             </button>
                             <button
                                 onClick={() => goTo(currentIndex + 1)}
                                 disabled={currentIndex === totalQuestions - 1}
                                 className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-violet-200 dark:hover:bg-violet-800/40 transition-colors"
                             >
-                                Next
+                                {t('next')}
                                 <ChevronRight className="w-4 h-4" />
                             </button>
                         </div>
@@ -269,7 +271,7 @@ export default function BrainChallengeGameScreen() {
                             }}
                             className="flex items-center gap-2 px-8 py-2.5 rounded-xl bg-violet-600 text-white font-bold text-sm hover:bg-violet-700 transition-colors shadow-md"
                         >
-                            Next Challenge
+                            {t('brain_training_next_challenge')}
                             <ArrowRight className="w-4 h-4" />
                         </button>
                     </div>

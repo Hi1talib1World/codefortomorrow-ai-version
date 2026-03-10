@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { User } from '../../types';
 import { DashboardView } from '../Dashboard';
@@ -22,39 +23,38 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, currentUse
     { id: 'store', label: t('store'), icon: <span className="text-2xl">🛒</span> },
     { id: 'messages', label: 'Support', icon: <span className="text-2xl">💬</span> },
     { id: 'settings', label: t('settings'), icon: <span className="text-2xl">⚙️</span> },
-    { 
-      id: 'profile', 
-      label: currentUser.name, 
+    {
+      id: 'profile',
+      label: currentUser.name,
       icon: <img src={currentUser.profilePictureUrl} alt={currentUser.name} className="w-8 h-8 rounded-full border-2 border-white dark:border-slate-700 shadow-sm" />
     },
   ];
 
   return (
-    <nav className="hidden md:flex flex-col bg-white dark:bg-slate-800 w-60 px-6 py-10 border-r-4 border-brand-100 dark:border-slate-700 shadow-xl transition-colors">
-        <div className="mb-12 px-4">
-            <h1 className="text-2xl font-black text-brand-500 dark:text-brand-400 leading-none uppercase italic tracking-tighter">C4T</h1>
-            <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Code for Tomorrow</p>
-        </div>
-        <ul className="space-y-3 overflow-y-auto no-scrollbar">
-            {navItems.map((item) => {
-                const isActive = activeView === item.id;
-                return (
-                    <li key={item.id}>
-                        <button
-                            onClick={() => setActiveView(item.id as DashboardView)}
-                            className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl font-black text-sm transition-all bubbly-btn ${
-                                isActive 
-                                    ? 'bg-brand-500 text-white shadow-[0_4px_0_0_#0EA5E9] ring-2 ring-brand-400/30' 
-                                    : 'text-slate-500 dark:text-slate-400 hover:bg-brand-50 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-slate-100 border-b-2 border-transparent hover:border-brand-100 dark:hover:border-slate-600'
-                            }`}
-                        >
-                            <div className={`w-6 h-6 flex items-center justify-center transition-transform ${isActive ? 'scale-110 rotate-6' : 'group-hover:scale-105'}`}>{item.icon}</div>
-                            <span className="truncate uppercase tracking-tighter italic text-xs">{item.label}</span>
-                        </button>
-                    </li>
-                );
-            })}
-        </ul>
+    <nav className="hidden md:flex flex-col bg-white dark:bg-slate-800 w-60 px-6 py-10 border-r border-slate-200 dark:border-slate-700 shadow-sm transition-colors">
+      <div className="mb-12 px-4">
+        <h1 className="text-2xl font-bold text-[#4285F4] dark:text-[#8ab4f8] leading-none tracking-tight">C4T</h1>
+        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Code for Tomorrow</p>
+      </div>
+      <ul className="space-y-1.5 overflow-y-auto no-scrollbar">
+        {navItems.map((item) => {
+          const isActive = activeView === item.id;
+          return (
+            <li key={item.id}>
+              <button
+                onClick={() => setActiveView(item.id as DashboardView)}
+                className={`w-full flex items-center space-x-3 rtl:space-x-reverse px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${isActive
+                  ? 'bg-[#4285F4]/10 text-[#1a73e8] dark:bg-[#4285F4]/20 dark:text-[#8ab4f8]'
+                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-slate-100'
+                  }`}
+              >
+                <div className={`w-8 h-8 flex items-center justify-center transition-transform ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}>{item.icon}</div>
+                <span className="truncate tracking-wide text-xs">{item.label}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </nav>
   );
 };

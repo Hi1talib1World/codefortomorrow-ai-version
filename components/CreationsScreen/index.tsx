@@ -18,37 +18,37 @@ const CreationToolCard: React.FC<CreationToolCardProps> = ({ tool, onClick }) =>
     const isComingSoon = tool.status === 'coming_soon';
 
     const colorClasses: { [key: string]: string } = {
-        purple: 'from-purple-500 to-indigo-600',
-        green: 'from-green-500 to-emerald-600',
-        pink: 'from-pink-500 to-fuchsia-500',
-        orange: 'from-orange-400 to-amber-500',
-        blue: 'from-brand-300 to-brand-500',
+        purple: 'bg-[#EA4335]', // Red
+        green: 'bg-[#34A853]',  // Green
+        pink: 'bg-[#FBBC05]',   // Yellow
+        orange: 'bg-[#EA4335]', // Red
+        blue: 'bg-[#4285F4]',   // Blue
     };
 
     const buttonColorClasses: { [key: string]: string } = {
-        purple: 'bg-purple-600/80 hover:bg-purple-700/90',
-        green: 'bg-green-600/80 hover:bg-green-700/90',
-        pink: 'bg-pink-600/80 hover:bg-pink-700/90',
-        orange: 'bg-orange-500/80 hover:bg-orange-600/90',
-        blue: 'bg-brand-500/80 hover:bg-brand-600/90',
+        purple: 'bg-white text-[#EA4335] hover:bg-slate-50',
+        green: 'bg-white text-[#34A853] hover:bg-slate-50',
+        pink: 'bg-white text-[#F29900] hover:bg-slate-50',
+        orange: 'bg-white text-[#EA4335] hover:bg-slate-50',
+        blue: 'bg-white text-[#4285F4] hover:bg-slate-50',
     }
 
     return (
-        <div className={`relative rounded-[1.5rem] shadow-lg text-white p-6 flex flex-col h-full bg-gradient-to-br overflow-hidden transition-transform hover:-translate-y-1 ${colorClasses[tool.color]}`}>
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full"></div>
-            <div className="absolute -bottom-8 -left-4 w-32 h-32 bg-white/10 rounded-full"></div>
-            
+        <div className={`relative rounded-3xl shadow-sm text-white p-6 flex flex-col h-full overflow-hidden transition-transform hover:-translate-y-1 ${colorClasses[tool.color]}`}>
+            <div className="absolute -top-4 -right-4 w-32 h-32 bg-white/10 rounded-full blur-xl group-hover:scale-110"></div>
+            <div className="absolute -bottom-8 -left-4 w-32 h-32 bg-white/10 rounded-full blur-xl group-hover:scale-110"></div>
+
             <div className="flex-grow z-10">
-                <div className="h-24 bg-white/20 rounded-xl mb-4 flex items-center justify-center shadow-inner">
-                    <span className="text-4xl">{tool.icon}</span>
+                <div className="w-16 h-16 bg-white/20 rounded-2xl mb-4 flex items-center justify-center shadow-sm backdrop-blur-sm border border-white/20 relative">
+                    <span className="text-3xl relative z-10">{tool.icon}</span>
                 </div>
-                <h3 className="text-lg font-black italic uppercase tracking-tighter">{t(tool.titleKey as any)}</h3>
-                <p className="text-xs opacity-90 mt-1 font-bold leading-tight">{t(tool.descriptionKey as any)}</p>
+                <h3 className="text-xl font-bold tracking-tight">{t(tool.titleKey as any)}</h3>
+                <p className="text-sm opacity-90 mt-2 font-medium leading-snug text-white/90">{t(tool.descriptionKey as any)}</p>
             </div>
-            <div className="mt-6 z-10">
-                <button 
+            <div className="mt-8 z-10">
+                <button
                     onClick={!isComingSoon ? onClick : undefined}
-                    className={`w-full py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-md active:scale-95 ${ isComingSoon ? 'bg-slate-600/80 cursor-not-allowed' : buttonColorClasses[tool.color]}`}
+                    className={`w-full py-3 rounded-full font-bold text-sm tracking-wide transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2 ${isComingSoon ? 'bg-black/20 text-white/70 cursor-not-allowed' : buttonColorClasses[tool.color]}`}
                 >
                     {t(tool.buttonTextKey as any)}
                 </button>
@@ -68,50 +68,51 @@ const RecentContentDetails = ({ item, onOpen }: { item: Creation, onOpen: () => 
     ];
 
     return (
-        <div className="bg-white dark:bg-slate-800 transition-colors rounded-[2rem] shadow-xl p-8 flex flex-col h-full border-b-[10px] border-slate-200 dark:border-slate-950">
-            <div className="flex items-center space-x-5 mb-6">
+        <div className="bg-white dark:bg-slate-800 transition-colors rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 flex flex-col h-full">
+            <div className="flex items-center space-x-5 mb-8">
                 <div className="relative shrink-0">
-                    <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-2xl flex items-center justify-center border-b-4 border-brand-200 dark:border-brand-800 shadow-inner">
-                        <span className="text-2xl font-black text-brand-600 dark:text-brand-400">{item.questionCount}</span>
+                    <div className="w-16 h-16 bg-[#4285F4]/10 dark:bg-slate-900 rounded-2xl flex items-center justify-center border border-[#4285F4]/20 shadow-sm relative overflow-hidden">
+                        <div className="absolute inset-0 bg-[#4285F4]/5 pointer-events-none"></div>
+                        <span className="text-2xl font-bold text-[#4285F4] dark:text-[#8ab4f8] relative z-10">{item.questionCount}</span>
                     </div>
                 </div>
                 <div className="min-w-0 flex-1">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center mb-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    <p className="text-xs font-medium uppercase tracking-wide text-slate-500 mb-1 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                         {item.date}
                     </p>
-                    <h3 className="text-lg font-black text-slate-800 dark:text-white truncate italic uppercase tracking-tighter leading-none">{item.title}</h3>
+                    <h3 className="text-xl font-bold text-slate-800 dark:text-white truncate tracking-tight">{item.title}</h3>
                 </div>
             </div>
 
-            <div className="space-y-4 my-4">
+            <div className="space-y-4 my-6">
                 {detailRows.map(row => (
-                    <div key={row.label} className="flex justify-between items-center border-b-2 border-slate-50 dark:border-slate-700/30 pb-2.5 last:border-0">
-                        <div className="flex items-center text-slate-500 dark:text-slate-400 font-black uppercase text-[9px] tracking-widest">
-                            <span className="mr-2 text-lg">{row.icon}</span>
+                    <div key={row.label} className="flex justify-between items-center border-b border-slate-100 dark:border-slate-700/50 pb-3 last:border-0">
+                        <div className="flex items-center text-slate-600 dark:text-slate-400 font-medium text-sm">
+                            <span className="mr-3 text-lg opacity-80">{row.icon}</span>
                             <span>{row.label}</span>
                         </div>
-                        <div className="font-black text-slate-800 dark:text-white text-right uppercase italic text-base">
-                           {row.value}
-                           {row.detail && <span className="block text-[8px] text-slate-400 dark:text-slate-500 font-bold tracking-widest not-italic leading-none mt-0.5">{row.detail}</span>}
+                        <div className="font-bold text-slate-800 dark:text-white text-right text-sm">
+                            {row.value}
+                            {row.detail && <span className="block text-xs text-slate-500 font-medium mt-1">{row.detail}</span>}
                         </div>
                     </div>
                 ))}
             </div>
 
-            <button className="w-full text-center py-2.5 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-brand-500 bg-slate-50 dark:bg-slate-700/50 hover:bg-brand-50 rounded-xl my-4 transition-all active:scale-95 shadow-sm">
+            <button className="w-full text-center py-3 text-xs font-bold uppercase tracking-wide text-slate-500 hover:text-[#4285F4] bg-slate-50 dark:bg-slate-700/30 hover:bg-[#4285F4]/5 rounded-xl transition-all shadow-sm">
                 {t('view_learning_outcomes')}
             </button>
-            
+
             <div className="flex-grow"></div>
 
-            <div className="grid grid-cols-2 gap-3 mb-3">
-                <button className="py-4 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-black uppercase tracking-widest rounded-xl hover:bg-slate-200 transition text-xs">
+            <div className="grid grid-cols-2 gap-4 mb-4 mt-6">
+                <button className="py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-full hover:bg-slate-200 dark:hover:bg-slate-600 transition text-sm">
                     {t('assign')}
                 </button>
-                <button 
-                    onClick={onOpen} 
-                    className="py-4 bg-brand-600 text-white font-black uppercase tracking-widest rounded-xl hover:bg-brand-500 border-b-4 border-brand-800 active:border-b-0 active:translate-y-1 transition text-xs"
+                <button
+                    onClick={onOpen}
+                    className="py-3 bg-[#4285F4] text-white font-bold rounded-full hover:bg-[#1a73e8] active:scale-95 transition text-sm shadow-md"
                 >
                     {t('open_content')}
                 </button>
@@ -161,7 +162,7 @@ const CreationsScreen: React.FC = () => {
         { id: 'scientific_inquiry', titleKey: 'scientific_inquiry', descriptionKey: 'scientific_inquiry_desc', buttonTextKey: 'coming_soon', color: 'orange', icon: '🔬', status: 'coming_soon' },
         { id: 'speaking_hub', titleKey: 'speaking_hub', descriptionKey: 'speaking_hub_desc', buttonTextKey: 'start_speaking', color: 'blue', icon: '🎤', status: 'active' },
     ];
-    
+
     const selectedCreation = creations.find(c => c.id === selectedCreationId) || creations[0];
 
     if (viewingCreation) {
@@ -179,7 +180,7 @@ const CreationsScreen: React.FC = () => {
     if (activeTool === 'smart_books') {
         return <SmartBooksScreen onBack={() => setActiveTool(null)} />;
     }
-    
+
     if (activeTool === 'speaking_hub') {
         return <SpeakingHubScreen onBack={() => setActiveTool(null)} />;
     }
@@ -187,10 +188,10 @@ const CreationsScreen: React.FC = () => {
     return (
         <div className="bg-brand-50 dark:bg-slate-900 min-h-full pb-10 p-4 md:p-8 transition-colors">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-                {creationTools.map(tool => 
-                    <CreationToolCard 
-                        key={tool.id} 
-                        tool={tool} 
+                {creationTools.map(tool =>
+                    <CreationToolCard
+                        key={tool.id}
+                        tool={tool}
                         onClick={() => setActiveTool(tool.id)}
                     />
                 )}
@@ -206,44 +207,44 @@ const CreationsScreen: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-1">
                         {selectedCreation ? (
-                             <RecentContentDetails 
-                                item={selectedCreation} 
-                                onOpen={() => setViewingCreation(selectedCreation)} 
-                             />
+                            <RecentContentDetails
+                                item={selectedCreation}
+                                onOpen={() => setViewingCreation(selectedCreation)}
+                            />
                         ) : (
-                            <div className="bg-white dark:bg-slate-800 rounded-[2rem] shadow-lg p-12 border-4 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center transition-colors h-full min-h-[350px]">
-                                <span className="text-6xl mb-6 opacity-20 filter grayscale">📂</span>
-                                <p className="text-slate-400 dark:text-slate-500 font-black italic uppercase tracking-tight text-lg">{t('no_content_saved')}</p>
+                            <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm p-12 border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center transition-colors h-full min-h-[350px]">
+                                <span className="text-5xl mb-6 opacity-40 filter grayscale">📂</span>
+                                <p className="text-slate-500 dark:text-slate-400 font-bold tracking-tight text-lg">{t('no_content_saved')}</p>
                             </div>
                         )}
                     </div>
-                    <div className="lg:col-span-2 bg-white dark:bg-slate-800 transition-colors rounded-[2rem] shadow-xl p-6 border-b-[10px] border-slate-100 dark:border-slate-950 overflow-y-auto max-h-[600px] no-scrollbar">
+                    <div className="lg:col-span-2 bg-white dark:bg-slate-800 transition-colors rounded-3xl shadow-sm p-6 border border-slate-200 dark:border-slate-700 overflow-y-auto max-h-[600px] no-scrollbar">
                         {creations.length > 0 ? (
                             <div className="space-y-4">
                                 {creations.map(c => (
-                                    <div 
-                                        key={c.id} 
-                                        className={`group relative w-full flex items-center p-6 rounded-[1.5rem] border-4 transition-all transform active:scale-[0.98] ${selectedCreationId === c.id ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20 shadow-md' : 'border-slate-50 dark:border-slate-700 hover:border-brand-200 dark:hover:border-brand-500'}`}
+                                    <div
+                                        key={c.id}
+                                        className={`group relative w-full flex items-center p-5 rounded-2xl border transition-all cursor-pointer ${selectedCreationId === c.id ? 'border-[#4285F4]/30 bg-[#4285F4]/5 shadow-sm' : 'border-slate-200 dark:border-slate-700 hover:border-[#4285F4]/20 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
                                     >
-                                        <button 
+                                        <button
                                             onClick={() => setSelectedCreationId(c.id)}
                                             className="flex-grow text-left flex items-center space-x-5"
                                         >
-                                            <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform shadow-inner">
+                                            <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform shadow-sm">
                                                 {c.contentType === 'quiz' ? '🧪' : '📚'}
                                             </div>
                                             <div className="min-w-0">
-                                                <h4 className="font-black text-slate-800 dark:text-white uppercase italic tracking-tighter text-lg truncate leading-none mb-0.5">{c.title}</h4>
-                                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none mt-1.5">{c.date} • {t(c.stageKey as any)} • {c.questionCount} {t('quiz')}</p>
+                                                <h4 className="font-bold text-slate-800 dark:text-white tracking-tight text-lg truncate leading-tight mb-1">{c.title}</h4>
+                                                <p className="text-xs font-medium text-slate-500 leading-none">{c.date} • {t(c.stageKey as any)} • {c.questionCount} {t('quiz')}</p>
                                             </div>
                                         </button>
-                                        
-                                        <button 
+
+                                        <button
                                             onClick={(e) => { e.stopPropagation(); setViewingCreation(c); }}
-                                            className="ml-4 bg-brand-600 hover:bg-brand-500 text-white w-10 h-10 rounded-xl shadow-lg border-b-4 border-brand-800 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center group/btn shrink-0"
+                                            className="ml-4 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600 text-[#4285F4] dark:text-[#8ab4f8] w-10 h-10 rounded-full shadow-sm active:scale-95 transition-all flex items-center justify-center group/btn shrink-0"
                                             title={t('open_content')}
                                         >
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover/btn:scale-125 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover/btn:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
@@ -253,7 +254,7 @@ const CreationsScreen: React.FC = () => {
                             </div>
                         ) : (
                             <div className="text-center text-slate-300 dark:text-slate-600 py-32">
-                                 <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-20 w-20 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-20 w-20 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                                 <p className="mt-6 font-black uppercase tracking-widest text-lg">{t('vault_empty')}</p>

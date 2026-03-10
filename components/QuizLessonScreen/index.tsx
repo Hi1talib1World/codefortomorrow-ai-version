@@ -28,15 +28,15 @@ const SuccessOverlay: React.FC<{ lesson: Lesson; onContinue: () => void }> = ({ 
             className="bg-white dark:bg-slate-800 rounded-3xl p-8 mx-4 max-w-sm w-full shadow-2xl flex flex-col items-center gap-4 text-center"
         >
             <div className="text-7xl animate-bounce">🎉</div>
-            <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Great Job!</h2>
-            <p className="text-slate-500 dark:text-slate-400 font-semibold text-sm">
-                You completed this lesson and earned <span className="text-yellow-500 font-black">+{lesson.xp} XP</span>!
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-white uppercase tracking-tight">Great Job!</h2>
+            <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">
+                You completed this lesson and earned <span className="text-[#FBBC05] font-bold">+{lesson.xp} XP</span>!
             </p>
             <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={onContinue}
-                className="w-full py-3 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white font-black text-base uppercase tracking-widest transition-colors shadow-lg shadow-brand-500/30"
+                className="w-full py-3 rounded-full bg-[#4285F4] hover:bg-[#1a73e8] text-white font-bold text-base tracking-wide transition-colors shadow-sm"
             >
                 Continue →
             </motion.button>
@@ -133,20 +133,20 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
     const MetaBadges = (
         <div className="flex flex-wrap items-center gap-2">
             {lesson.difficulty && (
-                <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${DIFFICULTY_COLORS[lesson.difficulty] || ''}`}>
+                <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide border border-transparent ${DIFFICULTY_COLORS[lesson.difficulty] || ''}`}>
                     {lesson.difficulty}
                 </span>
             )}
             {lesson.estimatedMinutes && (
-                <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold flex items-center gap-1">
+                <span className="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold flex items-center gap-1 border border-slate-200 dark:border-slate-600">
                     ⏱️ {lesson.estimatedMinutes} min
                 </span>
             )}
-            <span className="px-2 py-0.5 rounded-md bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400 text-[10px] font-bold flex items-center gap-1">
+            <span className="px-2 py-1 rounded-md bg-[#FBBC05]/10 dark:bg-[#FBBC05]/20 text-[#F29900] dark:text-[#fde293] text-[10px] font-bold flex items-center gap-1 border border-[#FBBC05]/30">
                 ⭐ {lesson.xp} XP
             </span>
             {lesson.tags?.map(tag => (
-                <span key={tag} className="px-2 py-0.5 rounded-md bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-400 text-[9px] font-bold uppercase tracking-wider">
+                <span key={tag} className="px-2 py-1 rounded-md bg-[#4285F4]/10 dark:bg-[#4285F4]/20 text-[#1a73e8] dark:text-[#8ab4f8] text-[10px] font-bold tracking-wide border border-[#4285F4]/30">
                     #{tag}
                 </span>
             ))}
@@ -164,11 +164,14 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
         >
             {/* Concept */}
             {lesson.explanationKey && (
-                <div className="bg-indigo-50 dark:bg-indigo-900/20 p-5 rounded-2xl border-2 border-indigo-100 dark:border-indigo-800/50 shadow-sm relative overflow-hidden group">
-                    <div className="absolute -right-4 -top-4 text-indigo-100 dark:text-indigo-900/40 text-7xl transform rotate-12 group-hover:scale-110 transition-transform">💡</div>
+                <div className="bg-[#4285F4]/5 dark:bg-[#4285F4]/10 p-6 rounded-3xl border border-[#4285F4]/20 dark:border-[#4285F4]/30 shadow-sm relative overflow-hidden group">
+                    <div className="absolute -right-4 -top-4 text-[#4285F4]/10 dark:text-[#4285F4]/20 text-7xl transform rotate-12 group-hover:scale-110 transition-transform">💡</div>
                     <div className="relative z-10">
-                        <h3 className="text-[11px] font-black text-indigo-500 dark:text-indigo-400 uppercase tracking-widest mb-2">Concept</h3>
-                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 leading-relaxed">
+                        <h3 className="text-xs font-bold text-[#1a73e8] dark:text-[#8ab4f8] uppercase tracking-wide mb-3 flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            Concept
+                        </h3>
+                        <p className="text-sm font-medium text-slate-700 dark:text-slate-200 leading-relaxed">
                             {t(lesson.explanationKey as any)}
                         </p>
                     </div>
@@ -177,17 +180,17 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
 
             {/* Objectives */}
             {lesson.objectivesKey && (
-                <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl p-4 shadow-sm">
-                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1">
+                <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm">
+                    <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-4 flex items-center gap-2">
                         🎯 Learning Objectives
                     </h3>
-                    <ul className="space-y-2">
+                    <ul className="space-y-3">
                         {((t(lesson.objectivesKey as any) as string) || '').split('|').map((obj, i) => (
-                            <li key={i} className="flex items-center gap-2 text-sm font-bold text-slate-600 dark:text-slate-300">
-                                <div className="w-5 h-5 rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 flex items-center justify-center text-[9px] font-black shrink-0">
+                            <li key={i} className="flex items-start gap-3 text-sm font-medium text-slate-600 dark:text-slate-300">
+                                <div className="w-5 h-5 rounded-full bg-[#34A853]/10 dark:bg-[#34A853]/20 text-[#2e9347] dark:text-[#a8dab5] flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
                                     {i + 1}
                                 </div>
-                                {obj}
+                                <span className="leading-snug">{obj}</span>
                             </li>
                         ))}
                     </ul>
@@ -196,9 +199,12 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
 
             {/* Pro Tip */}
             {lesson.proTipKey && (
-                <div className="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-400 p-4 rounded-r-xl">
-                    <h3 className="text-[10px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest mb-1">💡 Pro Tip!</h3>
-                    <p className="text-sm font-semibold text-amber-900/80 dark:text-amber-100/70">{t(lesson.proTipKey as any)}</p>
+                <div className="bg-[#FBBC05]/10 dark:bg-[#FBBC05]/5 border-l-4 border-[#F29900] p-5 rounded-r-2xl">
+                    <h3 className="text-xs font-bold text-[#F29900] dark:text-[#fde293] uppercase tracking-wide mb-2 flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        Pro Tip
+                    </h3>
+                    <p className="text-sm font-medium text-[#c07c00] dark:text-[#fde293]/80 leading-relaxed">{t(lesson.proTipKey as any)}</p>
                 </div>
             )}
 
@@ -206,9 +212,9 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
             {totalQuestions > 0 ? (
                 <motion.button
                     whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={handleStartQuiz}
-                    className="w-full py-4 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white font-black text-base uppercase tracking-widest shadow-lg shadow-brand-500/30 transition-colors flex items-center justify-center gap-3"
+                    className="w-full py-4 rounded-full bg-[#4285F4] hover:bg-[#1a73e8] text-white font-bold text-sm tracking-wide shadow-sm transition-colors flex items-center justify-center gap-3 mt-4"
                 >
                     <span>🎓</span> Take the Quiz!
                 </motion.button>
@@ -236,24 +242,24 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
             className="flex flex-col gap-5"
         >
             {/* Progress Bar */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
                 <div className="flex-grow h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                     <motion.div
-                        className="h-full bg-gradient-to-r from-brand-400 to-brand-600 rounded-full"
+                        className="h-full bg-[#4285F4] rounded-full"
                         initial={{ width: `${(questionIndex / totalQuestions) * 100}%` }}
                         animate={{ width: `${((questionIndex + 1) / totalQuestions) * 100}%` }}
                         transition={{ duration: 0.5 }}
                     />
                 </div>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest shrink-0">
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-wide shrink-0">
                     {questionIndex + 1} / {totalQuestions}
                 </span>
             </div>
 
             {/* Question Card */}
-            <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border-2 border-slate-100 dark:border-slate-700 shadow-sm">
-                <div className="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/40 flex items-center justify-center text-brand-600 font-black text-sm mb-3">Q</div>
-                <p className="text-base font-black text-slate-800 dark:text-white leading-snug">
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-[#4285F4]/10 dark:bg-slate-700 flex items-center justify-center text-[#4285F4] dark:text-[#8ab4f8] font-bold text-sm mb-4 border border-[#4285F4]/20">Q</div>
+                <p className="text-lg font-bold text-slate-800 dark:text-white leading-relaxed">
                     {t(currentQuestion.questionKey as any)}
                 </p>
             </div>
@@ -265,9 +271,9 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                     const isCorrect = idx === currentQuestion.correctIndex;
                     const revealed = answerState !== 'idle';
 
-                    let bg = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-brand-400 hover:bg-brand-50 dark:hover:border-brand-500 dark:hover:bg-brand-900/20';
-                    if (revealed && isCorrect) bg = 'bg-green-50 dark:bg-green-900/30 border-green-400 dark:border-green-500';
-                    else if (revealed && isSelected && !isCorrect) bg = 'bg-red-50 dark:bg-red-900/30 border-red-400 dark:border-red-500';
+                    let bg = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-[#4285F4]/40 hover:bg-[#4285F4]/5 dark:hover:border-[#4285F4]/40 dark:hover:bg-slate-700';
+                    if (revealed && isCorrect) bg = 'bg-[#34A853]/10 dark:bg-[#34A853]/20 border-[#34A853]/40 dark:border-[#34A853]/40';
+                    else if (revealed && isSelected && !isCorrect) bg = 'bg-[#EA4335]/10 dark:bg-[#EA4335]/20 border-[#EA4335]/40 dark:border-[#EA4335]/40';
 
                     return (
                         <motion.button
@@ -275,21 +281,21 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                             whileHover={answerState === 'idle' ? { scale: 1.01 } : {}}
                             whileTap={answerState === 'idle' ? { scale: 0.98 } : {}}
                             onClick={() => handleSelectOption(idx)}
-                            className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all ${bg} ${revealed ? 'cursor-default' : 'cursor-pointer'}`}
+                            className={`w-full flex items-center gap-4 p-4 rounded-2xl border text-left transition-all ${bg} ${revealed ? 'cursor-default' : 'cursor-pointer'}`}
                         >
-                            <div className={`w-7 h-7 rounded-full flex items-center justify-center font-black text-xs shrink-0 border-2 transition-colors
-                ${revealed && isCorrect ? 'bg-green-500 border-green-500 text-white' : ''}
-                ${revealed && isSelected && !isCorrect ? 'bg-red-500 border-red-500 text-white' : ''}
-                ${!revealed ? 'border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400' : ''}
-                ${revealed && !isCorrect && !isSelected ? 'border-slate-200 text-slate-400' : ''}
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0 border transition-colors
+                ${revealed && isCorrect ? 'bg-[#34A853] border-[#34A853] text-white' : ''}
+                ${revealed && isSelected && !isCorrect ? 'bg-[#EA4335] border-[#EA4335] text-white' : ''}
+                ${!revealed ? 'border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-700' : ''}
+                ${revealed && !isCorrect && !isSelected ? 'border-slate-200 text-slate-400 bg-slate-50 dark:bg-slate-800 opacity-50' : ''}
               `}>
-                                {revealed && isCorrect ? '✓' : revealed && isSelected && !isCorrect ? '✗' : OPTION_LABELS[idx]}
+                                {revealed && isCorrect ? <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg> : revealed && isSelected && !isCorrect ? <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg> : OPTION_LABELS[idx]}
                             </div>
-                            <span className={`text-sm font-bold transition-colors
-                ${revealed && isCorrect ? 'text-green-700 dark:text-green-300' : ''}
-                ${revealed && isSelected && !isCorrect ? 'text-red-700 dark:text-red-300' : ''}
+                            <span className={`text-sm font-medium transition-colors
+                ${revealed && isCorrect ? 'text-[#2e9347] dark:text-[#a8dab5]' : ''}
+                ${revealed && isSelected && !isCorrect ? 'text-[#c5221f] dark:text-[#f28b82]' : ''}
                 ${!revealed ? 'text-slate-700 dark:text-slate-200' : ''}
-                ${revealed && !isCorrect && !isSelected ? 'text-slate-400' : ''}
+                ${revealed && !isCorrect && !isSelected ? 'text-slate-400 opacity-50' : ''}
               `}>
                                 {t(optKey as any)}
                             </span>
@@ -305,15 +311,15 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                         initial={{ opacity: 0, y: 14 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0 }}
-                        className={`rounded-xl p-4 border-2 ${answerState === 'correct'
-                            ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700'
-                            : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
+                        className={`rounded-2xl p-5 border ${answerState === 'correct'
+                            ? 'bg-[#34A853]/10 dark:bg-[#34A853]/20 border-[#34A853]/20 dark:border-[#34A853]/30'
+                            : 'bg-[#EA4335]/10 dark:bg-[#EA4335]/20 border-[#EA4335]/20 dark:border-[#EA4335]/30'
                             }`}
                     >
-                        <p className={`text-sm font-black mb-1 ${answerState === 'correct' ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'}`}>
-                            {answerState === 'correct' ? '🎉 Correct!' : '❌ Not quite!'}
+                        <p className={`text-sm font-bold mb-2 flex items-center gap-2 ${answerState === 'correct' ? 'text-[#2e9347] dark:text-[#a8dab5]' : 'text-[#c5221f] dark:text-[#f28b82]'}`}>
+                            {answerState === 'correct' ? <><span className="text-xl">🎉</span> Correct!</> : <><span className="text-xl">❌</span> Not quite!</>}
                         </p>
-                        <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <p className="text-sm font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
                             {t(currentQuestion.feedbackKey as any)}
                         </p>
                     </motion.div>
@@ -325,9 +331,9 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={handleNext}
-                    className="w-full py-4 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white font-black text-base uppercase tracking-widest shadow-lg shadow-brand-500/30 transition-colors"
+                    className="w-full py-4 rounded-full bg-[#4285F4] hover:bg-[#1a73e8] text-white font-bold text-sm tracking-wide shadow-sm transition-colors mt-4"
                 >
                     {questionIndex < totalQuestions - 1 ? 'Next Question →' : '🎓 Finish Quiz!'}
                 </motion.button>
@@ -340,42 +346,42 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
             {showSuccessModal && <SuccessOverlay lesson={lesson} onContinue={handleComplete} />}
 
             {/* HEADER */}
-            <header className="flex-shrink-0 bg-white dark:bg-slate-800 px-4 py-3 border-b-4 border-brand-100 dark:border-slate-700 shadow-lg">
+            <header className="flex-shrink-0 bg-white dark:bg-slate-800 px-4 py-4 border-b border-slate-200 dark:border-slate-700 shadow-sm z-10 relative">
                 <div className="flex items-center justify-between max-w-2xl mx-auto w-full">
                     <button
                         onClick={onExit}
-                        className="w-9 h-9 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all border-b-2 border-slate-300 active:border-b-0 active:translate-y-0.5"
+                        className="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-700 rounded-full text-slate-500 dark:text-slate-400 hover:text-[#EA4335] hover:bg-[#EA4335]/10 transition-colors border border-slate-200 dark:border-slate-600 shadow-sm"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={5}>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
 
-                    <div className="flex flex-col items-center gap-0.5">
-                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                    <div className="flex flex-col items-center gap-1">
+                        <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                             {phase === 'reading' ? '📖 Read & Learn' : `Quiz · Q${questionIndex + 1}`}
                         </span>
-                        <span className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-tight">
+                        <span className="text-sm font-bold text-slate-800 dark:text-white tracking-tight">
                             {t(lesson.titleKey as any)}
                         </span>
                     </div>
 
-                    <div className="bg-white dark:bg-slate-800 px-2 py-1 rounded-lg border-b-2 border-yellow-500 shadow-md font-black text-yellow-600 text-sm">
+                    <div className="bg-[#FBBC05]/10 dark:bg-[#FBBC05]/20 px-3 py-1.5 rounded-full border border-[#FBBC05]/30 shadow-sm font-bold text-[#F29900] dark:text-[#fde293] text-sm flex items-center gap-1">
                         ⭐ {currentUser?.progress?.xp || 0}
                     </div>
                 </div>
             </header>
 
             {/* BODY */}
-            <div className="flex-grow overflow-y-auto">
-                <div className="max-w-2xl mx-auto w-full px-4 pt-5">
+            <div className="flex-grow overflow-y-auto bg-[#f8f9fa] dark:bg-slate-900">
+                <div className="max-w-2xl mx-auto w-full px-4 pt-8 pb-12">
                     {/* Title + badges */}
-                    <div className="mb-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className="bg-brand-500 text-white w-7 h-7 rounded-lg flex items-center justify-center font-black text-sm shrink-0">
+                    <div className="mb-6">
+                        <div className="flex items-center gap-3 mb-3">
+                            <div className="bg-[#4285F4] text-white w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
                                 {lesson.level}
                             </div>
-                            <h2 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tighter italic">
+                            <h2 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">
                                 {t(lesson.titleKey as any)}
                             </h2>
                         </div>
@@ -384,7 +390,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
 
                     {/* Challenge description */}
                     {lesson.challengeDescriptionKey && (
-                        <p className="text-sm font-bold text-slate-500 dark:text-slate-400 leading-relaxed mb-4 italic">
+                        <p className="text-base font-medium text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
                             {t(lesson.challengeDescriptionKey as any)}
                         </p>
                     )}

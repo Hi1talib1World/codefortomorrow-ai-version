@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
 import BottomNav from '../BottomNav';
@@ -17,36 +18,72 @@ import { User, Lesson, ProgrammingPath } from '../../types';
 
 export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'goals' | 'leaderboard' | 'store' | 'settings' | 'messages';
 
+// Map URL :view param → DashboardView enum
+const VIEW_MAP: Record<string, DashboardView> = {
+  learn: 'learn',
+  profile: 'profile',
+  creations: 'creations',
+  goals: 'goals',
+  leaderboard: 'leaderboard',
+  store: 'store',
+  settings: 'settings',
+  messages: 'messages',
+};
+
 interface DashboardProps {
   currentUser: User;
   onStartLesson: (lesson: Lesson) => void;
   onLogout: () => void;
   onSwitchPath: (pathId: ProgrammingPath['id']) => void;
   onUpdateUser: (updatedData: Partial<User>) => void;
-  initialView?: DashboardView;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLogout, onSwitchPath, onUpdateUser, initialView = 'home' }) => {
-  const [activeView, setActiveView] = useState<DashboardView>(initialView);
+const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLogout, onSwitchPath, onUpdateUser }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { view, pathId } = useParams<{ view?: string; pathId?: string }>();
+
+  // Derive the active view from the URL
+  const activeView: DashboardView = (() => {
+    // /dashboard/learn/:pathId  OR  /dashboard/learn
+    if (location.pathname.startsWith('/dashboard/learn')) return 'learn';
+    if (view && VIEW_MAP[view]) return VIEW_MAP[view];
+    return 'home';
+  })();
+
   const path = currentUser.currentPath;
+
+  /** Navigate to a dashboard sub-route */
+  const setActiveView = (v: DashboardView) => {
+    if (v === 'home') {
+      navigate('/dashboard');
+    } else if (v === 'learn') {
+      // If user already has a path chosen, go straight to that language's map
+      navigate(path ? `/dashboard/learn/${path}` : '/dashboard/learn');
+    } else {
+      navigate(`/dashboard/${v}`);
+    }
+  };
 
   const renderActiveView = () => {
     switch (activeView) {
       case 'home':
-        return <HomeHubScreen onNavigate={setActiveView} userName={currentUser.name} role={currentUser.role} />;
+        return <HomeHubScreen onNavigate={setActiveView} userName={currentUser.name} role={currentUser.role} currentPath={path} />;
       case 'learn':
-        if (!path) {
+        if (!path && !pathId) {
           return <PathSelectionScreen onPathSelected={(pId) => {
             onSwitchPath(pId);
-            setActiveView('learn');
+            navigate(`/dashboard/learn/${pId}`);
           }} />;
         }
-        return <LearnScreen
-          completedLessons={currentUser.progress.completedLessons[path] || []}
-          onStartLesson={onStartLesson}
-          path={path}
-          onSwitchPath={onSwitchPath}
-        />;
+        return (
+          <LearnScreen
+            completedLessons={currentUser.progress.completedLessons[pathId || path || ''] || []}
+            onStartLesson={onStartLesson}
+            path={(pathId || path) as ProgrammingPath['id']}
+            onSwitchPath={(pId) => navigate(`/dashboard/learn/${pId}`)}
+          />
+        );
       case 'profile':
         return <ProfileScreen currentUser={currentUser} onUpdateUser={onUpdateUser} />;
       case 'creations':
@@ -66,11 +103,11 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
           </div>
         );
       default:
-        return <HomeHubScreen onNavigate={setActiveView} userName={currentUser.name} role={currentUser.role} />;
+        return <HomeHubScreen onNavigate={setActiveView} userName={currentUser.name} role={currentUser.role} currentPath={path} />;
     }
   };
 
-  const mainContentBg = (activeView === 'learn' && path)
+  const mainContentBg = (activeView === 'learn' && (path || pathId))
     ? 'bg-brand-50 dark:bg-slate-900'
     : (activeView === 'home' ? 'bg-transparent' : 'bg-brand-50 dark:bg-slate-900');
 
@@ -81,7 +118,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
         <Header
           currentUser={currentUser}
           onLogout={onLogout}
-          onSwitchPath={onSwitchPath}
+          onSwitchPath={(pId) => navigate(`/dashboard/learn/${pId}`)}
         />
         <main className={`flex-grow overflow-y-auto ${mainContentBg} pb-24 md:pb-12 transition-colors`}>
           <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-6 md:py-10">

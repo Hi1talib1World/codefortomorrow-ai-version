@@ -34,14 +34,14 @@ const SpeakingPracticeWizard: React.FC<SpeakingPracticeWizardProps> = ({ languag
     };
 
     return (
-        <div className="p-4 md:p-8 bg-brand-50 dark:bg-slate-900 min-h-full">
-            <header className="mb-8 flex items-center space-x-4 text-sm font-bold text-brand-600 dark:text-brand-400">
-                <button onClick={onBack} className="hover:underline">{t('speaking_hub')}</button>
-                <span className="text-slate-400">&gt;</span>
-                <span className="text-slate-700 dark:text-slate-300">{t(languageTitleKey as any)}</span>
+        <div className="p-4 md:p-8 bg-slate-50 dark:bg-slate-900 min-h-full">
+            <header className="mb-8 flex items-center space-x-4 text-sm font-bold text-slate-500 dark:text-slate-400">
+                <button onClick={onBack} className="hover:text-[#4285F4] transition-colors">{t('speaking_hub')}</button>
+                <span className="text-slate-300 dark:text-slate-600">&gt;</span>
+                <span className="text-slate-800 dark:text-slate-200">{t(languageTitleKey as any)}</span>
             </header>
 
-            <div className="w-full max-w-5xl mx-auto mt-12 bg-white dark:bg-slate-800 p-10 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-700">
+            <div className="w-full max-w-5xl mx-auto mt-12 bg-white dark:bg-slate-800 p-10 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700">
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
                     {/* Level Dropdown */}
@@ -110,7 +110,7 @@ const SpeakingPracticeWizard: React.FC<SpeakingPracticeWizardProps> = ({ languag
                             <select
                                 value={formData.duration}
                                 onChange={(e) => setFormData({ ...formData, duration: Number(e.target.value) })}
-                                className="w-full appearance-none bg-slate-50 dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 text-slate-800 dark:text-white rounded-xl py-4 pl-4 pr-10 font-bold focus:outline-none focus:ring-2 focus:ring-brand-500"
+                                className="w-full appearance-none bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-white rounded-xl py-4 pl-4 pr-10 font-bold focus:outline-none focus:ring-2 focus:ring-[#4285F4] focus:border-transparent transition-shadow"
                             >
                                 <option value={1}>1 min</option>
                                 <option value={2}>2 min</option>
@@ -119,7 +119,7 @@ const SpeakingPracticeWizard: React.FC<SpeakingPracticeWizardProps> = ({ languag
                                 <option value={10}>10 min</option>
                                 <option value={15}>15 min</option>
                             </select>
-                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none w-5 h-5" />
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@ const SpeakingPracticeWizard: React.FC<SpeakingPracticeWizardProps> = ({ languag
                     <button
                         onClick={handleStart}
                         disabled={isNextDisabled()}
-                        className="py-4 px-12 bg-brand-500 text-white text-lg font-black uppercase tracking-widest rounded-2xl hover:bg-brand-600 transition disabled:bg-slate-300 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:-translate-y-1 transform"
+                        className="py-4 px-12 bg-[#4285F4] text-white text-base font-bold tracking-wide rounded-full hover:bg-[#1a73e8] transition-all disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed shadow-sm hover:shadow active:scale-95 transform"
                     >
                         {t('start_speaking')}
                     </button>

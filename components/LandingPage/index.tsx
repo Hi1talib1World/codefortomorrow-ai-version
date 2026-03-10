@@ -126,15 +126,15 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
 
         <AnimatedSection>
           <div className="relative inline-block mb-10">
-            <div className="absolute -inset-4 bg-brand-500/10 rounded-full blur-2xl"></div>
-            <div className="w-32 h-32 md:w-44 md:h-44 transform hover:scale-105 transition-all duration-700 cursor-pointer drop-shadow-[0_20px_50px_rgba(89,198,201,0.3)] relative">
+            <div className="absolute -inset-4 bg-[#4285F4]/10 rounded-full blur-2xl"></div>
+            <div className="w-32 h-32 md:w-44 md:h-44 transform hover:scale-105 transition-all duration-700 cursor-pointer drop-shadow-[0_20px_50px_rgba(66,133,244,0.3)] relative">
               <Mascot />
             </div>
           </div>
           <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold leading-[1.1] tracking-tight text-slate-900 dark:text-white">
             Learning to Code is a
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-brand-700 dark:from-brand-400 dark:to-brand-500">Great Adventure.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC05] dark:from-[#8ab4f8] dark:to-[#fdd663]">Great Adventure.</span>
           </h1>
           <p className="max-w-2xl mx-auto mt-8 text-slate-600 dark:text-slate-400 text-lg md:text-xl leading-relaxed font-medium">
             Empower your child with the language of the future. Our platform turns complex concepts into interactive play.
@@ -214,13 +214,13 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: Gamepad2, title: "Fun Games", color: "bg-orange-500", text: "Learn coding logic through immersive puzzles and interactive challenges." },
-              { icon: Brush, title: "Creative Projects", color: "bg-purple-500", text: "Design your own digital worlds, from simple animations to complex games." },
-              { icon: Bot, title: "AI Mentorship", color: "bg-emerald-500", text: "Personalized guidance that adapts to your child's unique learning pace." },
-              { icon: Award, title: "Skill Certification", color: "bg-amber-500", text: "Earn verifiable badges and certificates as you master new technologies." }
+              { icon: Gamepad2, title: "Fun Games", color: "bg-[#4285F4]", text: "Learn coding logic through immersive puzzles and interactive challenges." },
+              { icon: Brush, title: "Creative Projects", color: "bg-[#EA4335]", text: "Design your own digital worlds, from simple animations to complex games." },
+              { icon: Bot, title: "AI Mentorship", color: "bg-[#34A853]", text: "Personalized guidance that adapts to your child's unique learning pace." },
+              { icon: Award, title: "Skill Certification", color: "bg-[#FBBC05]", text: "Earn verifiable badges and certificates as you master new technologies." }
             ].map(feature => (
-              <div key={feature.title} className="group bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-sm border border-slate-200/60 dark:border-slate-700/60 hover:shadow-2xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-2">
-                <div className={`w-14 h-14 ${feature.color} rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
+              <div key={feature.title} className="group bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200/60 dark:border-slate-700/60 hover:shadow-xl transition-all duration-500 hover:-translate-y-2">
+                <div className={`w-14 h-14 ${feature.color} rounded-2xl flex items-center justify-center text-white mb-6 shadow-md group-hover:scale-110 transition-transform duration-500`}>
                   <feature.icon className="w-7 h-7" strokeWidth={2} />
                 </div>
                 <h3 className="font-bold text-xl mb-3 text-slate-900 dark:text-white">{feature.title}</h3>
@@ -266,11 +266,11 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
-              { id: "block", title: "Block Coding", icon: Gamepad2, desc: "Drag and drop blocks to learn logic. Perfect for beginners mapping out their first games.", iconBg: "bg-orange-100 dark:bg-orange-500/20", iconColor: "text-orange-500", glow: "bg-orange-500/10 group-hover:bg-orange-500/20", border: 'border-orange-200 dark:border-orange-500/30', age: "Ages 7-9" },
-              { id: "js", title: "JavaScript", icon: Code, desc: "The language of the web. Build interactive websites and web-based games.", iconBg: "bg-yellow-100 dark:bg-yellow-500/20", iconColor: "text-yellow-600 dark:text-yellow-500", glow: "bg-yellow-500/10 group-hover:bg-yellow-500/20", border: 'border-yellow-200 dark:border-yellow-500/30', age: "Ages 10-14" },
-              { id: "python", title: "Python", icon: Cpu, desc: "Powerful yet easy to read. Dive into data, back-end logic, and AI concepts.", iconBg: "bg-blue-100 dark:bg-blue-500/20", iconColor: "text-blue-500", glow: "bg-blue-500/10 group-hover:bg-blue-500/20", border: 'border-blue-200 dark:border-blue-500/30', age: "Ages 12-16+" }
+              { id: "block", title: "Block Coding", icon: Gamepad2, desc: "Drag and drop blocks to learn logic. Perfect for beginners mapping out their first games.", iconBg: "bg-[#EA4335]/10 dark:bg-[#EA4335]/20", iconColor: "text-[#EA4335]", glow: "bg-[#EA4335]/10 group-hover:bg-[#EA4335]/20", border: 'border-[#EA4335]/20 dark:border-[#EA4335]/30', age: "Ages 7-9" },
+              { id: "js", title: "JavaScript", icon: Code, desc: "The language of the web. Build interactive websites and web-based games.", iconBg: "bg-[#FBBC05]/10 dark:bg-[#FBBC05]/20", iconColor: "text-[#FBBC05] dark:text-[#FDE293]", glow: "bg-[#FBBC05]/10 group-hover:bg-[#FBBC05]/20", border: 'border-[#FBBC05]/20 dark:border-[#FBBC05]/30', age: "Ages 10-14" },
+              { id: "python", title: "Python", icon: Cpu, desc: "Powerful yet easy to read. Dive into data, back-end logic, and AI concepts.", iconBg: "bg-[#34A853]/10 dark:bg-[#34A853]/20", iconColor: "text-[#34A853]", glow: "bg-[#34A853]/10 group-hover:bg-[#34A853]/20", border: 'border-[#34A853]/20 dark:border-[#34A853]/30', age: "Ages 12-16+" }
             ].map(path => (
-              <div key={path.id} className={`bg-white dark:bg-slate-800 rounded-[2rem] p-8 border hover:border-transparent ${path.border} hover:shadow-2xl hover:shadow-${path.id} transition-all duration-500 hover:-translate-y-2 group cursor-pointer relative overflow-hidden`}>
+              <div key={path.id} className={`bg-white dark:bg-slate-800 rounded-3xl p-8 border hover:border-transparent ${path.border} hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group cursor-pointer relative overflow-hidden`}>
                 <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-2xl transition-all ${path.glow}`}></div>
                 <div className="flex justify-between items-start mb-6 relative z-10">
                   <div className={`w-14 h-14 rounded-2xl font-bold flex items-center justify-center p-3 ${path.iconBg} ${path.iconColor}`}>
@@ -302,19 +302,19 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
               { name: "Leo T.", role: "Student, Age 9", quote: "I love how the mascot explains things. It doesn't feel like school at all, it feels like I'm on a mission!", img: "https://picsum.photos/seed/leo/100/100" },
               { name: "Mr. Davison", role: "STEM Educator", quote: "Finally, a platform that bridges the gap between block-based coding and real-world logic effectively.", img: "https://picsum.photos/seed/dave/100/100" }
             ].map(t => (
-              <div key={t.name} className="bg-slate-50 dark:bg-slate-900/40 p-10 rounded-[2.5rem] border border-slate-100 dark:border-slate-800/50 relative">
+              <div key={t.name} className="bg-white dark:bg-slate-900/40 p-10 rounded-3xl border border-slate-200 dark:border-slate-800/50 shadow-sm relative">
                 <div className="absolute top-10 right-10 opacity-10">
                   <svg width="45" height="36" viewBox="0 0 45 36" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 0C6.04416 0 0 6.04416 0 13.5V36H18V13.5H9C9 11.0147 11.0147 9 13.5 9V0ZM40.5 0C33.0442 0 27 6.04416 27 13.5V36H45V13.5H36C36 11.0147 38.0147 9 40.5 9V0Z" /></svg>
                 </div>
                 <div className="flex items-center mb-8">
-                  <img src={t.img} alt={t.name} className="w-14 h-14 rounded-2xl mr-4 object-cover ring-4 ring-white dark:ring-slate-800 shadow-lg" referrerPolicy="no-referrer" />
+                  <img src={t.img} alt={t.name} className="w-14 h-14 rounded-full mr-4 object-cover ring-2 ring-slate-100 dark:ring-slate-800" referrerPolicy="no-referrer" />
                   <div>
                     <h4 className="font-bold text-lg text-slate-900 dark:text-white">{t.name}</h4>
-                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">{t.role}</p>
+                    <p className="text-brand-600 dark:text-brand-400 font-medium text-sm">{t.role}</p>
                   </div>
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium italic">"{t.quote}"</p>
-                <div className="flex mt-8 text-amber-400 gap-1"> {[...Array(5)].map((_, i) => <Star key={i} fill="currentColor" className="w-4 h-4" />)} </div>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">"{t.quote}"</p>
+                <div className="flex mt-8 text-[#FBBC05] gap-1"> {[...Array(5)].map((_, i) => <Star key={i} fill="currentColor" className="w-4 h-4" />)} </div>
               </div>
             ))}
           </div>

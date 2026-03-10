@@ -19,8 +19,8 @@ const LeagueIcon = ({ className }: { className?: string }) => (
 const HexagonBadgeIcon = ({ icon, earned }: { icon: React.ReactNode; earned: boolean }) => (
   <div className={`relative w-20 h-20 flex items-center justify-center flex-shrink-0 transition-all ${!earned ? 'grayscale opacity-30 scale-90' : 'drop-shadow-xl'}`}>
     <svg viewBox="0 0 100 115.47" className="absolute inset-0 w-full h-full transform transition-colors">
-      <path d="M50 0 L100 28.87 L100 86.6 L50 115.47 L0 86.6 L0 28.87 Z" fill={earned ? "#58C6C8" : "#cbd5e1"} className="dark:fill-slate-700" />
-      <path d="M50 5 L95 31.7 L95 83.77 L50 110.47 L5 83.77 L5 31.7 Z" fill={earned ? "#0EA5E9" : "#94a3b8"} className="dark:fill-slate-600" />
+      <path d="M50 0 L100 28.87 L100 86.6 L50 115.47 L0 86.6 L0 28.87 Z" fill={earned ? "#4285F4" : "#cbd5e1"} className="dark:fill-slate-700" />
+      <path d="M50 5 L95 31.7 L95 83.77 L50 110.47 L5 83.77 L5 31.7 Z" fill={earned ? "#1a73e8" : "#94a3b8"} className="dark:fill-slate-600" />
     </svg>
     <div className="relative z-10 text-white text-4xl">
       {icon}
@@ -75,17 +75,17 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
         <div className="max-w-4xl mx-auto">
 
           <div className="relative mb-20">
-            <div className="h-60 bg-gradient-to-r from-brand-600 to-brand-700 rounded-[3rem] relative shadow-2xl overflow-hidden group">
+            <div className="h-60 bg-[#4285F4] rounded-3xl relative shadow-md overflow-hidden group border border-[#1a73e8]">
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <button className="absolute top-6 left-6 w-12 h-12 bg-black/30 backdrop-blur-md rounded-2xl flex items-center justify-center hover:bg-black/50 transition-all text-white">
+              <button className="absolute top-6 left-6 w-12 h-12 bg-black/30 backdrop-blur-md rounded-xl flex items-center justify-center hover:bg-black/50 transition-all text-white border border-white/20">
                 <Plus className="w-8 h-8" />
               </button>
-              <button onClick={() => setIsEditModalOpen(true)} className="absolute bottom-6 right-6 w-12 h-12 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-black/50 transition-all text-white">
+              <button onClick={() => setIsEditModalOpen(true)} className="absolute bottom-6 right-6 w-12 h-12 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-black/50 transition-all text-white border border-white/20">
                 <Pencil className="w-6 h-6" />
               </button>
             </div>
             <div className="absolute -bottom-14 left-1/2 -translate-x-1/2">
-              <div className="w-40 h-40 rounded-full bg-white dark:bg-slate-800 border-[10px] border-slate-100 dark:border-slate-900 flex items-center justify-center relative overflow-hidden shadow-2xl transition-colors">
+              <div className="w-40 h-40 rounded-full bg-white dark:bg-slate-800 border-8 border-white dark:border-slate-900 flex items-center justify-center relative overflow-hidden shadow-lg transition-colors">
                 <img src={currentUser.profilePictureUrl} alt={currentUser.name} className="w-full h-full object-cover transition-transform duration-500" />
               </div>
             </div>
@@ -112,7 +112,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="md:col-span-2 bg-gradient-to-br from-brand-600 to-brand-700 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden">
+              <div className="md:col-span-2 bg-slate-900 border border-slate-700 p-8 rounded-3xl text-white shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-8 opacity-10">
                   <Brain className="w-32 h-32" />
                 </div>
@@ -137,7 +137,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border-b-[12px] border-slate-200 dark:border-slate-950 shadow-xl">
+              <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
                 <div className="space-y-6">
                   <div>
                     <h4 className="text-[10px] font-black uppercase tracking-widest text-green-500 mb-3 flex items-center gap-2">
@@ -169,26 +169,26 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center mb-12">
-            <div className="bg-white dark:bg-slate-800 border-b-8 border-slate-200 dark:border-slate-950 rounded-[2.5rem] p-6 flex flex-col items-center justify-center shadow-lg transition-all">
+            <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-6 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md">
               <div className="text-5xl mb-2">🔥</div>
-              <p className="font-black text-4xl leading-none">{userProgress.streak}</p>
-              <p className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-2">{t('streak')}</p>
+              <p className="font-bold text-4xl leading-none">{userProgress.streak}</p>
+              <p className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">{t('streak')}</p>
             </div>
-            <div className="bg-white dark:bg-slate-800 border-b-8 border-slate-200 dark:border-slate-950 rounded-[2.5rem] p-6 flex flex-col items-center justify-center shadow-lg transition-all">
-              <div className="text-5xl mb-2 text-yellow-400 drop-shadow-sm">⭐</div>
-              <p className="font-black text-4xl leading-none">{userProgress.xp}</p>
-              <p className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-2">{t('xp')}</p>
+            <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-6 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md">
+              <div className="text-5xl mb-2 text-[#FBBC05] drop-shadow-sm">⭐</div>
+              <p className="font-bold text-4xl leading-none">{userProgress.xp}</p>
+              <p className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">{t('xp')}</p>
             </div>
-            <div className="bg-white dark:bg-slate-800 border-b-8 border-slate-200 dark:border-slate-950 rounded-[2.5rem] p-6 flex flex-col items-center justify-center shadow-lg transition-all">
-              <LeagueIcon className="w-14 h-14 text-green-500 mb-2 drop-shadow-sm" />
-              <p className="font-black text-4xl leading-none uppercase italic tracking-tighter">{mockLeague}</p>
-              <p className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-2">{t('league_label')}</p>
+            <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-6 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md">
+              <LeagueIcon className="w-14 h-14 text-[#34A853] mb-2 drop-shadow-sm" />
+              <p className="font-bold text-3xl leading-none uppercase tracking-tight">{mockLeague}</p>
+              <p className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-3">{t('league_label')}</p>
             </div>
           </div>
 
           <div className="space-y-6">
-            <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tighter italic">{t('my_badges')}</h2>
-            <div className="bg-white dark:bg-slate-800 rounded-[3rem] p-8 border-b-[12px] border-slate-200 dark:border-slate-950 shadow-xl transition-colors">
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-white uppercase tracking-tight">{t('my_badges')}</h2>
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm transition-colors">
               {pathBadges.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {pathBadges.map(badge => {
