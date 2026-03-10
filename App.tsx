@@ -21,6 +21,7 @@ import BrainChallengeGameScreen from './components/BrainChallengeGameScreen';
 import PageTransitionLoader from './components/PageTransitionLoader';
 import ConfettiCelebration from './components/ConfettiCelebration';
 import { ToastProvider } from './components/ToastNotification';
+import ErrorBoundary from './components/ErrorBoundary';
 
 /** Default blank progress object used when creating a guest/new user session. */
 const defaultProgress: UserProgress = {
@@ -408,14 +409,16 @@ export default function App() {
   };
 
   return (
-    <ThemeProvider>
-      <ToastProvider>
-        <div className="min-h-screen text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
-          <PageTransitionLoader />
-          <ConfettiCelebration isActive={showConfetti} onComplete={() => setShowConfetti(false)} />
-          {renderContent()}
-        </div>
-      </ToastProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <ToastProvider>
+          <div className="min-h-screen text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
+            <PageTransitionLoader />
+            <ConfettiCelebration isActive={showConfetti} onComplete={() => setShowConfetti(false)} />
+            {renderContent()}
+          </div>
+        </ToastProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }

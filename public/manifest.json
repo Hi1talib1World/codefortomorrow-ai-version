@@ -1,0 +1,29 @@
+{
+    "name": "Code for Tomorrow",
+    "short_name": "CFT",
+    "description": "An interactive learning platform for kids to master coding, math, languages, and brain training.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#F8F9FA",
+    "theme_color": "#4285F4",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/assets/images/cofoto.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/assets/images/cofoto.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": [
+        "education",
+        "kids",
+        "games"
+    ]
+}

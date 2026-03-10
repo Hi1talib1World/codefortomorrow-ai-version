@@ -5,7 +5,8 @@ import { BADGES_BY_PATH } from '../../constants';
 import { useLanguage } from '../../contexts/LanguageContext';
 import EditProfileModal from '../EditProfileModal';
 import api from '../../services/api';
-import { Sparkles, Target, Zap, Brain, Plus, Pencil } from 'lucide-react';
+import { Sparkles, Target, Zap, Brain, Plus, Pencil, Award, BookOpen } from 'lucide-react';
+import AnimatedCounter from '../AnimatedCounter';
 
 // Mock data
 const mockFollowing = 12;
@@ -56,6 +57,15 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
 
   const pathBadges = currentPath ? BADGES_BY_PATH[currentPath] || [] : [];
   const earnedBadgeIds = (currentPath && userProgress.badgesEarned[currentPath]) || [];
+
+  // Compute additional stats
+  const totalLessons = Object.values(userProgress.completedLessons).reduce(
+    (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0
+  );
+  const quizScores = Object.values(userProgress.scores || {});
+  const avgScore = quizScores.length > 0
+    ? Math.round((quizScores as number[]).reduce((a, b) => a + b, 0) / quizScores.length)
+    : 0;
 
   const handleSaveProfile = (updatedData: Partial<User>) => {
     onUpdateUser(updatedData);
@@ -168,21 +178,31 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center mb-12">
-            <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-6 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md">
-              <div className="text-5xl mb-2">🔥</div>
-              <p className="font-bold text-4xl leading-none">{userProgress.streak}</p>
-              <p className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">{t('streak')}</p>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 text-center mb-12">
+            <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1">
+              <div className="text-4xl mb-2">🔥</div>
+              <p className="font-black text-3xl leading-none"><AnimatedCounter value={userProgress.streak} /></p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">{t('streak')}</p>
             </div>
-            <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-6 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md">
-              <div className="text-5xl mb-2 text-[#FBBC05] drop-shadow-sm">⭐</div>
-              <p className="font-bold text-4xl leading-none">{userProgress.xp}</p>
-              <p className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">{t('xp')}</p>
+            <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1">
+              <div className="text-4xl mb-2 text-[#FBBC05] drop-shadow-sm">⭐</div>
+              <p className="font-black text-3xl leading-none"><AnimatedCounter value={userProgress.xp} /></p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">{t('xp')}</p>
             </div>
-            <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-6 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md">
-              <LeagueIcon className="w-14 h-14 text-[#34A853] mb-2 drop-shadow-sm" />
-              <p className="font-bold text-3xl leading-none uppercase tracking-tight">{mockLeague}</p>
-              <p className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-3">{t('league_label')}</p>
+            <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1">
+              <BookOpen className="w-10 h-10 text-[#4285F4] mb-2" />
+              <p className="font-black text-3xl leading-none"><AnimatedCounter value={totalLessons} /></p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">Lessons</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1">
+              <Award className="w-10 h-10 text-[#34A853] mb-2" />
+              <p className="font-black text-3xl leading-none"><AnimatedCounter value={avgScore} suffix="%" /></p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">Avg Score</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1">
+              <LeagueIcon className="w-10 h-10 text-[#34A853] mb-2 drop-shadow-sm" />
+              <p className="font-black text-2xl leading-none uppercase tracking-tight">{mockLeague}</p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">{t('league_label')}</p>
             </div>
           </div>
 
