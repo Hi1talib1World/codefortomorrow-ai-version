@@ -3,12 +3,13 @@
  * LessonNode/index.tsx
  * ─────────────────────
  * A single interactive node on the lesson roadmap.
+ * Duolingo-style: large circle with progress ring, icon center.
  *
  * Visual states:
- *  - completed  → filled green circle with a checkmark ✓
- *  - next       → pulsing brand-colored circle with a "▶ START" label above
- *  - unlocked   → solid colored circle with lesson icon
- *  - locked     → dark grey circle with a 🔒 icon
+ *  - completed  → green circle with checkmark ✓ and full ring
+ *  - next       → pulsing brand circle with "START" badge and partial ring
+ *  - unlocked   → solid circle with lesson icon
+ *  - locked     → grey circle with 🔒 icon
  */
 import React from 'react';
 import { Lesson } from '../../types';
@@ -37,83 +38,102 @@ const EMOJI_MAP: Record<string, string> = {
 
 const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked, isNext, onStartLesson }) => {
   const { t } = useLanguage();
-
-  // Pick the icon to show inside the node
   const emoji = EMOJI_MAP[lesson.icon] ?? '📚';
 
-  // Determine background color of the node circle
-  const bgColor = isCompleted
-    ? 'bg-green-400 border-green-600'
+  // Circle colors
+  const circleBg = isCompleted
+    ? 'bg-[#58cc02]'
     : isNext
-      ? 'bg-brand-400 border-brand-600'
+      ? 'bg-[#4285F4]'
       : isUnlocked
-        ? 'border-slate-400 bg-white dark:bg-slate-700'
-        : 'bg-slate-700 border-slate-600';
+        ? 'bg-white dark:bg-slate-700'
+        : 'bg-slate-200 dark:bg-slate-700';
 
-  const shadowColor = isCompleted
-    ? 'shadow-green-400/60'
+  const ringColor = isCompleted
+    ? 'stroke-[#58cc02]'
     : isNext
-      ? 'shadow-brand-400/60'
-      : 'shadow-slate-800/30';
+      ? 'stroke-[#4285F4]'
+      : 'stroke-slate-200 dark:stroke-slate-600';
+
+  const shadowStyle = isCompleted
+    ? 'shadow-[0_6px_0_#46a302]'
+    : isNext
+      ? 'shadow-[0_6px_0_#1a73e8]'
+      : isUnlocked
+        ? 'shadow-[0_6px_0_#d1d5db] dark:shadow-[0_6px_0_#475569]'
+        : 'shadow-[0_4px_0_#9ca3af] dark:shadow-[0_4px_0_#334155]';
 
   return (
     <div className="relative flex flex-col items-center">
 
-      {/* "CONTINUE / START" label above the next lesson */}
+      {/* "START" floating badge above next lesson */}
       {isNext && (
         <motion.div
           initial={{ y: -4, opacity: 0 }}
-          animate={{ y: [-4, 0, -4], opacity: 1 }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          className="mb-2 bg-brand-500 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-lg uppercase tracking-widest"
+          animate={{ y: [-6, -2, -6], opacity: 1 }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+          className="mb-1 bg-white dark:bg-slate-800 text-[#4285F4] text-[10px] font-black px-3 py-1 rounded-lg shadow-md border border-slate-100 dark:border-slate-700 uppercase tracking-widest flex items-center gap-1"
         >
-          ▶ {t('continue') || 'Start'}
+          START ⭐
         </motion.div>
       )}
 
-      {/* Main circular button */}
-      <motion.button
-        onClick={() => isUnlocked && onStartLesson(lesson)}
-        disabled={!isUnlocked}
-        whileHover={isUnlocked ? { scale: 1.1 } : {}}
-        whileTap={isUnlocked ? { scale: 0.93 } : {}}
-        className={`
-          relative w-16 h-16 rounded-full border-[3px] flex items-center justify-center
-          transition-all duration-200 font-black
-          ${bgColor}
-          ${isUnlocked ? `shadow-lg ${shadowColor} cursor-pointer` : 'cursor-not-allowed opacity-60'}
-        `}
-      >
-        {/* Pulsing ring for the next lesson */}
-        {isNext && (
-          <span className="absolute inset-0 rounded-full bg-brand-400 opacity-40 animate-ping" />
-        )}
+      {/* Progress ring + circle button */}
+      <div className="relative">
+        {/* SVG progress ring */}
+        <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 72 72">
+          {/* Background track */}
+          <circle cx="36" cy="36" r="32" fill="none" className="stroke-slate-100 dark:stroke-slate-700" strokeWidth="5" />
+          {/* Progress arc */}
+          {(isCompleted || isNext) && (
+            <circle
+              cx="36" cy="36" r="32"
+              fill="none"
+              className={ringColor}
+              strokeWidth="5"
+              strokeLinecap="round"
+              strokeDasharray={`${2 * Math.PI * 32}`}
+              strokeDashoffset={`${2 * Math.PI * 32 * (isCompleted ? 0 : 0.6)}`}
+              style={{ transition: 'stroke-dashoffset 0.8s ease' }}
+            />
+          )}
+        </svg>
 
-        {/* Bottom shadow border (3D effect) */}
-        <span className={`absolute inset-0 rounded-full border-b-4 translate-y-1 -z-10
-          ${isCompleted ? 'border-green-700' : isNext ? 'border-brand-700' : 'border-slate-600'}
-        `} />
+        {/* Main circle button */}
+        <motion.button
+          onClick={() => isUnlocked && onStartLesson(lesson)}
+          disabled={!isUnlocked}
+          whileHover={isUnlocked ? { scale: 1.08 } : {}}
+          whileTap={isUnlocked ? { scale: 0.92 } : {}}
+          className={`
+            relative w-[68px] h-[68px] rounded-full flex items-center justify-center
+            transition-all duration-200 font-black m-[2px]
+            ${circleBg} ${shadowStyle}
+            ${isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}
+          `}
+        >
+          {/* Pulse ring for next */}
+          {isNext && (
+            <span className="absolute inset-0 rounded-full bg-[#4285F4] opacity-30 animate-ping" />
+          )}
 
-        {/* Node content */}
-        {isCompleted ? (
-          <span className="text-white text-2xl font-black">✓</span>
-        ) : !isUnlocked ? (
-          <span className="text-slate-400 text-xl">🔒</span>
-        ) : (
-          <span className="text-2xl select-none">{emoji}</span>
-        )}
-      </motion.button>
+          {/* Content */}
+          {isCompleted ? (
+            <span className="text-white text-3xl font-black drop-shadow-sm">✓</span>
+          ) : !isUnlocked ? (
+            <span className="text-slate-400 text-2xl">🔒</span>
+          ) : (
+            <span className="text-3xl select-none drop-shadow-sm">{emoji}</span>
+          )}
+        </motion.button>
+      </div>
 
-      {/* Lesson title label below */}
-      <p className={`mt-2 text-[10px] font-black text-center max-w-[80px] leading-tight uppercase tracking-wide
-        ${isUnlocked ? 'text-slate-600 dark:text-slate-300' : 'text-slate-400 dark:text-slate-600'}
-      `}>
-        {t(lesson.titleKey as any)}
-      </p>
-
-      {/* XP badge */}
-      {isUnlocked && (
-        <span className="mt-1 text-[9px] font-bold text-yellow-500">+{lesson.xp} XP</span>
+      {/* XP stars below completed nodes */}
+      {isCompleted && (
+        <div className="flex gap-0.5 mt-1">
+          <span className="text-yellow-400 text-[10px]">★</span>
+          <span className="text-yellow-400 text-[10px]">★</span>
+        </div>
       )}
     </div>
   );
