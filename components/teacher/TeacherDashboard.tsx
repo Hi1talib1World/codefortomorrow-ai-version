@@ -41,6 +41,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
   const [activeView, setActiveView] = useState<TeacherView>('overview');
   const [isCreatingAssignment, setIsCreatingAssignment] = useState(false);
   const [isCreatingActivity, setIsCreatingActivity] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
@@ -116,7 +117,14 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
 
   const renderView = () => {
     switch (activeView) {
-      case 'overview':
+      case 'overview': {
+        const [activeAlerts, setActiveAlerts] = React.useState([
+          { id: 1, user: 'Adam K.', action: 'completed Python Quiz', time: '2m ago', type: 'success' },
+          { id: 2, user: 'Sara M.', action: 'needs help with Loops', time: '15m ago', type: 'warning' },
+          { id: 3, user: 'Youssef B.', action: 'earned Logic Master badge', time: '1h ago', type: 'success' },
+          { id: 4, user: 'Class 4B', action: 'average score dropped', time: '3h ago', type: 'danger' },
+        ]);
+
         return (
           <div className="space-y-8 animate-pop-in">
             {/* Stats Overview */}
@@ -127,7 +135,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                 { label: 'Activities', value: activities.length.toString(), icon: Sparkles, color: 'text-emerald-600', bg: 'bg-emerald-50' },
                 { label: 'Quizzes', value: quizzes.length.toString(), icon: Calendar, color: 'text-orange-600', bg: 'bg-orange-50' },
               ].map((stat, i) => (
-                <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center space-x-4">
+                <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center space-x-4 hover:-translate-y-1 transition-transform cursor-pointer">
                   <div className={`${stat.bg} dark:bg-slate-700 p-4 rounded-2xl`}>
                     <stat.icon className={`w-6 h-6 ${stat.color} dark:text-white`} />
                   </div>
@@ -140,17 +148,22 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
             </div>
 
             {/* Weekly Activity Mini Chart */}
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 mt-8">
-              <h3 className="text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-4">Student Activity This Week</h3>
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 mt-8 group cursor-pointer">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Student Activity This Week</h3>
+                <button className="text-[10px] font-black uppercase text-brand-600 hover:text-brand-500 opacity-0 group-hover:opacity-100 transition-opacity">View Full Report</button>
+              </div>
               <div className="flex items-end gap-3 h-24">
                 {[{ d: 'Mon', v: 62 }, { d: 'Tue', v: 88 }, { d: 'Wed', v: 74 }, { d: 'Thu', v: 95 }, { d: 'Fri', v: 51 }, { d: 'Sat', v: 20 }, { d: 'Sun', v: 13 }].map((bar) => (
-                  <div key={bar.d} className="flex-1 flex flex-col items-center gap-1">
+                  <div key={bar.d} className="flex-1 flex flex-col items-center gap-1 group/bar">
+                    <div className="bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity absolute -mt-8 pointer-events-none">
+                      {bar.v}%
+                    </div>
                     <motion.div
                       initial={{ height: 0 }} animate={{ height: `${bar.v}%` }}
                       transition={{ delay: 0.1, duration: 0.6, ease: 'easeOut' }}
-                      className="w-full bg-brand-400 dark:bg-brand-600 rounded-t-lg min-h-[4px]"
+                      className="w-full bg-brand-400 dark:bg-brand-600 rounded-t-lg min-h-[4px] hover:bg-brand-500 dark:hover:bg-brand-500 transition-colors"
                       style={{ height: `${bar.v}%` }}
-                      title={`${bar.v} active students`}
                     />
                     <span className="text-[9px] font-black text-slate-400 uppercase">{bar.d}</span>
                   </div>
@@ -172,18 +185,21 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                     { name: 'Logic Masters A', students: 30, progress: 88, color: 'bg-green-500' },
                     { name: 'Intro to JS', students: 22, progress: 15, color: 'bg-orange-500' },
                   ].map((cls, i) => (
-                    <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-4 group hover:shadow-md transition-all cursor-pointer">
+                    <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-4 group hover:shadow-lg transition-all cursor-pointer hover:-translate-y-1 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent flex items-end justify-center p-4 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <span className="text-white text-xs font-black uppercase tracking-widest flex items-center gap-1">View Details <ChevronRight className="w-3 h-3" /></span>
+                      </div>
                       <div className="flex justify-between items-start">
                         <div className={`w-12 h-12 ${cls.color} rounded-2xl flex items-center justify-center text-white text-xl font-black shadow-lg`}>
                           {cls.name[0]}
                         </div>
-                        <button className="text-slate-300 hover:text-slate-600"><MoreVertical className="w-5 h-5" /></button>
+                        <button className="text-slate-300 hover:text-slate-600 z-20"><MoreVertical className="w-5 h-5" /></button>
                       </div>
                       <div>
-                        <h3 className="font-black text-slate-800 dark:text-white">{cls.name}</h3>
+                        <h3 className="font-black text-slate-800 dark:text-white group-hover:text-brand-600 transition-colors">{cls.name}</h3>
                         <p className="text-xs font-bold text-slate-400">{cls.students} Students</p>
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-2 relative z-0">
                         <div className="flex justify-between text-[10px] font-black uppercase">
                           <span className="text-slate-400">Class Progress</span>
                           <span className="text-slate-800 dark:text-white">{cls.progress}%</span>
@@ -221,30 +237,37 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
 
                 <h2 className="text-xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Alerts</h2>
                 <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 divide-y divide-slate-50 dark:divide-slate-700">
-                  {[
-                    { user: 'Adam K.', action: 'completed Python Quiz', time: '2m ago', type: 'success' },
-                    { user: 'Sara M.', action: 'needs help with Loops', time: '15m ago', type: 'warning' },
-                    { user: 'Youssef B.', action: 'earned Logic Master badge', time: '1h ago', type: 'success' },
-                    { user: 'Class 4B', action: 'average score dropped', time: '3h ago', type: 'danger' },
-                  ].map((alert, i) => (
-                    <div key={i} className="p-4 flex items-start space-x-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer">
+                  {activeAlerts.map((alert) => (
+                    <div key={alert.id} className="p-4 flex items-start space-x-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group">
                       <div className={`w-2 h-2 mt-2 rounded-full shrink-0 ${alert.type === 'success' ? 'bg-green-500' :
                         alert.type === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
                         }`} />
-                      <div className="flex-1">
+                      <div className="flex-1 cursor-pointer">
                         <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
                           <span className="font-black">{alert.user}</span> {alert.action}
                         </p>
                         <p className="text-[10px] font-bold text-slate-400 uppercase">{alert.time}</p>
                       </div>
-                      <ChevronRight className="w-4 h-4 text-slate-300" />
+                      <button
+                        onClick={() => setActiveAlerts(prev => prev.filter(a => a.id !== alert.id))}
+                        className="p-1 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300 hover:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded"
+                        title="Dismiss"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
                     </div>
                   ))}
+                  {activeAlerts.length === 0 && (
+                    <div className="p-8 text-center text-slate-400 font-bold text-sm">
+                      All caught up! No active alerts.
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         );
+      }
       case 'assignments':
         return (
           <div className="space-y-8 animate-pop-in">
@@ -413,70 +436,107 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
         );
       case 'students': {
         const MOCK_STUDENTS = [
-          { name: 'Adam K.', path: '🐍 Python', xp: 340, progress: 72, status: 'On Track', avatar: 'AK' },
-          { name: 'Sara M.', path: '⚡ JavaScript', xp: 210, progress: 45, status: 'Needs Help', avatar: 'SM' },
-          { name: 'Youssef B.', path: '🧩 Blocks', xp: 520, progress: 91, status: 'Excelling', avatar: 'YB' },
-          { name: 'Fatima Z.', path: '🌐 Web Dev', xp: 180, progress: 38, status: 'Behind', avatar: 'FZ' },
-          { name: 'Omar H.', path: '🐍 Python', xp: 410, progress: 83, status: 'On Track', avatar: 'OH' },
-          { name: 'Layla R.', path: '⚡ JavaScript', xp: 275, progress: 58, status: 'On Track', avatar: 'LR' },
-          { name: 'Karim N.', path: '🌐 Web Dev', xp: 95, progress: 20, status: 'Needs Help', avatar: 'KN' },
-          { name: 'Nadia S.', path: '🐍 Python', xp: 490, progress: 88, status: 'Excelling', avatar: 'NS' },
+          { id: 1, name: 'Adam K.', class: 'Grade 4', path: '🐍 Python', xp: 340, progress: 72, status: 'On Track', avatar: 'AK', streak: 4, lastQuiz: 85, style: 'Visual' },
+          { id: 2, name: 'Sara M.', class: 'Intro JS', path: '⚡ JavaScript', xp: 210, progress: 45, status: 'Needs Help', avatar: 'SM', streak: 1, lastQuiz: 42, style: 'Hands-on' },
+          { id: 3, name: 'Youssef B.', class: 'Logic Masters', path: '🧩 Blocks', xp: 520, progress: 91, status: 'Excelling', avatar: 'YB', streak: 12, lastQuiz: 100, style: 'Analytical' },
+          { id: 4, name: 'Fatima Z.', class: 'Grade 5', path: '🌐 Web Dev', xp: 180, progress: 38, status: 'Behind', avatar: 'FZ', streak: 0, lastQuiz: 55, style: 'Visual' },
+          { id: 5, name: 'Omar H.', class: 'Grade 4', path: '🐍 Python', xp: 410, progress: 83, status: 'On Track', avatar: 'OH', streak: 7, lastQuiz: 90, style: 'Reading' },
+          { id: 6, name: 'Layla R.', class: 'Intro JS', path: '⚡ JavaScript', xp: 275, progress: 58, status: 'On Track', avatar: 'LR', streak: 3, lastQuiz: 78, style: 'Hands-on' },
+          { id: 7, name: 'Karim N.', class: 'Grade 5', path: '🌐 Web Dev', xp: 95, progress: 20, status: 'Needs Help', avatar: 'KN', streak: 1, lastQuiz: 35, style: 'Visual' },
+          { id: 8, name: 'Nadia S.', class: 'Grade 4', path: '🐍 Python', xp: 490, progress: 88, status: 'Excelling', avatar: 'NS', streak: 9, lastQuiz: 95, style: 'Analytical' },
         ];
         const [studentSearch, setStudentSearch] = React.useState('');
-        const filtered = MOCK_STUDENTS.filter(s => s.name.toLowerCase().includes(studentSearch.toLowerCase()) || s.path.toLowerCase().includes(studentSearch.toLowerCase()));
+        const [classFilter, setClassFilter] = React.useState('All');
+
+        const filtered = MOCK_STUDENTS.filter(s => {
+          const matchesSearch = s.name.toLowerCase().includes(studentSearch.toLowerCase()) || s.path.toLowerCase().includes(studentSearch.toLowerCase());
+          const matchesClass = classFilter === 'All' || s.class === classFilter;
+          return matchesSearch && matchesClass;
+        });
+
         const statusColor = (s: string) => s === 'Excelling' ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300' : s === 'Needs Help' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300' : s === 'Behind' ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300';
         return (
           <div className="space-y-6 animate-pop-in">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-3xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Students</h2>
                 <p className="text-slate-400 font-bold">{MOCK_STUDENTS.length} students enrolled across all classes</p>
               </div>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <input value={studentSearch} onChange={e => setStudentSearch(e.target.value)} placeholder="Search students..." className="pl-9 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold focus:outline-none focus:border-brand-400 w-56" />
+              <div className="flex items-center gap-3">
+                <select
+                  value={classFilter}
+                  onChange={e => setClassFilter(e.target.value)}
+                  className="px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold focus:outline-none focus:border-brand-400"
+                >
+                  <option value="All">All Classes</option>
+                  <option value="Grade 4">Grade 4</option>
+                  <option value="Grade 5">Grade 5</option>
+                  <option value="Intro JS">Intro JS</option>
+                  <option value="Logic Masters">Logic Masters</option>
+                </select>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input value={studentSearch} onChange={e => setStudentSearch(e.target.value)} placeholder="Search students..." className="pl-9 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold focus:outline-none focus:border-brand-400 w-full sm:w-56" />
+                </div>
               </div>
             </div>
             <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-slate-100 dark:border-slate-700">
-                    {['Student', 'Path', 'XP', 'Progress', 'Status', 'Action'].map(h => (<th key={h} className="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">{h}</th>))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50 dark:divide-slate-700/50">
-                  {filtered.map((s, i) => (
-                    <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-[11px] font-black">{s.avatar}</div>
-                          <span className="font-black text-slate-800 dark:text-white text-sm">{s.name}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-slate-500 dark:text-slate-400">{s.path}</td>
-                      <td className="px-6 py-4">
-                        <span className="font-black text-yellow-600">⭐ {s.xp}</span>
-                      </td>
-                      <td className="px-6 py-4 w-40">
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <motion.div initial={{ width: 0 }} animate={{ width: `${s.progress}%` }} transition={{ delay: i * 0.05 }} className="h-full bg-brand-500 rounded-full" />
-                          </div>
-                          <span className="text-[10px] font-black text-slate-400 w-8">{s.progress}%</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${statusColor(s.status)}`}>{s.status}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <button className="p-2 text-slate-400 hover:text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/20 rounded-lg transition-all">
-                          <MessageSquare className="w-4 h-4" />
-                        </button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-slate-100 dark:border-slate-700">
+                      {['Student', 'Class / Path', 'XP', 'Progress', 'Status', 'Action'].map(h => (<th key={h} className="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">{h}</th>))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50 dark:divide-slate-700/50">
+                    {filtered.map((s, i) => (
+                      <tr
+                        key={i}
+                        className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer"
+                        onClick={() => setSelectedStudent(s)}
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-[11px] font-black">{s.avatar}</div>
+                            <span className="font-black text-slate-800 dark:text-white text-sm">{s.name}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{s.class}</span>
+                            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{s.path}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="font-black text-yellow-600">⭐ {s.xp}</span>
+                        </td>
+                        <td className="px-6 py-4 w-40">
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1 h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                              <motion.div initial={{ width: 0 }} animate={{ width: `${s.progress}%` }} transition={{ delay: i * 0.05 }} className="h-full bg-brand-500 rounded-full" />
+                            </div>
+                            <span className="text-[10px] font-black text-slate-400 w-8">{s.progress}%</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${statusColor(s.status)}`}>{s.status}</span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <button
+                            className="px-4 py-2 bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedStudent(s);
+                            }}
+                          >
+                            Details
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         );
@@ -484,24 +544,66 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
       case 'planner': {
         const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
         const TIMES = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '2:00 PM', '3:00 PM'];
-        const LESSONS: Record<string, { title: string, class: string, color: string }> = {
-          'Monday-9:00 AM': { title: 'Python Variables', class: 'Grade 4', color: 'bg-brand-500' },
-          'Monday-10:00 AM': { title: 'HTML Basics', class: 'Grade 5', color: 'bg-orange-500' },
-          'Tuesday-9:00 AM': { title: 'JS Loops', class: 'Intro JS', color: 'bg-yellow-500' },
-          'Tuesday-11:00 AM': { title: 'Logic Puzzles', class: 'Logic Masters', color: 'bg-purple-500' },
-          'Wednesday-10:00 AM': { title: 'Python Functions', class: 'Grade 4', color: 'bg-brand-500' },
-          'Thursday-9:00 AM': { title: 'CSS Styling', class: 'Grade 5', color: 'bg-orange-500' },
-          'Thursday-2:00 PM': { title: 'JS Quiz Review', class: 'Intro JS', color: 'bg-yellow-500' },
-          'Friday-11:00 AM': { title: 'Final Projects', class: 'All Classes', color: 'bg-rose-500' },
+
+        const [weekOffset, setWeekOffset] = React.useState(0);
+        const [lessons, setLessons] = React.useState<Record<string, { title: string, class: string, color: string }>>({
+          '0-Monday-9:00 AM': { title: 'Python Variables', class: 'Grade 4', color: 'bg-brand-500' },
+          '0-Monday-10:00 AM': { title: 'HTML Basics', class: 'Grade 5', color: 'bg-orange-500' },
+          '0-Tuesday-9:00 AM': { title: 'JS Loops', class: 'Intro JS', color: 'bg-yellow-500' },
+          '0-Tuesday-11:00 AM': { title: 'Logic Puzzles', class: 'Logic Masters', color: 'bg-purple-500' },
+          '0-Wednesday-10:00 AM': { title: 'Python Functions', class: 'Grade 4', color: 'bg-brand-500' },
+          '0-Thursday-9:00 AM': { title: 'CSS Styling', class: 'Grade 5', color: 'bg-orange-500' },
+          '0-Thursday-2:00 PM': { title: 'JS Quiz Review', class: 'Intro JS', color: 'bg-yellow-500' },
+          '0-Friday-11:00 AM': { title: 'Final Projects', class: 'All Classes', color: 'bg-rose-500' },
+        });
+
+        const getWeekDateRange = (offset: number) => {
+          const baseDate = new Date('2026-03-09T00:00:00'); // Base Monday
+          baseDate.setDate(baseDate.getDate() + (offset * 7));
+          const endDate = new Date(baseDate);
+          endDate.setDate(endDate.getDate() + 4); // Friday
+          return `Week of ${baseDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+        };
+
+        const handleAddLesson = () => {
+          const day = prompt('Enter Day (Monday-Friday):');
+          const time = prompt('Enter Time (e.g., 10:00 AM):');
+          const title = prompt('Enter Lesson Title:');
+          const className = prompt('Enter Class Name:');
+
+          if (day && time && title && className && DAYS.includes(day) && TIMES.includes(time)) {
+            const colors = ['bg-brand-500', 'bg-orange-500', 'bg-yellow-500', 'bg-purple-500', 'bg-rose-500', 'bg-emerald-500'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            const key = `${weekOffset}-${day}-${time}`;
+            setLessons(prev => ({ ...prev, [key]: { title, class: className, color: randomColor } }));
+          } else {
+            alert('Invalid input or slot already taken. Please try again with exact Day/Time matches like "Monday" and "9:00 AM".');
+          }
+        };
+
+        const handleRemoveLesson = (key: string) => {
+          if (window.confirm('Remove this lesson block?')) {
+            const newLessons = { ...lessons };
+            delete newLessons[key];
+            setLessons(newLessons);
+          }
         };
         return (
           <div className="space-y-6 animate-pop-in">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-3xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Lesson Planner</h2>
-                <p className="text-slate-400 font-bold">Week of March 10 – 14, 2026</p>
+                <div className="flex items-center gap-4 mt-2">
+                  <button onClick={() => setWeekOffset(o => o - 1)} className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-400">
+                    <ChevronRight className="w-5 h-5 rotate-180" />
+                  </button>
+                  <p className="text-slate-500 dark:text-slate-400 font-bold min-w-[200px] text-center">{getWeekDateRange(weekOffset)}</p>
+                  <button onClick={() => setWeekOffset(o => o + 1)} className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-400">
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
-              <button className="px-5 py-2.5 bg-brand-600 text-white rounded-xl font-black text-sm uppercase tracking-widest shadow-lg hover:bg-brand-500 flex items-center gap-2">
+              <button onClick={handleAddLesson} className="px-5 py-2.5 bg-brand-600 text-white rounded-xl font-black text-sm uppercase tracking-widest shadow-lg hover:bg-brand-500 flex items-center gap-2">
                 <Plus className="w-4 h-4" /> Add Lesson
               </button>
             </div>
@@ -518,17 +620,34 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                     <tr key={time}>
                       <td className="px-4 py-3 text-[10px] font-black text-slate-400">{time}</td>
                       {DAYS.map(day => {
-                        const key = `${day}-${time}`;
-                        const lesson = LESSONS[key];
+                        const key = `${weekOffset}-${day}-${time}`;
+                        const lesson = lessons[key];
                         return (
                           <td key={day} className="px-2 py-2">
                             {lesson ? (
-                              <div className={`${lesson.color} text-white rounded-xl p-3 cursor-pointer hover:opacity-90 transition-opacity`}>
+                              <div
+                                className={`${lesson.color} text-white rounded-xl p-3 cursor-pointer hover:opacity-90 transition-opacity group relative`}
+                                onClick={() => handleRemoveLesson(key)}
+                              >
                                 <p className="text-[10px] font-black uppercase tracking-wide opacity-80">{lesson.class}</p>
                                 <p className="text-xs font-black leading-tight mt-0.5">{lesson.title}</p>
+                                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <X className="w-3 h-3 text-white/50 hover:text-white" />
+                                </div>
                               </div>
                             ) : (
-                              <div className="h-14 rounded-xl border-2 border-dashed border-slate-100 dark:border-slate-700 hover:border-brand-300 transition-colors cursor-pointer" />
+                              <div
+                                className="h-14 rounded-xl border-2 border-dashed border-slate-100 dark:border-slate-700 hover:border-brand-300 transition-colors cursor-pointer"
+                                onClick={() => {
+                                  const title = prompt(`Add lesson for ${day} at ${time}\nEnter Title:`);
+                                  if (!title) return;
+                                  const className = prompt('Enter Class Name:');
+                                  if (!className) return;
+                                  const colors = ['bg-brand-500', 'bg-orange-500', 'bg-yellow-500', 'bg-purple-500', 'bg-rose-500', 'bg-emerald-500'];
+                                  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                                  setLessons(prev => ({ ...prev, [key]: { title, class: className, color: randomColor } }));
+                                }}
+                              />
                             )}
                           </td>
                         );
@@ -558,6 +677,8 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
     const [analytics, setAnalytics] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [contentSource, setContentSource] = useState('All');
+    const [selectedStrugglingStudent, setSelectedStrugglingStudent] = useState<any>(null);
+    const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
 
     useEffect(() => {
       const fetchAnalytics = async () => {
@@ -659,8 +780,14 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                     <p className="text-sm font-black text-slate-800 dark:text-white">{student.name}</p>
                     <p className="text-[10px] font-bold text-red-600 uppercase">Low Mastery in 3 concepts</p>
                   </div>
-                  <button className="p-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm text-red-600">
-                    <MessageSquare className="w-4 h-4" />
+                  <button
+                    onClick={() => setSelectedStrugglingStudent(student)}
+                    className="p-2 bg-white dark:bg-slate-800 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-xl shadow-sm text-red-600 transition-colors group relative"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                      AI Intervention
+                    </span>
                   </button>
                 </div>
               ))}
@@ -673,6 +800,93 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
             </div>
           </div>
         </div>
+
+        {/* AI Intervention Plan Modal */}
+        {selectedStrugglingStudent && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl w-full max-w-2xl border-2 border-slate-700 overflow-hidden transform transition-all animate-pop-in">
+              <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-start bg-slate-50 dark:bg-slate-800">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white shadow-lg">
+                    <Sparkles className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">AI Intervention Plan</h2>
+                    <p className="text-sm font-bold text-slate-400">Tailored strategy for {selectedStrugglingStudent.name}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => { setSelectedStrugglingStudent(null); setIsGeneratingPlan(false); }}
+                  className="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="p-8 space-y-6">
+                {!isGeneratingPlan ? (
+                  <div className="text-center py-8 space-y-4">
+                    <div className="w-20 h-20 bg-brand-50 dark:bg-brand-900/30 rounded-full flex items-center justify-center mx-auto text-brand-600 animate-pulse">
+                      <BarChart3 className="w-10 h-10" />
+                    </div>
+                    <h3 className="text-xl font-black text-slate-800 dark:text-white">Generate Personalized Plan?</h3>
+                    <p className="text-slate-500 font-medium px-8 flex flex-col gap-2">
+                      <span>Analyze recent quiz failures, historical learning data, and pacing for {selectedStrugglingStudent.name}.</span>
+                      <span className="text-xs font-bold bg-slate-100 dark:bg-slate-700 p-3 rounded-xl border border-slate-200 dark:border-slate-600">
+                        <strong className="text-red-500 block mb-1 uppercase tracking-widest text-[10px]">Identified Weaknesses</strong>
+                        Loops, Variable Scope, Conditional Logic
+                      </span>
+                    </p>
+                    <button
+                      onClick={() => {
+                        setIsGeneratingPlan(true);
+                        setTimeout(() => setIsGeneratingPlan(false), 2000); // Simulate generation
+                      }}
+                      className="mt-4 px-8 py-3 bg-brand-600 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-brand-500 transition-all flex items-center gap-2 mx-auto"
+                    >
+                      <Sparkles className="w-4 h-4" /> Start AI Analysis
+                    </button>
+                  </div>
+                ) : (
+                  <div className="py-12 flex flex-col items-center justify-center space-y-4">
+                    <div className="w-12 h-12 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin"></div>
+                    <p className="text-sm font-bold text-slate-400 animate-pulse uppercase tracking-widest">Synthesizing Learning Data...</p>
+                  </div>
+                )}
+
+                {selectedStrugglingStudent && !isGeneratingPlan && isGeneratingPlan === false && (
+                  <div className="space-y-6 animate-pop-in">
+                    <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl border border-emerald-100 dark:border-emerald-900/50">
+                      <h4 className="font-black text-emerald-800 dark:text-emerald-300 mb-2 uppercase text-sm tracking-wide">Recommended Action Plan</h4>
+                      <ul className="space-y-3">
+                        <li className="flex items-start gap-3">
+                          <span className="w-6 h-6 rounded-full bg-emerald-200 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-300 flex items-center justify-center text-xs font-black shrink-0">1</span>
+                          <p className="text-sm font-medium text-emerald-900 dark:text-emerald-100"><strong className="font-black">Assign Visual Module:</strong> Send "Visualizing Loops" activity. {selectedStrugglingStudent.name} responds 40% better to visual tracing tasks.</p>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <span className="w-6 h-6 rounded-full bg-emerald-200 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-300 flex items-center justify-center text-xs font-black shrink-0">2</span>
+                          <p className="text-sm font-medium text-emerald-900 dark:text-emerald-100"><strong className="font-black">Peer Pairing:</strong> Pair with Youssef B. (Excelling in Logic) for the upcoming group project.</p>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <span className="w-6 h-6 rounded-full bg-emerald-200 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-300 flex items-center justify-center text-xs font-black shrink-0">3</span>
+                          <p className="text-sm font-medium text-emerald-900 dark:text-emerald-100"><strong className="font-black">Check-in:</strong> Schedule a 5-minute 1-on-1 on Wednesday to review Scope concepts.</p>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="flex justify-end gap-3">
+                      <button className="px-5 py-2.5 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                        Save to Profile
+                      </button>
+                      <button className="px-5 py-2.5 bg-brand-600 text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg hover:bg-brand-500 transition-colors">
+                        Apply Recommendations
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   };
@@ -782,6 +996,77 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
           onClose={() => setIsCreatingActivity(false)}
           onSuccess={fetchActivities}
         />
+      )}
+
+      {/* Student Details Modal */}
+      {selectedStudent && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl w-full max-w-2xl border-2 border-slate-700 overflow-hidden transform transition-all animate-pop-in">
+            <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-start">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-2xl font-black shadow-lg">
+                  {selectedStudent.avatar}
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black text-slate-800 dark:text-white">{selectedStudent.name}</h2>
+                  <p className="text-sm font-bold text-slate-400 flex items-center gap-2">
+                    {selectedStudent.class} <span className="w-1 h-1 bg-slate-400 rounded-full"></span> {selectedStudent.path}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedStudent(null)}
+                className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-8 bg-slate-50 dark:bg-slate-900">
+              {/* Quick Stats Grid */}
+              <div className="grid grid-cols-4 gap-4">
+                {[
+                  { label: 'Total XP', value: selectedStudent.xp, icon: Sparkles, color: 'text-yellow-500' },
+                  { label: 'Streak', value: `${selectedStudent.streak} Days`, icon: Clock, color: 'text-orange-500' },
+                  { label: 'Last Quiz', value: `${selectedStudent.lastQuiz}%`, icon: BookOpen, color: 'text-brand-500' },
+                  { label: 'Progress', value: `${selectedStudent.progress}%`, icon: BarChart3, color: 'text-emerald-500' },
+                ].map((stat, i) => (
+                  <div key={i} className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 text-center">
+                    <stat.icon className={`w-6 h-6 mx-auto mb-2 ${stat.color}`} />
+                    <p className="text-lg font-black text-slate-800 dark:text-white">{stat.value}</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* AI Insights */}
+              <div className="bg-brand-50 dark:bg-brand-900/20 p-6 rounded-3xl border border-brand-100 dark:border-brand-900/50 flex gap-4">
+                <div className="w-10 h-10 bg-brand-200 dark:bg-brand-800 text-brand-700 dark:text-brand-300 rounded-xl flex items-center justify-center shrink-0">
+                  <LayoutDashboard className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-black text-slate-800 dark:text-white mb-1 tracking-tight">AI Insights</h3>
+                  <p className="text-sm font-bold text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
+                    {selectedStudent.name} is a <strong className="text-brand-600 dark:text-brand-400">{selectedStudent.style}</strong> learner.
+                    {selectedStudent.status === 'Needs Help' || selectedStudent.status === 'Behind'
+                      ? ` They are currently struggling with the pacing of the course and show weak grasp on recent topics.`
+                      : ` They are performing well and grasping concepts quickly.`}
+                  </p>
+                  <div className="flex gap-2">
+                    <button className="px-4 py-2 bg-brand-600 text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-md hover:bg-brand-500 transition-colors">
+                      Send Message
+                    </button>
+                    {(selectedStudent.status === 'Needs Help' || selectedStudent.status === 'Behind') && (
+                      <button className="px-4 py-2 bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-800 text-xs font-black uppercase tracking-wider rounded-xl hover:bg-brand-50 dark:hover:bg-brand-900/40 transition-colors">
+                        Auto-Assign Practice
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

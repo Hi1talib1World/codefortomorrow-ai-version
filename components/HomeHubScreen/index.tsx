@@ -132,6 +132,51 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                             </button>
                         </div>
                     </div>
+
+                    {/* Smart Books Section */}
+                    <div className="space-y-4">
+                        <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">Smart Books</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <button onClick={() => navigate('/smart-books')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left">
+                                <div className="aspect-[16/10] overflow-hidden bg-[#fce4ec]">
+                                    <img src="/esl_books.png" alt="ESL Books" className="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-500" />
+                                </div>
+                                <div className="p-4 flex items-center justify-between">
+                                    <p className="text-sm font-bold text-[#4285F4]">ESL Books</p>
+                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-[#4285F4] group-hover:bg-[#4285F4] group-hover:text-white group-hover:border-[#4285F4] transition-all shadow-sm">
+                                        <span className="text-lg">→</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Speaking Hub Section */}
+                    <div className="space-y-4">
+                        <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">Speaking Hub</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <button onClick={() => navigate('/speaking-hub')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left">
+                                <div className="aspect-[16/10] overflow-hidden bg-[#e3f2fd]">
+                                    <img src="/speaking_practice.png" alt="Practice a Language" className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500" />
+                                </div>
+                                <div className="p-4 flex items-center justify-between">
+                                    <p className="text-sm font-bold text-[#4285F4]">Practice a Language</p>
+                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-[#4285F4] group-hover:bg-[#4285F4] group-hover:text-white group-hover:border-[#4285F4] transition-all shadow-sm">
+                                        <span className="text-lg">→</span>
+                                    </div>
+                                </div>
+                            </button>
+                            <div className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 text-left opacity-75 cursor-default">
+                                <div className="aspect-[16/10] overflow-hidden bg-[#e3f2fd]">
+                                    <img src="/discover_learn.png" alt="Discover & Learn" className="w-full h-full object-contain p-4" />
+                                </div>
+                                <div className="p-4 flex items-center justify-between">
+                                    <p className="text-sm font-bold text-slate-400">Discover & Learn</p>
+                                    <span className="text-xs font-bold text-red-400 italic">Coming soon</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

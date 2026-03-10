@@ -107,6 +107,13 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
     }
   };
 
+  // Save the current dashboard route to localStorage whenever it changes
+  React.useEffect(() => {
+    if (location.pathname.startsWith('/dashboard')) {
+      localStorage.setItem('lastVisitedRoute', location.pathname);
+    }
+  }, [location.pathname]);
+
   const mainContentBg = (activeView === 'learn' && (path || pathId))
     ? 'bg-brand-50 dark:bg-slate-900'
     : (activeView === 'home' ? 'bg-transparent' : 'bg-brand-50 dark:bg-slate-900');

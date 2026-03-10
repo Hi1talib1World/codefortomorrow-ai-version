@@ -18,6 +18,7 @@ import LanguageSelectionScreen from './components/LanguageSelectionScreen';
 import { useLanguage } from './contexts/LanguageContext';
 import BrainTrainingScreen from './components/BrainTrainingScreen';
 import BrainChallengeGameScreen from './components/BrainChallengeGameScreen';
+import PageTransitionLoader from './components/PageTransitionLoader';
 
 /** Default blank progress object used when creating a guest/new user session. */
 const defaultProgress: UserProgress = {
@@ -162,7 +163,9 @@ export default function App() {
     const roleToSet = user.role || selectedRole || 'student';
     const userWithRole = { ...user, role: roleToSet };
     setCurrentUser(userWithRole);
-    navigate('/dashboard');
+
+    const savedRoute = localStorage.getItem('lastVisitedRoute');
+    navigate(savedRoute || '/dashboard');
 
     if (!user.role && selectedRole) {
       try {
@@ -188,19 +191,23 @@ export default function App() {
       lastLogin: now,
     };
     setCurrentUser(guestUser);
-    navigate('/dashboard');
+
+    const savedRoute = localStorage.getItem('lastVisitedRoute');
+    navigate(savedRoute || '/dashboard');
   }, [selectedRole, navigate]);
 
   const handleLogout = useCallback(async () => {
     await api.logout();
     setCurrentUser(null);
     setActiveLesson(null);
+    localStorage.removeItem('lastVisitedRoute');
     navigate('/auth');
   }, [navigate]);
 
   const onSplashFinish = useCallback(() => {
     if (currentUser) {
-      navigate('/dashboard');
+      const savedRoute = localStorage.getItem('lastVisitedRoute');
+      navigate(savedRoute || '/dashboard');
     } else if (!hasSelectedLanguage) {
       navigate('/language-selection');
     } else {
@@ -397,6 +404,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <div className="min-h-screen text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
+        <PageTransitionLoader />
         {renderContent()}
       </div>
     </ThemeProvider>
