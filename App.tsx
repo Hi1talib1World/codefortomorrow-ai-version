@@ -1,27 +1,27 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, useNavigate, Navigate, useParams } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
-import Dashboard from './components/Dashboard';
-import TeacherDashboard from './components/teacher/TeacherDashboard';
-import LessonScreen from './components/LessonScreen';
-import QuizLessonScreen from './components/QuizLessonScreen';
 import SplashScreen from './components/SplashScreen';
-import AuthScreen from './components/AuthScreen';
-import RoleSelectionScreen from './components/RoleSelectionScreen';
-import PathSelectionScreen from './components/PathSelectionScreen';
-import MathGameScreen from './components/MathGameScreen';
 import { Lesson, User, ProgrammingPath, UserProgress } from './types';
 import { BADGES_BY_PATH } from './constants';
 import api from './services/api';
-import LandingPage from './components/LandingPage';
-import LanguageSelectionScreen from './components/LanguageSelectionScreen';
 import { useLanguage } from './contexts/LanguageContext';
-import BrainTrainingScreen from './components/BrainTrainingScreen';
-import BrainChallengeGameScreen from './components/BrainChallengeGameScreen';
 import PageTransitionLoader from './components/PageTransitionLoader';
 import ConfettiCelebration from './components/ConfettiCelebration';
 import { ToastProvider } from './components/ToastNotification';
 import ErrorBoundary from './components/ErrorBoundary';
+
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const TeacherDashboard = lazy(() => import('./components/teacher/TeacherDashboard'));
+const LessonScreen = lazy(() => import('./components/LessonScreen'));
+const QuizLessonScreen = lazy(() => import('./components/QuizLessonScreen'));
+const AuthScreen = lazy(() => import('./components/AuthScreen'));
+const RoleSelectionScreen = lazy(() => import('./components/RoleSelectionScreen'));
+const MathGameScreen = lazy(() => import('./components/MathGameScreen'));
+const LandingPage = lazy(() => import('./components/LandingPage'));
+const LanguageSelectionScreen = lazy(() => import('./components/LanguageSelectionScreen'));
+const BrainTrainingScreen = lazy(() => import('./components/BrainTrainingScreen'));
+const BrainChallengeGameScreen = lazy(() => import('./components/BrainChallengeGameScreen'));
 
 /** Default blank progress object used when creating a guest/new user session. */
 const defaultProgress: UserProgress = {
@@ -351,60 +351,62 @@ export default function App() {
     } : null;
 
     return (
-      <Routes>
-        <Route path="/" element={<SplashScreen onFinish={onSplashFinish} />} />
+      <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="w-12 h-12 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <Routes>
+          <Route path="/" element={<SplashScreen onFinish={onSplashFinish} />} />
 
-        <Route path="/language-selection" element={
-          currentUser ? <Navigate to="/dashboard" replace /> :
-            hasSelectedLanguage ? <Navigate to="/welcome" replace /> :
-              <LanguageSelectionScreen />
-        } />
-
-        <Route path="/welcome" element={
-          currentUser ? <Navigate to="/dashboard" replace /> :
-            !hasSelectedLanguage ? <Navigate to="/language-selection" replace /> :
-              <LandingPage onGetStarted={() => navigate('/role-selection')} />
-        } />
-
-        <Route path="/role-selection" element={
-          currentUser ? <Navigate to="/dashboard" replace /> : <RoleSelectionScreen onSelect={handleRoleSelect} />
-        } />
-
-        <Route path="/auth" element={
-          currentUser ? <Navigate to="/dashboard" replace /> : <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} />
-        } />
-
-        {/* ─── Teacher dashboard ───────────────────────────────────────── */}
-        {currentUser?.role === 'teacher' && (
-          <Route path="/dashboard/*" element={
-            <TeacherDashboard currentUser={currentUser} onLogout={handleLogout} />
+          <Route path="/language-selection" element={
+            currentUser ? <Navigate to="/dashboard" replace /> :
+              hasSelectedLanguage ? <Navigate to="/welcome" replace /> :
+                <LanguageSelectionScreen />
           } />
-        )}
 
-        {/* ─── Student dashboard sub-routes ────────────────────────────── */}
-        {currentUser?.role !== 'teacher' && dashProps && (
-          <>
-            {/* /dashboard/learn/:pathId  — specific language roadmap */}
-            <Route path="/dashboard/learn/:pathId" element={<DashboardRoute {...dashProps} />} />
-            {/* /dashboard/learn          — language picker (no path set) */}
-            <Route path="/dashboard/learn" element={<DashboardRoute {...dashProps} />} />
-            {/* /dashboard/:view          — profile, goals, creations, etc. */}
-            <Route path="/dashboard/:view" element={<DashboardRoute {...dashProps} />} />
-            {/* /dashboard                — home hub */}
-            <Route path="/dashboard" element={<DashboardRoute {...dashProps} />} />
-          </>
-        )}
+          <Route path="/welcome" element={
+            currentUser ? <Navigate to="/dashboard" replace /> :
+              !hasSelectedLanguage ? <Navigate to="/language-selection" replace /> :
+                <LandingPage onGetStarted={() => navigate('/role-selection')} />
+          } />
 
-        {/* Redirect unauthenticated users */}
-        {!currentUser && (
-          <Route path="/dashboard/*" element={<Navigate to="/auth" replace />} />
-        )}
+          <Route path="/role-selection" element={
+            currentUser ? <Navigate to="/dashboard" replace /> : <RoleSelectionScreen onSelect={handleRoleSelect} />
+          } />
 
-        <Route path="/brain-training" element={<BrainTrainingScreen />} />
-        <Route path="/brain-training/:challengeId" element={<BrainChallengeGameScreen />} />
+          <Route path="/auth" element={
+            currentUser ? <Navigate to="/dashboard" replace /> : <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} />
+          } />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* ─── Teacher dashboard ───────────────────────────────────────── */}
+          {currentUser?.role === 'teacher' && (
+            <Route path="/dashboard/*" element={
+              <TeacherDashboard currentUser={currentUser} onLogout={handleLogout} />
+            } />
+          )}
+
+          {/* ─── Student dashboard sub-routes ────────────────────────────── */}
+          {currentUser?.role !== 'teacher' && dashProps && (
+            <>
+              {/* /dashboard/learn/:pathId  — specific language roadmap */}
+              <Route path="/dashboard/learn/:pathId" element={<DashboardRoute {...dashProps} />} />
+              {/* /dashboard/learn          — language picker (no path set) */}
+              <Route path="/dashboard/learn" element={<DashboardRoute {...dashProps} />} />
+              {/* /dashboard/:view          — profile, goals, creations, etc. */}
+              <Route path="/dashboard/:view" element={<DashboardRoute {...dashProps} />} />
+              {/* /dashboard                — home hub */}
+              <Route path="/dashboard" element={<DashboardRoute {...dashProps} />} />
+            </>
+          )}
+
+          {/* Redirect unauthenticated users */}
+          {!currentUser && (
+            <Route path="/dashboard/*" element={<Navigate to="/auth" replace />} />
+          )}
+
+          <Route path="/brain-training" element={<BrainTrainingScreen />} />
+          <Route path="/brain-training/:challengeId" element={<BrainChallengeGameScreen />} />
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     );
   };
 

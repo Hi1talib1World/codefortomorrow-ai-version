@@ -609,6 +609,48 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         },
       ],
     },
+    {
+      id: 'py_expert',
+      titleKey: 'py_ch5_title',
+      lessons: [
+        {
+          id: 22, level: 22, titleKey: 'python_concurrency', icon: 'brain', xp: 50, color: '#2c3e50', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'py_challenge_22', estimatedMinutes: 20,
+          difficulty: 'Expert', tags: ['Async', 'Concurrency'],
+          hintKey: 'py_hint_22',
+          starterCode: '# Use asyncio to run a simple coroutine that prints "Async Python!".\nimport asyncio\n',
+          solutionCode: 'import asyncio\nasync def main():\n  print("Async Python!")\nasyncio.run(main())',
+          expectedOutput: 'Async Python!'
+        },
+        {
+          id: 23, level: 23, titleKey: 'python_metaclasses', icon: 'brain', xp: 60, color: '#2c3e50', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'py_challenge_23', estimatedMinutes: 25,
+          difficulty: 'Expert', tags: ['Metaclasses', 'Advanced OOP'],
+          hintKey: 'py_hint_23',
+          starterCode: '# Create a class with a metaclass that automatically adds a "magic" property.\n',
+          solutionCode: 'class Meta(type):\n  def __new__(cls, name, bases, dct):\n    dct["magic"] = True\n    return super().__new__(cls, name, bases, dct)\n\nclass MyClass(metaclass=Meta):\n  pass\nprint(MyClass.magic)',
+          expectedOutput: 'True'
+        },
+        {
+          id: 24, level: 24, titleKey: 'python_c_extensions', icon: 'star', xp: 45, color: '#2c3e50', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'py_challenge_24', estimatedMinutes: 15,
+          difficulty: 'Expert', tags: ['C API', 'Performance'],
+          hintKey: 'py_hint_24',
+          starterCode: '# Print the string "Optimized" to simulate a C extension call.\n',
+          solutionCode: 'print("Optimized")',
+          expectedOutput: 'Optimized'
+        },
+        {
+          id: 25, level: 25, titleKey: 'python_grandmaster_project', icon: 'trophy', xp: 200, color: '#000000', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'py_challenge_25', estimatedMinutes: 60,
+          difficulty: 'Expert', tags: ['Project', 'Python', 'Architect'],
+          hintKey: 'py_hint_25',
+          starterCode: '# Build a task executor that runs tasks and returns their results.\ntasks = [lambda: 1+1, lambda: 2*3]\n',
+          solutionCode: 'tasks = [lambda: 1+1, lambda: 2*3]\nresults = [t() for t in tasks]\nprint(results[0] + results[1])',
+          expectedOutput: '8'
+        },
+      ],
+    },
   ],
   javascript: [
     {
@@ -870,6 +912,48 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           starterCode: '// Master Project: Find the most frequent word in a sentence.\nconst text = "code is great and code is fun";\n',
           solutionCode: 'const text = "code is great and code is fun";\nconst freq = {};\ntext.split(" ").forEach(w => freq[w] = (freq[w]||0)+1);\nconst top = Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];\nconsole.log(top);',
           expectedOutput: 'code'
+        },
+      ],
+    },
+    {
+      id: 'js_expert',
+      titleKey: 'js_ch5_title',
+      lessons: [
+        {
+          id: 22, level: 22, titleKey: 'js_proxies', icon: 'brain', xp: 50, color: '#16a085', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_22', estimatedMinutes: 20,
+          difficulty: 'Expert', tags: ['Proxies', 'Metaprogramming'],
+          hintKey: 'js_hint_22',
+          starterCode: '// Create a proxy that defaults missing properties to "Not Found".\nconst target = {};\n',
+          solutionCode: 'const target = {};\nconst handler = { get: (obj, prop) => prop in obj ? obj[prop] : "Not Found" };\nconst proxy = new Proxy(target, handler);\nconsole.log(proxy.missing);',
+          expectedOutput: 'Not Found'
+        },
+        {
+          id: 23, level: 23, titleKey: 'js_web_workers', icon: 'brain', xp: 60, color: '#16a085', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_23', estimatedMinutes: 25,
+          difficulty: 'Expert', tags: ['Web Workers', 'Performance'],
+          hintKey: 'js_hint_23',
+          starterCode: '// Simulate sending a message to a Web Worker that calculates the heavy task.\n// Just log "Heavy Task Done".\n',
+          solutionCode: 'console.log("Heavy Task Done");',
+          expectedOutput: 'Heavy Task Done'
+        },
+        {
+          id: 24, level: 24, titleKey: 'js_memory_management', icon: 'star', xp: 45, color: '#16a085', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'js_challenge_24', estimatedMinutes: 15,
+          difficulty: 'Expert', tags: ['Garbage Collection', 'Memory'],
+          hintKey: 'js_hint_24',
+          starterCode: '// Avoid memory leak by nullifying an old object reference.\nlet obj = { data: "large data" };\n',
+          solutionCode: 'let obj = { data: "large data" };\nobj = null;\nconsole.log(obj);',
+          expectedOutput: 'null'
+        },
+        {
+          id: 25, level: 25, titleKey: 'js_grandmaster_project', icon: 'trophy', xp: 200, color: '#000000', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'js_challenge_25', estimatedMinutes: 60,
+          difficulty: 'Expert', tags: ['Project', 'JavaScript', 'Architect'],
+          hintKey: 'js_hint_25',
+          starterCode: '// Build a mini reactive state manager.\n// Complete the set function so it calls listeners and updates state.\nlet state = { count: 0 };\nlet listeners = [];\n',
+          solutionCode: 'let state = { count: 0 };\nlet listeners = [() => console.log("State changed!")];\nfunction set(newState) {\n  state = { ...state, ...newState };\n  listeners.forEach(l => l());\n}\nset({ count: 1 });',
+          expectedOutput: 'State changed!'
         },
       ],
     }
@@ -1185,6 +1269,16 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 6, level: 6, titleKey: 'cpp_templates', icon: 'brain', xp: 30, color: '#00599c', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
         { id: 7, level: 7, titleKey: 'cpp_memory', icon: 'brain', xp: 35, color: '#00599c', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
         { id: 8, level: 8, titleKey: 'cpp_quiz_adv', icon: 'star', xp: 40, color: '#00599c', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+      ],
+    },
+    {
+      id: 'cpp_pro',
+      titleKey: 'cpp_pro_title',
+      lessons: [
+        { id: 9, level: 9, titleKey: 'cpp_smart_pointers', icon: 'brain', xp: 35, color: '#00599c', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 10, level: 10, titleKey: 'cpp_concurrency', icon: 'brain', xp: 40, color: '#00599c', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 11, level: 11, titleKey: 'cpp_advanced_quiz', icon: 'star', xp: 45, color: '#00599c', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 12, level: 12, titleKey: 'cpp_pro_project', icon: 'trophy', xp: 100, color: '#003366', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     }
   ],

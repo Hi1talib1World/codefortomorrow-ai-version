@@ -23,7 +23,8 @@ import {
   CheckCircle,
   Sparkles,
   ListChecks,
-  MessageSquare
+  MessageSquare,
+  X
 } from 'lucide-react';
 
 import CreateAssignmentScreen from './CreateAssignmentScreen';
