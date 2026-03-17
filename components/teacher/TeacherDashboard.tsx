@@ -26,6 +26,7 @@ import {
   MessageSquare,
   X
 } from 'lucide-react';
+import Mascot from '../Mascot';
 
 import CreateAssignmentScreen from './CreateAssignmentScreen';
 import CreateActivityScreen from './CreateActivityScreen';
@@ -48,6 +49,19 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
   const [activities, setActivities] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useLanguage();
+  const [activeAlerts, setActiveAlerts] = useState([
+    { id: 1, user: 'Adam K.', action: 'completed Python Quiz', time: '2m ago', type: 'success' },
+    { id: 2, user: 'Sara M.', action: 'needs help with Loops', time: '15m ago', type: 'warning' },
+    { id: 3, user: 'Youssef B.', action: 'earned Logic Master badge', time: '1h ago', type: 'success' },
+    { id: 4, user: 'Class 4B', action: 'average score dropped', time: '3h ago', type: 'danger' },
+  ]);
+  const [studentSearch, setStudentSearch] = useState('');
+  const [classFilter, setClassFilter] = useState('All');
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [isAnalyticsLoading, setIsAnalyticsLoading] = useState(true);
+  const [contentSource, setContentSource] = useState('All');
+  const [selectedStrugglingStudent, setSelectedStrugglingStudent] = useState<any>(null);
+  const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
 
   useEffect(() => {
     if (activeView === 'assignments' || activeView === 'overview') {
@@ -119,13 +133,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
   const renderView = () => {
     switch (activeView) {
       case 'overview': {
-        const [activeAlerts, setActiveAlerts] = React.useState([
-          { id: 1, user: 'Adam K.', action: 'completed Python Quiz', time: '2m ago', type: 'success' },
-          { id: 2, user: 'Sara M.', action: 'needs help with Loops', time: '15m ago', type: 'warning' },
-          { id: 3, user: 'Youssef B.', action: 'earned Logic Master badge', time: '1h ago', type: 'success' },
-          { id: 4, user: 'Class 4B', action: 'average score dropped', time: '3h ago', type: 'danger' },
-        ]);
-
         return (
           <div className="space-y-8 animate-pop-in">
             {/* Stats Overview */}
@@ -446,9 +453,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
           { id: 7, name: 'Karim N.', class: 'Grade 5', path: '🌐 Web Dev', xp: 95, progress: 20, status: 'Needs Help', avatar: 'KN', streak: 1, lastQuiz: 35, style: 'Visual' },
           { id: 8, name: 'Nadia S.', class: 'Grade 4', path: '🐍 Python', xp: 490, progress: 88, status: 'Excelling', avatar: 'NS', streak: 9, lastQuiz: 95, style: 'Analytical' },
         ];
-        const [studentSearch, setStudentSearch] = React.useState('');
-        const [classFilter, setClassFilter] = React.useState('All');
-
         const filtered = MOCK_STUDENTS.filter(s => {
           const matchesSearch = s.name.toLowerCase().includes(studentSearch.toLowerCase()) || s.path.toLowerCase().includes(studentSearch.toLowerCase());
           const matchesClass = classFilter === 'All' || s.class === classFilter;
@@ -675,12 +679,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
   };
 
   const AnalyticsView = () => {
-    const [analytics, setAnalytics] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const [contentSource, setContentSource] = useState('All');
-    const [selectedStrugglingStudent, setSelectedStrugglingStudent] = useState<any>(null);
-    const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
-
     useEffect(() => {
       const fetchAnalytics = async () => {
         try {
@@ -689,13 +687,13 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
         } catch (error) {
           console.error(error);
         } finally {
-          setLoading(false);
+          setIsAnalyticsLoading(false);
         }
       };
       fetchAnalytics();
     }, []);
 
-    if (loading) return <div className="flex justify-center py-20"><div className="w-12 h-12 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div></div>;
+    if (isAnalyticsLoading) return <div className="flex justify-center py-20"><div className="w-12 h-12 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div></div>;
 
     return (
       <div className="space-y-8">
@@ -903,10 +901,15 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
       )}
       {/* Sidebar */}
       <aside className={`fixed lg:relative lg:translate-x-0 inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-800 border-r border-slate-100 dark:border-slate-700 flex flex-col shrink-0 transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="p-8">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-brand-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg">C</div>
-            <span className="text-xl font-black text-slate-800 dark:text-white italic tracking-tighter uppercase">C4T Teacher</span>
+        <div className="p-6">
+          <div className="flex items-center space-x-3 group cursor-pointer">
+            <div className="w-14 h-14 relative flex items-center justify-center transform group-hover:scale-110 transition-transform">
+              <Mascot />
+            </div>
+            <div>
+              <span className="text-lg font-black text-slate-800 dark:text-white italic tracking-tighter uppercase block leading-none">Code for</span>
+              <span className="text-brand-600 font-black italic uppercase tracking-tighter text-sm">Tomorrow</span>
+            </div>
           </div>
         </div>
 

@@ -118,16 +118,15 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
             setAnswerState('idle');
         } else {
             setPhase('done');
-            const score = Math.round((correctCount + (answerState === 'correct' ? 1 : 0)) / totalQuestions * 100);
+            const score = Math.round(correctCount / totalQuestions * 100);
             setTimeout(() => setShowSuccessModal(true), 600);
         }
     }, [questionIndex, totalQuestions, correctCount, answerState]);
 
     const handleComplete = useCallback(() => {
-        const finalCorrect = correctCount + (answerState === 'correct' ? 1 : 0);
-        const score = Math.round(finalCorrect / totalQuestions * 100);
+        const score = Math.round(correctCount / totalQuestions * 100);
         onComplete(lesson.id, lesson.xp, score);
-    }, [correctCount, answerState, totalQuestions, lesson, onComplete]);
+    }, [correctCount, totalQuestions, lesson, onComplete]);
 
     // --- META BADGES ---
     const MetaBadges = (

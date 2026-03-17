@@ -69,9 +69,9 @@ const StoreItem: React.FC<{ item: any }> = ({ item }) => {
 
 const TokenPurchaseSection = () => {
     const items = [
-        { icon: '💰', title: 'Token Boost', amount: '250', price: '$4.99' },
-        { icon: '🛍️', title: 'Token Pouch', amount: '1000', price: '$12.99' },
-        { icon: '🏦', title: 'Token Vault', amount: '2000', price: '$19.99' },
+        { icon: '💰', title: 'Token Boost', amount: '250', price: '49 DH' },
+        { icon: '🛍️', title: 'Token Pouch', amount: '1000', price: '129 DH' },
+        { icon: '🏦', title: 'Token Vault', amount: '2000', price: '199 DH' },
     ];
     return (
         <div className="bg-[#f8f9fa] dark:bg-slate-800 rounded-3xl p-8 mt-12 border border-slate-200 dark:border-slate-700 shadow-sm transition-colors">
