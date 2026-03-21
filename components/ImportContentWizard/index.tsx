@@ -111,13 +111,13 @@ const ImportContentWizard: React.FC<ImportContentWizardProps> = ({ onBack, onSav
             </header>
 
             {currentStep <= 5 && <WizardStepper currentStep={currentStep} />}
-            
+
             <div className={`mx-auto bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg transition-colors ${currentStep === 6 ? 'max-w-4xl' : 'max-w-2xl'}`}>
                 {renderStepContent()}
                 {currentStep < 5 && (
                     <div className={`flex mt-8 ${currentStep > 1 ? 'justify-between' : 'justify-end'}`}>
                         {currentStep > 1 && (
-                             <button onClick={prevStep} className="py-3 px-8 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-white font-bold rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition">
+                            <button onClick={prevStep} className="py-3 px-8 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-white font-bold rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition">
                                 {t('back')}
                             </button>
                         )}
@@ -161,9 +161,9 @@ const SelectCurriculumStep = ({ formData, setFormData }: { formData: any, setFor
 
 const SelectStageStep = ({ formData, setFormData }: { formData: any, setFormData: any }) => {
     const { t } = useLanguage();
-    
+
     let stageOptions: { id: string; titleKey: string }[] = [];
-    
+
     if (formData.curriculum === 'MOROCCAN') {
         stageOptions = [
             { id: 'preschool', titleKey: 'stage_preschool' },
@@ -234,9 +234,9 @@ const UploadSourceStep = ({ formData, setFormData }: { formData: any, setFormDat
             e.dataTransfer.clearData();
         }
     };
-    
+
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(e.target.files && e.target.files[0]) {
+        if (e.target.files && e.target.files[0]) {
             handleFile(e.target.files[0]);
         }
     }
@@ -288,7 +288,7 @@ const PreferencesStep = ({ formData, setFormData }: { formData: any, setFormData
                     {counts.map(count => (
                         <button
                             key={count}
-                            onClick={() => setFormData({...formData, questionCount: count})}
+                            onClick={() => setFormData({ ...formData, questionCount: count })}
                             className={`py-3 px-6 border-2 rounded-lg font-bold transition ${formData.questionCount === count ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-300' : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:border-brand-300'}`}
                         >
                             {count}
@@ -297,14 +297,14 @@ const PreferencesStep = ({ formData, setFormData }: { formData: any, setFormData
                 </div>
             </div>
             <div>
-                 <h2 className="text-xl font-bold mb-4 dark:text-white">{t('content_language')}</h2>
-                 <select 
+                <h2 className="text-xl font-bold mb-4 dark:text-white">{t('content_language')}</h2>
+                <select
                     value={formData.language}
-                    onChange={(e) => setFormData({...formData, language: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, language: e.target.value })}
                     className="w-full p-3 border-2 border-gray-200 dark:border-slate-700 bg-transparent dark:text-white rounded-lg focus:outline-none focus:border-brand-500"
-                 >
+                >
                     {languages.map(lang => <option key={lang} value={lang}>{lang}</option>)}
-                 </select>
+                </select>
             </div>
         </div>
     )
@@ -322,7 +322,7 @@ const GeneratingPreviewStep = ({ formData, onComplete }: { formData: any; onComp
             try {
                 // Initial progress bump
                 setProgress(10);
-                
+
                 // Convert file to base64
                 const reader = new FileReader();
                 const fileContentPromise = new Promise<string>((resolve) => {
@@ -361,7 +361,7 @@ const GeneratingPreviewStep = ({ formData, onComplete }: { formData: any; onComp
                 const questions = await api.generateQuizFromAI(prompt, { data: base64Data, mimeType: formData.file.type });
 
                 setProgress(100);
-                
+
                 setTimeout(() => onComplete(questions), 500);
             } catch (err) {
                 console.error("AI Generation Error:", err);
@@ -378,8 +378,8 @@ const GeneratingPreviewStep = ({ formData, onComplete }: { formData: any; onComp
                 <div className="text-red-500 text-5xl mb-4">⚠️</div>
                 <h3 className="text-xl font-bold text-gray-800 dark:text-white">Oops! Something went wrong.</h3>
                 <p className="text-gray-500 dark:text-slate-400 mt-2">{error}</p>
-                <button 
-                    onClick={() => window.location.reload()} 
+                <button
+                    onClick={() => window.location.reload()}
                     className="mt-6 bg-brand-600 text-white font-bold py-2 px-6 rounded-lg"
                 >
                     Try Again
@@ -416,9 +416,9 @@ const PreviewStep = ({ questions, onBack, onSave }: { questions: QuizQuestion[];
 
             <div className="mb-6">
                 <label className="block text-sm font-bold text-gray-600 dark:text-slate-400 mb-2">Quiz Title</label>
-                <input 
-                    type="text" 
-                    value={title} 
+                <input
+                    type="text"
+                    value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="w-full p-3 border-2 border-gray-200 dark:border-slate-700 bg-transparent rounded-lg focus:outline-none focus:border-brand-500 font-bold text-gray-700 dark:text-white transition-colors"
                     placeholder="Enter a title for your creation..."
@@ -428,7 +428,7 @@ const PreviewStep = ({ questions, onBack, onSave }: { questions: QuizQuestion[];
             <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
                 {questions.map((q, idx) => (
                     <div key={q.id || idx} className="border border-gray-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-800 shadow-sm transition-colors">
-                        <button 
+                        <button
                             onClick={() => setExpandedId(expandedId === q.id ? null : q.id)}
                             className="w-full text-left p-4 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-slate-700 transition"
                         >
@@ -442,7 +442,7 @@ const PreviewStep = ({ questions, onBack, onSave }: { questions: QuizQuestion[];
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        
+
                         {expandedId === q.id && (
                             <div className="p-4 border-t border-gray-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 transition-colors">
                                 <p className="font-bold text-gray-800 dark:text-white mb-4">{q.question}</p>
@@ -459,7 +459,7 @@ const PreviewStep = ({ questions, onBack, onSave }: { questions: QuizQuestion[];
                                 </div>
                                 <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/50 rounded-lg transition-colors">
                                     <p className="text-xs font-bold text-amber-800 dark:text-amber-400 uppercase mb-1">Explanation</p>
-                                    <p className="text-sm text-amber-700 dark:text-amber-300 italic">{q.explanation}</p>
+                                    <p className="text-sm text-amber-700 dark:text-amber-300">{q.explanation}</p>
                                 </div>
                             </div>
                         )}

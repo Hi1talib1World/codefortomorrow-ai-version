@@ -48,7 +48,7 @@ const MotivationalQuote = () => {
                 </svg>
             </button>
             {isOpen && (
-                <div className="px-6 pb-6 text-slate-600 dark:text-slate-300 italic font-bold text-lg animate-pop-in">
+                <div className="px-6 pb-6 text-slate-600 dark:text-slate-300 font-bold text-lg animate-pop-in">
                     <p className="border-t-2 border-slate-100 dark:border-slate-700 pt-4">"The only way to do great work is to love what you do." - Steve Jobs</p>
                 </div>
             )}
@@ -68,7 +68,7 @@ const GoalsScreen: React.FC = () => {
         <div className="bg-brand-50 dark:bg-slate-900 min-h-full transition-colors p-4 sm:p-12">
             <div className="max-w-3xl mx-auto space-y-10">
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <h1 className="text-5xl font-black text-slate-800 dark:text-white uppercase tracking-tighter italic">
+                    <h1 className="text-5xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">
                         {t('goals')}
                     </h1>
                     <span className="text-sm font-black text-brand-600 dark:text-brand-400 bg-brand-100 dark:bg-brand-900/30 border-2 border-brand-200 dark:border-brand-800 rounded-2xl px-5 py-2 uppercase tracking-widest">

@@ -195,10 +195,10 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
         <AnimatedSection className="mt-24 pt-12 border-t border-slate-100 dark:border-slate-800/50">
           <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-8">Trusted by families and educators from</p>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
-            <div className="flex items-center gap-2 font-black text-xl italic"><Globe className="w-6 h-6" /> GLOBAL ACADEMY</div>
-            <div className="flex items-center gap-2 font-black text-xl italic"><Cpu className="w-6 h-6" /> TECH KIDS</div>
-            <div className="flex items-center gap-2 font-black text-xl italic"><Bot className="w-6 h-6" /> AI JUNIOR</div>
-            <div className="flex items-center gap-2 font-black text-xl italic"><Zap className="w-6 h-6" /> FUTURE LABS</div>
+            <div className="flex items-center gap-2 font-black text-xl"><Globe className="w-6 h-6" /> GLOBAL ACADEMY</div>
+            <div className="flex items-center gap-2 font-black text-xl"><Cpu className="w-6 h-6" /> TECH KIDS</div>
+            <div className="flex items-center gap-2 font-black text-xl"><Bot className="w-6 h-6" /> AI JUNIOR</div>
+            <div className="flex items-center gap-2 font-black text-xl"><Zap className="w-6 h-6" /> FUTURE LABS</div>
           </div>
         </AnimatedSection>
       </main>

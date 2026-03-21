@@ -21,7 +21,7 @@ const SuccessModal: React.FC<{ lesson: Lesson, onContinue: () => void }> = ({ le
                     <div className="absolute inset-0 bg-yellow-400 rounded-full blur-3xl opacity-20 group-hover:opacity-50 animate-pulse"></div>
                     <Mascot />
                 </div>
-                <h2 className="text-2xl font-black text-green-500 mb-2 uppercase tracking-tighter italic">{t('genius' as any)}</h2>
+                <h2 className="text-2xl font-black text-green-500 mb-2 uppercase tracking-tighter">{t('genius' as any)}</h2>
                 <p className="text-slate-500 dark:text-slate-400 font-bold text-base mb-6">{t('mission_complete_msg' as any)} <br /> <span className="text-yellow-500 font-black">+{lesson.xp} {t('star_xp_units' as any)}</span></p>
                 <button
                     onClick={onContinue}

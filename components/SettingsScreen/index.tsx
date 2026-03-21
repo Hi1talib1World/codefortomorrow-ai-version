@@ -15,10 +15,10 @@ const SettingsScreen: React.FC = () => {
   return (
     <div className="p-4 md:p-12 bg-brand-50 dark:bg-slate-900 min-h-full transition-colors">
       <div className="max-w-3xl mx-auto space-y-8">
-        <h1 className="text-5xl font-black text-slate-800 dark:text-white mb-12 italic tracking-tighter uppercase">
+        <h1 className="text-5xl font-black text-slate-800 dark:text-white mb-12 tracking-tighter uppercase">
           {t('settings')}
         </h1>
-        
+
         {/* Language Section */}
         <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-xl border-b-[10px] border-slate-200 dark:border-slate-900 transition-colors">
           <div className="flex items-center space-x-4 mb-6">
@@ -56,16 +56,15 @@ const SettingsScreen: React.FC = () => {
           <p className="text-slate-500 dark:text-slate-400 font-bold text-xl mb-8 leading-tight">
             {t('appearance_desc')}
           </p>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Light Mode Button */}
             <button
               onClick={() => theme === 'dark' && toggleTheme()}
-              className={`relative flex flex-col items-center p-8 rounded-3xl border-4 transition-all transform active:scale-95 ${
-                theme === 'light' 
-                  ? 'bg-brand-50 border-brand-500 ring-4 ring-brand-100 dark:ring-0' 
+              className={`relative flex flex-col items-center p-8 rounded-3xl border-4 transition-all transform active:scale-95 ${theme === 'light'
+                  ? 'bg-brand-50 border-brand-500 ring-4 ring-brand-100 dark:ring-0'
                   : 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 grayscale opacity-60'
-              }`}
+                }`}
             >
               <div className="w-20 h-20 bg-yellow-400 rounded-2xl flex items-center justify-center text-5xl mb-4 shadow-lg animate-pulse">☀️</div>
               <span className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">{t('light_mode')}</span>
@@ -77,11 +76,10 @@ const SettingsScreen: React.FC = () => {
             {/* Dark Mode Button */}
             <button
               onClick={() => theme === 'light' && toggleTheme()}
-              className={`relative flex flex-col items-center p-8 rounded-3xl border-4 transition-all transform active:scale-95 ${
-                theme === 'dark' 
-                  ? 'bg-slate-700 border-brand-500 ring-4 ring-brand-900/50' 
+              className={`relative flex flex-col items-center p-8 rounded-3xl border-4 transition-all transform active:scale-95 ${theme === 'dark'
+                  ? 'bg-slate-700 border-brand-500 ring-4 ring-brand-900/50'
                   : 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 grayscale opacity-60'
-              }`}
+                }`}
             >
               <div className="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center text-5xl mb-4 shadow-lg">🌙</div>
               <span className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">{t('dark_mode')}</span>

@@ -25,7 +25,7 @@ const SuccessModal: React.FC<{ lesson: Lesson, onContinue: () => void }> = ({ le
                     <div className="absolute inset-0 bg-yellow-400 rounded-full blur-3xl opacity-20 group-hover:opacity-50 animate-pulse"></div>
                     <Mascot />
                 </div>
-                <h2 className="text-2xl font-black text-green-500 mb-2 uppercase tracking-tighter italic">{t('genius')}</h2>
+                <h2 className="text-2xl font-black text-green-500 mb-2 uppercase tracking-tighter">{t('genius')}</h2>
                 <p className="text-slate-500 dark:text-slate-400 font-bold text-base mb-6">{t('mission_complete_msg')} <br /> <span className="text-yellow-500 font-black">+{lesson.xp} {t('star_xp_units')}</span></p>
                 <button
                     onClick={onContinue}
@@ -57,7 +57,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                     )}
                     {output && (
                         <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 p-2 rounded-xl rounded-bl-none shadow-xl min-w-[100px] animate-pop-in border-2 border-brand-400">
-                            <p className="text-slate-800 dark:text-slate-100 font-black text-sm text-center whitespace-pre-wrap italic tracking-tighter">{output}</p>
+                            <p className="text-slate-800 dark:text-slate-100 font-black text-sm text-center whitespace-pre-wrap tracking-tighter">{output}</p>
                             <div className="absolute -bottom-2 left-0 w-4 h-4 bg-white dark:bg-slate-800 border-b-2 border-l-2 border-brand-400 rotate-45"></div>
                         </div>
                     )}
@@ -238,7 +238,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         {aiContext?.recommendation && (
                             <div className="flex items-center gap-2 bg-brand-50 dark:bg-brand-900/30 px-3 py-1 rounded-full border border-brand-100 dark:border-brand-800">
                                 <Sparkles className="w-3 h-3 text-brand-600" />
-                                <span className="text-[8px] font-black text-brand-700 uppercase italic">AI Adaptive Mode</span>
+                                <span className="text-[8px] font-black text-brand-700 uppercase">AI Adaptive Mode</span>
                             </div>
                         )}
                     </div>
@@ -255,7 +255,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         <div className="bg-brand-500 text-white w-7 h-7 rounded-lg flex items-center justify-center font-black text-sm">
                             {lesson.level}
                         </div>
-                        <h2 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tighter italic">
+                        <h2 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tighter">
                             {t(lesson.titleKey as any)}
                         </h2>
                     </div>
@@ -353,7 +353,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         {showHint && (
                             <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-xl border border-yellow-100 dark:border-yellow-800/50 animate-pop-in space-y-2">
                                 {lesson.hintKey && (
-                                    <p className="text-yellow-700 dark:text-yellow-400 text-xs font-bold italic">
+                                    <p className="text-yellow-700 dark:text-yellow-400 text-xs font-bold">
                                         {t(lesson.hintKey as any)}
                                     </p>
                                 )}
@@ -377,7 +377,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
 
                     {aiHint && (
                         <div className="bg-brand-50 dark:bg-brand-900/30 p-3 rounded-xl border border-brand-100 dark:border-brand-800 animate-pop-in">
-                            <p className="text-brand-500 dark:text-brand-300 font-bold italic text-xs">
+                            <p className="text-brand-500 dark:text-brand-300 font-bold text-xs">
                                 <span className="text-lg mr-2">🤖</span>
                                 {aiHint}
                             </p>
@@ -451,7 +451,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                             </div>
                             <div className="flex-grow p-4 overflow-y-auto space-y-2">
                                 {outputHistory.length === 0 ? (
-                                    <div className="opacity-50 italic">Waiting for execution...</div>
+                                    <div className="opacity-50">Waiting for execution...</div>
                                 ) : (
                                     outputHistory.map((item) => (
                                         <div key={item.id} className="border-b border-white/5 pb-2 mb-2 last:border-0 last:mb-0">

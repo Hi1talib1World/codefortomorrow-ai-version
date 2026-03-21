@@ -36,10 +36,10 @@ const CreateAssignmentScreen: React.FC<CreateAssignmentScreenProps> = ({ onClose
   const handleQuestionChange = (index: number, field: keyof Question, value: any) => {
     const newQuestions = [...questions];
     if (field === 'options') {
-        // value is { optionIndex: number, text: string }
-        newQuestions[index].options[value.optionIndex] = value.text;
+      // value is { optionIndex: number, text: string }
+      newQuestions[index].options[value.optionIndex] = value.text;
     } else {
-        (newQuestions[index] as any)[field] = value;
+      (newQuestions[index] as any)[field] = value;
     }
     setQuestions(newQuestions);
   };
@@ -51,9 +51,9 @@ const CreateAssignmentScreen: React.FC<CreateAssignmentScreenProps> = ({ onClose
 
     try {
       // Validate questions
-      const isValid = questions.every(q => 
-        q.question.trim() !== '' && 
-        q.options.every(opt => opt.trim() !== '') && 
+      const isValid = questions.every(q =>
+        q.question.trim() !== '' &&
+        q.options.every(opt => opt.trim() !== '') &&
         q.correctAnswer !== ''
       );
 
@@ -82,15 +82,15 @@ const CreateAssignmentScreen: React.FC<CreateAssignmentScreenProps> = ({ onClose
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl w-full max-w-4xl border-2 border-slate-700 my-8 transform transition-all">
         <div className="sticky top-0 bg-white dark:bg-slate-800 p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center z-10 rounded-t-3xl">
-          <h2 className="text-2xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Create New Quiz</h2>
-          <button 
+          <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Create New Quiz</h2>
+          <button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
           >
             <X className="w-6 h-6 text-slate-500" />
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="p-8 space-y-8">
           {error && (
             <div className="bg-red-50 border-2 border-red-200 text-red-600 p-4 rounded-2xl font-bold text-sm">
@@ -102,7 +102,7 @@ const CreateAssignmentScreen: React.FC<CreateAssignmentScreenProps> = ({ onClose
             <div className="space-y-6">
               <div className="relative">
                 <Type className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-slate-400" />
-                <input 
+                <input
                   type="text"
                   placeholder="Quiz Title"
                   value={assignmentTitle}
@@ -125,34 +125,34 @@ const CreateAssignmentScreen: React.FC<CreateAssignmentScreenProps> = ({ onClose
 
             <div className="space-y-6">
               <div className="relative">
-                  <Users className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-slate-400" />
-                  <select
-                      value={selectedClass}
-                      onChange={(e) => setSelectedClass(e.target.value)}
-                      className="w-full bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl border-2 border-slate-200 dark:border-slate-600 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all pl-12 pr-4 py-3 appearance-none font-bold"
-                  >
-                      <option value="">Assign to Class (Optional)</option>
-                      <option value="Grade 4">Grade 4</option>
-                      <option value="Grade 5">Grade 5</option>
-                      <option value="Grade 6">Grade 6</option>
-                  </select>
+                <Users className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-slate-400" />
+                <select
+                  value={selectedClass}
+                  onChange={(e) => setSelectedClass(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl border-2 border-slate-200 dark:border-slate-600 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all pl-12 pr-4 py-3 appearance-none font-bold"
+                >
+                  <option value="">Assign to Class (Optional)</option>
+                  <option value="Grade 4">Grade 4</option>
+                  <option value="Grade 5">Grade 5</option>
+                  <option value="Grade 6">Grade 6</option>
+                </select>
               </div>
               <div className="relative">
-                  <Calendar className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-slate-400" />
-                  <input 
-                    type="date"
-                    value={dueDate}
-                    onChange={(e) => setDueDate(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl border-2 border-slate-200 dark:border-slate-600 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all pl-12 pr-4 py-3 font-bold"
-                  />
+                <Calendar className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-slate-400" />
+                <input
+                  type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl border-2 border-slate-200 dark:border-slate-600 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all pl-12 pr-4 py-3 font-bold"
+                />
               </div>
             </div>
           </div>
 
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Questions</h3>
-              <button 
+              <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Questions</h3>
+              <button
                 type="button"
                 onClick={handleAddQuestion}
                 className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm hover:bg-slate-200 transition-all"
@@ -166,7 +166,7 @@ const CreateAssignmentScreen: React.FC<CreateAssignmentScreenProps> = ({ onClose
               {questions.map((q, qIndex) => (
                 <div key={qIndex} className="p-6 bg-slate-50 dark:bg-slate-700/50 rounded-3xl border-2 border-slate-100 dark:border-slate-700 space-y-4 relative">
                   {questions.length > 1 && (
-                    <button 
+                    <button
                       type="button"
                       onClick={() => handleRemoveQuestion(qIndex)}
                       className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 transition-colors"
@@ -174,10 +174,10 @@ const CreateAssignmentScreen: React.FC<CreateAssignmentScreenProps> = ({ onClose
                       <Trash2 className="w-5 h-5" />
                     </button>
                   )}
-                  
+
                   <div className="space-y-2">
                     <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Question {qIndex + 1}</label>
-                    <input 
+                    <input
                       type="text"
                       placeholder="Enter your question here..."
                       value={q.question}
@@ -190,18 +190,17 @@ const CreateAssignmentScreen: React.FC<CreateAssignmentScreenProps> = ({ onClose
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {q.options.map((opt, optIndex) => (
                       <div key={optIndex} className="flex items-center gap-3">
-                        <button 
+                        <button
                           type="button"
                           onClick={() => handleQuestionChange(qIndex, 'correctAnswer', opt)}
-                          className={`p-2 rounded-lg transition-all ${
-                            q.correctAnswer === opt && opt !== ''
-                              ? 'bg-green-500 text-white shadow-lg' 
+                          className={`p-2 rounded-lg transition-all ${q.correctAnswer === opt && opt !== ''
+                              ? 'bg-green-500 text-white shadow-lg'
                               : 'bg-slate-200 dark:bg-slate-600 text-slate-400'
-                          }`}
+                            }`}
                         >
                           <CheckCircle2 className="w-5 h-5" />
                         </button>
-                        <input 
+                        <input
                           type="text"
                           placeholder={`Option ${optIndex + 1}`}
                           value={opt}
@@ -218,7 +217,7 @@ const CreateAssignmentScreen: React.FC<CreateAssignmentScreenProps> = ({ onClose
           </div>
 
           <div className="flex justify-end pt-8 border-t border-slate-100 dark:border-slate-700">
-            <button 
+            <button
               type="submit"
               disabled={isSubmitting}
               className="px-12 py-4 bg-brand-600 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl hover:bg-brand-500 disabled:bg-slate-400 transition-all flex items-center gap-3"

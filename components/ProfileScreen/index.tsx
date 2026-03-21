@@ -102,7 +102,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
           </div>
 
           <div className="text-center mb-12">
-            <h1 className="text-5xl font-black tracking-tighter uppercase italic">{currentUser.name}</h1>
+            <h1 className="text-5xl font-black tracking-tighter uppercase">{currentUser.name}</h1>
             <p className="text-slate-500 dark:text-slate-400 font-bold text-xl mt-2">{currentUser.bio || t('no_bio')}</p>
             <div className="mt-6 flex items-center justify-center space-x-6 text-lg font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
               <span className="hover:text-brand-500 transition-colors cursor-pointer">{mockFollowing} {t('following')}</span>
@@ -114,10 +114,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
           {/* AI Learning Profile Section */}
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tighter italic">AI Learning Profile</h2>
+              <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">AI Learning Profile</h2>
               <div className="flex items-center space-x-2 bg-brand-50 dark:bg-brand-900/30 px-3 py-1 rounded-full">
                 <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-                <span className="text-[10px] font-black text-brand-700 dark:text-brand-300 uppercase italic">Dynamic Analysis</span>
+                <span className="text-[10px] font-black text-brand-700 dark:text-brand-300 uppercase">Dynamic Analysis</span>
               </div>
             </div>
 
@@ -127,11 +127,11 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                   <Brain className="w-32 h-32" />
                 </div>
                 <div className="relative z-10">
-                  <h3 className="text-xl font-black uppercase italic tracking-tight mb-4 flex items-center gap-2">
+                  <h3 className="text-xl font-black uppercase tracking-tight mb-4 flex items-center gap-2">
                     <Target className="w-5 h-5" />
                     AI Recommendation
                   </h3>
-                  <p className="text-brand-50 font-medium leading-relaxed italic mb-6">
+                  <p className="text-brand-50 font-medium leading-relaxed mb-6">
                     "{aiProfile?.recommendation || "Keep pushing forward! Your progress is being analyzed to provide personalized tips."}"
                   </p>
                   <div className="space-y-3">
@@ -158,7 +158,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                         <span key={i} className="px-2 py-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-[10px] font-black rounded-lg uppercase">
                           {s}
                         </span>
-                      )) || <span className="text-xs text-slate-400 font-bold italic">Analyzing...</span>}
+                      )) || <span className="text-xs text-slate-400 font-bold">Analyzing...</span>}
                     </div>
                   </div>
                   <div className="pt-6 border-t border-slate-100 dark:border-slate-700">
@@ -170,7 +170,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                         <span key={i} className="px-2 py-1 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 text-[10px] font-black rounded-lg uppercase">
                           {w}
                         </span>
-                      )) || <span className="text-xs text-slate-400 font-bold italic">Analyzing...</span>}
+                      )) || <span className="text-xs text-slate-400 font-bold">Analyzing...</span>}
                     </div>
                   </div>
                 </div>

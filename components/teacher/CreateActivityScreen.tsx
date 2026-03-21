@@ -47,7 +47,7 @@ const CreateActivityScreen: React.FC<CreateActivityScreenProps> = ({ onClose, on
 
     try {
       const totalDuration = steps.reduce((acc, step) => acc + (parseInt(step.duration) || 0), 0);
-      
+
       await api.createActivity({
         title,
         description,
@@ -75,7 +75,7 @@ const CreateActivityScreen: React.FC<CreateActivityScreenProps> = ({ onClose, on
             <div className="p-2 bg-brand-100 dark:bg-brand-900/30 rounded-xl">
               <Sparkles className="w-6 h-6 text-brand-600" />
             </div>
-            <h2 className="text-2xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Prepare Classroom Activity</h2>
+            <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Prepare Classroom Activity</h2>
           </div>
           <button onClick={onClose} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
             <X className="w-6 h-6 text-slate-500" />
@@ -95,7 +95,7 @@ const CreateActivityScreen: React.FC<CreateActivityScreenProps> = ({ onClose, on
                 <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Activity Title</label>
                 <div className="relative">
                   <Type className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-slate-400" />
-                  <input 
+                  <input
                     type="text"
                     placeholder="e.g., Introduction to Python Loops"
                     value={title}
@@ -126,7 +126,7 @@ const CreateActivityScreen: React.FC<CreateActivityScreenProps> = ({ onClose, on
                 <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Target Grade / Level</label>
                 <div className="relative">
                   <Users className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-slate-400" />
-                  <input 
+                  <input
                     type="text"
                     placeholder="e.g., Grade 5, Beginners"
                     value={targetGrade}
@@ -145,7 +145,7 @@ const CreateActivityScreen: React.FC<CreateActivityScreenProps> = ({ onClose, on
                 <div className="space-y-2">
                   {materials.map((material, index) => (
                     <div key={index} className="flex items-center gap-2">
-                      <input 
+                      <input
                         type="text"
                         placeholder="e.g., Laptops, Worksheets"
                         value={material}
@@ -164,11 +164,11 @@ const CreateActivityScreen: React.FC<CreateActivityScreenProps> = ({ onClose, on
 
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight flex items-center gap-2">
+              <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2">
                 <ListChecks className="w-6 h-6 text-brand-600" />
                 Activity Steps
               </h3>
-              <button 
+              <button
                 type="button"
                 onClick={handleAddStep}
                 className="flex items-center gap-2 px-4 py-2 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 rounded-xl font-bold text-sm hover:bg-brand-100 transition-all"
@@ -187,10 +187,10 @@ const CreateActivityScreen: React.FC<CreateActivityScreenProps> = ({ onClose, on
                       <button type="button" onClick={() => handleRemoveStep(index)} className="p-2 text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 className="w-5 h-5" /></button>
                     )}
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="md:col-span-3 space-y-2">
-                      <input 
+                      <input
                         type="text"
                         placeholder="Step Title (e.g., Live Demo)"
                         value={step.title}
@@ -202,7 +202,7 @@ const CreateActivityScreen: React.FC<CreateActivityScreenProps> = ({ onClose, on
                     <div className="space-y-2">
                       <div className="relative">
                         <Clock className="absolute top-1/2 -translate-y-1/2 left-3 w-4 h-4 text-slate-400" />
-                        <input 
+                        <input
                           type="number"
                           placeholder="Mins"
                           value={step.duration}
@@ -226,7 +226,7 @@ const CreateActivityScreen: React.FC<CreateActivityScreenProps> = ({ onClose, on
           </div>
 
           <div className="flex justify-end pt-8 border-t border-slate-100 dark:border-slate-700">
-            <button 
+            <button
               type="submit"
               disabled={isSubmitting}
               className="px-12 py-4 bg-brand-600 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl hover:bg-brand-500 disabled:bg-slate-400 transition-all flex items-center gap-3"

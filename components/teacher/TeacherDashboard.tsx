@@ -183,7 +183,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
               {/* Recent Activity */}
               <div className="lg:col-span-2 space-y-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Active Classes</h2>
+                  <h2 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Active Classes</h2>
                   <button className="text-sm font-bold text-brand-600 hover:underline">View all</button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -227,7 +227,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
 
               {/* Notifications / Alerts */}
               <div className="space-y-6">
-                <h2 className="text-xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Quick Actions</h2>
+                <h2 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Quick Actions</h2>
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
                   <button
                     onClick={() => setIsCreatingAssignment(true)}
@@ -243,7 +243,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                   </button>
                 </div>
 
-                <h2 className="text-xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Alerts</h2>
+                <h2 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Alerts</h2>
                 <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 divide-y divide-slate-50 dark:divide-slate-700">
                   {activeAlerts.map((alert) => (
                     <div key={alert.id} className="p-4 flex items-start space-x-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group">
@@ -281,7 +281,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
           <div className="space-y-8 animate-pop-in">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-3xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Quizzes & Exercises</h2>
+                <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Quizzes & Exercises</h2>
                 <p className="text-slate-400 font-bold">Manage your learning materials and assignments</p>
               </div>
               <button
@@ -302,7 +302,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                   <BookOpen className="w-10 h-10" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase italic">No quizzes yet</h3>
+                  <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase">No quizzes yet</h3>
                   <p className="text-slate-400 font-bold">Create your first quiz to start tracking student progress!</p>
                 </div>
                 <button
@@ -326,7 +326,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                             {quiz.dueDate ? new Date(quiz.dueDate).toLocaleDateString() : 'No deadline'}
                           </span>
                         </div>
-                        <h3 className="text-2xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight leading-tight">{quiz.title}</h3>
+                        <h3 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight leading-tight">{quiz.title}</h3>
                       </div>
                       <button
                         onClick={() => handleDeleteQuiz(quiz._id)}
@@ -365,7 +365,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
           <div className="space-y-8 animate-pop-in">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-3xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Classroom Activities</h2>
+                <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Classroom Activities</h2>
                 <p className="text-slate-400 font-bold">Prepare and organize your live classroom sessions</p>
               </div>
               <button
@@ -386,7 +386,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                   <Sparkles className="w-10 h-10" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase italic">No activities yet</h3>
+                  <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase">No activities yet</h3>
                   <p className="text-slate-400 font-bold">Plan your first classroom activity to make learning fun!</p>
                 </div>
                 <button
@@ -410,7 +410,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                             {activity.duration} Mins
                           </span>
                         </div>
-                        <h3 className="text-2xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight leading-tight">{activity.title}</h3>
+                        <h3 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight leading-tight">{activity.title}</h3>
                       </div>
                       <button
                         onClick={() => handleDeleteActivity(activity._id)}
@@ -464,7 +464,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
           <div className="space-y-6 animate-pop-in">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-3xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Students</h2>
+                <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Students</h2>
                 <p className="text-slate-400 font-bold">{MOCK_STUDENTS.length} students enrolled across all classes</p>
               </div>
               <div className="flex items-center gap-3">
@@ -597,7 +597,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
           <div className="space-y-6 animate-pop-in">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-3xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Lesson Planner</h2>
+                <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Lesson Planner</h2>
                 <div className="flex items-center gap-4 mt-2">
                   <button onClick={() => setWeekOffset(o => o - 1)} className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-400">
                     <ChevronRight className="w-5 h-5 rotate-180" />
@@ -674,7 +674,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
           </div>
         );
       default:
-        return <div className="flex items-center justify-center h-64 text-slate-400 font-black uppercase italic">Coming Soon</div>;
+        return <div className="flex items-center justify-center h-64 text-slate-400 font-black uppercase">Coming Soon</div>;
     }
   };
 
@@ -699,7 +699,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Class-Level Reports</h2>
+            <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Class-Level Reports</h2>
             <p className="text-slate-400 font-bold">Data-driven insights into student mastery and class trends</p>
           </div>
           <div className="flex items-center space-x-4">
@@ -720,7 +720,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
             </div>
             <div className="flex items-center space-x-2 bg-brand-50 dark:bg-brand-900/30 px-4 py-2 rounded-xl">
               <Sparkles className="w-5 h-5 text-brand-600 dark:text-brand-400" />
-              <span className="text-xs font-black text-brand-700 dark:text-brand-300 uppercase italic">AI Powered</span>
+              <span className="text-xs font-black text-brand-700 dark:text-brand-300 uppercase">AI Powered</span>
             </div>
           </div>
         </div>
@@ -731,9 +731,9 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
             <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
               <BarChart3 className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-black uppercase italic tracking-tight">AI Progress Summary</h3>
+            <h3 className="text-xl font-black uppercase tracking-tight">AI Progress Summary</h3>
           </div>
-          <p className="text-brand-50 font-medium leading-relaxed italic">
+          <p className="text-brand-50 font-medium leading-relaxed">
             "{analytics?.summary || "Analyzing class performance data..."}"
           </p>
         </div>
@@ -741,7 +741,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Performance Heatmap */}
           <div className="lg:col-span-2 bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-700">
-            <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase italic mb-6">Student Mastery Heatmap</h3>
+            <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase mb-6">Student Mastery Heatmap</h3>
             <div className="space-y-4">
               {analytics?.heatmap?.map((student: any, i: number) => (
                 <div key={i} className="flex items-center space-x-4">
@@ -771,7 +771,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
 
           {/* Struggling Students */}
           <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-700">
-            <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase italic mb-6">Attention Needed</h3>
+            <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase mb-6">Attention Needed</h3>
             <div className="space-y-4">
               {analytics?.strugglingStudents?.slice(0, 5).map((student: any, i: number) => (
                 <div key={i} className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/30">
@@ -810,7 +810,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                     <Sparkles className="w-6 h-6" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">AI Intervention Plan</h2>
+                    <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">AI Intervention Plan</h2>
                     <p className="text-sm font-bold text-slate-400">Tailored strategy for {selectedStrugglingStudent.name}</p>
                   </div>
                 </div>
@@ -907,8 +907,8 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
               <Mascot />
             </div>
             <div>
-              <span className="text-lg font-black text-slate-800 dark:text-white italic tracking-tighter uppercase block leading-none">Code for</span>
-              <span className="text-brand-600 font-black italic uppercase tracking-tighter text-sm">Tomorrow</span>
+              <span className="text-lg font-black text-slate-800 dark:text-white tracking-tighter uppercase block leading-none">Code for</span>
+              <span className="text-brand-600 font-black uppercase tracking-tighter text-sm">Tomorrow</span>
             </div>
           </div>
         </div>

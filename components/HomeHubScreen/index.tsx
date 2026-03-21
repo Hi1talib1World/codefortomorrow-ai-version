@@ -172,7 +172,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, userName = "C
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
                                     <p className="text-sm font-bold text-slate-400">Discover & Learn</p>
-                                    <span className="text-xs font-bold text-red-400 italic">Coming soon</span>
+                                    <span className="text-xs font-bold text-red-400">Coming soon</span>
                                 </div>
                             </div>
                         </div>

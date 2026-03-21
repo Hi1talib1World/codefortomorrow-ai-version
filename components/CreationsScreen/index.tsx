@@ -199,7 +199,7 @@ const CreationsScreen: React.FC = () => {
             <div className="mt-16">
                 <div className="flex justify-between items-end mb-6 px-2">
                     <div>
-                        <h2 className="text-2xl font-black text-slate-800 dark:text-white italic uppercase tracking-tighter leading-none">{t('recent_contents')}</h2>
+                        <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tighter leading-none">{t('recent_contents')}</h2>
                         <p className="text-slate-400 font-bold mt-1.5 uppercase tracking-widest text-[9px]">Manage your magic creations</p>
                     </div>
                     <button className="text-[10px] font-black uppercase tracking-widest text-brand-500 hover:underline mb-0.5">{t('view_all')}</button>

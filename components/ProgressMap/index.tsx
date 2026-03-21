@@ -144,7 +144,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ completedLessons, onStartLess
     return (
       <div className="text-center text-slate-400 py-20 px-6">
         <div className="text-6xl mb-4">🚧</div>
-        <p className="font-black text-xl uppercase tracking-tighter italic">Coming soon!</p>
+        <p className="font-black text-xl uppercase tracking-tighter">Coming soon!</p>
       </div>
     );
   }
@@ -264,7 +264,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ completedLessons, onStartLess
       {searchQuery && filteredSections.length === 0 && filteredModules.length === 0 && (
         <div className="text-center py-20 px-6">
           <div className="text-6xl mb-4">🔍</div>
-          <p className="font-black text-slate-400 text-lg uppercase tracking-tighter italic">
+          <p className="font-black text-slate-400 text-lg uppercase tracking-tighter">
             No lessons found for "{searchQuery}"
           </p>
           <button

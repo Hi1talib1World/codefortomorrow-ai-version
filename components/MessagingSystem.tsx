@@ -117,11 +117,11 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
     }
   };
 
-  const filteredConversations = conversations.filter(c => 
+  const filteredConversations = conversations.filter(c =>
     c.user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredTeachers = teachers.filter(t => 
+  const filteredTeachers = teachers.filter(t =>
     t.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -131,10 +131,10 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
       <div className={`w-full md:w-80 border-r border-slate-100 dark:border-slate-800 flex flex-col bg-white dark:bg-slate-900 ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
         <div className="p-6 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-black text-slate-800 dark:text-white italic uppercase tracking-tight">Messages</h2>
+            <h2 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Messages</h2>
             <div className="flex items-center gap-2">
               {currentUser.role === 'student' && (
-                <button 
+                <button
                   onClick={() => setView(view === 'conversations' ? 'contacts' : 'conversations')}
                   className={`p-2 rounded-xl transition-all ${view === 'contacts' ? 'bg-brand-600 text-white' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                   title={view === 'contacts' ? 'Back to chats' : 'New message to teacher'}
@@ -151,8 +151,8 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
           </div>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder={view === 'conversations' ? "Search conversations..." : "Search teachers..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -172,7 +172,7 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
                 <MessageSquare className="w-12 h-12 text-slate-200 mx-auto mb-4" />
                 <p className="text-slate-400 font-bold text-sm">No messages yet.</p>
                 {currentUser.role === 'student' && (
-                  <button 
+                  <button
                     onClick={() => setView('contacts')}
                     className="mt-4 text-brand-600 font-black text-xs uppercase hover:underline"
                   >
@@ -188,9 +188,9 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
                   className={`w-full p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50 ${selectedUser?._id === conv.user._id ? 'bg-brand-50 dark:bg-brand-900/20' : ''}`}
                 >
                   <div className="relative">
-                    <img 
-                      src={conv.user.profilePictureUrl || 'https://picsum.photos/seed/user/100/100'} 
-                      alt={conv.user.name} 
+                    <img
+                      src={conv.user.profilePictureUrl || 'https://picsum.photos/seed/user/100/100'}
+                      alt={conv.user.name}
                       className="w-12 h-12 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-sm"
                       referrerPolicy="no-referrer"
                     />
@@ -231,9 +231,9 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
                     }}
                     className="w-full p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-2xl transition-all"
                   >
-                    <img 
-                      src={teacher.profilePictureUrl || 'https://picsum.photos/seed/teacher/100/100'} 
-                      alt={teacher.name} 
+                    <img
+                      src={teacher.profilePictureUrl || 'https://picsum.photos/seed/teacher/100/100'}
+                      alt={teacher.name}
                       className="w-12 h-12 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-sm"
                       referrerPolicy="no-referrer"
                     />
@@ -256,7 +256,7 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
             <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-xl flex items-center justify-center mx-auto mb-6">
               <MessageSquare className="w-10 h-10 text-brand-600" />
             </div>
-            <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase italic tracking-tight">Your Inbox</h3>
+            <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Your Inbox</h3>
             <p className="text-slate-400 font-bold max-w-xs mx-auto mt-2">Select a conversation to start chatting with your teacher or students.</p>
           </div>
         ) : (
@@ -267,9 +267,9 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
                 <button onClick={() => setSelectedUser(null)} className="md:hidden p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full">
                   <ArrowLeft className="w-5 h-5" />
                 </button>
-                <img 
-                  src={selectedUser.profilePictureUrl} 
-                  alt={selectedUser.name} 
+                <img
+                  src={selectedUser.profilePictureUrl}
+                  alt={selectedUser.name}
                   className="w-10 h-10 rounded-xl object-cover border-2 border-brand-50 dark:border-slate-700 shadow-sm"
                   referrerPolicy="no-referrer"
                 />
@@ -287,26 +287,25 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {messages.map((msg, i) => {
                 const isMe = msg.sender._id === currentUser._id;
-                const showAvatar = i === 0 || messages[i-1].sender._id !== msg.sender._id;
-                
+                const showAvatar = i === 0 || messages[i - 1].sender._id !== msg.sender._id;
+
                 return (
                   <div key={msg._id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} items-end gap-2`}>
                     {!isMe && showAvatar && (
-                      <img 
-                        src={msg.sender.profilePictureUrl} 
-                        alt="" 
+                      <img
+                        src={msg.sender.profilePictureUrl}
+                        alt=""
                         className="w-8 h-8 rounded-lg object-cover mb-1"
                         referrerPolicy="no-referrer"
                       />
                     )}
                     {!isMe && !showAvatar && <div className="w-8" />}
-                    
+
                     <div className={`max-w-[75%] group`}>
-                      <div className={`p-4 rounded-3xl text-sm font-bold shadow-sm ${
-                        isMe 
-                          ? 'bg-brand-600 text-white rounded-br-none' 
+                      <div className={`p-4 rounded-3xl text-sm font-bold shadow-sm ${isMe
+                          ? 'bg-brand-600 text-white rounded-br-none'
                           : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-none'
-                      }`}>
+                        }`}>
                         {msg.content}
                       </div>
                       <div className={`flex items-center gap-1 mt-1 ${isMe ? 'justify-end' : 'justify-start'}`}>
@@ -327,14 +326,14 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
             {/* Input Area */}
             <div className="p-4 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-800">
               <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-                <input 
-                  type="text" 
-                  placeholder="Type a message..." 
+                <input
+                  type="text"
+                  placeholder="Type a message..."
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   className="flex-1 bg-slate-50 dark:bg-slate-900 border-none focus:ring-2 focus:ring-brand-500 rounded-2xl px-6 py-3 text-sm font-bold text-slate-800 dark:text-white"
                 />
-                <button 
+                <button
                   type="submit"
                   disabled={!newMessage.trim() || isSending}
                   className="p-3 bg-brand-600 text-white rounded-2xl shadow-lg hover:bg-brand-500 disabled:bg-slate-300 transition-all"

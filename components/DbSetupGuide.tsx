@@ -22,7 +22,7 @@ const DbSetupGuide: React.FC<DbSetupGuideProps> = ({ isOpen, onClose, onRetry, i
             className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl max-w-2xl w-full overflow-hidden border-4 border-red-100 dark:border-red-900/30"
           >
             <div className="bg-red-500 p-8 text-white relative">
-              <button 
+              <button
                 onClick={onClose}
                 className="absolute top-6 right-6 p-2 hover:bg-white/20 rounded-full transition-colors"
               >
@@ -32,7 +32,7 @@ const DbSetupGuide: React.FC<DbSetupGuideProps> = ({ isOpen, onClose, onRetry, i
                 <div className="p-3 bg-white/20 rounded-2xl">
                   <Database className="w-8 h-8" />
                 </div>
-                <h2 className="text-3xl font-black italic uppercase tracking-tight">Database Connection Error</h2>
+                <h2 className="text-3xl font-black uppercase tracking-tight">Database Connection Error</h2>
               </div>
               <p className="text-red-50 font-bold">Your application is running, but it cannot talk to your MongoDB Atlas database. This is usually due to IP whitelisting.</p>
             </div>
@@ -42,7 +42,7 @@ const DbSetupGuide: React.FC<DbSetupGuideProps> = ({ isOpen, onClose, onRetry, i
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 text-slate-800 dark:text-white">
                     <Shield className="w-5 h-5 text-red-500" />
-                    <h3 className="font-black uppercase italic text-sm">Step 1: Network Access</h3>
+                    <h3 className="font-black uppercase text-sm">Step 1: Network Access</h3>
                   </div>
                   <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
                     Log in to your <a href="https://cloud.mongodb.com" target="_blank" rel="noopener noreferrer" className="text-red-500 underline font-bold">MongoDB Atlas Dashboard</a> and go to <strong>Network Access</strong> in the left sidebar.
@@ -52,7 +52,7 @@ const DbSetupGuide: React.FC<DbSetupGuideProps> = ({ isOpen, onClose, onRetry, i
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 text-slate-800 dark:text-white">
                     <Globe className="w-5 h-5 text-red-500" />
-                    <h3 className="font-black uppercase italic text-sm">Step 2: Add IP Address</h3>
+                    <h3 className="font-black uppercase text-sm">Step 2: Add IP Address</h3>
                   </div>
                   <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
                     Click <strong>Add IP Address</strong> and select <strong>Allow Access From Anywhere</strong> (0.0.0.0/0) for development.
@@ -66,7 +66,7 @@ const DbSetupGuide: React.FC<DbSetupGuideProps> = ({ isOpen, onClose, onRetry, i
                     <CheckCircle2 className="w-5 h-5 text-green-600" />
                   </div>
                   <div>
-                    <h4 className="font-black text-slate-800 dark:text-white uppercase italic text-xs mb-1">Step 3: Confirm & Retry</h4>
+                    <h4 className="font-black text-slate-800 dark:text-white uppercase text-xs mb-1">Step 3: Confirm & Retry</h4>
                     <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
                       Click <strong>Confirm</strong> and wait about 60 seconds. Then click the <strong>"Retry Connection"</strong> button below.
                     </p>
@@ -75,16 +75,16 @@ const DbSetupGuide: React.FC<DbSetupGuideProps> = ({ isOpen, onClose, onRetry, i
               </div>
 
               <div className="flex justify-between items-center">
-                <button 
+                <button
                   onClick={onClose}
-                  className="text-slate-400 font-black uppercase italic text-xs hover:text-slate-600 dark:hover:text-slate-200"
+                  className="text-slate-400 font-black uppercase text-xs hover:text-slate-600 dark:hover:text-slate-200"
                 >
                   Close Guide
                 </button>
-                <button 
+                <button
                   onClick={onRetry}
                   disabled={isRetrying}
-                  className="px-8 py-3 bg-red-500 text-white font-black uppercase italic rounded-2xl hover:scale-105 transition-transform shadow-lg shadow-red-500/20 disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
+                  className="px-8 py-3 bg-red-500 text-white font-black uppercase rounded-2xl hover:scale-105 transition-transform shadow-lg shadow-red-500/20 disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
                 >
                   {isRetrying ? (
                     <>
