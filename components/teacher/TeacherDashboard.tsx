@@ -24,7 +24,17 @@ import {
   Sparkles,
   ListChecks,
   MessageSquare,
-  X
+  X,
+  Terminal,
+  Zap,
+  Box,
+  Globe,
+  Star,
+  GraduationCap,
+  UserCheck,
+  UserX,
+  Award,
+  PenTool
 } from 'lucide-react';
 import Mascot from '../Mascot';
 
@@ -37,7 +47,7 @@ interface TeacherDashboardProps {
   onLogout: () => void;
 }
 
-type TeacherView = 'overview' | 'classes' | 'assignments' | 'activities' | 'students' | 'planner' | 'reports' | 'settings' | 'messages';
+type TeacherView = 'overview' | 'classes' | 'assignments' | 'activities' | 'students' | 'planner' | 'gradebook' | 'reports' | 'settings' | 'messages';
 
 const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogout }) => {
   const [activeView, setActiveView] = useState<TeacherView>('overview');
@@ -62,6 +72,19 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
   const [contentSource, setContentSource] = useState('All');
   const [selectedStrugglingStudent, setSelectedStrugglingStudent] = useState<any>(null);
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
+
+  const [studentsData, setStudentsData] = useState<any[]>([
+    { id: 1, name: 'Adam K.', class: 'Grade 4', path: 'Python', pathIcon: Terminal, xp: 340, progress: 72, status: 'On Track', avatar: 'AK', streak: 4, lastQuiz: 85, style: 'Visual', notes: [] },
+    { id: 2, name: 'Sara M.', class: 'Intro JS', path: 'JavaScript', pathIcon: Zap, xp: 210, progress: 45, status: 'Needs Help', avatar: 'SM', streak: 1, lastQuiz: 42, style: 'Hands-on', notes: [] },
+    { id: 3, name: 'Youssef B.', class: 'Logic Masters', path: 'Blocks', pathIcon: Box, xp: 520, progress: 91, status: 'Excelling', avatar: 'YB', streak: 12, lastQuiz: 100, style: 'Analytical', notes: [] },
+    { id: 4, name: 'Fatima Z.', class: 'Grade 5', path: 'Web Dev', pathIcon: Globe, xp: 180, progress: 38, status: 'Behind', avatar: 'FZ', streak: 0, lastQuiz: 55, style: 'Visual', notes: [] },
+    { id: 5, name: 'Omar H.', class: 'Grade 4', path: 'Python', pathIcon: Terminal, xp: 410, progress: 83, status: 'On Track', avatar: 'OH', streak: 7, lastQuiz: 90, style: 'Reading', notes: [] },
+    { id: 6, name: 'Layla R.', class: 'Intro JS', path: 'JavaScript', pathIcon: Zap, xp: 275, progress: 58, status: 'On Track', avatar: 'LR', streak: 3, lastQuiz: 78, style: 'Hands-on', notes: [] },
+    { id: 7, name: 'Karim N.', class: 'Grade 5', path: 'Web Dev', pathIcon: Globe, xp: 95, progress: 20, status: 'Needs Help', avatar: 'KN', streak: 1, lastQuiz: 35, style: 'Visual', notes: [] },
+    { id: 8, name: 'Nadia S.', class: 'Grade 4', path: 'Python', pathIcon: Terminal, xp: 490, progress: 88, status: 'Excelling', avatar: 'NS', streak: 9, lastQuiz: 95, style: 'Analytical', notes: [] },
+  ]);
+
+  const [attendance, setAttendance] = useState<Record<number, string>>({});
 
   useEffect(() => {
     if (activeView === 'assignments' || activeView === 'overview') {
@@ -125,6 +148,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
     { id: 'assignments', icon: ListChecks, label: 'Quizzes' },
     { id: 'activities', icon: Sparkles, label: 'Activities' },
     { id: 'planner', icon: Calendar, label: 'Lesson Planner' },
+    { id: 'gradebook', icon: GraduationCap, label: 'Gradebook' },
     { id: 'messages', icon: MessageSquare, label: 'Messages' },
     { id: 'reports', icon: BarChart3, label: 'Analytics' },
     { id: 'settings', icon: Settings, label: 'Settings' },
@@ -240,6 +264,50 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                     className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase tracking-widest shadow-lg hover:bg-emerald-500 transition-all flex items-center justify-center space-x-2">
                     <Sparkles className="w-5 h-5" />
                     <span>Prepare Activity</span>
+                  </button>
+                </div>
+
+                <h2 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Daily Attendance</h2>
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-slate-500 dark:text-slate-400">Class 4B - Today</span>
+                    <span className="text-xs font-black text-brand-600 bg-brand-50 dark:bg-brand-900/30 px-2 py-1 rounded-md">{studentsData.filter(s => attendance[s.id] !== 'absent').length}/{studentsData.length} Present</span>
+                  </div>
+                  <div className="space-y-3">
+                    {studentsData.slice(0, 4).map(s => (
+                      <div key={s.id} className="flex items-center justify-between group">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-[10px] font-black">{s.avatar}</div>
+                          <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{s.name}</span>
+                        </div>
+                        <div className="opacity-0 group-hover:opacity-100 flex gap-1 transition-opacity">
+                          <button
+                            onClick={() => setAttendance(prev => ({ ...prev, [s.id]: 'present' }))}
+                            className={`p-1.5 rounded-md transition-colors ${attendance[s.id] === 'present' || !attendance[s.id] ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400' : 'hover:bg-slate-100 text-slate-400 dark:hover:bg-slate-700'}`}
+                            title="Mark Present"
+                          >
+                            <UserCheck className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => setAttendance(prev => ({ ...prev, [s.id]: 'absent' }))}
+                            className={`p-1.5 rounded-md transition-colors ${attendance[s.id] === 'absent' ? 'bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400' : 'hover:bg-slate-100 text-slate-400 dark:hover:bg-slate-700'}`}
+                            title="Mark Absent"
+                          >
+                            <UserX className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="group-hover:hidden transition-opacity">
+                          {attendance[s.id] === 'absent' ? (
+                            <span className="text-[10px] font-black text-red-500 uppercase tracking-wider flex items-center gap-1"><UserX className="w-3 h-3" /> Absent</span>
+                          ) : (
+                            <span className="text-[10px] font-black text-green-500 uppercase tracking-wider flex items-center gap-1"><UserCheck className="w-3 h-3" /> Present</span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button className="w-full mt-2 py-2 text-xs font-black text-slate-400 hover:text-brand-600 transition-colors uppercase tracking-widest">
+                    View Full Roster
                   </button>
                 </div>
 
@@ -443,17 +511,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
           </div>
         );
       case 'students': {
-        const MOCK_STUDENTS = [
-          { id: 1, name: 'Adam K.', class: 'Grade 4', path: '🐍 Python', xp: 340, progress: 72, status: 'On Track', avatar: 'AK', streak: 4, lastQuiz: 85, style: 'Visual' },
-          { id: 2, name: 'Sara M.', class: 'Intro JS', path: '⚡ JavaScript', xp: 210, progress: 45, status: 'Needs Help', avatar: 'SM', streak: 1, lastQuiz: 42, style: 'Hands-on' },
-          { id: 3, name: 'Youssef B.', class: 'Logic Masters', path: '🧩 Blocks', xp: 520, progress: 91, status: 'Excelling', avatar: 'YB', streak: 12, lastQuiz: 100, style: 'Analytical' },
-          { id: 4, name: 'Fatima Z.', class: 'Grade 5', path: '🌐 Web Dev', xp: 180, progress: 38, status: 'Behind', avatar: 'FZ', streak: 0, lastQuiz: 55, style: 'Visual' },
-          { id: 5, name: 'Omar H.', class: 'Grade 4', path: '🐍 Python', xp: 410, progress: 83, status: 'On Track', avatar: 'OH', streak: 7, lastQuiz: 90, style: 'Reading' },
-          { id: 6, name: 'Layla R.', class: 'Intro JS', path: '⚡ JavaScript', xp: 275, progress: 58, status: 'On Track', avatar: 'LR', streak: 3, lastQuiz: 78, style: 'Hands-on' },
-          { id: 7, name: 'Karim N.', class: 'Grade 5', path: '🌐 Web Dev', xp: 95, progress: 20, status: 'Needs Help', avatar: 'KN', streak: 1, lastQuiz: 35, style: 'Visual' },
-          { id: 8, name: 'Nadia S.', class: 'Grade 4', path: '🐍 Python', xp: 490, progress: 88, status: 'Excelling', avatar: 'NS', streak: 9, lastQuiz: 95, style: 'Analytical' },
-        ];
-        const filtered = MOCK_STUDENTS.filter(s => {
+        const filtered = studentsData.filter((s: any) => {
           const matchesSearch = s.name.toLowerCase().includes(studentSearch.toLowerCase()) || s.path.toLowerCase().includes(studentSearch.toLowerCase());
           const matchesClass = classFilter === 'All' || s.class === classFilter;
           return matchesSearch && matchesClass;
@@ -465,7 +523,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Students</h2>
-                <p className="text-slate-400 font-bold">{MOCK_STUDENTS.length} students enrolled across all classes</p>
+                <p className="text-slate-400 font-bold">{studentsData.length} students enrolled across all classes</p>
               </div>
               <div className="flex items-center gap-3">
                 <select
@@ -509,11 +567,15 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                         <td className="px-6 py-4">
                           <div className="flex flex-col">
                             <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{s.class}</span>
-                            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{s.path}</span>
+                            <span className="flex items-center gap-1 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                              {s.pathIcon && <s.pathIcon className="w-3 h-3" />} {s.path}
+                            </span>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="font-black text-yellow-600">⭐ {s.xp}</span>
+                          <span className="flex items-center gap-1 font-black text-yellow-600">
+                            <Star className="w-4 h-4 fill-current" /> {s.xp}
+                          </span>
                         </td>
                         <td className="px-6 py-4 w-40">
                           <div className="flex items-center gap-2">
@@ -667,10 +729,146 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
       }
       case 'reports':
         return <AnalyticsView />;
+      case 'gradebook': {
+        const assignments = ['Python Variables', 'HTML Basics', 'JS Loops', 'Logic Puzzles', 'Python Functions'];
+        return (
+          <div className="space-y-6 animate-pop-in">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Gradebook</h2>
+                <p className="text-slate-400 font-bold">Track student performance across all assignments</p>
+              </div>
+              <button className="px-5 py-2.5 bg-brand-600 text-white rounded-xl font-black text-sm uppercase tracking-widest shadow-lg hover:bg-brand-500 flex items-center gap-2">
+                <Box className="w-4 h-4" /> Export CSV
+              </button>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-x-auto">
+              <table className="w-full min-w-[800px]">
+                <thead>
+                  <tr className="border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                    <th className="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest sticky left-0 bg-slate-50 dark:bg-slate-800/90 backdrop-blur-sm z-10 w-48">Student</th>
+                    {assignments.map(a => (
+                      <th key={a} className="text-center px-4 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">{a}</th>
+                    ))}
+                    <th className="text-center px-4 py-4 text-[10px] font-black text-brand-500 uppercase tracking-widest">Average</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50 dark:divide-slate-700/50">
+                  {studentsData.map((s, i) => {
+                    const mockScores = assignments.map((_, idx) => Math.min(100, Math.max(30, s.progress + (idx * 5) - 10 + (s.id * 3))));
+                    const avg = Math.round(mockScores.reduce((a, b) => a + b, 0) / mockScores.length);
+                    return (
+                      <tr key={s.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
+                        <td className="px-6 py-3 sticky left-0 bg-white dark:bg-slate-800 group-hover:bg-slate-50 dark:group-hover:bg-slate-700/30 z-10">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-[10px] font-black shrink-0">{s.avatar}</div>
+                            <div>
+                              <p className="font-black text-slate-800 dark:text-white text-sm truncate">{s.name}</p>
+                              <p className="text-[10px] font-bold text-slate-400">{s.class}</p>
+                            </div>
+                          </div>
+                        </td>
+                        {mockScores.map((score, idx) => (
+                          <td key={idx} className="px-4 py-3 text-center">
+                            <span className={`text-sm font-bold ${score >= 80 ? 'text-green-600 dark:text-green-400' : score >= 60 ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'}`}>
+                              {score}%
+                            </span>
+                          </td>
+                        ))}
+                        <td className="px-4 py-3 text-center bg-slate-50/50 dark:bg-slate-700/20">
+                          <span className="text-sm font-black text-brand-600 dark:text-brand-400">{avg}%</span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      }
       case 'messages':
         return (
           <div className="h-[calc(100vh-12rem)] animate-pop-in">
             <MessagingSystem currentUser={currentUser} />
+          </div>
+        );
+      case 'settings':
+        return <SettingsView />;
+      case 'classes':
+        const myClasses = [
+          { id: 1, name: 'Grade 4 - Python Basics', schedule: 'Mon, Wed 9:00 AM', enrolled: 24, progress: 65, color: 'bg-brand-500', nextTopic: 'Loops & Conditionals' },
+          { id: 2, name: 'Grade 5 - Web Dev', schedule: 'Tue, Thu 10:00 AM', enrolled: 18, progress: 42, color: 'bg-purple-500', nextTopic: 'HTML Forms' },
+          { id: 3, name: 'Logic Masters A', schedule: 'Mon, Wed 2:00 PM', enrolled: 30, progress: 88, color: 'bg-green-500', nextTopic: 'Advanced Puzzles' },
+          { id: 4, name: 'Intro to JS', schedule: 'Tue, Fri 11:00 AM', enrolled: 22, progress: 15, color: 'bg-orange-500', nextTopic: 'Variables & Data Types' },
+          { id: 5, name: 'Python Advanced', schedule: 'Thu 3:00 PM', enrolled: 15, progress: 10, color: 'bg-rose-500', nextTopic: 'Functions & Scope' },
+        ];
+        return (
+          <div className="space-y-8 animate-pop-in">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">My Classes</h2>
+                <p className="text-slate-400 font-bold">Manage your active classes and curriculum progress</p>
+              </div>
+              <button className="px-6 py-3 bg-brand-600 text-white rounded-2xl font-black uppercase tracking-widest shadow-lg hover:bg-brand-500 transition-all flex items-center space-x-2 w-max">
+                <Plus className="w-5 h-5" />
+                <span>New Class</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {myClasses.map(cls => (
+                <div key={cls.id} className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl transition-all group flex flex-col justify-between cursor-pointer hover:-translate-y-1 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/20 to-transparent rounded-full -mr-16 -mt-16 pointer-events-none z-0"></div>
+                  
+                  <div className="relative z-10 space-y-6">
+                    <div className="flex justify-between items-start">
+                      <div className={`w-14 h-14 ${cls.color} rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg`}>
+                        {cls.name[0]}
+                      </div>
+                      <button className="text-slate-300 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
+                        <MoreVertical className="w-6 h-6" />
+                      </button>
+                    </div>
+
+                    <div>
+                      <h3 className="text-xl font-black text-slate-800 dark:text-white group-hover:text-brand-600 transition-colors uppercase leading-snug">{cls.name}</h3>
+                      <p className="text-xs font-bold text-slate-400 mt-1 flex items-center gap-1"><Clock className="w-3 h-3" /> {cls.schedule}</p>
+                    </div>
+
+                    <div className="flex bg-slate-50 dark:bg-slate-700/50 rounded-2xl p-4 justify-between items-center group-hover:bg-brand-50 dark:group-hover:bg-brand-900/20 transition-colors">
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Students</p>
+                        <p className="text-lg font-black text-slate-800 dark:text-white">{cls.enrolled}</p>
+                      </div>
+                      <div className="w-px h-8 bg-slate-200 dark:bg-slate-600"></div>
+                      <div className="text-right">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Next Topic</p>
+                        <p className="text-sm font-bold text-slate-700 dark:text-slate-200 truncate max-w-[120px]">{cls.nextTopic}</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-[10px] font-black uppercase">
+                        <span className="text-slate-400">Overall Progress</span>
+                        <span className="text-slate-800 dark:text-white">{cls.progress}%</span>
+                      </div>
+                      <div className="h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden shadow-inner">
+                        <motion.div
+                          initial={{ width: 0 }} animate={{ width: `${cls.progress}%` }}
+                          transition={{ delay: 0.2, duration: 0.8 }}
+                          className={`h-full ${cls.color} group-hover:brightness-110 transition-all`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <button className="w-full mt-6 py-4 bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-black text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-2 group-hover:bg-brand-50 group-hover:text-brand-600 dark:group-hover:bg-brand-900/30 dark:group-hover:text-brand-400">
+                    View Class Portal <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         );
       default:
@@ -890,6 +1088,114 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
     );
   };
 
+  const SettingsView = () => {
+    const [emailAlerts, setEmailAlerts] = useState(true);
+    const [studentAlerts, setStudentAlerts] = useState(true);
+    const [weeklyReport, setWeeklyReport] = useState(false);
+    const [passingGrade, setPassingGrade] = useState('70');
+    const [language, setLanguage] = useState('English');
+
+    return (
+      <div className="space-y-8 animate-pop-in">
+        <div>
+          <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Settings</h2>
+          <p className="text-slate-400 font-bold">Manage your profile, classes, and notifications</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Profile Section */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-700">
+              <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase mb-6 flex items-center gap-2"><UserCheck className="w-6 h-6 text-brand-500" /> Public Profile</h3>
+              
+              <div className="flex items-center gap-6 mb-8">
+                <img src={currentUser.profilePictureUrl || 'https://via.placeholder.com/150'} alt="Profile" className="w-24 h-24 rounded-3xl object-cover border-4 border-slate-100 dark:border-slate-700" referrerPolicy="no-referrer" />
+                <div>
+                  <button className="px-4 py-2 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 font-black text-xs uppercase tracking-widest rounded-xl hover:bg-brand-100 dark:hover:bg-brand-900/50 transition-colors mb-2">Change Avatar</button>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase">JPG, GIF or PNG. Max size of 800K</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Full Name</label>
+                  <input type="text" defaultValue={currentUser.name} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-800 dark:text-white focus:outline-none focus:border-brand-500 transition-colors" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Email Address</label>
+                  <input type="email" defaultValue={currentUser.email} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-800 dark:text-white focus:outline-none focus:border-brand-500 transition-colors" />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Bio / Teacher Intro</label>
+                  <textarea rows={3} defaultValue="Passionate computing teacher focused on logic and creativity." className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-800 dark:text-white focus:outline-none focus:border-brand-500 transition-colors resize-none"></textarea>
+                </div>
+              </div>
+            </div>
+
+            {/* Class Preferences */}
+            <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-700">
+              <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase mb-6 flex items-center gap-2"><Settings className="w-6 h-6 text-emerald-500" /> Class Preferences</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Default Passing Grade (%)</label>
+                  <input type="number" value={passingGrade} onChange={(e) => setPassingGrade(e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500 transition-colors" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Classroom Language</label>
+                  <select value={language} onChange={(e) => setLanguage(e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500 transition-colors">
+                    <option value="English">English</option>
+                    <option value="French">French</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="Arabic">Arabic</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-4">
+              <button className="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-2xl font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">Cancel</button>
+              <button onClick={() => alert('Settings Saved Successfully!')} className="px-6 py-3 bg-brand-600 text-white rounded-2xl font-black uppercase tracking-widest shadow-lg hover:bg-brand-500 transition-all">Save Changes</button>
+            </div>
+          </div>
+
+          {/* Notifications */}
+          <div className="space-y-6">
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700">
+              <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase mb-6 flex items-center gap-2"><Bell className="w-5 h-5 text-orange-500" /> Notifications</h3>
+              
+              <div className="space-y-4">
+                <label className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+                  <div className="pr-4">
+                    <p className="font-black text-slate-800 dark:text-white text-sm">Student Intervention Alerts</p>
+                    <p className="text-[10px] font-bold text-slate-400 mt-0.5 leading-tight">Get notified immediately when a student falls significantly behind.</p>
+                  </div>
+                  <input type="checkbox" checked={studentAlerts} onChange={() => setStudentAlerts(!studentAlerts)} className="w-5 h-5 accent-brand-500 flex-shrink-0" />
+                </label>
+                
+                <label className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+                  <div className="pr-4">
+                    <p className="font-black text-slate-800 dark:text-white text-sm">Daily Email Digest</p>
+                    <p className="text-[10px] font-bold text-slate-400 mt-0.5 leading-tight">Receive a morning summary of class activity and alerts.</p>
+                  </div>
+                  <input type="checkbox" checked={emailAlerts} onChange={() => setEmailAlerts(!emailAlerts)} className="w-5 h-5 accent-brand-500 flex-shrink-0" />
+                </label>
+
+                <label className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+                  <div className="pr-4">
+                    <p className="font-black text-slate-800 dark:text-white text-sm">Weekly Analytics Report</p>
+                    <p className="text-[10px] font-bold text-slate-400 mt-0.5 leading-tight">Insightful AI summaries of your class progress every Friday.</p>
+                  </div>
+                  <input type="checkbox" checked={weeklyReport} onChange={() => setWeeklyReport(!weeklyReport)} className="w-5 h-5 accent-brand-500 flex-shrink-0" />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300 overflow-hidden">
       {isSidebarOpen && (
@@ -1066,6 +1372,52 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                       </button>
                     )}
                   </div>
+                </div>
+              </div>
+
+              {/* Behavior & Notes */}
+              <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-100 dark:border-slate-700">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-black text-slate-800 dark:text-white tracking-tight flex items-center gap-2">
+                    <PenTool className="w-5 h-5 text-brand-500" /> Teacher Notes & Behavior
+                  </h3>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        const note = prompt('Add a note:');
+                        if (note) {
+                          const newNote = { text: note, date: new Date().toLocaleDateString(), type: 'neutral' };
+                          setStudentsData(prev => prev.map(s => s.id === selectedStudent.id ? { ...s, notes: [...(s.notes || []), newNote] } : s));
+                          setSelectedStudent((prev: any) => ({ ...prev, notes: [...(prev.notes || []), newNote] }));
+                        }
+                      }}
+                      className="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                      + Add Note
+                    </button>
+                    <button
+                      onClick={() => {
+                        const newNote = { text: 'Outstanding participation', date: new Date().toLocaleDateString(), type: 'positive' };
+                        setStudentsData(prev => prev.map(s => s.id === selectedStudent.id ? { ...s, notes: [...(s.notes || []), newNote] } : s));
+                        setSelectedStudent((prev: any) => ({ ...prev, notes: [...(prev.notes || []), newNote] }));
+                      }}
+                       className="px-3 py-1.5 bg-green-50 dark:bg-green-900/30 text-green-600 border border-green-200 dark:border-green-800 text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors flex items-center gap-1">
+                      <Award className="w-3 h-3" /> +1 Point
+                    </button>
+                  </div>
+                </div>
+                <div className="space-y-3 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                  {(!selectedStudent.notes || selectedStudent.notes.length === 0) ? (
+                    <p className="text-xs font-bold text-slate-400 text-center py-4">No notes yet. Add behavior observations here.</p>
+                  ) : (
+                    selectedStudent.notes.map((note: any, i: number) => (
+                      <div key={i} className={`p-3 rounded-xl border ${note.type === 'positive' ? 'bg-green-50/50 dark:bg-green-900/10 border-green-100 dark:border-green-800/50' : 'bg-slate-50 dark:bg-slate-700/30 border-slate-100 dark:border-slate-700'}`}>
+                        <div className="flex justify-between items-start mb-1">
+                          <span className={`text-xs font-black ${note.type === 'positive' ? 'text-green-700 dark:text-green-400' : 'text-slate-700 dark:text-slate-300'}`}>{note.text}</span>
+                          <span className="text-[9px] font-bold text-slate-400 uppercase">{note.date}</span>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>

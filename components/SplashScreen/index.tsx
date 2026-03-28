@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from 'react';
-import Mascot from '../Mascot';
 
 interface SplashScreenProps {
   onFinish: () => void;
@@ -38,18 +37,6 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
         <div className="absolute top-[40%] right-[20%] w-48 h-48 bg-[#FBBC05]/5 rounded-full blur-3xl"></div>
       </div>
 
-      {/* Mascot */}
-      <div
-        className="relative z-10 mb-8 transition-all duration-700"
-        style={{
-          opacity: Math.min(progress / 30, 1),
-          transform: `translateY(${Math.max(20 - (progress / 5) * 2, 0)}px) scale(${Math.min(0.8 + progress / 500, 1)})`
-        }}
-      >
-        <div className="transform scale-[1.6] drop-shadow-lg">
-          <Mascot />
-        </div>
-      </div>
 
       {/* Title */}
       <div
