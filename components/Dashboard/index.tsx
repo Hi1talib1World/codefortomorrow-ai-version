@@ -14,9 +14,10 @@ import SettingsScreen from '../SettingsScreen';
 import HomeHubScreen from '../HomeHubScreen';
 import PathSelectionScreen from '../PathSelectionScreen';
 import MessagingSystem from '../MessagingSystem';
+import DocumentationScreen from '../DocumentationScreen';
 import { User, Lesson, ProgrammingPath } from '../../types';
 
-export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'goals' | 'leaderboard' | 'store' | 'settings' | 'messages';
+export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'goals' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs';
 
 // Map URL :view param → DashboardView enum
 const VIEW_MAP: Record<string, DashboardView> = {
@@ -28,6 +29,7 @@ const VIEW_MAP: Record<string, DashboardView> = {
   store: 'store',
   settings: 'settings',
   messages: 'messages',
+  docs: 'docs',
 };
 
 interface DashboardProps {
@@ -102,6 +104,8 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
             <MessagingSystem currentUser={currentUser} />
           </div>
         );
+      case 'docs':
+        return <DocumentationScreen currentUser={currentUser} />;
       default:
         return <HomeHubScreen onNavigate={setActiveView} userName={currentUser.name} role={currentUser.role} currentPath={path} />;
     }
