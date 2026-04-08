@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, useInView, useAnimation } from 'motion/react';
 import { ChevronRight, X, Menu, Gamepad2, Brush, Bot, Award, Star, Twitter, Instagram, Facebook, Github, Linkedin, Mail, Code, Terminal, Cpu, ChevronDown, CheckCircle, Play, Users, Rocket, Globe, Languages, ShieldCheck, Zap, Users2, Send } from 'lucide-react';
 import Mascot from '../Mascot';
+import { ImageCarousel } from '../ImageCarousel';
 
 const AnimatedSection: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
   const ref = useRef(null);
@@ -260,6 +261,17 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
             <StatCard icon={Rocket} value="500+" label="Lessons" color="bg-orange-500" />
             <StatCard icon={Star} value="4.9/5" label="User Rating" color="bg-amber-500" />
           </div>
+        </AnimatedSection>
+      </section>
+
+      {/* Platform Carousel Section */}
+      <section className="py-24 bg-brand-50/30 dark:bg-slate-900/10">
+        <AnimatedSection className="container mx-auto px-6 text-center">
+          <div className="mb-12">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Explore the Platform.</h2>
+            <p className="text-slate-500 dark:text-slate-400 mt-4 max-w-2xl mx-auto text-lg font-medium">A sneak peek into the amazing worlds your child will explore.</p>
+          </div>
+          <ImageCarousel />
         </AnimatedSection>
       </section>
 

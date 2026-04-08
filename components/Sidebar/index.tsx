@@ -21,6 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, currentUse
     { id: 'goals', label: t('goals'), icon: <span className="text-2xl">🏅</span> },
     { id: 'leaderboard', label: t('leaderboard'), icon: <span className="text-2xl">🏆</span> },
     { id: 'store', label: t('store'), icon: <span className="text-2xl">🛒</span> },
+    { id: 'docs', label: 'Docs', icon: <span className="text-2xl">📖</span> },
     { id: 'messages', label: 'Support', icon: <span className="text-2xl">💬</span> },
     { id: 'settings', label: t('settings'), icon: <span className="text-2xl">⚙️</span> },
     {
