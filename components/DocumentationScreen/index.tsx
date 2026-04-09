@@ -38,11 +38,11 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
                 <button
                   key={path.id}
                   onClick={() => setSelectedPath(path.id)}
-                  className={\`w-full text-left px-3 py-2.5 rounded-xl font-bold text-sm transition-colors \${
+                  className={`w-full text-left px-3 py-2.5 rounded-xl font-bold text-sm transition-colors ${
                     selectedPath === path.id
                       ? 'bg-[#4285F4]/10 text-[#4285F4]'
                       : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
-                  }\`}
+                  }`}
                 >
                   <span className="mr-2">{path.icon}</span>
                   {t(path.titleKey as any)}
