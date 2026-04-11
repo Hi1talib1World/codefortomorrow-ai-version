@@ -17,8 +17,8 @@ export default function BrainTrainingScreen() {
         } catch (e) {}
     }, []);
 
-    // Generate 100 challenges
-    const challenges = Array.from({ length: 100 }, (_, i) => ({
+    // Generate 1000 challenges
+    const challenges = Array.from({ length: 1000 }, (_, i) => ({
         id: i + 1,
         title: `${t('brain_training_challenges')} ${i + 1}`,
         unlocked: true,
