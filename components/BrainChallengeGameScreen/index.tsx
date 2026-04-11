@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import api from '../../services/api';
 
 /* ─── Question types ────────────────────────────────────────────── */
 interface Question {
@@ -10,6 +11,7 @@ interface Question {
     options: { label: string; value: string }[];
     correctAnswer: string;
     category: 'math' | 'logic' | 'problem-solving';
+    imageUrl?: string;
 }
 
 /* ─── Master question pools ─────────────────────────────────────── */
@@ -39,6 +41,17 @@ const MATH_QUESTIONS: Omit<Question, 'id'>[] = [
     { questionText: 'The product of two consecutive numbers is 132. What are they?', options: [{ label: 'A', value: '10 & 11' }, { label: 'B', value: '11 & 12' }, { label: 'C', value: '12 & 13' }, { label: 'D', value: '13 & 14' }], correctAnswer: '11 & 12', category: 'math' },
     { questionText: 'What is the smallest number divisible by 1, 2, 3, 4, 5, and 6?', options: [{ label: 'A', value: '30' }, { label: 'B', value: '60' }, { label: 'C', value: '120' }, { label: 'D', value: '180' }], correctAnswer: '60', category: 'math' },
     { questionText: 'If you write all numbers from 1 to 100, how many times does the digit 9 appear?', options: [{ label: 'A', value: '10' }, { label: 'B', value: '19' }, { label: 'C', value: '20' }, { label: 'D', value: '21' }], correctAnswer: '20', category: 'math' },
+    // Geometry & Algebra basics
+    { questionText: 'If a square has an area of 64, what is its perimeter?', options: [{ label: 'A', value: '24' }, { label: 'B', value: '32' }, { label: 'C', value: '16' }, { label: 'D', value: '64' }], correctAnswer: '32', category: 'math' },
+    { questionText: 'How many degrees are in a triangle?', options: [{ label: 'A', value: '90°' }, { label: 'B', value: '180°' }, { label: 'C', value: '360°' }, { label: 'D', value: '270°' }], correctAnswer: '180°', category: 'math' },
+    { questionText: 'If x + 5 = 12, what is x?', options: [{ label: 'A', value: '5' }, { label: 'B', value: '6' }, { label: 'C', value: '7' }, { label: 'D', value: '8' }], correctAnswer: '7', category: 'math' },
+    { questionText: 'What is 7 squared?', options: [{ label: 'A', value: '14' }, { label: 'B', value: '42' }, { label: 'C', value: '49' }, { label: 'D', value: '56' }], correctAnswer: '49', category: 'math' },
+    { questionText: 'What is the square root of 144?', options: [{ label: 'A', value: '10' }, { label: 'B', value: '11' }, { label: 'C', value: '12' }, { label: 'D', value: '14' }], correctAnswer: '12', category: 'math' },
+    { questionText: 'A triangle with all sides equal is called…', options: [{ label: 'A', value: 'Isosceles' }, { label: 'B', value: 'Scalene' }, { label: 'C', value: 'Equilateral' }, { label: 'D', value: 'Right dihedral' }], correctAnswer: 'Equilateral', category: 'math' },
+    { questionText: 'If 3x = 21, what is x?', options: [{ label: 'A', value: '7' }, { label: 'B', value: '8' }, { label: 'C', value: '6' }, { label: 'D', value: '9' }], correctAnswer: '7', category: 'math' },
+    { questionText: 'What is 15% of 200?', options: [{ label: 'A', value: '15' }, { label: 'B', value: '30' }, { label: 'C', value: '45' }, { label: 'D', value: '20' }], correctAnswer: '30', category: 'math' },
+    { questionText: 'The perimeter of a rectangle is 20 and length is 6. What is width?', options: [{ label: 'A', value: '4' }, { label: 'B', value: '8' }, { label: 'C', value: '14' }, { label: 'D', value: '2' }], correctAnswer: '4', category: 'math' },
+    { questionText: 'How many sides does a hexagon have?', options: [{ label: 'A', value: '5' }, { label: 'B', value: '6' }, { label: 'C', value: '7' }, { label: 'D', value: '8' }], correctAnswer: '6', category: 'math' },
 ];
 
 const LOGIC_QUESTIONS: Omit<Question, 'id'>[] = [
@@ -117,15 +130,78 @@ export default function BrainChallengeGameScreen() {
     const navigate = useNavigate();
     const { challengeId } = useParams<{ challengeId: string }>();
     const cId = Number(challengeId) || 1;
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
-    const questions = useMemo(() => generateQuestions(cId), [cId]);
+    const languageNames: Record<string, string> = { en: 'English', fr: 'French', ar: 'Arabic' };
+    const promptLang = languageNames[language] || 'English';
+
+    const [questions, setQuestions] = useState<Question[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [answers, setAnswers] = useState<Record<number, string>>({});
 
-    const current = questions[currentIndex];
-    const totalQuestions = questions.length;
-    const cat = categoryStyleMap[current.category];
+    useEffect(() => {
+        let isMounted = true;
+        const fetchQuestions = async () => {
+            setIsLoading(true);
+            try {
+                const prompt = `Generate 5 brain training challenges for a kids learning app. Focus heavily on engaging math problems, while including some logic and problem-solving puzzles. 
+The questions, answers, and options MUST be written in ${promptLang}.
+Format as a valid JSON array exactly matching this structure:
+[
+  {
+    "questionText": "What comes next in the sequence 2, 4, 6, 8, ...?",
+    "imagePrompt": "A short descriptive prompt for an AI image generator to create a colorful, kid-friendly illustration related to this puzzle",
+    "options": [
+      { "label": "A", "value": "10" },
+      { "label": "B", "value": "12" },
+      { "label": "C", "value": "14" },
+      { "label": "D", "value": "9" }
+    ],
+    "correctAnswer": "10",
+    "category": "math"
+  }
+]`;
+                const generated = await api.generateQuizFromAI(prompt);
+                
+                if (!isMounted) return;
+
+                // Map to ensure it strictly follows our Question interface based on prompt
+                // Handle different possible AI output formats
+                const mappedQuestions = generated.map((q: any, i: number) => {
+                    let formattedOptions = [];
+                    if (q.options && q.options[0] && typeof q.options[0] === 'object' && q.options[0].label) {
+                        formattedOptions = q.options;
+                    } else if (Array.isArray(q.options)) {
+                        formattedOptions = q.options.map((o: string, idx: number) => ({ label: ['A','B','C','D'][idx] || 'A', value: String(o) }));
+                    }
+
+                    return {
+                        id: i + 1,
+                        questionText: q.questionText || q.question || "Unknown question",
+                        options: formattedOptions,
+                        correctAnswer: String(q.correctAnswer || q.answer || ""),
+                        category: ['math', 'logic', 'problem-solving'].includes(q.category) ? q.category : 'logic',
+                        imageUrl: q.imagePrompt ? `https://image.pollinations.ai/prompt/${encodeURIComponent(q.imagePrompt + ' colorful 3d kids illustration, cute, bright colors')}` : undefined
+                    };
+                });
+
+                if (mappedQuestions.length > 0) {
+                    setQuestions(mappedQuestions);
+                } else {
+                    setQuestions(generateQuestions(cId).slice(0, 5));
+                }
+            } catch (err) {
+                console.error("AI generation failed or timed out:", err);
+                if (isMounted) setQuestions(generateQuestions(cId).slice(0, 5));
+            } finally {
+                if (isMounted) setIsLoading(false);
+            }
+        };
+
+        fetchQuestions();
+        return () => { isMounted = false; };
+    }, [cId]);
 
     const selectAnswer = useCallback(
         (questionId: number, value: string) => {
@@ -135,8 +211,22 @@ export default function BrainChallengeGameScreen() {
     );
 
     const goTo = (idx: number) => {
-        if (idx >= 0 && idx < totalQuestions) setCurrentIndex(idx);
+        if (idx >= 0 && idx < questions.length) setCurrentIndex(idx);
     };
+
+    if (isLoading || questions.length === 0) {
+        return (
+            <div className="h-screen bg-white dark:bg-slate-900 flex flex-col items-center justify-center p-6 transition-colors duration-300">
+                <div className="w-24 h-24 border-4 border-[#e8f0fe] border-t-violet-500 rounded-full animate-spin mx-auto mb-6"></div>
+                <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">{t('consulting_ai' as any) || 'Consulting AI...'}</h2>
+            </div>
+        );
+    }
+
+    const current = questions[currentIndex];
+    const totalQuestions = questions.length;
+    // Safely get category styles or default to logic if mapping fails
+    const cat = categoryStyleMap[current.category] || categoryStyleMap['logic'];
 
     return (
         <div className="h-screen flex bg-white dark:bg-slate-900 font-sans overflow-hidden">
@@ -207,7 +297,12 @@ export default function BrainChallengeGameScreen() {
 
                     {/* Question visual / text */}
                     <div className="w-full max-w-3xl mb-10">
-                        <div className="bg-slate-50 dark:bg-slate-800 rounded-3xl p-8 md:p-12 flex items-center justify-center min-h-[180px] shadow-inner border border-slate-200 dark:border-slate-700">
+                        <div className="bg-slate-50 dark:bg-slate-800 rounded-3xl p-8 md:p-12 flex flex-col items-center justify-center min-h-[180px] shadow-inner border border-slate-200 dark:border-slate-700">
+                            {current.imageUrl && (
+                                <div className="w-full max-w-sm aspect-video mb-6 rounded-2xl overflow-hidden shadow-lg border-4 border-white dark:border-slate-700">
+                                    <img src={current.imageUrl} alt="Challenge visual" className="w-full h-full object-cover" />
+                                </div>
+                            )}
                             <p className="text-xl md:text-3xl font-black text-slate-800 dark:text-white text-center tracking-tight leading-snug">
                                 {current.questionText}
                             </p>
@@ -264,6 +359,14 @@ export default function BrainChallengeGameScreen() {
                         </div>
                         <button
                             onClick={() => {
+                                try {
+                                    const stored = localStorage.getItem('completedBrainChallenges');
+                                    const completed = stored ? JSON.parse(stored) : [];
+                                    if (!completed.includes(cId)) {
+                                        localStorage.setItem('completedBrainChallenges', JSON.stringify([...completed, cId]));
+                                    }
+                                } catch (e) {}
+
                                 const nextId = cId + 1;
                                 setCurrentIndex(0);
                                 setAnswers({});

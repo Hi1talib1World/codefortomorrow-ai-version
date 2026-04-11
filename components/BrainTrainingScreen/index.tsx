@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -6,12 +6,22 @@ import { useLanguage } from '../../contexts/LanguageContext';
 export default function BrainTrainingScreen() {
     const navigate = useNavigate();
     const { t } = useLanguage();
+    const [completedIds, setCompletedIds] = useState<number[]>([]);
+
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem('completedBrainChallenges');
+            if (stored) {
+                setCompletedIds(JSON.parse(stored));
+            }
+        } catch (e) {}
+    }, []);
 
     // Generate 100 challenges
     const challenges = Array.from({ length: 100 }, (_, i) => ({
         id: i + 1,
         title: `${t('brain_training_challenges')} ${i + 1}`,
-        unlocked: i === 0,
+        unlocked: true,
     }));
 
     const features = [
@@ -110,40 +120,58 @@ export default function BrainTrainingScreen() {
 
                 {/* Challenge Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {challenges.map((challenge) => (
+                    {challenges.map((challenge) => {
+                        const isCompleted = completedIds.includes(challenge.id);
+                        return (
                         <div
                             key={challenge.id}
                             onClick={() => navigate(`/brain-training/${challenge.id}`)}
-                            className={`group rounded-2xl p-5 transition-all cursor-pointer ${challenge.unlocked
+                            className={`group rounded-2xl p-5 transition-all cursor-pointer ${
+                                isCompleted
+                                ? 'bg-emerald-100 dark:bg-emerald-900/30 border-2 border-emerald-400 dark:border-emerald-500 shadow-lg shadow-emerald-200/50'
+                                : challenge.unlocked
                                 ? 'bg-violet-100 dark:bg-violet-900/30 border-2 border-violet-400 dark:border-violet-500 shadow-lg shadow-violet-200/50 dark:shadow-violet-900/30'
                                 : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-violet-300 dark:hover:border-violet-600'
                                 }`}
                         >
-                            <p className={`text-sm font-black mb-4 ${challenge.unlocked
+                            <p className={`text-sm font-black mb-1 ${
+                                isCompleted ? 'text-emerald-700 dark:text-emerald-300' :
+                                challenge.unlocked
                                 ? 'text-violet-700 dark:text-violet-300'
                                 : 'text-slate-400 dark:text-slate-500'
                                 }`}>
                                 {challenge.title}
                             </p>
+                            <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-4">
+                                5 {t('brain_training_questions')}
+                            </p>
                             <div
-                                className={`w-full h-10 rounded-xl flex items-center justify-center transition-all ${challenge.unlocked
+                                className={`w-full h-10 rounded-xl flex items-center justify-center transition-all ${
+                                    isCompleted ? 'bg-emerald-500 hover:bg-emerald-600 shadow-md' :
+                                    challenge.unlocked
                                     ? 'bg-violet-500 hover:bg-violet-600 shadow-md'
                                     : 'bg-slate-100 dark:bg-slate-700 group-hover:bg-violet-100 dark:group-hover:bg-violet-900/30'
                                     }`}
                             >
-                                <svg
-                                    className={`w-5 h-5 ${challenge.unlocked
-                                        ? 'text-white'
-                                        : 'text-slate-400 dark:text-slate-500 group-hover:text-violet-500 dark:group-hover:text-violet-400'
-                                        }`}
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path d="M8 5v14l11-7z" />
-                                </svg>
+                                {isCompleted ? (
+                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="4">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                ) : (
+                                    <svg
+                                        className={`w-5 h-5 ${challenge.unlocked
+                                            ? 'text-white'
+                                            : 'text-slate-400 dark:text-slate-500 group-hover:text-violet-500 dark:group-hover:text-violet-400'
+                                            }`}
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                )}
                             </div>
                         </div>
-                    ))}
+                    )})}
                 </div>
             </div>
         </div>

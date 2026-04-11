@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useInView, useAnimation } from 'motion/react';
 import { ChevronRight, X, Menu, Gamepad2, Brush, Bot, Award, Star, Twitter, Instagram, Facebook, Github, Linkedin, Mail, Code, Terminal, Cpu, ChevronDown, CheckCircle, Play, Users, Rocket, Globe, Languages, ShieldCheck, Zap, Users2, Send } from 'lucide-react';
 import Mascot from '../Mascot';
@@ -110,6 +111,7 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
             <NavLink href="#features" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">Features</NavLink>
             <NavLink href="#how-it-works" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">How It Works</NavLink>
             <NavLink href="#testimonials" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">Testimonials</NavLink>
+            <Link to="/blog" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-bold transition-colors text-sm">Blog</Link>
           </nav>
           <div className="flex items-center gap-4">
             <button
@@ -144,6 +146,7 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
               <NavLink href="#features" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">Features</NavLink>
               <NavLink href="#how-it-works" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">How It Works</NavLink>
               <NavLink href="#testimonials" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">Testimonials</NavLink>
+              <Link to="/blog" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-bold transition-colors text-sm">Blog</Link>
             </nav>
             <div className="flex items-center gap-4">
               <button
@@ -538,7 +541,8 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
                 <NavLink href="#" className="hover:text-white font-medium">Curriculum</NavLink>
                 <NavLink href="#features" className="hover:text-white font-medium">Features</NavLink>
                 <NavLink href="#how-it-works" className="hover:text-white font-medium">How It Works</NavLink>
-                <NavLink href="#" className="hover:text-white font-medium">Pricing</NavLink>
+                <NavLink href="#pricing" className="hover:text-white font-medium">Pricing</NavLink>
+                <Link to="/blog" className="hover:text-white font-medium text-sm transition-colors">Blog</Link>
               </nav>
             </div>
 

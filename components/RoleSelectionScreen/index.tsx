@@ -11,7 +11,14 @@ const RoleSelectionScreen: React.FC<RoleSelectionScreenProps> = ({ onSelect }) =
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-brand-50 dark:bg-slate-900 flex items-center justify-center p-6 transition-colors duration-300">
+    <div className="min-h-screen bg-brand-50 dark:bg-slate-900 flex flex-col items-center justify-center p-6 transition-colors duration-300">
+      <motion.h1 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-4xl md:text-5xl font-black text-slate-800 dark:text-white uppercase tracking-tighter mb-12 text-center"
+      >
+        {t('role_selection_question' as any) || "What's Your Role?"}
+      </motion.h1>
       <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Teacher Card */}
         <motion.button

@@ -125,6 +125,7 @@ const translations = {
     use_this_code: 'Use this code',
     im_a_teacher: "I'm a teacher",
     im_a_student: "I'm a student",
+    role_selection_question: "What's Your Role?",
     // Wizard
     last_details: 'Last Details',
     questions_label: 'Questions',
@@ -749,6 +750,7 @@ const translations = {
     use_this_code: 'Utiliser ce code',
     im_a_teacher: "Je suis un enseignant",
     im_a_student: "Je suis un étudiant",
+    role_selection_question: "Quel est ton rôle ?",
     // Wizard
     last_details: 'Derniers Détails',
     questions_label: 'Questions',
@@ -1174,6 +1176,7 @@ const translations = {
     use_this_code: 'استخدم هذا الكود',
     im_a_teacher: 'أنا معلم',
     im_a_student: 'أنا طالب',
+    role_selection_question: 'ما هو دورك؟',
     // Wizard
     last_details: 'التفاصيل الأخيرة',
     questions_label: 'الأسئلة',
