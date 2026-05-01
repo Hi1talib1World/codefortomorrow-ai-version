@@ -431,6 +431,25 @@ const translations = {
     js_hint_20: 'ConstructorFn.prototype.method = function() {...}',
     js_hint_21: 'Object.entries(freq).sort((a,b) => b[1]-a[1])[0][0] gets the top word.',
 
+    // ─── JavaScript Chapter 5 lesson titles ──────────────────────────────────
+    js_ch6_title: 'DOM Mastery',
+    js_dom_manipulation: 'DOM Manipulation',
+    js_event_delegation: 'Event Delegation',
+    js_local_storage: 'Local Storage',
+    js_dom_project: 'DOM Master Project',
+
+    // JavaScript Chapter 5 — challenges
+    js_challenge_26: 'Create a new <div> element, set its text to "Hello DOM", and log its outerHTML.',
+    js_challenge_27: 'Log "Delegation works!" to simulate handling a click on a child element via the parent.',
+    js_challenge_28: 'Save "user1" to localStorage under key "user", then retrieve and log it.',
+    js_challenge_29: 'Build a mini to-do list string generator mapping an array of tasks to <li> tags inside a <ul>.',
+
+    // JavaScript Chapter 5 — hints
+    js_hint_26: 'Use document.createElement("div") and .outerHTML to get the string representation.',
+    js_hint_27: 'Event delegation uses a single listener on a parent instead of many on children.',
+    js_hint_28: 'localStorage.setItem(key, value) and localStorage.getItem(key)',
+    js_hint_29: 'Map tasks to <li> elements, join them, and wrap in <ul> tags.',
+
     // ─── Web Dev Chapter 4 lesson titles ─────────────────────────────────────
     web_css_grid_advanced: 'CSS Grid Areas',
     web_js_events: 'JS DOM Events',
@@ -880,6 +899,22 @@ const translations = {
     js_promises: 'Promesses',
     js_async_await: 'Async/Await',
     js_fetch_api: 'API Fetch',
+
+    js_ch6_title: 'Maîtrise du DOM',
+    js_dom_manipulation: 'Manipulation du DOM',
+    js_event_delegation: 'Délégation d\'Événements',
+    js_local_storage: 'Stockage Local',
+    js_dom_project: 'Projet Maître DOM',
+
+    js_challenge_26: 'Créez un nouvel élément <div>, définissez son texte sur "Hello DOM", et affichez son outerHTML.',
+    js_challenge_27: 'Affichez "Delegation works!" pour simuler la gestion d\'un clic sur un élément enfant via le parent.',
+    js_challenge_28: 'Sauvegardez "user1" dans le localStorage sous la clé "user", puis récupérez-le et affichez-le.',
+    js_challenge_29: 'Construisez un mini-générateur de chaîne de liste de tâches mappant un tableau de tâches sur des balises <li> à l\'intérieur d\'un <ul>.',
+
+    js_hint_26: 'Utilisez document.createElement("div") et .outerHTML pour obtenir la représentation en chaîne.',
+    js_hint_27: 'La délégation d\'événements utilise un seul écouteur sur un parent au lieu de plusieurs sur les enfants.',
+    js_hint_28: 'localStorage.setItem(key, value) et localStorage.getItem(key)',
+    js_hint_29: 'Mappez les tâches sur des éléments <li>, joignez-les et enveloppez-les dans des balises <ul>.',
     web_advanced_title: 'Mises en Page Avancées',
     web_flexbox: 'Flexbox',
     web_grid: 'Grille CSS',
@@ -1353,6 +1388,22 @@ const translations = {
     js_challenge_6: 'أنشئ وعداً (Promise) بسيطاً.',
     js_challenge_7: 'استخدم async/await لإرجاع قيمة.',
     js_challenge_8: 'اختبار: ماذا تُرجع الدالة fetch()؟',
+
+    js_ch6_title: 'إتقان الـ DOM',
+    js_dom_manipulation: 'معالجة الـ DOM',
+    js_event_delegation: 'تفويض الأحداث',
+    js_local_storage: 'التخزين المحلي (Local Storage)',
+    js_dom_project: 'مشروع الـ DOM النهائي',
+
+    js_challenge_26: 'قم بإنشاء عنصر <div> جديد، وتعيين نصه إلى "Hello DOM"، وطباعة outerHTML الخاص به.',
+    js_challenge_27: 'اطبع "Delegation works!" لمحاكاة التعامل مع نقرة على عنصر فرعي من خلال العنصر الرئيسي.',
+    js_challenge_28: 'احفظ "user1" في localStorage تحت مفتاح "user"، ثم استرجع واطبعه.',
+    js_challenge_29: 'قم ببناء مولد قائمة مهام صغير يقوم بتعيين مصفوفة من المهام إلى علامات <li> داخل <ul>.',
+
+    js_hint_26: 'استخدم document.createElement("div") و .outerHTML للحصول على تمثيل النص.',
+    js_hint_27: 'يستخدم تفويض الأحداث مستمعًا واحدًا على العنصر الرئيسي بدلاً من العديد على العناصر الفرعية.',
+    js_hint_28: 'localStorage.setItem(key, value) و localStorage.getItem(key)',
+    js_hint_29: 'قم بتعيين المهام إلى عناصر <li>، وقم بربطها، وتغليفها بعلامات <ul>.',
     web_challenge_1: 'أنشئ أول عنوان HTML لك!',
     web_challenge_2: 'أضف صورة إلى صفحتك.',
     web_challenge_3: 'اختبار: ماذا تعني CSS؟',

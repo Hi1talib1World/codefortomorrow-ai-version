@@ -956,6 +956,48 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           expectedOutput: 'State changed!'
         },
       ],
+    },
+    {
+      id: 'js_dom_mastery',
+      titleKey: 'js_ch6_title',
+      lessons: [
+        {
+          id: 26, level: 26, titleKey: 'js_dom_manipulation', icon: 'brain', xp: 50, color: '#27ae60', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_26', estimatedMinutes: 15,
+          difficulty: 'Expert', tags: ['DOM', 'Document'],
+          hintKey: 'js_hint_26',
+          starterCode: '// Create a new <div> element, set its text to "Hello DOM", and log its outerHTML.\n',
+          solutionCode: 'const div = document.createElement("div");\ndiv.textContent = "Hello DOM";\nconsole.log(div.outerHTML);',
+          expectedOutput: '<div>Hello DOM</div>'
+        },
+        {
+          id: 27, level: 27, titleKey: 'js_event_delegation', icon: 'brain', xp: 60, color: '#27ae60', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'js_challenge_27', estimatedMinutes: 20,
+          difficulty: 'Expert', tags: ['Events', 'Delegation'],
+          hintKey: 'js_hint_27',
+          starterCode: '// Log "Delegation works!" to simulate handling a click on a child element via the parent.\n',
+          solutionCode: 'console.log("Delegation works!");',
+          expectedOutput: 'Delegation works!'
+        },
+        {
+          id: 28, level: 28, titleKey: 'js_local_storage', icon: 'star', xp: 45, color: '#27ae60', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'js_challenge_28', estimatedMinutes: 15,
+          difficulty: 'Expert', tags: ['Storage', 'API'],
+          hintKey: 'js_hint_28',
+          starterCode: '// Save "user1" to localStorage under key "user", then retrieve and log it.\n',
+          solutionCode: 'localStorage.setItem("user", "user1");\nconsole.log(localStorage.getItem("user"));',
+          expectedOutput: 'user1'
+        },
+        {
+          id: 29, level: 29, titleKey: 'js_dom_project', icon: 'trophy', xp: 200, color: '#1e8449', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: 'js_challenge_29', estimatedMinutes: 60,
+          difficulty: 'Expert', tags: ['Project', 'JavaScript', 'DOM'],
+          hintKey: 'js_hint_29',
+          starterCode: '// Build a mini to-do list string generator.\n// Given an array of tasks, output an HTML string of <ul> with <li> for each task.\nconst tasks = ["Eat", "Sleep", "Code"];\n',
+          solutionCode: 'const tasks = ["Eat", "Sleep", "Code"];\nconst html = "<ul>" + tasks.map(t => `<li>${t}</li>`).join("") + "</ul>";\nconsole.log(html);',
+          expectedOutput: '<ul><li>Eat</li><li>Sleep</li><li>Code</li></ul>'
+        },
+      ],
     }
   ],
   lua: [
