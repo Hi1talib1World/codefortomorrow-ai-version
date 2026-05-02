@@ -342,12 +342,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 11, titleKey: 'logic_master', icon: 'trophy', xp: 60, color: '#8e44ad', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'bc_challenge_11', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'block_coding_advanced',
-      titleKey: 'block_coding_advanced_title',
+    {
+      id: 'block_coding_masterclass',
+      titleKey: 'block_coding_masterclass_title',
       lessons: [
-        { id: 1, level: 12, titleKey: 'block_coding_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'block_coding_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 13, titleKey: 'block_coding_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'block_coding_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 251, titleKey: 'block_coding_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'block_coding_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 252, titleKey: 'block_coding_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'block_coding_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -659,12 +659,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         },
       ],
     },
-      {
-      id: 'python_advanced',
-      titleKey: 'python_advanced_title',
+    {
+      id: 'python_masterclass',
+      titleKey: 'python_masterclass_title',
       lessons: [
-        { id: 1, level: 26, titleKey: 'python_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'python_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 27, titleKey: 'python_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'python_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 253, titleKey: 'python_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'python_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 254, titleKey: 'python_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'python_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1015,12 +1015,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         },
       ],
     },
-      {
-      id: 'javascript_advanced',
-      titleKey: 'javascript_advanced_title',
+    {
+      id: 'javascript_masterclass',
+      titleKey: 'javascript_masterclass_title',
       lessons: [
-        { id: 1, level: 30, titleKey: 'javascript_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'javascript_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 31, titleKey: 'javascript_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'javascript_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 255, titleKey: 'javascript_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'javascript_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 256, titleKey: 'javascript_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'javascript_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1059,12 +1059,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 16, titleKey: 'lua_master_project', icon: 'trophy', xp: 100, color: '#000080', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'lua_advanced',
-      titleKey: 'lua_advanced_title',
+    {
+      id: 'lua_masterclass',
+      titleKey: 'lua_masterclass_title',
       lessons: [
-        { id: 1, level: 17, titleKey: 'lua_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'lua_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 18, titleKey: 'lua_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'lua_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 257, titleKey: 'lua_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'lua_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 258, titleKey: 'lua_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'lua_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1311,12 +1311,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         },
       ],
     },
-      {
-      id: 'web_dev_advanced',
-      titleKey: 'web_dev_advanced_title',
+    {
+      id: 'web_dev_masterclass',
+      titleKey: 'web_dev_masterclass_title',
       lessons: [
-        { id: 1, level: 22, titleKey: 'web_dev_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'web_dev_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 23, titleKey: 'web_dev_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'web_dev_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 259, titleKey: 'web_dev_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'web_dev_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 260, titleKey: 'web_dev_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'web_dev_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1363,12 +1363,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 12, titleKey: 'cpp_pro_project', icon: 'trophy', xp: 100, color: '#003366', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'cpp_advanced',
-      titleKey: 'cpp_advanced_title',
+    {
+      id: 'c++_masterclass',
+      titleKey: 'cpp_masterclass_title',
       lessons: [
-        { id: 1, level: 13, titleKey: 'cpp_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'cpp_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 14, titleKey: 'cpp_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'cpp_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 261, titleKey: 'cpp_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'cpp_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 262, titleKey: 'cpp_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'cpp_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1406,12 +1406,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'csharp_master_project', icon: 'trophy', xp: 100, color: '#68217a', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'c_sharp_advanced',
-      titleKey: 'c_sharp_advanced_title',
+    {
+      id: 'c_sharp_masterclass',
+      titleKey: 'csharp_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'c_sharp_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'c_sharp_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'c_sharp_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'c_sharp_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 263, titleKey: 'csharp_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'csharp_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 264, titleKey: 'csharp_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'csharp_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1439,20 +1439,11 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       ],
     },
     {
-      id: 'java_advanced',
-      titleKey: 'java_advanced_title',
+      id: 'java_masterclass',
+      titleKey: 'java_masterclass_title',
       lessons: [
-        { id: 1, level: 5, titleKey: 'java_streams', icon: 'brain', xp: 30, color: '#ea2d2e', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
-        { id: 1, level: 6, titleKey: 'java_lambdas', icon: 'brain', xp: 35, color: '#ea2d2e', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
-        { id: 1, level: 7, titleKey: 'java_multithreading', icon: 'star', xp: 40, color: '#ea2d2e', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
-      ],
-    },
-      {
-      id: 'java_advanced',
-      titleKey: 'java_advanced_title',
-      lessons: [
-        { id: 1, level: 8, titleKey: 'java_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'java_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 9, titleKey: 'java_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'java_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 265, titleKey: 'java_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'java_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 266, titleKey: 'java_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'java_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1490,12 +1481,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'kotlin_master_project', icon: 'trophy', xp: 100, color: '#4d2ba4', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'kotlin_advanced',
-      titleKey: 'kotlin_advanced_title',
+    {
+      id: 'kotlin_masterclass',
+      titleKey: 'kotlin_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'kotlin_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'kotlin_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'kotlin_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'kotlin_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 267, titleKey: 'kotlin_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'kotlin_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 268, titleKey: 'kotlin_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'kotlin_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1533,12 +1524,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'swift_master_project', icon: 'trophy', xp: 100, color: '#cc3f2b', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'swift_advanced',
-      titleKey: 'swift_advanced_title',
+    {
+      id: 'swift_masterclass',
+      titleKey: 'swift_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'swift_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'swift_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'swift_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'swift_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 269, titleKey: 'swift_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'swift_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 270, titleKey: 'swift_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'swift_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1576,12 +1567,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'go_master_project', icon: 'trophy', xp: 100, color: '#007d9c', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'go_advanced',
-      titleKey: 'go_advanced_title',
+    {
+      id: 'go_masterclass',
+      titleKey: 'go_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'go_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'go_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'go_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'go_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 271, titleKey: 'go_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'go_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 272, titleKey: 'go_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'go_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1619,12 +1610,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'rust_master_project', icon: 'trophy', xp: 100, color: '#dea584', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'rust_advanced',
-      titleKey: 'rust_advanced_title',
+    {
+      id: 'rust_masterclass',
+      titleKey: 'rust_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'rust_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'rust_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'rust_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'rust_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 273, titleKey: 'rust_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'rust_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 274, titleKey: 'rust_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'rust_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1662,12 +1653,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'php_master_project', icon: 'trophy', xp: 100, color: '#4f5b93', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'php_advanced',
-      titleKey: 'php_advanced_title',
+    {
+      id: 'php_masterclass',
+      titleKey: 'php_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'php_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'php_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'php_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'php_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 275, titleKey: 'php_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'php_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 276, titleKey: 'php_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'php_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1705,12 +1696,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'ruby_master_project', icon: 'trophy', xp: 100, color: '#cc342d', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'ruby_advanced',
-      titleKey: 'ruby_advanced_title',
+    {
+      id: 'ruby_masterclass',
+      titleKey: 'ruby_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'ruby_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'ruby_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'ruby_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'ruby_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 277, titleKey: 'ruby_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'ruby_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 278, titleKey: 'ruby_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'ruby_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1760,12 +1751,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'ts_master_project', icon: 'trophy', xp: 100, color: '#235a97', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'typescript_advanced',
-      titleKey: 'typescript_advanced_title',
+    {
+      id: 'typescript_masterclass',
+      titleKey: 'typescript_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'typescript_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'typescript_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'typescript_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'typescript_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 279, titleKey: 'typescript_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'typescript_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 280, titleKey: 'typescript_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'typescript_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1793,20 +1784,11 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       ],
     },
     {
-      id: 'sql_advanced',
-      titleKey: 'sql_advanced_title',
+      id: 'sql_masterclass',
+      titleKey: 'sql_masterclass_title',
       lessons: [
-        { id: 1, level: 5, titleKey: 'sql_subqueries', icon: 'brain', xp: 25, color: '#336791', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
-        { id: 1, level: 6, titleKey: 'sql_transactions', icon: 'brain', xp: 30, color: '#336791', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
-        { id: 1, level: 7, titleKey: 'sql_indexing', icon: 'star', xp: 35, color: '#336791', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
-      ],
-    },
-      {
-      id: 'sql_advanced',
-      titleKey: 'sql_advanced_title',
-      lessons: [
-        { id: 1, level: 8, titleKey: 'sql_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'sql_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 9, titleKey: 'sql_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'sql_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 281, titleKey: 'sql_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'sql_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 282, titleKey: 'sql_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'sql_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1844,12 +1826,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'r_master_project', icon: 'trophy', xp: 100, color: '#1a59a1', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'r_advanced',
-      titleKey: 'r_advanced_title',
+    {
+      id: 'r_masterclass',
+      titleKey: 'r_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'r_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'r_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'r_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'r_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 283, titleKey: 'r_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'r_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 284, titleKey: 'r_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'r_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1887,12 +1869,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'dart_master_project', icon: 'trophy', xp: 100, color: '#00a38d', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'dart_advanced',
-      titleKey: 'dart_advanced_title',
+    {
+      id: 'dart_masterclass',
+      titleKey: 'dart_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'dart_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'dart_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'dart_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'dart_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 285, titleKey: 'dart_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'dart_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 286, titleKey: 'dart_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'dart_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1930,12 +1912,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'scala_master_project', icon: 'trophy', xp: 100, color: '#b22415', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'scala_advanced',
-      titleKey: 'scala_advanced_title',
+    {
+      id: 'scala_masterclass',
+      titleKey: 'scala_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'scala_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'scala_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'scala_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'scala_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 287, titleKey: 'scala_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'scala_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 288, titleKey: 'scala_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'scala_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
@@ -1985,12 +1967,12 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
         { id: 1, level: 15, titleKey: 'math_master', icon: 'trophy', xp: 100, color: '#4f46e5', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
-      {
-      id: 'math_advanced',
-      titleKey: 'math_advanced_title',
+    {
+      id: 'math_masterclass',
+      titleKey: 'math_masterclass_title',
       lessons: [
-        { id: 1, level: 16, titleKey: 'math_adv_lesson_1', icon: 'brain', xp: 30, color: '#6366f1', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'math_adv_chal_1', starterCode: '// Advanced logic\n', solutionCode: '// Advanced solution', expectedOutput: 'Done' },
-        { id: 1, level: 17, titleKey: 'math_adv_lesson_2', icon: 'star', xp: 50, color: '#6366f1', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'math_adv_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 289, titleKey: 'math_master_lesson_1', icon: 'brain', xp: 50, color: '#ff4757', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'math_master_chal_1', starterCode: '// Masterclass\n', solutionCode: '// Solution', expectedOutput: 'Master' },
+        { id: 1, level: 290, titleKey: 'math_master_lesson_2', icon: 'trophy', xp: 100, color: '#ff4757', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'math_master_chal_2', starterCode: '', solutionCode: '', expectedOutput: '' },
       ],
     },
   ],
