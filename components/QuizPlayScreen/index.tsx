@@ -34,7 +34,7 @@ const InteractiveQuiz: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =
     const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [textInput, setTextInput] = useState('');
-    
+
     // State for Matching
     const [shuffledRight, setShuffledRight] = useState<{ left: string, right: string }[]>([]);
     const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
@@ -243,11 +243,10 @@ const InteractiveQuiz: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =
                                             key={`left-${idx}`}
                                             disabled={isMatched || isAnswered}
                                             onClick={() => setSelectedLeft(pair.left)}
-                                            className={`w-full text-left p-4 rounded-2xl border-2 font-bold text-base transition-all ${
-                                                isMatched ? 'opacity-0 scale-95 pointer-events-none' 
-                                                : isSelected ? 'bg-brand-100 border-brand-500 text-brand-700 shadow-md' 
-                                                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-brand-300 dark:text-white'
-                                            } ${isShaking ? 'animate-shake border-red-500 text-red-700 bg-red-50' : ''}`}
+                                            className={`w-full text-left p-4 rounded-2xl border-2 font-bold text-base transition-all ${isMatched ? 'opacity-0 scale-95 pointer-events-none'
+                                                    : isSelected ? 'bg-brand-100 border-brand-500 text-brand-700 shadow-md'
+                                                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-brand-300 dark:text-white'
+                                                } ${isShaking ? 'animate-shake border-red-500 text-red-700 bg-red-50' : ''}`}
                                         >
                                             {pair.left}
                                         </button>
@@ -268,11 +267,10 @@ const InteractiveQuiz: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =
                                             key={`right-${idx}`}
                                             disabled={!!isMatched || isAnswered}
                                             onClick={() => setSelectedRight(pair.right)}
-                                            className={`w-full text-left p-4 rounded-2xl border-2 font-bold text-base transition-all ${
-                                                isMatched ? 'opacity-0 scale-95 pointer-events-none' 
-                                                : isSelected ? 'bg-purple-100 border-purple-500 text-purple-700 shadow-md' 
-                                                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-purple-300 dark:text-white'
-                                            } ${isShaking ? 'animate-shake border-red-500 text-red-700 bg-red-50' : ''}`}
+                                            className={`w-full text-left p-4 rounded-2xl border-2 font-bold text-base transition-all ${isMatched ? 'opacity-0 scale-95 pointer-events-none'
+                                                    : isSelected ? 'bg-purple-100 border-purple-500 text-purple-700 shadow-md'
+                                                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-purple-300 dark:text-white'
+                                                } ${isShaking ? 'animate-shake border-red-500 text-red-700 bg-red-50' : ''}`}
                                         >
                                             {pair.right}
                                         </button>
@@ -286,8 +284,8 @@ const InteractiveQuiz: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =
 
             {/* Bottom Status Bar */}
             <div className={`p-6 md:p-8 border-t-2 transition-colors ${!isAnswered ? 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800' :
-                    isCorrect ? 'bg-green-100 dark:bg-green-900/40 border-green-200 dark:border-green-800' :
-                        'bg-red-100 dark:bg-red-900/40 border-red-200 dark:border-red-800'
+                isCorrect ? 'bg-green-100 dark:bg-green-900/40 border-green-200 dark:border-green-800' :
+                    'bg-red-100 dark:bg-red-900/40 border-red-200 dark:border-red-800'
                 }`}>
                 <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
                     <div className="flex items-center space-x-4">
@@ -318,10 +316,10 @@ const InteractiveQuiz: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =
                         onClick={isAnswered ? handleNext : handleCheck}
                         disabled={!isInputValid()}
                         className={`w-full md:w-44 py-3.5 rounded-2xl font-black text-lg uppercase border-b-8 transition-all active:border-b-0 active:translate-y-1 ${!isAnswered
-                                ? 'bg-brand-600 border-brand-800 text-white hover:bg-brand-500 disabled:bg-slate-200 disabled:border-slate-300 disabled:text-slate-400'
-                                : isCorrect
-                                    ? 'bg-green-500 border-green-700 text-white hover:bg-green-400'
-                                    : 'bg-red-500 border-red-700 text-white hover:bg-red-400'
+                            ? 'bg-brand-600 border-brand-800 text-white hover:bg-brand-500 disabled:bg-slate-200 disabled:border-slate-300 disabled:text-slate-400'
+                            : isCorrect
+                                ? 'bg-green-500 border-green-700 text-white hover:bg-green-400'
+                                : 'bg-red-500 border-red-700 text-white hover:bg-red-400'
                             }`}
                     >
                         {isAnswered ? t('continue_button') : t('check_answer')}
