@@ -88,9 +88,11 @@ export interface Lesson {
 export interface QuizQuestion {
   id: number;
   question: string;
+  type?: 'multiple-choice' | 'true-false' | 'fill-in-the-blank' | 'matching';
   options: string[];
   answer: string;
   explanation: string;
+  pairs?: { left: string, right: string }[];
 }
 
 export interface Creation {

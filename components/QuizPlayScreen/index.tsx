@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Creation, QuizQuestion } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import Mascot from '../Mascot';
@@ -9,31 +8,116 @@ interface QuizPlayScreenProps {
     onClose: () => void;
 }
 
-const QuizPlayScreen: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) => {
+// Utility to shuffle arrays
+const shuffleArray = (array: any[]) => {
+    const newArr = [...array];
+    for (let i = newArr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+    }
+    return newArr;
+};
+
+const InteractiveQuiz: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) => {
     const { t } = useLanguage();
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [isAnswered, setIsAnswered] = useState(false);
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
 
+    // Question State
     const questions = creation.data;
     const currentQuestion = questions[currentIndex];
-    const progress = ((currentIndex) / questions.length) * 100;
+    const qType = currentQuestion.type || 'multiple-choice';
+
+    // State for different question types
+    const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [textInput, setTextInput] = useState('');
+    
+    // State for Matching
+    const [shuffledRight, setShuffledRight] = useState<{ left: string, right: string }[]>([]);
+    const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
+    const [selectedRight, setSelectedRight] = useState<string | null>(null);
+    const [matchedPairs, setMatchedPairs] = useState<string[]>([]);
+    const [shakeId, setShakeId] = useState<string | null>(null);
+
+    const progress = (currentIndex / questions.length) * 100;
+
+    // Reset and Initialize state when question changes
+    useEffect(() => {
+        setIsAnswered(false);
+        setSelectedOption(null);
+        setTextInput('');
+        setSelectedLeft(null);
+        setSelectedRight(null);
+        setMatchedPairs([]);
+        setShakeId(null);
+
+        if (qType === 'multiple-choice' || !qType) {
+            setShuffledOptions(shuffleArray(currentQuestion.options || []));
+        } else if (qType === 'true-false') {
+            // Keep True/False order standard
+            setShuffledOptions(currentQuestion.options || ['True', 'False']);
+        } else if (qType === 'matching' && currentQuestion.pairs) {
+            setShuffledRight(shuffleArray(currentQuestion.pairs));
+        }
+    }, [currentIndex, currentQuestion, qType]);
+
+    // Matching Logic Effect
+    useEffect(() => {
+        if (qType === 'matching' && selectedLeft && selectedRight) {
+            // Find if they match
+            const rightPair = currentQuestion.pairs?.find(p => p.right === selectedRight);
+            if (rightPair && rightPair.left === selectedLeft) {
+                // Correct match
+                setMatchedPairs(prev => [...prev, selectedLeft]);
+                setSelectedLeft(null);
+                setSelectedRight(null);
+            } else {
+                // Incorrect match
+                setShakeId(selectedLeft + '-' + selectedRight);
+                setTimeout(() => {
+                    setShakeId(null);
+                    setSelectedLeft(null);
+                    setSelectedRight(null);
+                }, 600);
+            }
+        }
+    }, [selectedLeft, selectedRight, currentQuestion.pairs, qType]);
+
+    const isInputValid = () => {
+        if (qType === 'multiple-choice' || qType === 'true-false') return !!selectedOption;
+        if (qType === 'fill-in-the-blank') return textInput.trim().length > 0;
+        if (qType === 'matching') return currentQuestion.pairs && matchedPairs.length === currentQuestion.pairs.length;
+        return false;
+    };
+
+    const evaluateAnswer = () => {
+        if (qType === 'multiple-choice' || qType === 'true-false') {
+            return selectedOption === currentQuestion.answer;
+        }
+        if (qType === 'fill-in-the-blank') {
+            return textInput.trim().toLowerCase() === currentQuestion.answer.toLowerCase();
+        }
+        if (qType === 'matching') {
+            return currentQuestion.pairs && matchedPairs.length === currentQuestion.pairs.length;
+        }
+        return false;
+    };
+
+    const isCorrect = isAnswered ? evaluateAnswer() : false;
 
     const handleCheck = () => {
-        if (!selectedOption) return;
-
-        const isCorrect = selectedOption === currentQuestion.answer;
-        if (isCorrect) setScore(s => s + 1);
+        if (!isInputValid()) return;
+        const correct = evaluateAnswer();
+        if (correct) setScore(s => s + 1);
         setIsAnswered(true);
     };
 
     const handleNext = () => {
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(prev => prev + 1);
-            setSelectedOption(null);
-            setIsAnswered(false);
         } else {
             setShowResults(true);
         }
@@ -65,8 +149,6 @@ const QuizPlayScreen: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =>
         );
     }
 
-    const isCorrect = selectedOption === currentQuestion.answer;
-
     return (
         <div className="fixed inset-0 bg-white dark:bg-slate-900 z-[60] flex flex-col transition-colors">
             {/* Header / Progress */}
@@ -79,56 +161,126 @@ const QuizPlayScreen: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =>
                 <div className="flex-grow h-3 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div
                         className="h-full bg-green-500 transition-all duration-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.4)]"
-                        style={{ width: `${progress}%` }}
+                        style={{ width: \`\${progress}%\` }}
                     />
-                </div>
-                <div className="text-yellow-500 font-black text-lg flex items-center space-x-1.5">
-                    <span>❤️</span>
-                    <span>5</span>
                 </div>
             </div>
 
             {/* Question Area */}
-            <div className="flex-grow flex flex-col items-center justify-center p-6 max-w-3xl mx-auto w-full">
+            <div className="flex-grow flex flex-col items-center justify-center p-6 max-w-3xl mx-auto w-full overflow-y-auto">
                 <div className="w-full mb-10">
                     <h1 className="text-xl md:text-2xl font-black text-slate-800 dark:text-white leading-tight mb-8">
                         {currentQuestion.question}
                     </h1>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {currentQuestion.options.map((opt, idx) => {
-                            const isSelected = selectedOption === opt;
-                            let btnClasses = "w-full text-left p-5 rounded-2xl border-2 border-b-8 font-bold text-lg transition-all transform active:scale-95 ";
+                    {/* Rendering Multiple Choice / True False */}
+                    {(qType === 'multiple-choice' || qType === 'true-false') && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {shuffledOptions.map((opt, idx) => {
+                                const isSelected = selectedOption === opt;
+                                let btnClasses = "w-full text-left p-5 rounded-2xl border-2 border-b-8 font-bold text-lg transition-all transform active:scale-95 ";
 
-                            if (isAnswered) {
-                                if (opt === currentQuestion.answer) {
-                                    btnClasses += "bg-green-100 border-green-500 text-green-700 dark:bg-green-900/30 dark:text-green-300";
-                                } else if (isSelected) {
-                                    btnClasses += "bg-red-100 border-red-500 text-red-700 dark:bg-red-900/30 dark:text-red-300";
+                                if (isAnswered) {
+                                    if (opt === currentQuestion.answer) {
+                                        btnClasses += "bg-green-100 border-green-500 text-green-700 dark:bg-green-900/30 dark:text-green-300";
+                                    } else if (isSelected) {
+                                        btnClasses += "bg-red-100 border-red-500 text-red-700 dark:bg-red-900/30 dark:text-red-300";
+                                    } else {
+                                        btnClasses += "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400 opacity-50";
+                                    }
                                 } else {
-                                    btnClasses += "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400 opacity-50";
+                                    btnClasses += isSelected
+                                        ? "bg-brand-50 border-brand-500 text-brand-600 dark:bg-brand-900/30 dark:text-brand-300"
+                                        : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-brand-300";
                                 }
-                            } else {
-                                btnClasses += isSelected
-                                    ? "bg-brand-50 border-brand-500 text-brand-600 dark:bg-brand-900/30 dark:text-brand-300"
-                                    : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-brand-300";
-                            }
 
-                            return (
-                                <button
-                                    key={idx}
-                                    onClick={() => !isAnswered && setSelectedOption(opt)}
-                                    disabled={isAnswered}
-                                    className={btnClasses}
-                                >
-                                    <span className="inline-block w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-xs mr-3 text-center leading-7 border border-slate-200 dark:border-slate-600">
-                                        {idx + 1}
-                                    </span>
-                                    {opt}
-                                </button>
-                            );
-                        })}
-                    </div>
+                                return (
+                                    <button
+                                        key={idx}
+                                        onClick={() => !isAnswered && setSelectedOption(opt)}
+                                        disabled={isAnswered}
+                                        className={btnClasses}
+                                    >
+                                        <span className="inline-block w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-xs mr-3 text-center leading-7 border border-slate-200 dark:border-slate-600">
+                                            {idx + 1}
+                                        </span>
+                                        {opt}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {/* Rendering Fill in the Blank */}
+                    {qType === 'fill-in-the-blank' && (
+                        <div className="relative w-full max-w-lg mx-auto">
+                            <input
+                                type="text"
+                                value={textInput}
+                                onChange={(e) => setTextInput(e.target.value)}
+                                disabled={isAnswered}
+                                placeholder={t('write_answer') as string}
+                                className={`w-full text-2xl font-black text-center border-b-8 border-2 border-slate-200 dark:border-slate-600 rounded-2xl p-6 bg-slate-50 dark:bg-slate-700 focus:outline-none focus:border-brand-500 dark:text-white transition-all
+                                ${isAnswered && !isCorrect ? 'border-red-500 bg-red-50 dark:bg-red-900/30 text-red-700' : ''}
+                                ${isAnswered && isCorrect ? 'border-green-500 bg-green-50 dark:bg-green-900/50 text-green-700' : ''}
+                                `}
+                            />
+                        </div>
+                    )}
+
+                    {/* Rendering Matching Game */}
+                    {qType === 'matching' && currentQuestion.pairs && (
+                        <div className="flex flex-col md:flex-row gap-6">
+                            {/* Left Column */}
+                            <div className="flex-1 flex flex-col gap-3">
+                                {currentQuestion.pairs.map((pair, idx) => {
+                                    const isMatched = matchedPairs.includes(pair.left);
+                                    const isSelected = selectedLeft === pair.left;
+                                    const isShaking = shakeId?.startsWith(pair.left + '-');
+
+                                    return (
+                                        <button
+                                            key={`left-${idx}`}
+                                            disabled={isMatched || isAnswered}
+                                            onClick={() => setSelectedLeft(pair.left)}
+                                            className={`w-full text-left p-4 rounded-2xl border-2 font-bold text-base transition-all ${
+                                                isMatched ? 'opacity-0 scale-95 pointer-events-none' 
+                                                : isSelected ? 'bg-brand-100 border-brand-500 text-brand-700 shadow-md' 
+                                                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-brand-300 dark:text-white'
+                                            } ${isShaking ? 'animate-shake border-red-500 text-red-700 bg-red-50' : ''}`}
+                                        >
+                                            {pair.left}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Right Column */}
+                            <div className="flex-1 flex flex-col gap-3">
+                                {shuffledRight.map((pair, idx) => {
+                                    const rightMatchedItem = currentQuestion.pairs?.find(p => p.right === pair.right);
+                                    const isMatched = rightMatchedItem && matchedPairs.includes(rightMatchedItem.left);
+                                    const isSelected = selectedRight === pair.right;
+                                    const isShaking = shakeId?.endsWith('-' + pair.right);
+
+                                    return (
+                                        <button
+                                            key={`right-${idx}`}
+                                            disabled={!!isMatched || isAnswered}
+                                            onClick={() => setSelectedRight(pair.right)}
+                                            className={`w-full text-left p-4 rounded-2xl border-2 font-bold text-base transition-all ${
+                                                isMatched ? 'opacity-0 scale-95 pointer-events-none' 
+                                                : isSelected ? 'bg-purple-100 border-purple-500 text-purple-700 shadow-md' 
+                                                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-purple-300 dark:text-white'
+                                            } ${isShaking ? 'animate-shake border-red-500 text-red-700 bg-red-50' : ''}`}
+                                        >
+                                            {pair.right}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -164,7 +316,7 @@ const QuizPlayScreen: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =>
 
                     <button
                         onClick={isAnswered ? handleNext : handleCheck}
-                        disabled={!selectedOption}
+                        disabled={!isInputValid()}
                         className={`w-full md:w-44 py-3.5 rounded-2xl font-black text-lg uppercase border-b-8 transition-all active:border-b-0 active:translate-y-1 ${!isAnswered
                                 ? 'bg-brand-600 border-brand-800 text-white hover:bg-brand-500 disabled:bg-slate-200 disabled:border-slate-300 disabled:text-slate-400'
                                 : isCorrect
@@ -180,4 +332,4 @@ const QuizPlayScreen: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =>
     );
 };
 
-export default QuizPlayScreen;
+export default InteractiveQuiz;
