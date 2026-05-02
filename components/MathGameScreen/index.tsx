@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Lesson, ProgrammingPath, User } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import Mascot from '../Mascot';
 import { Sparkles } from 'lucide-react';
+import { MatchPairs, VerticalStack, PerimeterMatch, PerimeterGrid } from '../MathInteractive';
 
 interface MathGameScreenProps {
     lesson: Lesson;
@@ -41,24 +42,26 @@ const MathGameScreen: React.FC<MathGameScreenProps> = ({ lesson, onComplete, onE
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [mascotMood, setMascotMood] = useState('idle');
 
-    // Hardcode some specific validation logic based on the lesson
-    // In a real scenario, this could be driven by lesson.expectedOutput or a quiz property.
-    const validateAnswer = () => {
-        let expected = '';
-        const descKey = lesson.challengeDescriptionKey;
+    const descKey = lesson.challengeDescriptionKey;
 
-        // Using English text logic since this is a demo to simulate the Math Game functionality
-        if (descKey === 'math_challenge_1') expected = '8'; // What is 5 + 3?
-        if (descKey === 'math_challenge_2') expected = '6'; // What is 10 - 4?
-        if (descKey === 'math_challenge_3') expected = '10'; // What number comes next? 2, 4, 6, 8, ...
-        if (descKey === 'math_challenge_4') expected = '20'; // Solve this: (5 * 2) + 10
+    const handleInteractiveSuccess = () => {
+        setIsCorrect(true);
+        setMascotMood('happy');
+        setTimeout(() => setShowSuccessModal(true), 1200);
+    };
+
+    const validateFallbackAnswer = () => {
+        let expected = '';
+        if (descKey === 'math_challenge_1') expected = '8'; 
+        if (descKey === 'math_challenge_2') expected = '6'; 
+        if (descKey === 'math_challenge_3') expected = '10'; 
+        if (descKey === 'math_challenge_4') expected = '20'; 
 
         const correct = answer.trim() === expected;
         setIsCorrect(correct);
 
         if (correct) {
-            setMascotMood('happy');
-            setTimeout(() => setShowSuccessModal(true), 1200);
+            handleInteractiveSuccess();
         } else {
             setMascotMood('thinking');
         }
@@ -70,11 +73,49 @@ const MathGameScreen: React.FC<MathGameScreenProps> = ({ lesson, onComplete, onE
 
     const isRTL = language === 'ar';
 
+    const renderInteractiveGame = () => {
+        switch (descKey) {
+            case 'math_challenge_1':
+                return <MatchPairs onSuccess={handleInteractiveSuccess} />;
+            case 'math_challenge_2':
+                return <VerticalStack onSuccess={handleInteractiveSuccess} />;
+            case 'math_challenge_3':
+                return <PerimeterMatch onSuccess={handleInteractiveSuccess} />;
+            case 'math_challenge_4':
+                return <PerimeterGrid onSuccess={handleInteractiveSuccess} />;
+            default:
+                return (
+                    <>
+                        <div className="relative w-64 mx-auto mb-8">
+                            <input
+                                type="text"
+                                value={answer}
+                                onChange={(e) => setAnswer(e.target.value)}
+                                placeholder="?"
+                                className={`w-full text-5xl font-black text-center border-b-8 border-2 border-slate-200 dark:border-slate-600 rounded-2xl p-6 bg-slate-50 dark:bg-slate-700 focus:outline-none focus:border-brand-500 dark:text-white transition-all
+                        ${isCorrect === false ? 'border-red-500 animate-shake' : ''}
+                        ${isCorrect === true ? 'border-green-500 bg-green-50 dark:bg-green-900/50' : ''}
+                      `}
+                                autoFocus
+                            />
+                        </div>
+
+                        <button
+                            onClick={validateFallbackAnswer}
+                            className="w-full max-w-xs bg-brand-500 text-white font-black py-4 rounded-2xl text-xl uppercase border-b-8 border-brand-700 hover:bg-brand-400 active:border-b-2 active:translate-y-2 transition-all bubbly-btn shadow-xl mx-auto block"
+                        >
+                            {t('check_answer' as any) || 'Check Answer'}
+                        </button>
+                    </>
+                );
+        }
+    };
+
     return (
-        <div className={`fixed inset-0 bg-brand-50 dark:bg-slate-900 font-sans flex flex-col z-50 overflow-hidden select-none transition-colors ${isRTL ? 'dir-rtl' : 'dir-ltr'}`}>
+        <div className={`fixed inset-0 bg-brand-50 dark:bg-slate-900 font-sans flex flex-col z-50 overflow-y-auto select-none transition-colors ${isRTL ? 'dir-rtl' : 'dir-ltr'}`}>
             {showSuccessModal && <SuccessModal lesson={lesson} onContinue={handleComplete} />}
 
-            <header className="flex-shrink-0 bg-white dark:bg-slate-800 p-3 border-b-4 border-brand-100 dark:border-slate-700 shadow-lg">
+            <header className="flex-shrink-0 bg-white dark:bg-slate-800 p-3 border-b-4 border-brand-100 dark:border-slate-700 shadow-lg sticky top-0 z-40">
                 <div className="flex items-center justify-between max-w-7xl mx-auto">
                     <button onClick={onExit} className="w-9 h-9 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-xl text-slate-400 dark:text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all border-b-2 border-slate-300 active:border-b-0 active:translate-y-1 bubbly-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={5}>
@@ -97,41 +138,22 @@ const MathGameScreen: React.FC<MathGameScreenProps> = ({ lesson, onComplete, onE
                 </div>
             </header>
 
-            <div className="flex-grow flex flex-col items-center justify-center p-6 space-y-8">
-                <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border-4 border-brand-200 dark:border-slate-700 shadow-2xl max-w-2xl w-full text-center relative overflow-hidden">
+            <div className="flex-grow flex flex-col items-center justify-center p-6 space-y-8 min-h-max pb-32">
+                <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border-4 border-brand-200 dark:border-slate-700 shadow-2xl max-w-4xl w-full text-center relative overflow-hidden">
                     <div className={`absolute -top-10 -right-10 w-32 h-32 bg-yellow-300 rounded-full blur-3xl opacity-20`}></div>
 
                     <div className="bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-300 px-4 py-1.5 rounded-full inline-flex font-black text-sm uppercase tracking-widest mb-6">
                         {t(lesson.titleKey as any)}
                     </div>
 
-                    <h2 className="text-3xl lg:text-5xl font-black text-slate-800 dark:text-white mt-4 mb-8">
+                    <h2 className="text-3xl lg:text-4xl font-black text-slate-800 dark:text-white mt-4 mb-12">
                         {t(lesson.challengeDescriptionKey as any)}
                     </h2>
 
-                    <div className="relative w-64 mx-auto mb-8">
-                        <input
-                            type="text"
-                            value={answer}
-                            onChange={(e) => setAnswer(e.target.value)}
-                            placeholder="?"
-                            className={`w-full text-5xl font-black text-center border-b-8 border-2 border-slate-200 dark:border-slate-600 rounded-2xl p-6 bg-slate-50 dark:bg-slate-700 focus:outline-none focus:border-brand-500 dark:text-white transition-all
-                    ${isCorrect === false ? 'border-red-500 animate-shake' : ''}
-                    ${isCorrect === true ? 'border-green-500 bg-green-50 dark:bg-green-900/50' : ''}
-                  `}
-                            autoFocus
-                        />
-                    </div>
-
-                    <button
-                        onClick={validateAnswer}
-                        className="w-full max-w-xs bg-brand-500 text-white font-black py-4 rounded-2xl text-xl uppercase border-b-8 border-brand-700 hover:bg-brand-400 active:border-b-2 active:translate-y-2 transition-all bubbly-btn shadow-xl mx-auto block"
-                    >
-                        {t('check_answer' as any) || 'Check Answer'}
-                    </button>
+                    {renderInteractiveGame()}
                 </div>
 
-                <div className="relative w-32 h-32">
+                <div className="relative w-32 h-32 mt-8">
                     <Mascot />
                 </div>
             </div>
