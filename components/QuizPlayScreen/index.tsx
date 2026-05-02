@@ -161,7 +161,7 @@ const InteractiveQuiz: React.FC<QuizPlayScreenProps> = ({ creation, onClose }) =
                 <div className="flex-grow h-3 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div
                         className="h-full bg-green-500 transition-all duration-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.4)]"
-                        style={{ width: \`\${progress}%\` }}
+                        style={{ width: `${progress}%` }}
                     />
                 </div>
             </div>
