@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface PerimeterGridProps {
     onSuccess: () => void;
 }
 
 export const PerimeterGrid: React.FC<PerimeterGridProps> = ({ onSuccess }) => {
+    const { t, language } = useLanguage();
+    const isRTL = language === 'ar';
+
     const targetPerimeter = 20;
     const GRID_SIZE = 10;
     
@@ -55,19 +59,20 @@ export const PerimeterGrid: React.FC<PerimeterGridProps> = ({ onSuccess }) => {
 
     return (
         <div 
+            dir="ltr"
             className="w-full max-w-2xl mx-auto flex flex-col items-center select-none"
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
         >
             <div className="flex w-full justify-between items-end mb-6 px-4">
-                <div className="text-left">
-                    <p className="text-slate-500 font-bold uppercase tracking-widest text-xs mb-1">Target</p>
+                <div className="text-start">
+                    <p className="text-slate-500 font-bold uppercase tracking-widest text-xs mb-1">{t('math_target' as any)}</p>
                     <div className="bg-slate-200 dark:bg-slate-700 px-4 py-2 rounded-xl text-2xl font-black text-slate-700 dark:text-slate-200 border-b-4 border-slate-300 dark:border-slate-600">
                         {targetPerimeter}
                     </div>
                 </div>
-                <div className="text-right">
-                    <p className="text-brand-500 font-bold uppercase tracking-widest text-xs mb-1">Current</p>
+                <div className="text-end">
+                    <p className="text-brand-500 font-bold uppercase tracking-widest text-xs mb-1">{t('math_current' as any)}</p>
                     <div className={`px-6 py-2 rounded-xl text-3xl font-black border-b-4 transition-all ${
                         isSuccess 
                             ? 'bg-green-500 border-green-700 text-white animate-pulse' 
@@ -119,7 +124,7 @@ export const PerimeterGrid: React.FC<PerimeterGridProps> = ({ onSuccess }) => {
                 </div>
             </div>
             <p className="mt-6 text-slate-400 font-bold text-sm">
-                Click and drag to draw an energy field.
+                {t('math_draw_hint' as any)}
             </p>
         </div>
     );

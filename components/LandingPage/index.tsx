@@ -201,7 +201,7 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
             <div className="flex items-center gap-2 font-black text-xl"><Globe className="w-6 h-6" /> GLOBAL ACADEMY</div>
             <div className="flex items-center gap-2 font-black text-xl"><Cpu className="w-6 h-6" /> TECH KIDS</div>
-            <div className="flex items-center gap-2 font-black text-xl"><Bot className="w-6 h-6" /> AI JUNIOR</div>
+            <div className="flex items-center gap-2 font-black text-xl"><Bot className="w-6 h-6" /> Junior</div>
             <div className="flex items-center gap-2 font-black text-xl"><Zap className="w-6 h-6" /> FUTURE LABS</div>
           </div>
         </AnimatedSection>
@@ -289,7 +289,7 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
             {[
               { icon: Gamepad2, title: "Fun Games", color: "bg-[#4285F4]", text: "Learn coding logic through immersive puzzles and interactive challenges." },
               { icon: Brush, title: "Creative Projects", color: "bg-[#EA4335]", text: "Design your own digital worlds, from simple animations to complex games." },
-              { icon: Bot, title: "AI Mentorship", color: "bg-[#34A853]", text: "Personalized guidance that adapts to your child's unique learning pace." },
+              { icon: Bot, title: "Mentorship", color: "bg-[#34A853]", text: "Personalized guidance that adapts to your child's unique learning pace." },
               { icon: Award, title: "Skill Certification", color: "bg-[#FBBC05]", text: "Earn verifiable badges and certificates as you master new technologies." }
             ].map(feature => (
               <div key={feature.title} className="group bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200/60 dark:border-slate-700/60 hover:shadow-xl transition-all duration-500 hover:-translate-y-2">

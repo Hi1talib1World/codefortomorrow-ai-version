@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface MatchPairsProps {
     onSuccess: () => void;
@@ -22,6 +23,9 @@ const rightItems = [
 const shuffleArray = (array: any[]) => array.sort(() => Math.random() - 0.5);
 
 export const MatchPairs: React.FC<MatchPairsProps> = ({ onSuccess }) => {
+    const { language } = useLanguage();
+    const isRTL = language === 'ar';
+
     const [shuffledRight, setShuffledRight] = useState(rightItems);
     const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
     const [selectedRight, setSelectedRight] = useState<string | null>(null);
@@ -59,8 +63,8 @@ export const MatchPairs: React.FC<MatchPairsProps> = ({ onSuccess }) => {
     }, [matchedPairs, onSuccess]);
 
     return (
-        <div className="w-full max-w-2xl mx-auto flex gap-8 select-none relative">
-            {/* Left Column */}
+        <div dir="ltr" className="w-full max-w-2xl mx-auto flex gap-8 select-none relative">
+            {/* Left Column — expressions */}
             <div className="flex-1 flex flex-col gap-4">
                 {leftItems.map(item => {
                     const isMatched = matchedPairs.includes(item.id);
@@ -85,7 +89,7 @@ export const MatchPairs: React.FC<MatchPairsProps> = ({ onSuccess }) => {
                 })}
             </div>
 
-            {/* Right Column */}
+            {/* Right Column — answers */}
             <div className="flex-1 flex flex-col gap-4">
                 {shuffledRight.map(item => {
                     const isMatched = matchedPairs.includes(item.matchId);

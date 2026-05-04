@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface VerticalStackProps {
     onSuccess: () => void;
 }
 
 export const VerticalStack: React.FC<VerticalStackProps> = ({ onSuccess }) => {
+    const { language } = useLanguage();
+    const isRTL = language === 'ar';
+
     // We'll simulate:
     //   1 0
     // - 0 4
@@ -49,12 +53,12 @@ export const VerticalStack: React.FC<VerticalStackProps> = ({ onSuccess }) => {
 
     return (
         <div className="w-full max-w-sm mx-auto flex flex-col items-center select-none gap-8">
-            {/* The Stack */}
-            <div className={`bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border-4 ${isSuccess ? 'border-green-500 bg-green-50 shadow-[0_0_20px_rgba(34,197,94,0.4)]' : 'border-slate-200 dark:border-slate-700'} ${isShaking ? 'animate-shake border-red-500' : ''} transition-all duration-300`}>
-                <div className="font-mono text-5xl font-black text-slate-700 dark:text-slate-200 tracking-[1em] text-right pr-4">
-                    <div className="mb-2 tracking-[0.5em] ml-8">10</div>
+            {/* The Stack — force LTR so digits never reverse in RTL mode */}
+            <div dir="ltr" className={`bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border-4 ${isSuccess ? 'border-green-500 bg-green-50 shadow-[0_0_20px_rgba(34,197,94,0.4)]' : 'border-slate-200 dark:border-slate-700'} ${isShaking ? 'animate-shake border-red-500' : ''} transition-all duration-300`}>
+                <div className="font-mono text-5xl font-black text-slate-700 dark:text-slate-200 tracking-[1em] text-end pe-4">
+                    <div className="mb-2 tracking-[0.5em] ms-8">10</div>
                     <div className="flex items-center justify-end">
-                        <span className="text-red-500 mr-4 tracking-normal">-</span>
+                        <span className="text-red-500 me-4 tracking-normal">-</span>
                         <span className="tracking-[0.5em]">04</span>
                     </div>
                 </div>

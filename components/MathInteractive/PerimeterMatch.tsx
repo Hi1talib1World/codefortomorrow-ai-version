@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface PerimeterMatchProps {
     onSuccess: () => void;
@@ -11,6 +12,9 @@ const shapes = [
 ];
 
 export const PerimeterMatch: React.FC<PerimeterMatchProps> = ({ onSuccess }) => {
+    const { t, language } = useLanguage();
+    const isRTL = language === 'ar';
+
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [isShaking, setIsShaking] = useState(false);
     const targetPerimeter = 12;
@@ -31,9 +35,9 @@ export const PerimeterMatch: React.FC<PerimeterMatchProps> = ({ onSuccess }) => 
     };
 
     return (
-        <div className="w-full max-w-3xl mx-auto flex flex-col items-center select-none gap-8">
+        <div dir="ltr" className="w-full max-w-3xl mx-auto flex flex-col items-center select-none gap-8">
             <div className="bg-white dark:bg-slate-800 px-8 py-4 rounded-3xl border-4 border-dashed border-brand-300 dark:border-brand-700 text-center">
-                <p className="text-slate-500 font-bold uppercase tracking-widest text-sm mb-1">Target Perimeter</p>
+                <p className="text-slate-500 font-bold uppercase tracking-widest text-sm mb-1">{t('math_target_perimeter' as any)}</p>
                 <h3 className="text-5xl font-black text-brand-500">{targetPerimeter}</h3>
             </div>
 
@@ -81,7 +85,7 @@ export const PerimeterMatch: React.FC<PerimeterMatchProps> = ({ onSuccess }) => 
                                 shakingThis ? 'bg-red-100 border-red-500 text-red-700' :
                                 'bg-slate-100 border-slate-200 text-slate-500 group-hover:bg-brand-100 group-hover:border-brand-300 group-hover:text-brand-700'
                             }`}>
-                                Select
+                                {t('math_select' as any)}
                             </div>
                         </div>
                     );

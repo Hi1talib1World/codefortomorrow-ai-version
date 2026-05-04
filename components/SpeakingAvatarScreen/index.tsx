@@ -1,9 +1,11 @@
 
-import React from 'react';
-import AvatarCanvas from '../AvatarCanvas';
+import React, { Suspense } from 'react';
 import ChatInterface from '../ChatInterface';
 import { useAvatarChat } from '../../hooks/useAvatarChat';
 import { WizardFormData } from '../SpeakingPracticeWizard';
+import { AvatarFallback } from '../AvatarCanvas';
+
+const LazyAvatarCanvas = React.lazy(() => import('../AvatarCanvas'));
 
 interface SpeakingAvatarScreenProps {
     onBack: () => void;
@@ -32,7 +34,9 @@ const SpeakingAvatarScreen: React.FC<SpeakingAvatarScreenProps> = ({ onBack, wiz
                 </svg>
             </button>
             <div className="flex-grow relative">
-                <AvatarCanvas isSpeaking={!!currentMessage} lipSyncData={lipSyncData} />
+                <Suspense fallback={<AvatarFallback />}>
+                    <LazyAvatarCanvas isSpeaking={!!currentMessage} lipSyncData={lipSyncData} />
+                </Suspense>
             </div>
             <div className="absolute bottom-0 left-0 right-0 z-10 p-4">
                 <ChatInterface

@@ -28,9 +28,9 @@ export const blogPosts = [
     },
     {
         id: "3",
-        title: "Introducing the New AI Mentor",
-        excerpt: "We're thrilled to announce our latest feature: an intelligent AI mentor that adapts to your child's learning pace and provides real-time hints.",
-        content: "Everyone learns at their own pace. That's why we're excited to introduce the AI Mentor, a revolutionary new feature built directly into our learning platform. This intelligent assistant monitors progress, identifies areas where a student might be struggling, and provides personalized hints and guidance.\n\n### Tailored Feedback\nInstead of simply giving the user the answer, the AI Mentor acts like a real teacher. It analyzes the student's code in real-time and asks leading questions to help them arrive at the solution independently.\n\n### Always Available\nNo more waiting for office hours or getting stuck for hours. The AI Mentor is available 24/7, providing a supportive safety net that empowers students to take risks, make mistakes, and learn from them without frustration.",
+        title: "Introducing the New Mentorship Feature",
+        excerpt: "We're thrilled to announce our latest mentorship feature that adapts to your child's learning pace and provides real-time guidance.",
+        content: "Everyone learns at their own pace. That's why we're excited to introduce the Mentorship feature, a revolutionary addition built directly into our learning platform. This intelligent assistant monitors progress, identifies areas where a student might be struggling, and provides personalized guidance and support.\n\n### Tailored Feedback\nInstead of simply giving the answer, the mentor acts like a real teacher. It analyzes the student's code in real-time and asks leading questions to help them arrive at the solution independently.\n\n### Always Available\nNo more waiting for office hours or getting stuck for hours. The mentor is available 24/7, providing a supportive safety net that empowers students to take risks, make mistakes, and learn from them without frustration.",
         author: "Product Team",
         date: "March 28, 2026",
         category: "New Features",

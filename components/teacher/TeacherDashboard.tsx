@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { motion } from 'motion/react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { User } from '../../types';
@@ -37,6 +37,9 @@ import {
   PenTool
 } from 'lucide-react';
 import Mascot from '../Mascot';
+import { AvatarFallback } from '../AvatarCanvas';
+
+const LazyAvatarCanvas = React.lazy(() => import('../AvatarCanvas'));
 
 import CreateAssignmentScreen from './CreateAssignmentScreen';
 import CreateActivityScreen from './CreateActivityScreen';

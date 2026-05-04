@@ -1,11 +1,14 @@
 
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, Suspense } from 'react';
 import { Lesson, ProgrammingPath, User } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { PATHS } from '../../constants';
 import Mascot from '../Mascot';
+import { AvatarFallback } from '../AvatarCanvas';
 import api from '../../services/api';
 import { Sparkles, Brain, Zap, RotateCcw, Play, Terminal } from 'lucide-react';
+
+const LazyAvatarCanvas = React.lazy(() => import('../AvatarCanvas'));
 
 interface LessonScreenProps {
     lesson: Lesson;
