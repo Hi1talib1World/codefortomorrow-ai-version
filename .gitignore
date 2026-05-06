@@ -25,3 +25,26 @@ dist-ssr
 .gitnexus
 .env
 .env.*
+
+# Secrets and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+.aws/
+.gcp/
+.secrets*
+
+# Local databases and backups
+*.sqlite
+*.sqlite3
+*.db
+*.sql
+*.bak
+
+# Deployment/platform local config
+.vercel/
+.netlify/
+.firebase/
