@@ -400,9 +400,9 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
             {[
-              { name: "Sarah L.", role: "Parent", quote: "The curriculum is perfectly paced. My daughter went from zero coding knowledge to building her first game in weeks.", img: "https://picsum.photos/seed/sarah/100/100" },
-              { name: "Leo T.", role: "Student, Age 9", quote: "I love how the mascot explains things. It doesn't feel like school at all, it feels like I'm on a mission!", img: "https://picsum.photos/seed/leo/100/100" },
-              { name: "Mr. Davison", role: "STEM Educator", quote: "Finally, a platform that bridges the gap between block-based coding and real-world logic effectively.", img: "https://picsum.photos/seed/dave/100/100" }
+              { name: "Fatima Z.", role: "Parent", quote: "The curriculum is perfectly paced. My daughter went from zero coding knowledge to building her first game in weeks.", img: "https://picsum.photos/seed/fatima/100/100" },
+              { name: "Omar, Age 9", role: "Student", quote: "I love how the mascot explains things. It doesn't feel like school at all, it feels like I'm on a mission!", img: "https://picsum.photos/seed/omar/100/100" },
+              { name: "Mr. Ahmed", role: "STEM Educator", quote: "Finally, a platform that bridges the gap between block-based coding and real-world logic effectively.", img: "https://picsum.photos/seed/ahmed/100/100" }
             ].map(t => (
               <div key={t.name} className="bg-white dark:bg-slate-900/40 p-10 rounded-3xl border border-slate-200 dark:border-slate-800/50 shadow-sm relative">
                 <div className="absolute top-10 right-10 opacity-10">
