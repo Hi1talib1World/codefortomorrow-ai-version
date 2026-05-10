@@ -72,7 +72,7 @@ export const ProjectFeed: React.FC = () => {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-black text-white mb-8 tracking-tight">Top repos</h1>
+        <h1 className="text-3xl font-black text-white mb-8 tracking-tight">Trending Repos</h1>
         
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           {/* Search Bar */}
