@@ -60,21 +60,38 @@ export const getLeaderboard = async (req: Request, res: Response) => {
 export const getCuratedRepos = async (req: Request, res: Response) => {
   try {
     const filePath = path.resolve(process.cwd(), 'custom-repos.json');
+    const cacheFilePath = path.resolve(process.cwd(), 'repos-cache.json');
+    
     let repos: string[] = [];
     if (fs.existsSync(filePath)) {
       repos = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     }
 
+    let persistentCache: any[] = [];
+    if (fs.existsSync(cacheFilePath)) {
+      try {
+        persistentCache = JSON.parse(fs.readFileSync(cacheFilePath, 'utf-8'));
+      } catch (e) {
+        console.error('Error parsing repos-cache.json', e);
+      }
+    }
+
     const cacheKey = 'curated_repos';
     const cachedData = getCached(cacheKey);
     if (cachedData) {
-      // Check if the number of repos has changed, if not return cached
       if (cachedData.length === repos.length) {
         return res.json(cachedData);
       }
     }
 
+    let rateLimited = false;
+
     const fetchRepo = async (fullName: string) => {
+      // If we know we are rate limited, just return the cached version immediately
+      if (rateLimited) {
+        return persistentCache.find((r: any) => r.full_name?.toLowerCase() === fullName.toLowerCase()) || null;
+      }
+
       const response = await fetch(`https://api.github.com/repos/${fullName}`, {
         headers: {
           'User-Agent': 'CodeForTomorrow-App',
@@ -82,15 +99,32 @@ export const getCuratedRepos = async (req: Request, res: Response) => {
           ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
         }
       });
+      
       if (response.ok) {
         return await response.json();
+      } else if (response.status === 403 || response.status === 429) {
+        rateLimited = true;
+        console.warn(`[GitHub API] Rate limit exceeded while fetching ${fullName}. Falling back to persistent cache.`);
+        return persistentCache.find((r: any) => r.full_name?.toLowerCase() === fullName.toLowerCase()) || null;
       }
       return null;
     };
 
-    const repoDetails = (await Promise.all(repos.map(fetchRepo))).filter(Boolean);
+    // Process sequentially to avoid slamming the API
+    const repoDetails = [];
+    for (const repo of repos) {
+      const details = await fetchRepo(repo);
+      if (details) {
+        repoDetails.push(details);
+      }
+    }
     
-    setCached(cacheKey, repoDetails);
+    // Save to persistent cache if we got good data
+    if (repoDetails.length > 0) {
+      fs.writeFileSync(cacheFilePath, JSON.stringify(repoDetails, null, 2));
+      setCached(cacheKey, repoDetails);
+    }
+    
     res.json(repoDetails);
   } catch (error) {
     console.error('Error fetching curated repos:', error);
