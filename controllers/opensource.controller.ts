@@ -78,39 +78,44 @@ export const getCuratedRepos = async (req: Request, res: Response) => {
 
     const cacheKey = 'curated_repos';
     const cachedData = getCached(cacheKey);
-    if (cachedData) {
-      if (cachedData.length === repos.length) {
-        return res.json(cachedData);
-      }
+    // If we have cached data and it matches the number of curated repos, return it
+    if (cachedData && cachedData.length > 0 && cachedData.length === repos.length) {
+      return res.json(cachedData);
     }
 
+    // If GitHub API is likely rate-limited (we can guess if we failed recently), we could just serve persistentCache
+    // But let's try fetching. If it fails, we fall back.
     let rateLimited = false;
 
     const fetchRepo = async (fullName: string) => {
-      // If we know we are rate limited, just return the cached version immediately
       if (rateLimited) {
         return persistentCache.find((r: any) => r.full_name?.toLowerCase() === fullName.toLowerCase()) || null;
       }
 
-      const response = await fetch(`https://api.github.com/repos/${fullName}`, {
-        headers: {
-          'User-Agent': 'CodeForTomorrow-App',
-          'Accept': 'application/vnd.github.mercy-preview+json',
-          ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
+      try {
+        const response = await fetch(`https://api.github.com/repos/${fullName}`, {
+          headers: {
+            'User-Agent': 'CodeForTomorrow-App',
+            'Accept': 'application/vnd.github.mercy-preview+json',
+            ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
+          }
+        });
+        
+        if (response.ok) {
+          return await response.json();
+        } else if (response.status === 403 || response.status === 429) {
+          rateLimited = true;
+          console.warn(`[GitHub API] Rate limit exceeded while fetching ${fullName}. Falling back to persistent cache.`);
+          return persistentCache.find((r: any) => r.full_name?.toLowerCase() === fullName.toLowerCase()) || null;
         }
-      });
-      
-      if (response.ok) {
-        return await response.json();
-      } else if (response.status === 403 || response.status === 429) {
+      } catch (err) {
+        console.warn(`[GitHub API] Fetch failed for ${fullName}. Falling back to persistent cache.`);
         rateLimited = true;
-        console.warn(`[GitHub API] Rate limit exceeded while fetching ${fullName}. Falling back to persistent cache.`);
         return persistentCache.find((r: any) => r.full_name?.toLowerCase() === fullName.toLowerCase()) || null;
       }
       return null;
     };
 
-    // Process sequentially to avoid slamming the API
     const repoDetails = [];
     for (const repo of repos) {
       const details = await fetchRepo(repo);
@@ -119,13 +124,15 @@ export const getCuratedRepos = async (req: Request, res: Response) => {
       }
     }
     
-    // Save to persistent cache if we got good data
     if (repoDetails.length > 0) {
       fs.writeFileSync(cacheFilePath, JSON.stringify(repoDetails, null, 2));
       setCached(cacheKey, repoDetails);
+      res.json(repoDetails);
+    } else if (persistentCache.length > 0) {
+      res.json(persistentCache); // Ultimate fallback
+    } else {
+      res.json([]);
     }
-    
-    res.json(repoDetails);
   } catch (error) {
     console.error('Error fetching curated repos:', error);
     res.status(500).json({ message: 'Error fetching curated repos' });

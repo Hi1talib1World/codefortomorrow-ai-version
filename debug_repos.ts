@@ -1,0 +1,1 @@
+import { getCuratedRepos } from './controllers/opensource.controller'; const res = { json: (d) => console.log('RES:', JSON.stringify(d).length), status: () => res }; getCuratedRepos({}, res);
