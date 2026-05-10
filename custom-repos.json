@@ -1,5 +1,18 @@
 [
+  "freeCodeCamp/freeCodeCamp",
   "facebook/react",
-  "vitejs/vite",
-  "motiondivision/motion"
+  "vuejs/vue",
+  "twbs/bootstrap",
+  "tensorflow/tensorflow",
+  "vercel/next.js",
+  "microsoft/vscode",
+  "linux/linux",
+  "golang/go",
+  "flutter/flutter",
+  "facebook/react-native",
+  "nodejs/node",
+  "angular/angular",
+  "d3/d3",
+  "kamranahmedse/developer-roadmap",
+  "openai/openai-cookbook"
 ]
