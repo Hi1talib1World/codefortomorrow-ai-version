@@ -13,6 +13,7 @@ import activityRoutes from './routes/activity.routes';
 import messageRoutes from './routes/message.routes';
 import aiRoutes from './routes/ai.routes';
 import openSourceRoutes from './routes/opensource.routes';
+import adminRoutes from './routes/admin.routes';
 import { errorHandler } from './middleware/error.middleware';
 
 // Load environment variables from .env file
@@ -66,6 +67,7 @@ async function startServer() {
   app.use('/api/messages', messageRoutes);
   app.use('/api/ai', aiRoutes);
   app.use('/api/opensource', openSourceRoutes);
+  app.use('/api/admin', adminRoutes);
 
   // --- Vite Middleware or Static Files ---
   if (process.env.NODE_ENV !== 'production') {

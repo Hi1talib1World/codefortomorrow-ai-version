@@ -9,6 +9,7 @@ export interface IUser extends Document {
   password?: string;
   googleId?: string;
   profilePictureUrl: string;
+  role: 'student' | 'teacher' | 'admin';
   // FIX: Corrected the type for the 'progress' field to 'mongoose.Types.ObjectId'. The previous type `IProgress['_id']` was causing a compilation error.
   progress: mongoose.Types.ObjectId; // This will store the ObjectId of the user's progress document
   createdAt: Date;
@@ -40,6 +41,11 @@ const userSchema: Schema = new Schema({
   profilePictureUrl: {
     type: String,
     default: 'https://ui-avatars.com/api/?name=C+C&background=random&color=fff',
+  },
+  role: {
+    type: String,
+    enum: ['student', 'teacher', 'admin'],
+    default: 'student',
   },
   progress: {
     type: Schema.Types.ObjectId,

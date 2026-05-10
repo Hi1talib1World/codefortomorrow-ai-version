@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, useNavigate, Navigate, useParams } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from './contexts/ThemeContext';
 import SplashScreen from './components/SplashScreen';
 import { Lesson, User, ProgrammingPath, UserProgress } from './types';
@@ -10,6 +11,9 @@ import PageTransitionLoader from './components/PageTransitionLoader';
 import ConfettiCelebration from './components/ConfettiCelebration';
 import { ToastProvider } from './components/ToastNotification';
 import ErrorBoundary from './components/ErrorBoundary';
+import AdminGuard from './components/AdminDashboard/AdminGuard';
+
+const queryClient = new QueryClient();
 
 const Dashboard = lazy(() => import('./components/Dashboard'));
 const TeacherDashboard = lazy(() => import('./components/teacher/TeacherDashboard'));
@@ -25,6 +29,7 @@ const BrainChallengeGameScreen = lazy(() => import('./components/BrainChallengeG
 const BlogScreen = lazy(() => import('./components/BlogScreen'));
 const BlogPostScreen = lazy(() => import('./components/BlogPostScreen'));
 const OpenSourceScreen = lazy(() => import('./components/OpenSourceScreen'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 
 /** Default blank progress object used when creating a guest/new user session. */
 const defaultProgress: UserProgress = {
@@ -410,6 +415,19 @@ export default function App() {
           <Route path="/blog/:postId" element={<BlogPostScreen />} />
           <Route path="/open-source" element={<OpenSourceScreen />} />
 
+          {/* ─── Owner Admin Dashboard ────────────────────────────────────── */}
+          <Route
+            path="/admin/*"
+            element={
+              <AdminGuard currentUser={currentUser}>
+                <AdminDashboard
+                  currentUser={currentUser}
+                  onLogout={handleLogout}
+                />
+              </AdminGuard>
+            }
+          />
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
@@ -417,16 +435,18 @@ export default function App() {
   };
 
   return (
-    <ErrorBoundary>
-      <ThemeProvider>
-        <ToastProvider>
-          <div className="min-h-screen text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
-            <PageTransitionLoader />
-            <ConfettiCelebration isActive={showConfetti} onComplete={() => setShowConfetti(false)} />
-            {renderContent()}
-          </div>
-        </ToastProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary>
+        <ThemeProvider>
+          <ToastProvider>
+            <div className="min-h-screen text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
+              <PageTransitionLoader />
+              <ConfettiCelebration isActive={showConfetti} onComplete={() => setShowConfetti(false)} />
+              {renderContent()}
+            </div>
+          </ToastProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
+    </QueryClientProvider>
   );
 }
