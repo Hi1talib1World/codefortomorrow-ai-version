@@ -4,7 +4,7 @@ dotenv.config();
 
 async function setAdmin() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/codefortomorrow');
+    await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/codefortomorrow');
     const result = await mongoose.connection.db!
       .collection('users')
       .updateOne(
