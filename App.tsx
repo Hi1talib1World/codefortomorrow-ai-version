@@ -24,6 +24,7 @@ const BrainTrainingScreen = lazy(() => import('./components/BrainTrainingScreen'
 const BrainChallengeGameScreen = lazy(() => import('./components/BrainChallengeGameScreen'));
 const BlogScreen = lazy(() => import('./components/BlogScreen'));
 const BlogPostScreen = lazy(() => import('./components/BlogPostScreen'));
+const OpenSourceScreen = lazy(() => import('./components/OpenSourceScreen'));
 
 /** Default blank progress object used when creating a guest/new user session. */
 const defaultProgress: UserProgress = {
@@ -407,6 +408,7 @@ export default function App() {
           <Route path="/brain-training/:challengeId" element={<BrainChallengeGameScreen />} />
           <Route path="/blog" element={<BlogScreen />} />
           <Route path="/blog/:postId" element={<BlogPostScreen />} />
+          <Route path="/open-source" element={<OpenSourceScreen />} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
