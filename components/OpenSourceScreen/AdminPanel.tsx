@@ -42,7 +42,7 @@ export const AdminPanel: React.FC = () => {
     <div className="max-w-3xl mx-auto pb-24 md:pb-0">
       <div className="mb-12">
         <div className="flex items-center gap-3 mb-2">
-          <Settings className="w-8 h-8 text-[#00f2ff]" />
+          <Settings className="w-8 h-8 text-[#facc15]" />
           <h1 className="text-3xl font-bold font-mono uppercase tracking-widest text-white">Curate Content</h1>
         </div>
         <p className="text-slate-400 font-mono text-sm">
@@ -50,14 +50,14 @@ export const AdminPanel: React.FC = () => {
         </p>
       </div>
 
-      <div className="bg-[#111217]/80 backdrop-blur-md border border-dashed border-[#00f2ff]/30 rounded-xl p-8 relative overflow-hidden">
+      <div className="bg-[#121212]/80 backdrop-blur-md border border-dashed border-[#facc15]/30 rounded-xl p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
-          <ShieldAlert className="w-32 h-32 text-[#00f2ff]" />
+          <ShieldAlert className="w-32 h-32 text-[#facc15]" />
         </div>
 
         <div className="relative z-10">
           <h2 className="text-xl font-bold text-white font-mono mb-6 flex items-center gap-2">
-            <Plus className="w-5 h-5 text-[#00f2ff]" /> Add Repository
+            <Plus className="w-5 h-5 text-[#facc15]" /> Add Repository
           </h2>
           
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -75,7 +75,7 @@ export const AdminPanel: React.FC = () => {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://github.com/owner/repo"
-                  className="w-full bg-[#050505] border border-slate-700 text-white font-mono rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff] transition-all"
+                  className="w-full bg-[#09090b] border border-slate-700 text-white font-mono rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:border-[#facc15] focus:ring-1 focus:ring-[#facc15] transition-all"
                   required
                 />
               </div>
@@ -87,7 +87,7 @@ export const AdminPanel: React.FC = () => {
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="w-full sm:w-auto bg-[#00f2ff]/10 border border-[#00f2ff]/50 hover:bg-[#00f2ff]/20 text-[#00f2ff] font-mono font-bold px-8 py-3 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto bg-[#facc15]/10 border border-[#facc15]/50 hover:bg-[#facc15]/20 text-[#facc15] font-mono font-bold px-8 py-3 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {status === 'loading' ? (
                 <><Loader2 className="w-5 h-5 animate-spin" /> PROCESSING...</>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Star, GitFork, BookOpen, Clock, Tag } from 'lucide-react';
+import { Search, ChevronDown, CheckCircle2, Star, GitFork } from 'lucide-react';
 
 interface Repo {
   id: number;
@@ -8,15 +8,13 @@ interface Repo {
   full_name: string;
   description: string;
   stargazers_count: number;
+  forks_count: number;
   language: string;
   html_url: string;
+  owner: {
+    avatar_url: string;
+  };
 }
-
-const mockArticles = [
-  { id: 1, title: 'Understanding React Server Components in 2026', readTime: '5 min', tags: ['React', 'Architecture'], image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=500&q=80', url: '#' },
-  { id: 2, title: 'The Future of WebAssembly and Edge Computing', readTime: '8 min', tags: ['Wasm', 'Edge'], image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500&q=80', url: '#' },
-  { id: 3, title: 'A Deep Dive into Framer Motion Shared Layouts', readTime: '6 min', tags: ['Animation', 'UI'], image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=80', url: '#' },
-];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -27,13 +25,14 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } }
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.3 } }
 };
 
 export const ProjectFeed: React.FC = () => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchRepos = async () => {
@@ -52,103 +51,128 @@ export const ProjectFeed: React.FC = () => {
     fetchRepos();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {[1, 2, 3, 4, 5, 6].map(i => (
-          <div key={i} className="h-64 bg-[#111217] rounded-xl border border-dashed border-slate-800 animate-pulse"></div>
-        ))}
-      </div>
-    );
-  }
+  const filteredRepos = repos.filter(r => 
+    r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (r.description && r.description.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  const formatNumber = (num: number) => {
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+    return num.toString();
+  };
 
   return (
-    <div className="space-y-12 pb-24 md:pb-0">
-      <section>
-        <div className="flex items-center gap-3 mb-8">
-          <BookOpen className="w-6 h-6 text-[#00f2ff]" />
-          <h2 className="text-2xl font-bold font-mono uppercase tracking-widest">Curated Repositories</h2>
-        </div>
+    <div className="space-y-8">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-black text-white mb-8 tracking-tight">Top repos</h1>
         
-        {repos.length === 0 ? (
-          <div className="text-center py-12 border border-dashed border-slate-800 rounded-xl bg-[#111217]/50">
-            <p className="text-slate-500 font-mono text-sm">No curated repositories found. Add some from the Admin panel.</p>
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+          {/* Search Bar */}
+          <div className="relative w-full md:max-w-md">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-slate-600" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search projects..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="block w-full pl-10 pr-3 py-2.5 border border-slate-800 rounded-lg leading-5 bg-[#0e0e11] text-slate-300 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-slate-700 sm:text-sm transition-colors"
+            />
           </div>
-        ) : (
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
-          >
-            {repos.map(repo => (
-              <motion.div key={repo.id} variants={itemVariants} className="group relative bg-[#111217]/80 backdrop-blur-sm border border-dashed border-slate-800 rounded-xl p-6 hover:border-[#00f2ff]/50 transition-colors flex flex-col h-full">
-                <div className="absolute top-0 right-0 w-20 h-20 bg-[#00f2ff] opacity-0 group-hover:opacity-10 blur-2xl transition-opacity rounded-full pointer-events-none"></div>
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="font-bold text-lg text-white truncate pr-4" title={repo.full_name}>{repo.name}</h3>
-                  <div className="flex items-center gap-1 text-slate-400 font-mono text-xs bg-[#050505] px-2 py-1 rounded border border-slate-800 shrink-0">
-                    <Star className="w-3 h-3 text-[#00f2ff]" />
-                    {repo.stargazers_count.toLocaleString()}
-                  </div>
-                </div>
-                <p className="text-slate-400 text-sm mb-6 flex-1 line-clamp-3 leading-relaxed">
-                  {repo.description || 'No description provided.'}
-                </p>
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-dashed border-slate-800/50">
-                  <span className="text-xs font-mono text-slate-500 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#00f2ff]"></span>
-                    {repo.language || 'Mixed'}
-                  </span>
-                  <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-xs font-bold font-mono text-[#00f2ff] hover:text-white transition-colors bg-[#00f2ff]/10 hover:bg-[#00f2ff]/20 px-3 py-1.5 rounded">
-                    READ_MORE
-                  </a>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </section>
 
-      <section>
-        <div className="flex items-center gap-3 mb-8">
-          <BookOpen className="w-6 h-6 text-[#00f2ff]" />
-          <h2 className="text-2xl font-bold font-mono uppercase tracking-widest">Featured Articles</h2>
+          {/* Filters */}
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <button className="flex-1 md:flex-none flex items-center justify-between gap-3 px-4 py-2.5 bg-[#0e0e11] border border-slate-800 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-800/50 transition-colors">
+              Languages <ChevronDown className="w-4 h-4 text-slate-500" />
+            </button>
+            <button className="flex-1 md:flex-none flex items-center justify-between gap-3 px-4 py-2.5 bg-[#0e0e11] border border-slate-800 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-800/50 transition-colors">
+              Popularity <ChevronDown className="w-4 h-4 text-slate-500" />
+            </button>
+          </div>
         </div>
-        
+      </div>
+
+      {/* Grid */}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="h-72 bg-[#121212] rounded-2xl border border-slate-800/60 animate-pulse"></div>
+          ))}
+        </div>
+      ) : filteredRepos.length === 0 ? (
+        <div className="text-center py-20 bg-[#121212] rounded-2xl border border-slate-800">
+          <p className="text-slate-500 font-semibold">No repositories match your search.</p>
+        </div>
+      ) : (
         <motion.div 
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {mockArticles.map(article => (
-            <motion.div key={article.id} variants={itemVariants} className="group bg-[#111217]/80 backdrop-blur-sm border border-dashed border-slate-800 rounded-xl overflow-hidden hover:border-[#00f2ff]/50 transition-colors flex flex-col h-full">
-              <div className="h-40 overflow-hidden relative">
-                <div className="absolute inset-0 bg-[#00f2ff]/20 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0" />
-              </div>
-              <div className="p-6 flex flex-col flex-1">
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {article.tags.map(tag => (
-                    <span key={tag} className="text-[10px] font-mono text-slate-400 bg-[#050505] px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1">
-                      <Tag className="w-2.5 h-2.5" /> {tag}
-                    </span>
-                  ))}
+          {filteredRepos.map(repo => (
+            <motion.a 
+              href={repo.html_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              key={repo.id} 
+              variants={itemVariants} 
+              className="bg-[#121212] rounded-2xl border border-slate-800/60 hover:border-slate-700 p-6 flex flex-col transition-colors group cursor-pointer"
+            >
+              {/* Header: Avatar, Name, Verified */}
+              <div className="flex items-start gap-4 mb-4">
+                <img 
+                  src={repo.owner?.avatar_url || 'https://github.com/github.png'} 
+                  alt={repo.name} 
+                  className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <h3 className="font-bold text-lg text-white truncate">{repo.name}</h3>
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  </div>
+                  <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
+                    {repo.description || 'No description provided.'}
+                  </p>
                 </div>
-                <h3 className="font-bold text-white mb-4 line-clamp-2 leading-snug">{article.title}</h3>
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-dashed border-slate-800/50">
-                  <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" /> {article.readTime}
-                  </span>
-                  <a href={article.url} className="text-xs font-bold font-mono text-[#00f2ff] hover:text-white transition-colors">
-                    READ_ARTICLE →
-                  </a>
+              </div>
+
+              {/* Tags */}
+              <div className="flex items-center gap-2 mb-6">
+                <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[11px] font-bold rounded-md">
+                  {repo.language || 'Code'}
+                </span>
+                <span className="px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-[11px] font-bold rounded-md">
+                  Legendary
+                </span>
+              </div>
+
+              {/* Topics (Mocked empty boxes as per reference) */}
+              <div className="flex items-center gap-2 mb-8 mt-auto">
+                <div className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">careers</div>
+                <div className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">certification</div>
+                <div className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">community</div>
+              </div>
+
+              {/* Footer */}
+              <div className="flex items-center gap-6 pt-5 border-t border-slate-800/60 text-sm font-semibold">
+                <div className="flex items-center gap-1.5">
+                  <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                  <span className="text-white">Stars</span>
+                  <span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <GitFork className="w-4 h-4 text-slate-500" />
+                  <span className="text-white">Forks</span>
+                  <span className="text-slate-400">{formatNumber(repo.forks_count || 0)}</span>
                 </div>
               </div>
-            </motion.div>
+            </motion.a>
           ))}
         </motion.div>
-      </section>
+      )}
     </div>
   );
 };
