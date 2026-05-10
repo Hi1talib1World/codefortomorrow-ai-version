@@ -8,6 +8,7 @@ import {
 import ContentTable from './ContentTable';
 import ContentEditor from './ContentEditor';
 import AnalyticsPanel from './AnalyticsPanel';
+import { AdminPanel as OpenSourceAdmin } from '../OpenSourceScreen/AdminPanel';
 
 interface AdminDashboardProps {
   currentUser: { name: string; email: string; profilePictureUrl: string } | null;
@@ -16,6 +17,7 @@ interface AdminDashboardProps {
 
 const NAV_ITEMS = [
   { id: 'content', label: 'Content', icon: FileText, path: '/admin' },
+  { id: 'opensource', label: 'Open Source', icon: Settings, path: '/admin/opensource' },
   { id: 'analytics', label: 'Analytics', icon: BarChart3, path: '/admin/analytics' },
   { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings' },
 ];
@@ -144,6 +146,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
                   ? 'Content'
                   : location.pathname.includes('/analytics')
                   ? 'Analytics'
+                  : location.pathname.includes('/opensource')
+                  ? 'Open Source'
                   : location.pathname.includes('/new')
                   ? 'New Post'
                   : location.pathname.includes('/edit')
@@ -175,6 +179,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
                 <Route path="/new" element={<ContentEditor />} />
                 <Route path="/edit/:id" element={<ContentEditor />} />
                 <Route path="/analytics" element={<AnalyticsPanel />} />
+                <Route path="/opensource" element={<OpenSourceAdmin />} />
                 <Route path="/settings" element={
                   <div className="text-slate-400 font-mono text-sm p-8 text-center">
                     Settings panel coming soon.

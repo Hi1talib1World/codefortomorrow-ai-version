@@ -1,11 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Settings, ShieldAlert, Plus, Github, Loader2, CheckCircle2 } from 'lucide-react';
+import { Settings, ShieldAlert, Plus, Github, Loader2, CheckCircle2, TrendingUp, Star } from 'lucide-react';
 
 export const AdminPanel: React.FC = () => {
   const [url, setUrl] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const [trending, setTrending] = useState<any[]>([]);
+  const [trendingLoading, setTrendingLoading] = useState(false);
+  const [addingRepo, setAddingRepo] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTrending = async () => {
+      setTrendingLoading(true);
+      try {
+        const res = await fetch('/api/opensource/trending');
+        if (res.ok) {
+          const data = await res.json();
+          setTrending(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch trending repos', err);
+      } finally {
+        setTrendingLoading(false);
+      }
+    };
+    fetchTrending();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +56,31 @@ export const AdminPanel: React.FC = () => {
       console.error(err);
       setStatus('error');
       setMessage('A network error occurred.');
+    }
+  };
+
+  const handleAddTrending = async (repoUrl: string, repoName: string) => {
+    setAddingRepo(repoName);
+    try {
+      const res = await fetch('/api/opensource/repos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: repoUrl }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStatus('success');
+        setMessage(`Successfully added ${repoName} to feed.`);
+      } else {
+        setStatus('error');
+        setMessage(data.message || `Failed to add ${repoName}.`);
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus('error');
+      setMessage('A network error occurred.');
+    } finally {
+      setAddingRepo(null);
     }
   };
 
@@ -117,6 +163,51 @@ export const AdminPanel: React.FC = () => {
               <ShieldAlert className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
               <p className="text-sm font-mono text-red-400">{message}</p>
             </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* Trending Section */}
+      <div className="mt-8 bg-[#121212]/80 backdrop-blur-md border border-dashed border-[#facc15]/30 rounded-xl p-8 relative overflow-hidden">
+        <div className="relative z-10">
+          <h2 className="text-xl font-bold text-white font-mono mb-6 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-[#facc15]" /> Discover Trending (Last 7 Days)
+          </h2>
+          
+          {trendingLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 text-[#facc15] animate-spin" />
+            </div>
+          ) : trending.length === 0 ? (
+            <p className="text-slate-400 font-mono text-sm">No trending repositories found.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {trending.map((repo) => (
+                <div key={repo.id} className="bg-[#09090b] border border-slate-700 rounded-lg p-4 flex flex-col justify-between">
+                  <div>
+                    <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="font-bold text-[#facc15] font-mono text-sm hover:underline flex items-center gap-2 mb-1">
+                      {repo.full_name}
+                    </a>
+                    <p className="text-xs text-slate-400 line-clamp-2 mb-3">
+                      {repo.description || 'No description provided.'}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-800">
+                    <div className="flex items-center gap-1 text-slate-400 text-xs font-mono">
+                      <Star className="w-3.5 h-3.5" /> {repo.stargazers_count}
+                    </div>
+                    <button
+                      onClick={() => handleAddTrending(repo.html_url, repo.full_name)}
+                      disabled={addingRepo === repo.full_name}
+                      className="text-xs bg-[#facc15]/10 hover:bg-[#facc15]/20 text-[#facc15] border border-[#facc15]/30 px-3 py-1.5 rounded transition-colors disabled:opacity-50 flex items-center gap-1 font-bold"
+                    >
+                      {addingRepo === repo.full_name ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
+                      Add
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>

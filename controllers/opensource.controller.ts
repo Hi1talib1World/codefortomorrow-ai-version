@@ -139,3 +139,40 @@ export const addCuratedRepo = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error adding curated repo' });
   }
 };
+
+export const getTrendingRepos = async (req: Request, res: Response) => {
+  try {
+    // Trending = created in the last 7 days, sorted by stars
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    const dateStr = date.toISOString().split('T')[0];
+
+    const cacheKey = `trending_repos_${dateStr}`;
+    const cachedData = getCached(cacheKey);
+    if (cachedData) {
+      return res.json(cachedData);
+    }
+
+    const query = `created:>${dateStr}`;
+    const response = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=15`, {
+      headers: {
+        'User-Agent': 'CodeForTomorrow-App',
+        ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
+      }
+    });
+
+    if (!response.ok) {
+      if (response.status === 403) {
+        return res.status(429).json({ message: 'GitHub API rate limit exceeded.' });
+      }
+      throw new Error(`GitHub API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    setCached(cacheKey, data.items || []);
+    res.json(data.items || []);
+  } catch (error) {
+    console.error('Error fetching trending repos:', error);
+    res.status(500).json({ message: 'Error fetching trending repos' });
+  }
+};
