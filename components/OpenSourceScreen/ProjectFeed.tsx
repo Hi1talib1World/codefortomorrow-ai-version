@@ -11,6 +11,7 @@ interface Repo {
   forks_count: number;
   language: string;
   html_url: string;
+  topics: string[];
   owner: {
     avatar_url: string;
   };
@@ -59,6 +60,12 @@ export const ProjectFeed: React.FC = () => {
   const formatNumber = (num: number) => {
     if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
     return num.toString();
+  };
+
+  const getTierBadge = (stars: number) => {
+    if (stars > 5000) return { label: 'Legendary', class: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500' };
+    if (stars > 1000) return { label: 'Popular', class: 'bg-blue-500/10 border-blue-500/20 text-blue-400' };
+    return { label: 'Rising', class: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' };
   };
 
   return (
@@ -112,65 +119,71 @@ export const ProjectFeed: React.FC = () => {
           animate="show"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {filteredRepos.map(repo => (
-            <motion.a 
-              href={repo.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={repo.id} 
-              variants={itemVariants} 
-              className="bg-[#121212] rounded-2xl border border-slate-800/60 hover:border-slate-700 p-6 flex flex-col transition-colors group cursor-pointer"
-            >
-              {/* Header: Avatar, Name, Verified */}
-              <div className="flex items-start gap-4 mb-4">
-                <img 
-                  src={repo.owner?.avatar_url || 'https://github.com/github.png'} 
-                  alt={repo.name} 
-                  className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800"
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <h3 className="font-bold text-lg text-white truncate">{repo.name}</h3>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+          {filteredRepos.map(repo => {
+            const tier = getTierBadge(repo.stargazers_count);
+            return (
+              <motion.a 
+                href={repo.html_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                key={repo.id} 
+                variants={itemVariants} 
+                className="bg-[#121212] rounded-2xl border border-slate-800/60 hover:border-slate-700 p-6 flex flex-col transition-colors group cursor-pointer"
+              >
+                {/* Header: Avatar, Name, Verified */}
+                <div className="flex items-start gap-4 mb-4">
+                  <img 
+                    src={repo.owner?.avatar_url || 'https://github.com/github.png'} 
+                    alt={repo.name} 
+                    className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800"
+                    onError={(e) => { (e.target as HTMLImageElement).src = 'https://github.com/github.png'; }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <h3 className="font-bold text-lg text-white truncate">{repo.name}</h3>
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                    </div>
+                    <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
+                      {repo.description || 'No description provided.'}
+                    </p>
                   </div>
-                  <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
-                    {repo.description || 'No description provided.'}
-                  </p>
                 </div>
-              </div>
 
-              {/* Tags */}
-              <div className="flex items-center gap-2 mb-6">
-                <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[11px] font-bold rounded-md">
-                  {repo.language || 'Code'}
-                </span>
-                <span className="px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-[11px] font-bold rounded-md">
-                  Legendary
-                </span>
-              </div>
-
-              {/* Topics (Mocked empty boxes as per reference) */}
-              <div className="flex items-center gap-2 mb-8 mt-auto">
-                <div className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">careers</div>
-                <div className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">certification</div>
-                <div className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">community</div>
-              </div>
-
-              {/* Footer */}
-              <div className="flex items-center gap-6 pt-5 border-t border-slate-800/60 text-sm font-semibold">
-                <div className="flex items-center gap-1.5">
-                  <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                  <span className="text-white">Stars</span>
-                  <span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span>
+                {/* Tags */}
+                <div className="flex items-center gap-2 mb-6 flex-wrap">
+                  <span className="px-3 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-[11px] font-bold rounded-md">
+                    {repo.language || 'Code'}
+                  </span>
+                  <span className={`px-3 py-1 border text-[11px] font-bold rounded-md ${tier.class}`}>
+                    {tier.label}
+                  </span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <GitFork className="w-4 h-4 text-slate-500" />
-                  <span className="text-white">Forks</span>
-                  <span className="text-slate-400">{formatNumber(repo.forks_count || 0)}</span>
+
+                {/* Topics */}
+                <div className="flex items-center gap-2 mb-8 mt-auto flex-wrap">
+                  {repo.topics?.slice(0, 3).map((topic) => (
+                    <div key={topic} className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">
+                      {topic}
+                    </div>
+                  ))}
                 </div>
-              </div>
-            </motion.a>
-          ))}
+
+                {/* Footer */}
+                <div className="flex items-center gap-6 pt-5 border-t border-slate-800/60 text-sm font-semibold">
+                  <div className="flex items-center gap-1.5">
+                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                    <span className="text-white">Stars</span>
+                    <span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <GitFork className="w-4 h-4 text-slate-500" />
+                    <span className="text-white">Forks</span>
+                    <span className="text-slate-400">{formatNumber(repo.forks_count || 0)}</span>
+                  </div>
+                </div>
+              </motion.a>
+            );
+          })}
         </motion.div>
       )}
     </div>

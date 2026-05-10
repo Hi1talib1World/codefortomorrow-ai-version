@@ -78,6 +78,7 @@ export const getCuratedRepos = async (req: Request, res: Response) => {
       const response = await fetch(`https://api.github.com/repos/${fullName}`, {
         headers: {
           'User-Agent': 'CodeForTomorrow-App',
+          'Accept': 'application/vnd.github.mercy-preview+json',
           ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
         }
       });
