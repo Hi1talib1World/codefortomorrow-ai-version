@@ -16,5 +16,6 @@
   "denoland/deno",
   "ansible/ansible",
   "kubernetes/kubernetes",
-  "django/django"
+  "django/django",
+  "dstotijn/hetty"
 ]
