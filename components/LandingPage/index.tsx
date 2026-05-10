@@ -112,6 +112,7 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
             <NavLink href="#how-it-works" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">How It Works</NavLink>
             <NavLink href="#testimonials" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">Testimonials</NavLink>
             <Link to="/blog" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-bold transition-colors text-sm">Blog</Link>
+            <a href="https://github.com/hichamoutaleb" target="_blank" rel="noopener noreferrer" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-bold transition-colors text-sm">Open-source</a>
           </nav>
           <div className="flex items-center gap-4">
             <button
@@ -142,16 +143,17 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
               <img src="/assets/images/cofoto.png" alt="Code for Tomorrow Logo" className="w-10 h-10 object-contain rounded-xl shadow-lg shadow-brand-500/20 group-hover:scale-110 transition-transform" />
               <span className="text-lg font-bold tracking-tight uppercase">Code for Tomorrow</span>
             </div>
-            <nav className="hidden md:flex items-center space-x-10">
-              <NavLink href="#features" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">Features</NavLink>
-              <NavLink href="#how-it-works" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">How It Works</NavLink>
-              <NavLink href="#testimonials" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">Testimonials</NavLink>
-              <Link to="/blog" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-bold transition-colors text-sm">Blog</Link>
+            <nav className="flex flex-col space-y-6 mt-12 mb-8">
+              <NavLink href="#features" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-lg">Features</NavLink>
+              <NavLink href="#how-it-works" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-lg">How It Works</NavLink>
+              <NavLink href="#testimonials" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-lg">Testimonials</NavLink>
+              <Link to="/blog" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium transition-colors text-lg">Blog</Link>
+              <a href="https://github.com/hichamoutaleb" target="_blank" rel="noopener noreferrer" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium transition-colors text-lg">Open-source</a>
             </nav>
             <div className="flex items-center gap-4">
               <button
                 onClick={onGetStarted}
-                className="hidden md:flex items-center gap-2 bg-brand-600 text-white font-semibold px-6 py-2.5 rounded-full hover:bg-brand-500 transition-all text-sm shadow-xl shadow-brand-500/25 active:scale-95"
+                className="w-full flex items-center justify-center gap-2 bg-brand-600 text-white font-semibold px-6 py-2.5 rounded-full hover:bg-brand-500 transition-all text-sm shadow-xl shadow-brand-500/25 active:scale-95"
               >
                 Get Started
               </button>
