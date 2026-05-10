@@ -188,6 +188,8 @@ export interface User {
   progress: UserProgress;
   currentPath: ProgrammingPath['id'] | null;
   role: 'teacher' | 'student' | null;
+  savedRepos?: string[];
+  savedPosts?: string[];
   createdAt: string;
   lastLogin: string;
 }

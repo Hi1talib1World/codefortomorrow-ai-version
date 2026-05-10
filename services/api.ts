@@ -134,6 +134,23 @@ const api = {
   },
 
   /**
+   * Toggles the saved state of a repository or blog post.
+   */
+  toggleSaveItem: async (itemId: string, type: 'repo' | 'post'): Promise<User> => {
+    const response = await fetch(`${API_BASE_URL}/users/save`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ itemId, type }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || `Failed to toggle save for ${type}.`);
+    }
+    return data;
+  },
+
+  /**
    * Updates the user's learning progress on the backend.
    */
   updateUserProgress: async (newProgress: Partial<UserProgress>): Promise<UserProgress> => {

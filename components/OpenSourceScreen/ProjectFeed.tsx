@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Search, ChevronDown, CheckCircle2, Star, GitFork } from 'lucide-react';
+import { Search, ChevronDown, CheckCircle2, Star, GitFork, Bookmark } from 'lucide-react';
+import { RepoDetails } from './RepoDetails';
+import { User } from '../../types';
+import api from '../../services/api';
+import { AuthPromptModal } from '../AuthPromptModal';
 
 interface Repo {
   id: number;
@@ -30,10 +34,17 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.3 } }
 };
 
-export const ProjectFeed: React.FC = () => {
+interface ProjectFeedProps {
+  currentUser?: User | null;
+  updateUser?: (data: Partial<User>) => Promise<void>;
+}
+
+export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUser }) => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchRepos = async () => {
@@ -68,8 +79,30 @@ export const ProjectFeed: React.FC = () => {
     return { label: 'Rising', class: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' };
   };
 
+  const handleSaveRepo = async (e: React.MouseEvent, repoId: number) => {
+    e.stopPropagation();
+    if (!currentUser || currentUser._id.startsWith('guest_')) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    
+    try {
+      const updatedUser = await api.toggleSaveItem(repoId.toString(), 'repo');
+      if (updateUser) {
+        await updateUser(updatedUser);
+      }
+    } catch (error) {
+      console.error('Failed to save repo:', error);
+    }
+  };
+
+  if (selectedRepo) {
+    return <RepoDetails repo={selectedRepo} onBack={() => setSelectedRepo(null)} currentUser={currentUser} updateUser={updateUser} />;
+  }
+
   return (
     <div className="space-y-8">
+      <AuthPromptModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       {/* Header */}
       <div>
         <h1 className="text-3xl font-black text-white mb-8 tracking-tight">Trending Repos</h1>
@@ -122,10 +155,8 @@ export const ProjectFeed: React.FC = () => {
           {filteredRepos.map(repo => {
             const tier = getTierBadge(repo.stargazers_count);
             return (
-              <motion.a 
-                href={repo.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
+              <motion.div 
+                onClick={() => setSelectedRepo(repo)}
                 key={repo.id} 
                 variants={itemVariants} 
                 className="bg-[#121212] rounded-2xl border border-slate-800/60 hover:border-slate-700 p-6 flex flex-col transition-colors group cursor-pointer"
@@ -147,6 +178,12 @@ export const ProjectFeed: React.FC = () => {
                       {repo.description || 'No description provided.'}
                     </p>
                   </div>
+                  <button 
+                    onClick={(e) => handleSaveRepo(e, repo.id)}
+                    className={`p-2 rounded-lg transition-colors ${currentUser?.savedRepos?.includes(repo.id.toString()) ? 'bg-brand-500/20 text-brand-500' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+                  >
+                    <Bookmark className={`w-5 h-5 ${currentUser?.savedRepos?.includes(repo.id.toString()) ? 'fill-current' : ''}`} />
+                  </button>
                 </div>
 
                 {/* Tags */}
@@ -181,7 +218,7 @@ export const ProjectFeed: React.FC = () => {
                     <span className="text-slate-400">{formatNumber(repo.forks_count || 0)}</span>
                   </div>
                 </div>
-              </motion.a>
+              </motion.div>
             );
           })}
         </motion.div>

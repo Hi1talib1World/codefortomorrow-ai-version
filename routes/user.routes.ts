@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { updateUserProfile, updateUserProgress, getTeachers } from '../controllers/user.controller';
+import { updateUserProfile, updateUserProgress, getTeachers, toggleSaveItem } from '../controllers/user.controller';
 import { protect } from '../middleware/auth.middleware';
 
 const router = express.Router();
@@ -29,5 +29,12 @@ router.put('/profile', updateUserProfile);
  * @access  Private
  */
 router.put('/progress', updateUserProgress);
+
+/**
+ * @route   PUT /api/users/save
+ * @desc    Toggle saving a repository or blog post
+ * @access  Private
+ */
+router.put('/save', toggleSaveItem);
 
 export default router;

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Calendar, User, ChevronRight, Bookmark } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { User as UserType } from '../../types';
+import api from '../../services/api';
+import { AuthPromptModal } from '../AuthPromptModal';
 
 export const blogPosts = [
     {
@@ -105,14 +108,36 @@ export const blogPosts = [
     }
 ];
 
-export default function BlogScreen() {
+interface BlogScreenProps {
+    currentUser?: UserType | null;
+    updateUser?: (data: Partial<UserType>) => Promise<void>;
+}
+
+export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps) {
     const navigate = useNavigate();
     const { t } = useLanguage();
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-
+    const handleSavePost = async (e: React.MouseEvent, postId: string) => {
+        e.stopPropagation();
+        if (!currentUser || currentUser._id.startsWith('guest_')) {
+            setIsAuthModalOpen(true);
+            return;
+        }
+        
+        try {
+            const updatedUser = await api.toggleSaveItem(postId, 'post');
+            if (updateUser) {
+                await updateUser(updatedUser);
+            }
+        } catch (error) {
+            console.error('Failed to save post:', error);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 selection:bg-brand-100 selection:text-brand-900">
+            <AuthPromptModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
             {/* Header */}
             <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -153,9 +178,17 @@ export default function BlogScreen() {
                                     alt={post.title} 
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                 />
-                                <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider text-brand-600 dark:text-brand-400 shadow-sm">
-                                    {post.category}
+                                <div className="absolute top-4 left-4 flex gap-2">
+                                    <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider text-brand-600 dark:text-brand-400 shadow-sm">
+                                        {post.category}
+                                    </div>
                                 </div>
+                                <button
+                                    onClick={(e) => handleSavePost(e, post.id)}
+                                    className={`absolute top-4 right-4 p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm ${currentUser?.savedPosts?.includes(post.id) ? 'bg-brand-500 text-white' : 'bg-white/90 dark:bg-slate-900/90 text-slate-500 hover:text-brand-500'}`}
+                                >
+                                    <Bookmark className={`w-4 h-4 ${currentUser?.savedPosts?.includes(post.id) ? 'fill-current' : ''}`} />
+                                </button>
                             </div>
                             <div className="p-8 flex flex-col flex-1">
                                 <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-3 line-clamp-2 mix-blend-luminosity">

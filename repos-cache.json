@@ -67,7 +67,7 @@
     "releases_url": "https://api.github.com/repos/freeCodeCamp/freeCodeCamp/releases{/id}",
     "deployments_url": "https://api.github.com/repos/freeCodeCamp/freeCodeCamp/deployments",
     "created_at": "2014-12-24T17:49:19Z",
-    "updated_at": "2026-05-10T19:51:44Z",
+    "updated_at": "2026-05-10T19:59:55Z",
     "pushed_at": "2026-05-10T10:56:59Z",
     "git_url": "git://github.com/freeCodeCamp/freeCodeCamp.git",
     "ssh_url": "git@github.com:freeCodeCamp/freeCodeCamp.git",
@@ -75,8 +75,8 @@
     "svn_url": "https://github.com/freeCodeCamp/freeCodeCamp",
     "homepage": "https://contribute.freecodecamp.org",
     "size": 571799,
-    "stargazers_count": 444448,
-    "watchers_count": 444448,
+    "stargazers_count": 444449,
+    "watchers_count": 444449,
     "language": "TypeScript",
     "has_issues": true,
     "has_projects": true,
@@ -121,15 +121,9 @@
     "visibility": "public",
     "forks": 44501,
     "open_issues": 183,
-    "watchers": 444448,
+    "watchers": 444449,
     "default_branch": "main",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {},
     "organization": {
       "login": "freeCodeCamp",
@@ -263,13 +257,7 @@
     "open_issues": 3,
     "watchers": 232689,
     "default_branch": "master",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "network_count": 62179,
     "subscribers_count": 8184
   },
@@ -342,7 +330,7 @@
     "deployments_url": "https://api.github.com/repos/microsoft/vscode/deployments",
     "created_at": "2015-09-03T20:23:38Z",
     "updated_at": "2026-05-10T19:53:19Z",
-    "pushed_at": "2026-05-10T19:53:09Z",
+    "pushed_at": "2026-05-10T19:59:28Z",
     "git_url": "git://github.com/microsoft/vscode.git",
     "ssh_url": "git@github.com:microsoft/vscode.git",
     "clone_url": "https://github.com/microsoft/vscode.git",
@@ -362,7 +350,7 @@
     "mirror_url": null,
     "archived": false,
     "disabled": false,
-    "open_issues_count": 17415,
+    "open_issues_count": 17417,
     "license": {
       "key": "mit",
       "name": "MIT License",
@@ -384,16 +372,10 @@
     ],
     "visibility": "public",
     "forks": 39739,
-    "open_issues": 17415,
+    "open_issues": 17417,
     "watchers": 184759,
     "default_branch": "main",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {
       "activeRepoStatus": "true",
       "durableOwnershipDisable": "false",
@@ -423,7 +405,7 @@
       "site_admin": false
     },
     "network_count": 39739,
-    "subscribers_count": 3417
+    "subscribers_count": 3418
   },
   {
     "id": 11730342,
@@ -510,7 +492,7 @@
     "has_wiki": true,
     "has_pages": false,
     "has_discussions": true,
-    "forks_count": 33835,
+    "forks_count": 33833,
     "mirror_url": null,
     "archived": false,
     "disabled": false,
@@ -534,17 +516,11 @@
       "vue"
     ],
     "visibility": "public",
-    "forks": 33835,
+    "forks": 33833,
     "open_issues": 623,
     "watchers": 209753,
     "default_branch": "main",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {},
     "organization": {
       "login": "vuejs",
@@ -567,7 +543,7 @@
       "user_view_type": "public",
       "site_admin": false
     },
-    "network_count": 33835,
+    "network_count": 33833,
     "subscribers_count": 5739
   },
   {
@@ -685,13 +661,7 @@
     "open_issues": 1293,
     "watchers": 244929,
     "default_branch": "main",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {},
     "organization": {
       "login": "facebook",
@@ -785,8 +755,8 @@
     "releases_url": "https://api.github.com/repos/tensorflow/tensorflow/releases{/id}",
     "deployments_url": "https://api.github.com/repos/tensorflow/tensorflow/deployments",
     "created_at": "2015-11-07T01:19:20Z",
-    "updated_at": "2026-05-10T18:18:33Z",
-    "pushed_at": "2026-05-10T19:50:28Z",
+    "updated_at": "2026-05-10T19:59:23Z",
+    "pushed_at": "2026-05-10T19:59:12Z",
     "git_url": "git://github.com/tensorflow/tensorflow.git",
     "ssh_url": "git@github.com:tensorflow/tensorflow.git",
     "clone_url": "https://github.com/tensorflow/tensorflow.git",
@@ -806,7 +776,7 @@
     "mirror_url": null,
     "archived": false,
     "disabled": false,
-    "open_issues_count": 5068,
+    "open_issues_count": 5067,
     "license": {
       "key": "apache-2.0",
       "name": "Apache License 2.0",
@@ -831,16 +801,10 @@
     ],
     "visibility": "public",
     "forks": 75269,
-    "open_issues": 5068,
+    "open_issues": 5067,
     "watchers": 195052,
     "default_branch": "master",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {
       "ai_agent_config_bypass": "false",
       "ghss_scan_exemption": [
@@ -941,7 +905,7 @@
     "releases_url": "https://api.github.com/repos/nilbuild/developer-roadmap/releases{/id}",
     "deployments_url": "https://api.github.com/repos/nilbuild/developer-roadmap/deployments",
     "created_at": "2017-03-15T13:45:52Z",
-    "updated_at": "2026-05-10T19:44:41Z",
+    "updated_at": "2026-05-10T19:59:01Z",
     "pushed_at": "2026-05-09T09:09:47Z",
     "git_url": "git://github.com/nilbuild/developer-roadmap.git",
     "ssh_url": "git@github.com:nilbuild/developer-roadmap.git",
@@ -949,8 +913,8 @@
     "svn_url": "https://github.com/nilbuild/developer-roadmap",
     "homepage": "https://roadmap.sh",
     "size": 360347,
-    "stargazers_count": 354521,
-    "watchers_count": 354521,
+    "stargazers_count": 354524,
+    "watchers_count": 354524,
     "language": "TypeScript",
     "has_issues": true,
     "has_projects": false,
@@ -998,15 +962,9 @@
     "visibility": "public",
     "forks": 44049,
     "open_issues": 8,
-    "watchers": 354521,
+    "watchers": 354524,
     "default_branch": "master",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "network_count": 44049,
     "subscribers_count": 6856
   },
@@ -1134,13 +1092,7 @@
     "open_issues": 551,
     "watchers": 186871,
     "default_branch": "master",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {},
     "organization": {
       "login": "ohmyzsh",
@@ -1287,13 +1239,7 @@
     "open_issues": 109,
     "watchers": 346512,
     "default_branch": "main",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "network_count": 82857,
     "subscribers_count": 8549
   },
@@ -1365,7 +1311,7 @@
     "releases_url": "https://api.github.com/repos/sindresorhus/awesome/releases{/id}",
     "deployments_url": "https://api.github.com/repos/sindresorhus/awesome/deployments",
     "created_at": "2014-07-11T13:42:37Z",
-    "updated_at": "2026-05-10T19:53:37Z",
+    "updated_at": "2026-05-10T19:58:19Z",
     "pushed_at": "2026-05-05T14:47:44Z",
     "git_url": "git://github.com/sindresorhus/awesome.git",
     "ssh_url": "git@github.com:sindresorhus/awesome.git",
@@ -1373,8 +1319,8 @@
     "svn_url": "https://github.com/sindresorhus/awesome",
     "homepage": "",
     "size": 1561,
-    "stargazers_count": 464911,
-    "watchers_count": 464911,
+    "stargazers_count": 464912,
+    "watchers_count": 464912,
     "language": null,
     "has_issues": true,
     "has_projects": false,
@@ -1409,15 +1355,9 @@
     "visibility": "public",
     "forks": 34875,
     "open_issues": 74,
-    "watchers": 464911,
+    "watchers": 464912,
     "default_branch": "main",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "network_count": 34875,
     "subscribers_count": 8177
   },
@@ -1537,13 +1477,7 @@
     "open_issues": 436,
     "watchers": 174234,
     "default_branch": "main",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {},
     "organization": {
       "login": "twbs",
@@ -1637,7 +1571,7 @@
     "releases_url": "https://api.github.com/repos/flutter/flutter/releases{/id}",
     "deployments_url": "https://api.github.com/repos/flutter/flutter/deployments",
     "created_at": "2015-03-06T22:54:58Z",
-    "updated_at": "2026-05-10T19:29:21Z",
+    "updated_at": "2026-05-10T20:00:53Z",
     "pushed_at": "2026-05-10T17:31:30Z",
     "git_url": "git://github.com/flutter/flutter.git",
     "ssh_url": "git@github.com:flutter/flutter.git",
@@ -1645,8 +1579,8 @@
     "svn_url": "https://github.com/flutter/flutter",
     "homepage": "https://flutter.dev",
     "size": 442509,
-    "stargazers_count": 176262,
-    "watchers_count": 176262,
+    "stargazers_count": 176263,
+    "watchers_count": 176263,
     "language": "Dart",
     "has_issues": true,
     "has_projects": true,
@@ -1654,7 +1588,7 @@
     "has_wiki": true,
     "has_pages": false,
     "has_discussions": false,
-    "forks_count": 30346,
+    "forks_count": 30345,
     "mirror_url": null,
     "archived": false,
     "disabled": false,
@@ -1693,17 +1627,11 @@
       "windows"
     ],
     "visibility": "public",
-    "forks": 30346,
+    "forks": 30345,
     "open_issues": 12626,
-    "watchers": 176262,
+    "watchers": 176263,
     "default_branch": "master",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {
       "ai_agent_config_bypass": "false",
       "ghss_scan_exemption": [
@@ -1733,7 +1661,7 @@
       "user_view_type": "public",
       "site_admin": false
     },
-    "network_count": 30346,
+    "network_count": 30345,
     "subscribers_count": 3481
   },
   {
@@ -1821,7 +1749,7 @@
     "has_wiki": false,
     "has_pages": false,
     "has_discussions": true,
-    "forks_count": 31042,
+    "forks_count": 31043,
     "mirror_url": null,
     "archived": false,
     "disabled": false,
@@ -1855,17 +1783,11 @@
       "vercel"
     ],
     "visibility": "public",
-    "forks": 31042,
+    "forks": 31043,
     "open_issues": 3906,
     "watchers": 139361,
     "default_branch": "canary",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {},
     "organization": {
       "login": "vercel",
@@ -1888,7 +1810,7 @@
       "user_view_type": "public",
       "site_admin": false
     },
-    "network_count": 31042,
+    "network_count": 31043,
     "subscribers_count": 1543
   },
   {
@@ -2004,13 +1926,7 @@
     "open_issues": 10118,
     "watchers": 133824,
     "default_branch": "master",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {
       "ai_agent_config_bypass": "false",
       "ghss_scan_exemption": [
@@ -2156,13 +2072,7 @@
     "open_issues": 2240,
     "watchers": 106634,
     "default_branch": "main",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {},
     "organization": {
       "login": "denoland",
@@ -2299,13 +2209,7 @@
     "open_issues": 802,
     "watchers": 68495,
     "default_branch": "devel",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {
       "ruleset_modifier_1": "false"
     },
@@ -2401,7 +2305,7 @@
     "releases_url": "https://api.github.com/repos/kubernetes/kubernetes/releases{/id}",
     "deployments_url": "https://api.github.com/repos/kubernetes/kubernetes/deployments",
     "created_at": "2014-06-06T22:56:04Z",
-    "updated_at": "2026-05-10T19:44:38Z",
+    "updated_at": "2026-05-10T19:54:56Z",
     "pushed_at": "2026-05-10T13:07:47Z",
     "git_url": "git://github.com/kubernetes/kubernetes.git",
     "ssh_url": "git@github.com:kubernetes/kubernetes.git",
@@ -2409,8 +2313,8 @@
     "svn_url": "https://github.com/kubernetes/kubernetes",
     "homepage": "https://kubernetes.io",
     "size": 1469790,
-    "stargazers_count": 122170,
-    "watchers_count": 122170,
+    "stargazers_count": 122171,
+    "watchers_count": 122171,
     "language": "Go",
     "has_issues": true,
     "has_projects": true,
@@ -2418,7 +2322,7 @@
     "has_wiki": false,
     "has_pages": false,
     "has_discussions": false,
-    "forks_count": 43018,
+    "forks_count": 43017,
     "mirror_url": null,
     "archived": false,
     "disabled": false,
@@ -2442,17 +2346,11 @@
       "kubernetes"
     ],
     "visibility": "public",
-    "forks": 43018,
+    "forks": 43017,
     "open_issues": 2667,
-    "watchers": 122170,
+    "watchers": 122171,
     "default_branch": "master",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {},
     "organization": {
       "login": "kubernetes",
@@ -2475,7 +2373,7 @@
       "user_view_type": "public",
       "site_admin": false
     },
-    "network_count": 43018,
+    "network_count": 43017,
     "subscribers_count": 3167
   },
   {
@@ -2596,13 +2494,7 @@
     "open_issues": 433,
     "watchers": 87456,
     "default_branch": "main",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "custom_properties": {},
     "organization": {
       "login": "django",
@@ -2743,13 +2635,7 @@
     "open_issues": 38,
     "watchers": 10196,
     "default_branch": "main",
-    "permissions": {
-      "admin": false,
-      "maintain": false,
-      "push": false,
-      "triage": false,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "network_count": 606,
     "subscribers_count": 126
   },
@@ -2855,13 +2741,7 @@
     "open_issues": 0,
     "watchers": 50,
     "default_branch": "main",
-    "permissions": {
-      "admin": true,
-      "maintain": true,
-      "push": true,
-      "triage": true,
-      "pull": true
-    },
+    "temp_clone_token": null,
     "network_count": 9,
     "subscribers_count": 0
   }

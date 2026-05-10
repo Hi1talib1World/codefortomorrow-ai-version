@@ -411,9 +411,9 @@ export default function App() {
 
           <Route path="/brain-training" element={<BrainTrainingScreen />} />
           <Route path="/brain-training/:challengeId" element={<BrainChallengeGameScreen />} />
-          <Route path="/blog" element={<BlogScreen />} />
-          <Route path="/blog/:postId" element={<BlogPostScreen />} />
-          <Route path="/open-source" element={<OpenSourceScreen />} />
+          <Route path="/blog" element={<BlogScreen currentUser={currentUser} updateUser={updateUser} />} />
+          <Route path="/blog/:postId" element={<BlogPostScreen currentUser={currentUser} updateUser={updateUser} />} />
+          <Route path="/open-source" element={<OpenSourceScreen currentUser={currentUser} updateUser={updateUser} />} />
 
           {/* ─── Owner Admin Dashboard ────────────────────────────────────── */}
           <Route

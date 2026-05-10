@@ -5,8 +5,14 @@ import { Leaderboard } from './Leaderboard';
 import { ResourcesHub } from './ResourcesHub';
 import { AdminPanel } from './AdminPanel';
 import { motion, AnimatePresence } from 'motion/react';
+import { User } from '../../types';
 
-export default function OpenSourceScreen() {
+interface OpenSourceScreenProps {
+  currentUser?: User | null;
+  updateUser?: (data: Partial<User>) => Promise<void>;
+}
+
+export default function OpenSourceScreen({ currentUser, updateUser }: OpenSourceScreenProps) {
   const [activeTab, setActiveTab] = useState('feed');
 
   return (
@@ -19,7 +25,7 @@ export default function OpenSourceScreen() {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.2 }}
         >
-          {activeTab === 'feed' && <ProjectFeed />}
+          {activeTab === 'feed' && <ProjectFeed currentUser={currentUser} updateUser={updateUser} />}
           {activeTab === 'leaderboard' && <Leaderboard />}
           {activeTab === 'resources' && <ResourcesHub />}
           {activeTab === 'admin' && <AdminPanel />}

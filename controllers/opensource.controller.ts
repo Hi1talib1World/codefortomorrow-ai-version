@@ -210,3 +210,36 @@ export const getTrendingRepos = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error fetching trending repos' });
   }
 };
+
+export const getRepoReadme = async (req: Request, res: Response) => {
+  try {
+    const { owner, repo } = req.params;
+    const cacheKey = `readme_${owner}_${repo}`;
+    const cachedData = getCached(cacheKey);
+    if (cachedData) {
+      return res.send(cachedData);
+    }
+
+    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`, {
+      headers: {
+        'User-Agent': 'CodeForTomorrow-App',
+        'Accept': 'application/vnd.github.v3.raw',
+        ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
+      }
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return res.status(404).json({ message: 'Readme not found' });
+      }
+      throw new Error(`GitHub API error: ${response.status}`);
+    }
+
+    const markdown = await response.text();
+    setCached(cacheKey, markdown);
+    res.send(markdown);
+  } catch (error) {
+    console.error('Error fetching readme:', error);
+    res.status(500).json({ message: 'Error fetching readme' });
+  }
+};

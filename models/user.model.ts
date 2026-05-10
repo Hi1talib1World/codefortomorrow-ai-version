@@ -12,6 +12,8 @@ export interface IUser extends Document {
   role: 'student' | 'teacher' | 'admin';
   // FIX: Corrected the type for the 'progress' field to 'mongoose.Types.ObjectId'. The previous type `IProgress['_id']` was causing a compilation error.
   progress: mongoose.Types.ObjectId; // This will store the ObjectId of the user's progress document
+  savedRepos?: string[];
+  savedPosts?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -47,6 +49,8 @@ const userSchema: Schema = new Schema({
     enum: ['student', 'teacher', 'admin'],
     default: 'student',
   },
+  savedRepos: [{ type: String }],
+  savedPosts: [{ type: String }],
   progress: {
     type: Schema.Types.ObjectId,
     ref: 'Progress', // This creates the link to the Progress model

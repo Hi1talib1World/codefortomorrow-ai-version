@@ -105,3 +105,57 @@ export const getTeachers = async (req: Request, res: Response, next: NextFunctio
         next(error);
     }
 };
+
+/**
+ * @desc    Toggle saving a repository or blog post
+ * @route   PUT /api/users/save
+ * @access  Private
+ */
+export const toggleSaveItem = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        // @ts-ignore
+        const user = await User.findById(req.user?.id);
+
+        if (!user) {
+            throw new ApiError(404, 'User not found');
+        }
+
+        const { itemId, type } = req.body;
+        if (!itemId || !['repo', 'post'].includes(type)) {
+            throw new ApiError(400, 'Invalid request data');
+        }
+
+        if (type === 'repo') {
+            const repos = user.savedRepos || [];
+            if (repos.includes(itemId)) {
+                user.savedRepos = repos.filter(id => id !== itemId);
+            } else {
+                user.savedRepos = [...repos, itemId];
+            }
+        } else if (type === 'post') {
+            const posts = user.savedPosts || [];
+            if (posts.includes(itemId)) {
+                user.savedPosts = posts.filter(id => id !== itemId);
+            } else {
+                user.savedPosts = [...posts, itemId];
+            }
+        }
+
+        const updatedUser = await user.save();
+        await updatedUser.populate('progress');
+
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            profilePictureUrl: updatedUser.profilePictureUrl,
+            bio: (updatedUser as any).bio,
+            currentPath: (updatedUser as any).currentPath,
+            progress: updatedUser.progress,
+            savedRepos: updatedUser.savedRepos,
+            savedPosts: updatedUser.savedPosts,
+        });
+    } catch (error) {
+        next(error);
+    }
+};

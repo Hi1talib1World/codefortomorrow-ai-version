@@ -1,16 +1,46 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, Clock, Share2, Twitter, Facebook, Linkedin, Link2, X } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Clock, Share2, Twitter, Facebook, Linkedin, Link2, X, Bookmark } from 'lucide-react';
 import { blogPosts } from '../BlogScreen';
 import { useToast } from '../ToastNotification';
+import { User as UserType } from '../../types';
+import api from '../../services/api';
+import { AuthPromptModal } from '../AuthPromptModal';
 
-export default function BlogPostScreen() {
+interface BlogPostScreenProps {
+    currentUser?: UserType | null;
+    updateUser?: (data: Partial<UserType>) => Promise<void>;
+}
+
+export default function BlogPostScreen({ currentUser, updateUser }: BlogPostScreenProps) {
     const { postId } = useParams<{ postId: string }>();
     const navigate = useNavigate();
     const { showToast } = useToast();
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
     const post = blogPosts.find(p => p.id === postId);
+
+    const handleSavePost = async () => {
+        if (!post) return;
+        if (!currentUser || currentUser._id.startsWith('guest_')) {
+            setIsAuthModalOpen(true);
+            return;
+        }
+        
+        try {
+            const updatedUser = await api.toggleSaveItem(post.id, 'post');
+            if (updateUser) {
+                await updateUser(updatedUser);
+            }
+            showToast(updatedUser.savedPosts?.includes(post.id) ? 'Post saved to bookmarks!' : 'Post removed from bookmarks.', 'success');
+        } catch (error) {
+            console.error('Failed to save post:', error);
+            showToast('Failed to save post.', 'error');
+        }
+    };
+    
+    const isSaved = currentUser?.savedPosts?.includes(post?.id || '');
 
     const handleShareClick = () => {
         setIsShareModalOpen(true);
@@ -47,6 +77,7 @@ export default function BlogPostScreen() {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 selection:bg-brand-100 selection:text-brand-900 pb-20">
+            <AuthPromptModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
             {/* Header */}
             <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -107,12 +138,30 @@ export default function BlogPostScreen() {
                     >
                         <Share2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
                     </button>
+                    
+                    <span className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 mt-4 rotate-180" style={{ writingMode: 'vertical-rl' }}>Save</span>
+                    <button 
+                        onClick={handleSavePost}
+                        className={`w-12 h-12 rounded-full border flex items-center justify-center transition-colors group shadow-sm ${isSaved ? 'bg-brand-50 dark:bg-brand-500/10 border-brand-200 dark:border-brand-500/30 text-brand-500' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500 hover:text-brand-500 hover:border-brand-500'}`}
+                    >
+                        <Bookmark className={`w-5 h-5 group-hover:scale-110 transition-transform ${isSaved ? 'fill-current' : ''}`} />
+                    </button>
                 </div>
 
                 {/* Article Content */}
                 <article className="max-w-3xl flex-1 mt-4">
-                    <div className="flex items-center gap-2 text-brand-600 dark:text-brand-400 font-bold mb-10 pb-10 border-b border-slate-200 dark:border-slate-800 cursor-pointer w-fit" onClick={() => navigate('/blog')}>
-                        <ArrowLeft className="w-5 h-5" /> Back to Blog
+                    <div className="flex items-center justify-between mb-10 pb-10 border-b border-slate-200 dark:border-slate-800">
+                        <div className="flex items-center gap-2 text-brand-600 dark:text-brand-400 font-bold cursor-pointer w-fit" onClick={() => navigate('/blog')}>
+                            <ArrowLeft className="w-5 h-5" /> Back to Blog
+                        </div>
+                        <div className="flex lg:hidden items-center gap-3">
+                            <button onClick={handleShareClick} className="p-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full">
+                                <Share2 className="w-4 h-4" />
+                            </button>
+                            <button onClick={handleSavePost} className={`p-2 rounded-full ${isSaved ? 'bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'}`}>
+                                <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+                            </button>
+                        </div>
                     </div>
 
                     <p className="text-xl md:text-2xl font-medium text-slate-600 dark:text-slate-300 leading-relaxed mb-12">
