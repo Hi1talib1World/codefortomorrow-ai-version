@@ -15,7 +15,7 @@ interface DashboardLayoutProps {
 
 const GENERAL_ITEMS = [
   { id: 'feed', icon: Home, label: 'Home' },
-  { id: 'yc-oss', icon: Zap, label: 'YC-OSS' },
+  { id: 'yc-oss', icon: Zap, label: 'AI Repos' },
   { id: 'gsoc', icon: Users, label: 'GSoC Orgs' },
   { id: 'trending', icon: TrendingUp, label: 'Trending Repos' },
   { id: 'issues', icon: Search, label: 'Find Issues' },
