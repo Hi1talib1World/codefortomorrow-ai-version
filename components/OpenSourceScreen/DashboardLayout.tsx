@@ -16,19 +16,19 @@ interface DashboardLayoutProps {
 const GENERAL_ITEMS = [
   { id: 'feed', icon: Home, label: 'Home' },
   { id: 'yc-oss', icon: Zap, label: 'AI Repos' },
-  { id: 'gsoc', icon: Users, label: 'GSoC Orgs' },
-  { id: 'trending', icon: TrendingUp, label: 'Trending Repos' },
-  { id: 'issues', icon: Search, label: 'Find Issues' },
+  { id: 'gsoc', icon: Users, label: 'Hack Repos' },
+  { id: 'trending', icon: TrendingUp, label: 'Hot Now' },
+  { id: 'issues', icon: Search, label: 'Good First Issues' },
 ];
 
 const COMMUNITY_ITEMS = [
-  { id: 'leaderboard', icon: Users, label: 'Leaderboard' },
-  { id: 'resources', icon: BookOpen, label: 'Resources' },
-  { id: 'bounties', icon: DollarSign, label: 'Bounties' },
+  { id: 'leaderboard', icon: Users, label: 'Top Contributors' },
+  { id: 'resources', icon: BookOpen, label: 'Starter Kits' },
+  { id: 'bounties', icon: DollarSign, label: 'Earn & Code' },
 ];
 
 const MY_DASHBOARD_ITEMS = [
-  { id: 'admin', icon: Search, label: 'Overview' },
+  { id: 'admin', icon: Search, label: 'My Saved' },
 ];
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, activeTab, setActiveTab }) => {
