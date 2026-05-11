@@ -29,6 +29,7 @@ const BrainChallengeGameScreen = lazy(() => import('./components/BrainChallengeG
 const BlogScreen = lazy(() => import('./components/BlogScreen'));
 const BlogPostScreen = lazy(() => import('./components/BlogPostScreen'));
 const OpenSourceScreen = lazy(() => import('./components/OpenSourceScreen'));
+const RepoArticlePage = lazy(() => import('./components/OpenSourceScreen/RepoArticlePage'));
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 
 /** Default blank progress object used when creating a guest/new user session. */
@@ -414,6 +415,7 @@ export default function App() {
           <Route path="/blog" element={<BlogScreen currentUser={currentUser} updateUser={updateUser} />} />
           <Route path="/blog/:postId" element={<BlogPostScreen currentUser={currentUser} updateUser={updateUser} />} />
           <Route path="/open-source" element={<OpenSourceScreen currentUser={currentUser} updateUser={updateUser} />} />
+          <Route path="/open-source/:category/:slug" element={<RepoArticlePage />} />
 
           {/* ─── Owner Admin Dashboard ────────────────────────────────────── */}
           <Route
