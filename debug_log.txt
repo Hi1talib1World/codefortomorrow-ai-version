@@ -1,2 +1,0 @@
-Dirname: .
-CWD: C:\Users\hix\Documents\GitHub\codefortomorrow-ai-version

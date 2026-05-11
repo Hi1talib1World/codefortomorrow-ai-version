@@ -41,9 +41,7 @@ async function startServer() {
     const isConnected = mongoose.connection.readyState === 1;
     res.json({
       status: isConnected ? 'ok' : 'error',
-      database: isConnected ? 'connected' : 'disconnected',
-      cwd: process.cwd(),
-      dirname: _dirname
+      database: isConnected ? 'connected' : 'disconnected'
     });
   });
 
