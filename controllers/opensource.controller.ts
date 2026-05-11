@@ -222,29 +222,60 @@ export const getRepoReadme = async (req: Request, res: Response) => {
   try {
     const { owner, repo } = req.params;
     const cacheKey = `readme_${owner}_${repo}`;
+
+    // 1. Check in-memory cache first
     const cachedData = getCached(cacheKey);
     if (cachedData) {
       return res.send(cachedData);
     }
 
-    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`, {
-      headers: {
-        'User-Agent': 'CodeForTomorrow-App',
-        'Accept': 'application/vnd.github.v3.raw',
-        ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
-      }
-    });
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        return res.status(404).json({ message: 'Readme not found' });
-      }
-      throw new Error(`GitHub API error: ${response.status}`);
+    // 2. Check persistent file cache
+    const readmeCacheDir = path.resolve(process.cwd(), 'readme-cache');
+    const readmeCacheFile = path.resolve(readmeCacheDir, `${owner}__${repo}.md`);
+    
+    let persistentCachedReadme: string | null = null;
+    if (fs.existsSync(readmeCacheFile)) {
+      persistentCachedReadme = fs.readFileSync(readmeCacheFile, 'utf-8');
     }
 
-    const markdown = await response.text();
-    setCached(cacheKey, markdown);
-    res.send(markdown);
+    // 3. Try fetching from GitHub
+    try {
+      const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`, {
+        headers: {
+          'User-Agent': 'CodeForTomorrow-App',
+          'Accept': 'application/vnd.github.v3.raw',
+          ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
+        }
+      });
+
+      if (response.ok) {
+        const markdown = await response.text();
+        setCached(cacheKey, markdown);
+
+        // Persist to file cache
+        if (!fs.existsSync(readmeCacheDir)) {
+          fs.mkdirSync(readmeCacheDir, { recursive: true });
+        }
+        fs.writeFileSync(readmeCacheFile, markdown);
+
+        return res.send(markdown);
+      } else if (response.status === 404) {
+        return res.status(404).json({ message: 'Readme not found' });
+      } else {
+        // Rate limited or other error — fall through to persistent cache
+        console.warn(`[GitHub API] Error ${response.status} fetching README for ${owner}/${repo}`);
+      }
+    } catch (fetchErr) {
+      console.warn(`[GitHub API] Network error fetching README for ${owner}/${repo}:`, fetchErr);
+    }
+
+    // 4. Fallback to persistent cache
+    if (persistentCachedReadme) {
+      setCached(cacheKey, persistentCachedReadme);
+      return res.send(persistentCachedReadme);
+    }
+
+    res.status(503).json({ message: 'GitHub API unavailable and no cached README found.' });
   } catch (error) {
     console.error('Error fetching readme:', error);
     res.status(500).json({ message: 'Error fetching readme' });

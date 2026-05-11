@@ -4,6 +4,8 @@ import { ProjectFeed } from './ProjectFeed';
 import { Leaderboard } from './Leaderboard';
 import { ResourcesHub } from './ResourcesHub';
 import { AdminPanel } from './AdminPanel';
+import { AIRepos } from './AIRepos';
+import { HackRepos } from './HackRepos';
 import { motion, AnimatePresence } from 'motion/react';
 import { User } from '../../types';
 
@@ -26,6 +28,8 @@ export default function OpenSourceScreen({ currentUser, updateUser }: OpenSource
           transition={{ duration: 0.2 }}
         >
           {activeTab === 'feed' && <ProjectFeed currentUser={currentUser} updateUser={updateUser} />}
+          {activeTab === 'yc-oss' && <AIRepos />}
+          {activeTab === 'gsoc' && <HackRepos />}
           {activeTab === 'leaderboard' && <Leaderboard />}
           {activeTab === 'resources' && <ResourcesHub />}
           {activeTab === 'admin' && <AdminPanel />}
@@ -34,3 +38,4 @@ export default function OpenSourceScreen({ currentUser, updateUser }: OpenSource
     </DashboardLayout>
   );
 }
+
