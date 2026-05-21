@@ -71,24 +71,34 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
   // Fetch search results from GitHub when query or filters change
   useEffect(() => {
     const doSearch = async () => {
-      if (!searchQuery && !languageFilter && !sortBy) {
-        setSearchResults(null);
-        return;
+      const baseQuery = searchQuery.trim() || 'stars:>10000';
+      const queryParts = [baseQuery];
+      if (languageFilter) queryParts.push(`language:${languageFilter}`);
+      const query = queryParts.join(' ');
+
+      const params = new URLSearchParams();
+      params.set('q', query);
+      if (sortBy) {
+        params.set('sort', sortBy as string);
+        params.set('order', 'desc');
       }
+      params.set('per_page', '30');
+
+      const url = `/api/opensource/search?${params.toString()}`;
       try {
-        const q = searchQuery || 'stars:>100';
-        const params = new URLSearchParams();
-        params.set('q', q);
-        if (languageFilter) params.set('language', languageFilter);
-        if (sortBy) params.set('sort', sortBy as string);
-        params.set('per_page', '30');
-        const res = await fetch(`/api/opensource/search?${params.toString()}`);
-        if (res.ok) {
-          const data = await res.json();
-          setSearchResults(data);
+        console.log('GitHub search URL:', url);
+        const res = await fetch(url);
+        if (!res.ok) {
+          const text = await res.text();
+          console.error('Search API request failed:', url, res.status, res.statusText, text);
+          setSearchResults([]);
+          return;
         }
+
+        const data = await res.json();
+        setSearchResults(data);
       } catch (err) {
-        console.error('Search failed', err);
+        console.error('Search failed:', err, 'URL:', url);
       }
     };
     const t = setTimeout(doSearch, 300);
