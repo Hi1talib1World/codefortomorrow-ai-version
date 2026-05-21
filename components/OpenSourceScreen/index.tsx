@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DashboardLayout } from './DashboardLayout';
 import { ProjectFeed } from './ProjectFeed';
 import { Leaderboard } from './Leaderboard';
 import { ResourcesHub } from './ResourcesHub';
 import { AdminPanel } from './AdminPanel';
+import { MySaved } from './MySaved';
 import { AIRepos } from './AIRepos';
 import { HackRepos } from './HackRepos';
 import { motion, AnimatePresence } from 'motion/react';
@@ -14,11 +15,14 @@ interface OpenSourceScreenProps {
   updateUser?: (data: Partial<User>) => Promise<void>;
 }
 
+import { useSearchParams } from 'react-router-dom';
+
 export default function OpenSourceScreen({ currentUser, updateUser }: OpenSourceScreenProps) {
-  const [activeTab, setActiveTab] = useState('feed');
+  const [searchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'feed';
 
   return (
-    <DashboardLayout activeTab={activeTab} setActiveTab={setActiveTab}>
+    <DashboardLayout>
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
@@ -30,9 +34,9 @@ export default function OpenSourceScreen({ currentUser, updateUser }: OpenSource
           {activeTab === 'feed' && <ProjectFeed currentUser={currentUser} updateUser={updateUser} />}
           {activeTab === 'yc-oss' && <AIRepos />}
           {activeTab === 'gsoc' && <HackRepos />}
-          {activeTab === 'leaderboard' && <Leaderboard />}
+          {activeTab === 'trending' && <Leaderboard />}
           {activeTab === 'resources' && <ResourcesHub />}
-          {activeTab === 'admin' && <AdminPanel />}
+          {activeTab === 'admin' && <MySaved />}
         </motion.div>
       </AnimatePresence>
     </DashboardLayout>

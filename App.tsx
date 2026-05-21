@@ -438,6 +438,7 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <RepoProvider>
       <ErrorBoundary>
         <ThemeProvider>
           <ToastProvider>
@@ -449,6 +450,7 @@ export default function App() {
           </ToastProvider>
         </ThemeProvider>
       </ErrorBoundary>
+      </RepoProvider>
     </QueryClientProvider>
   );
 }

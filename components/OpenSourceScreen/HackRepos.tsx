@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search, CheckCircle2, Star, GitFork, ExternalLink, Shield } from 'lucide-react';
@@ -12,13 +12,37 @@ const formatNumber = (num: number) => num >= 1000 ? (num / 1000).toFixed(1) + 'k
 export const HackRepos: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [repos, setRepos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const filtered = HACK_REPOS_DATA.filter(r => {
-    const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) || r.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === 'All' || r.category === activeCategory;
+  const source = repos.length > 0 ? repos : HACK_REPOS_DATA;
+  const filtered = source.filter((r: any) => {
+    const name = (r.name || r.full_name || '').toLowerCase();
+    const desc = (r.description || '').toLowerCase();
+    const matchesSearch = name.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase());
+    const matchesCategory = activeCategory === 'All' || (r.category === activeCategory) || ((r.topics || []).includes(activeCategory));
     return matchesSearch && matchesCategory;
   });
+
+  useEffect(() => {
+    const fetchHackRepos = async () => {
+      setLoading(true);
+      try {
+        const q = 'security OR pentest OR ctf';
+        const res = await fetch(`/api/opensource/search?q=${encodeURIComponent(q)}&sort=stars&per_page=30`);
+        if (res.ok) {
+          const data = await res.json();
+          setRepos(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch hack repos', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHackRepos();
+  }, []);
 
   return (
     <div className="space-y-8">

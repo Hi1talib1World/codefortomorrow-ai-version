@@ -218,6 +218,76 @@ export const getTrendingRepos = async (req: Request, res: Response) => {
   }
 };
 
+export const searchRepos = async (req: Request, res: Response) => {
+  try {
+    const { q, language, sort = 'stars', order = 'desc', per_page = '30', page = '1' } = req.query as any;
+
+    // Allow clients to pass a full q; otherwise return bad request
+    if (!q || typeof q !== 'string') {
+      return res.status(400).json({ message: 'Query parameter `q` is required.' });
+    }
+
+    const cacheKey = `search_${q}_${language || ''}_${sort}_${order}_${per_page}_${page}`;
+    const cachedData = getCached(cacheKey);
+    if (cachedData) return res.json(cachedData);
+
+    let query = q;
+    if (language) {
+      query += ` language:${language}`;
+    }
+
+    const response = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=${encodeURIComponent(sort)}&order=${encodeURIComponent(order)}&per_page=${encodeURIComponent(per_page)}&page=${encodeURIComponent(page)}`, {
+      headers: {
+        'User-Agent': 'CodeForTomorrow-App',
+        ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
+      }
+    });
+
+    if (!response.ok) {
+      if (response.status === 403) return res.status(429).json({ message: 'GitHub API rate limit exceeded.' });
+      throw new Error(`GitHub API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    setCached(cacheKey, data.items || []);
+    res.json(data.items || []);
+  } catch (error) {
+    console.error('Error searching repos:', error);
+    res.status(500).json({ message: 'Error searching repositories' });
+  }
+};
+
+export const getReposById = async (req: Request, res: Response) => {
+  try {
+    const ids = (req.query.ids as string) || '';
+    if (!ids) return res.status(400).json({ message: 'ids query param required' });
+    const idList = ids.split(',').map(s => s.trim()).filter(Boolean);
+    const results: any[] = [];
+
+    for (const id of idList) {
+      try {
+        const response = await fetch(`https://api.github.com/repositories/${encodeURIComponent(id)}`, {
+          headers: {
+            'User-Agent': 'CodeForTomorrow-App',
+            ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          results.push(data);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch repo by id', id, err);
+      }
+    }
+
+    res.json(results);
+  } catch (error) {
+    console.error('Error getting repos by id:', error);
+    res.status(500).json({ message: 'Error fetching repositories by id' });
+  }
+};
+
 export const getRepoReadme = async (req: Request, res: Response) => {
   try {
     const { owner, repo } = req.params;

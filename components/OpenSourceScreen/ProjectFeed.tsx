@@ -43,6 +43,9 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [languageFilter, setLanguageFilter] = useState('');
+  const [sortBy, setSortBy] = useState<'stars'|'forks'|'updated'|'']('');
+  const [searchResults, setSearchResults] = useState<Repo[] | null>(null);
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
@@ -63,10 +66,39 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
     fetchRepos();
   }, []);
 
+  // Fetch search results from GitHub when query or filters change
+  useEffect(() => {
+    const doSearch = async () => {
+      if (!searchQuery && !languageFilter && !sortBy) {
+        setSearchResults(null);
+        return;
+      }
+      try {
+        const q = searchQuery || 'stars:>100';
+        const params = new URLSearchParams();
+        params.set('q', q);
+        if (languageFilter) params.set('language', languageFilter);
+        if (sortBy) params.set('sort', sortBy as string);
+        params.set('per_page', '30');
+        const res = await fetch(`/api/opensource/search?${params.toString()}`);
+        if (res.ok) {
+          const data = await res.json();
+          setSearchResults(data);
+        }
+      } catch (err) {
+        console.error('Search failed', err);
+      }
+    };
+    const t = setTimeout(doSearch, 300);
+    return () => clearTimeout(t);
+  }, [searchQuery, languageFilter, sortBy]);
+
   const filteredRepos = repos.filter(r => 
     r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     (r.description && r.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  const displayedRepos = searchResults !== null ? searchResults : filteredRepos;
 
   const formatNumber = (num: number) => {
     if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
@@ -131,12 +163,22 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
 
           {/* Filters */}
           <div className="flex items-center gap-3 w-full md:w-auto">
-            <button className="flex-1 md:flex-none flex items-center justify-between gap-3 px-4 py-2.5 bg-[#0e0e11] border border-slate-800 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-800/50 transition-colors">
-              Languages <ChevronDown className="w-4 h-4 text-slate-500" />
-            </button>
-            <button className="flex-1 md:flex-none flex items-center justify-between gap-3 px-4 py-2.5 bg-[#0e0e11] border border-slate-800 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-800/50 transition-colors">
-              Popularity <ChevronDown className="w-4 h-4 text-slate-500" />
-            </button>
+            <div className="flex items-center gap-2">
+              <select value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)} className="px-3 py-2 bg-[#0e0e11] border border-slate-800 rounded-lg text-sm text-slate-300">
+                <option value="">All Languages</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="TypeScript">TypeScript</option>
+                <option value="Python">Python</option>
+                <option value="Go">Go</option>
+                <option value="Rust">Rust</option>
+              </select>
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value as any)} className="px-3 py-2 bg-[#0e0e11] border border-slate-800 rounded-lg text-sm text-slate-300">
+                <option value="">Sort</option>
+                <option value="stars">Most stars</option>
+                <option value="forks">Most forks</option>
+                <option value="updated">Recently updated</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -159,7 +201,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
           animate="show"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {filteredRepos.map(repo => {
+          {displayedRepos.map(repo => {
             const tier = getTierBadge(repo.stargazers_count);
             return (
               <motion.div 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search, CheckCircle2, Star, GitFork, ExternalLink, Sparkles } from 'lucide-react';
@@ -12,13 +12,44 @@ const formatNumber = (num: number) => num >= 1000 ? (num / 1000).toFixed(1) + 'k
 export const AIRepos: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [repos, setRepos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [languageFilter, setLanguageFilter] = useState('');
+  const [popularitySort, setPopularitySort] = useState<'stars' | 'forks' | ''>('');
   const navigate = useNavigate();
 
-  const filtered = AI_REPOS_DATA.filter(r => {
-    const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) || r.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === 'All' || r.category === activeCategory;
-    return matchesSearch && matchesCategory;
+  const source = repos.length > 0 ? repos : AI_REPOS_DATA;
+  const filtered = source.filter((r: any) => {
+    const name = (r.name || r.full_name || '').toLowerCase();
+    const desc = (r.description || '').toLowerCase();
+    const matchesSearch = name.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase());
+    const matchesCategory = activeCategory === 'All' || (r.category === activeCategory) || ((r.language || '') === activeCategory) || ((r.topics || []).includes(activeCategory));
+    const matchesLanguage = !languageFilter || (r.language || '').toLowerCase() === languageFilter.toLowerCase();
+    return matchesSearch && matchesCategory && matchesLanguage;
   });
+
+  useEffect(() => {
+    const fetchAIRepos = async () => {
+      setLoading(true);
+      try {
+        // Construct a basic query for AI repos
+        const q = 'ai OR machine learning';
+        const res = await fetch(`/api/opensource/search?q=${encodeURIComponent(q)}&sort=stars&per_page=30`);
+        if (res.ok) {
+          const data = await res.json();
+          setRepos(data.map((r: any) => ({
+            ...r,
+            owner: r.owner || { avatar_url: r.owner?.avatar_url || 'https://github.com/github.png' }
+          })));
+        }
+      } catch (err) {
+        console.error('Failed to fetch AI repos', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAIRepos();
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -49,10 +80,10 @@ export const AIRepos: React.FC = () => {
         <div className="text-center py-20 bg-[#121212] rounded-2xl border border-slate-800"><p className="text-slate-500 font-semibold">No AI repos match your search.</p></div>
       ) : (
         <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map(repo => {
-            const IconComp = repo.icon;
+          {filtered.map((repo: any) => {
+            const IconComp = repo.icon || (() => null);
             return (
-              <motion.div onClick={() => navigate(`/open-source/ai/${repo.slug}`)} key={repo.id} variants={itemVariants}
+              <motion.div onClick={() => window.open(repo.html_url || repo.url, '_blank', 'noopener')} key={repo.id || repo.full_name} variants={itemVariants}
                 className="bg-[#121212] rounded-2xl border border-slate-800/60 hover:border-purple-500/30 p-6 flex flex-col transition-all group cursor-pointer hover:shadow-lg hover:shadow-purple-500/5">
                 <div className="flex items-start gap-4 mb-4">
                   <img src={repo.owner.avatar_url} alt={repo.name} className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800"
@@ -67,11 +98,11 @@ export const AIRepos: React.FC = () => {
                   <ExternalLink className="w-4 h-4 text-slate-600 group-hover:text-purple-400 shrink-0 transition-colors" />
                 </div>
                 <div className="flex items-center gap-2 mb-6 flex-wrap">
-                  <span className="px-3 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-[11px] font-bold rounded-md">{repo.language}</span>
-                  <span className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[11px] font-bold rounded-md flex items-center gap-1"><IconComp className="w-3 h-3" /> {repo.category}</span>
+                  <span className="px-3 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-[11px] font-bold rounded-md">{repo.language || 'Code'}</span>
+                  <span className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[11px] font-bold rounded-md flex items-center gap-1"><IconComp className="w-3 h-3" /> {repo.category || (repo.topics && repo.topics[0]) || 'AI'}</span>
                 </div>
                 <div className="flex items-center gap-2 mb-6 mt-auto flex-wrap">
-                  {repo.topics.map(t => <div key={t} className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">{t}</div>)}
+                  {(repo.topics || []).slice(0,3).map((t: string) => <div key={t} className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">{t}</div>)}
                 </div>
                 <div className="flex items-center gap-6 pt-5 border-t border-slate-800/60 text-sm font-semibold">
                   <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-500 fill-current" /><span className="text-white">Stars</span><span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span></div>

@@ -5,12 +5,10 @@ import {
   BookOpen, DollarSign, Bell, Star, 
   Twitter, Github, Mail, Menu, X, ChevronRight, CheckCircle2
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
 }
 
 const GENERAL_ITEMS = [
@@ -31,35 +29,38 @@ const MY_DASHBOARD_ITEMS = [
   { id: 'admin', icon: Search, label: 'My Saved' },
 ];
 
-export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, activeTab, setActiveTab }) => {
+export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'feed';
 
-  const renderNavSection = (title: string, items: typeof GENERAL_ITEMS) => (
+      const renderNavSection = (title: string, items: typeof GENERAL_ITEMS) => (
     <div className="mb-6">
       <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4 mb-3">{title}</h3>
       <div className="space-y-1">
         {items.map((item) => {
-          const isActive = activeTab === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => {
-                setActiveTab(item.id);
-                setIsMobileMenuOpen(false);
-              }}
-              className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg transition-colors text-sm font-semibold
-                ${isActive 
-                  ? 'bg-slate-800/50 text-[#facc15]' 
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
-                }`}
-            >
-              <div className="flex items-center gap-3">
-                <item.icon className={`w-4 h-4 ${isActive ? 'text-[#facc15]' : ''}`} />
-                {item.label}
-              </div>
-              {isActive && <ChevronRight className="w-4 h-4 text-[#facc15]" />}
-            </button>
-          );
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    navigate(`/open-source?tab=${item.id}`);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg transition-colors text-sm font-semibold
+                    ${isActive 
+                      ? 'bg-slate-800/50 text-[#facc15]' 
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
+                    }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <item.icon className={`w-4 h-4 ${isActive ? 'text-[#facc15]' : ''}`} />
+                    {item.label}
+                  </div>
+                  {isActive && <ChevronRight className="w-4 h-4 text-[#facc15]" />}
+                </button>
+              );
         })}
       </div>
     </div>
