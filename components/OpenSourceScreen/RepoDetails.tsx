@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft, Star, GitFork, Github, CheckCircle2, Bookmark } from 'lucide-react';
+import { ArrowLeft, Star, GitFork, Github, CheckCircle2, Bookmark, Share2, Twitter, Facebook, Linkedin, Link2, X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { User } from '../../types';
@@ -19,6 +19,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchReadme = async () => {
@@ -86,6 +87,13 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
           <span className="font-semibold">Back to Feed</span>
         </button>
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsShareModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 border rounded-lg font-semibold transition-colors bg-[#121212] border-slate-800 text-slate-300 hover:bg-slate-800"
+          >
+            <Share2 className="w-4 h-4" />
+            <span>Share</span>
+          </button>
           <button 
             onClick={handleSaveRepo}
             className={`flex items-center gap-2 px-4 py-2 border rounded-lg font-semibold transition-colors ${isSaved ? 'bg-brand-500/10 border-brand-500/20 text-brand-500' : 'bg-[#121212] border-slate-800 text-slate-300 hover:bg-slate-800'}`}
@@ -136,6 +144,79 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
           </div>
         </div>
       </div>
+
+      {/* Share Modal */}
+      {isShareModalOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[2rem] shadow-2xl border border-slate-200/60 dark:border-slate-800/60 overflow-hidden">
+            <div className="p-6 flex justify-between items-center border-b border-slate-100 dark:border-slate-800/80">
+              <h3 className="font-black tracking-tight text-xl text-slate-900 dark:text-white flex items-center gap-2">
+                <Share2 className="w-5 h-5 text-brand-500" /> Share Repository
+              </h3>
+              <button 
+                onClick={() => setIsShareModalOpen(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                <a 
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(repo.html_url)}&text=${encodeURIComponent(repo.name)}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 group"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-[#E8F5FE] text-[#1DA1F2] flex items-center justify-center group-hover:-translate-y-1 transition-transform">
+                    <Twitter className="w-6 h-6" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-500">Twitter</span>
+                </a>
+                <a 
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(repo.html_url)}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 group"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-[#EBF0F8] text-[#1877F2] flex items-center justify-center group-hover:-translate-y-1 transition-transform">
+                    <Facebook className="w-6 h-6" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-500">Facebook</span>
+                </a>
+                <a 
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(repo.html_url)}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 group"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-[#EAF3FA] text-[#0A66C2] flex items-center justify-center group-hover:-translate-y-1 transition-transform">
+                    <Linkedin className="w-6 h-6" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-500">LinkedIn</span>
+                </a>
+                <button 
+                  onClick={async () => { await navigator.clipboard.writeText(repo.html_url); setIsShareModalOpen(false); }}
+                  className="flex flex-col items-center gap-2 group"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center group-hover:-translate-y-1 transition-transform">
+                    <Link2 className="w-6 h-6" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-500">Copy</span>
+                </button>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 border border-slate-200 dark:border-slate-700">
+                <div className="text-xs font-medium text-slate-500 truncate flex-1 pl-1 select-all">
+                  {repo.html_url}
+                </div>
+                <button 
+                  onClick={async () => { await navigator.clipboard.writeText(repo.html_url); setIsShareModalOpen(false); }}
+                  className="px-4 py-2 bg-white dark:bg-slate-700 text-slate-700 dark:text-white text-xs font-bold rounded-lg shadow-sm hover:shadow transition-shadow border border-slate-200 dark:border-slate-600 shrink-0"
+                >
+                  Copy Link
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Readme Content */}
       <div className="bg-[#121212] rounded-3xl border border-slate-800 p-8 min-h-[50vh]">

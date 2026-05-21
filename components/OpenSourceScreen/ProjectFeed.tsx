@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Search, ChevronDown, CheckCircle2, Star, GitFork, Bookmark } from 'lucide-react';
+import { Search, ChevronDown, CheckCircle2, Star, GitFork, Bookmark, Share2 } from 'lucide-react';
 import { RepoDetails } from './RepoDetails';
 import { User } from '../../types';
 import api from '../../services/api';
@@ -77,6 +77,13 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
     if (stars > 5000) return { label: 'Legendary', class: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500' };
     if (stars > 1000) return { label: 'Popular', class: 'bg-blue-500/10 border-blue-500/20 text-blue-400' };
     return { label: 'Rising', class: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' };
+  };
+
+  const handleShareInFeed = (e: React.MouseEvent, repo: Repo) => {
+    e.stopPropagation();
+    const shareUrl = encodeURIComponent(repo.html_url);
+    const shareText = encodeURIComponent(repo.name);
+    window.open(`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`, '_blank', 'noopener');
   };
 
   const handleSaveRepo = async (e: React.MouseEvent, repoId: number) => {
@@ -217,6 +224,10 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
                     <span className="text-white">Forks</span>
                     <span className="text-slate-400">{formatNumber(repo.forks_count || 0)}</span>
                   </div>
+                  <button onClick={(e) => handleShareInFeed(e, repo)} className="flex items-center gap-1.5 p-2 rounded-md bg-slate-800 hover:bg-slate-700">
+                    <Share2 className="w-4 h-4 text-slate-300" />
+                    <span className="text-slate-300">Share</span>
+                  </button>
                 </div>
               </motion.div>
             );
