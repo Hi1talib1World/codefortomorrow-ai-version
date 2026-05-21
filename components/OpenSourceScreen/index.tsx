@@ -7,6 +7,8 @@ import { AdminPanel } from './AdminPanel';
 import { MySaved } from './MySaved';
 import { AIRepos } from './AIRepos';
 import { HackRepos } from './HackRepos';
+import { GoodFirstIssues } from './GoodFirstIssues';
+import { BountiesHub } from './BountiesHub';
 import { motion, AnimatePresence } from 'motion/react';
 import { User } from '../../types';
 
@@ -31,11 +33,13 @@ export default function OpenSourceScreen({ currentUser, updateUser }: OpenSource
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.2 }}
         >
-          {activeTab === 'feed' && <ProjectFeed currentUser={currentUser} updateUser={updateUser} />}
+          {(activeTab === 'feed' || activeTab === 'trending') && <ProjectFeed currentUser={currentUser} updateUser={updateUser} />}
           {activeTab === 'yc-oss' && <AIRepos />}
           {activeTab === 'gsoc' && <HackRepos />}
-          {activeTab === 'trending' && <Leaderboard />}
+          {activeTab === 'leaderboard' && <Leaderboard />}
+          {activeTab === 'issues' && <GoodFirstIssues />}
           {activeTab === 'resources' && <ResourcesHub />}
+          {activeTab === 'bounties' && <BountiesHub />}
           {activeTab === 'admin' && <MySaved />}
         </motion.div>
       </AnimatePresence>

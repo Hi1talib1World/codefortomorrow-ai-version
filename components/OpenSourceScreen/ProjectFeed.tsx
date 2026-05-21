@@ -39,31 +39,33 @@ interface ProjectFeedProps {
   updateUser?: (data: Partial<User>) => Promise<void>;
 }
 
+type SortOption = 'stars' | 'forks' | 'updated' | '';
+
 export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUser }) => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [languageFilter, setLanguageFilter] = useState('');
-  const [sortBy, setSortBy] = useState<'stars'|'forks'|'updated'|'']('');
+  const [sortBy, setSortBy] = useState<SortOption>('');
   const [searchResults, setSearchResults] = useState<Repo[] | null>(null);
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchRepos = async () => {
+    const fetchTrending = async () => {
       try {
-        const res = await fetch('/api/opensource/repos');
+        const res = await fetch('/api/opensource/trending');
         if (res.ok) {
           const data = await res.json();
           setRepos(data);
         }
       } catch (error) {
-        console.error('Failed to fetch repos:', error);
+        console.error('Failed to fetch trending repos:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchRepos();
+    fetchTrending();
   }, []);
 
   // Fetch search results from GitHub when query or filters change
@@ -93,12 +95,11 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
     return () => clearTimeout(t);
   }, [searchQuery, languageFilter, sortBy]);
 
-  const filteredRepos = repos.filter(r => 
-    r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    (r.description && r.description.toLowerCase().includes(searchQuery.toLowerCase()))
+  const sourceRepos = searchResults !== null ? searchResults : repos;
+  const displayedRepos = sourceRepos.filter(r => 
+    (r.name || r.full_name || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+    ((r.description || '')).toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const displayedRepos = searchResults !== null ? searchResults : filteredRepos;
 
   const formatNumber = (num: number) => {
     if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
@@ -190,7 +191,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
             <div key={i} className="h-72 bg-[#121212] rounded-2xl border border-slate-800/60 animate-pulse"></div>
           ))}
         </div>
-      ) : filteredRepos.length === 0 ? (
+      ) : displayedRepos.length === 0 ? (
         <div className="text-center py-20 bg-[#121212] rounded-2xl border border-slate-800">
           <p className="text-slate-500 font-semibold">No repositories match your search.</p>
         </div>

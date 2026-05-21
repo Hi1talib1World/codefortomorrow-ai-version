@@ -218,6 +218,38 @@ export const getTrendingRepos = async (req: Request, res: Response) => {
   }
 };
 
+export const searchIssues = async (req: Request, res: Response) => {
+  try {
+    const { q, language, sort = 'comments', order = 'desc', per_page = '30', page = '1' } = req.query as any;
+    if (!q || typeof q !== 'string') {
+      return res.status(400).json({ message: 'Query parameter `q` is required.' });
+    }
+
+    let query = `${q} label:\"good first issue\" state:open`;
+    if (language) {
+      query += ` language:${language}`;
+    }
+
+    const response = await fetch(`https://api.github.com/search/issues?q=${encodeURIComponent(query)}&sort=${encodeURIComponent(sort)}&order=${encodeURIComponent(order)}&per_page=${encodeURIComponent(per_page)}&page=${encodeURIComponent(page)}`, {
+      headers: {
+        'User-Agent': 'CodeForTomorrow-App',
+        ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
+      }
+    });
+
+    if (!response.ok) {
+      if (response.status === 403) return res.status(429).json({ message: 'GitHub API rate limit exceeded.' });
+      throw new Error(`GitHub API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error searching issues:', error);
+    res.status(500).json({ message: 'Error searching issues' });
+  }
+};
+
 export const searchRepos = async (req: Request, res: Response) => {
   try {
     const { q, language, sort = 'stars', order = 'desc', per_page = '30', page = '1' } = req.query as any;
