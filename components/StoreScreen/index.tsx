@@ -1,15 +1,16 @@
 
 import React, { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { Zap, Tag, Palette, User, Coins } from 'lucide-react';
 
-const TokenIcon = () => <span className="text-yellow-400 drop-shadow-sm">♦️</span>;
+const TokenIcon = () => <Coins className="w-4 h-4 text-yellow-500 dark:text-yellow-400 inline-block drop-shadow-sm align-middle" />;
 
 const StoreTabsCount = ({ activeTab, setActiveTab, counts }: { activeTab: string, setActiveTab: (tab: string) => void, counts: Record<string, number> }) => {
     const tabs = [
-        { id: 'Boosters', label: 'Boosters', icon: '⚡' },
-        { id: 'Titles', label: 'Titles', icon: '🏷️' },
-        { id: 'Themes', label: 'Themes', icon: '🎨' },
-        { id: 'Avatar', label: 'Avatar', icon: '👤' },
+        { id: 'Boosters', label: 'Boosters', icon: <Zap className="w-5 h-5" /> },
+        { id: 'Titles', label: 'Titles', icon: <Tag className="w-5 h-5" /> },
+        { id: 'Themes', label: 'Themes', icon: <Palette className="w-5 h-5" /> },
+        { id: 'Avatar', label: 'Avatar', icon: <User className="w-5 h-5" /> },
     ];
     return (
         <div className="flex items-center justify-between border-b-4 border-slate-200 dark:border-slate-800 mb-8 overflow-x-auto no-scrollbar transition-colors">

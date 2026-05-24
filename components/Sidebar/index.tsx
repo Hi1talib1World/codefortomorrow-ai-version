@@ -4,6 +4,17 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { User } from '../../types';
 import { DashboardView } from '../Dashboard';
+import { 
+  Home, 
+  BookOpen, 
+  Folder, 
+  Award, 
+  Trophy, 
+  ShoppingBag, 
+  FileText, 
+  MessageSquare, 
+  Settings 
+} from 'lucide-react';
 
 interface SidebarProps {
   activeView: DashboardView;
@@ -15,15 +26,15 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, currentUse
   const { t } = useLanguage();
 
   const navItems = [
-    { id: 'home', label: t('home'), icon: <span className="text-2xl">🏠</span> },
-    { id: 'learn', label: t('learn'), icon: <span className="text-2xl">📚</span> },
-    { id: 'creations', label: t('creations'), icon: <span className="text-2xl">📁</span> },
-    { id: 'goals', label: t('goals'), icon: <span className="text-2xl">🏅</span> },
-    { id: 'leaderboard', label: t('leaderboard'), icon: <span className="text-2xl">🏆</span> },
-    { id: 'store', label: t('store'), icon: <span className="text-2xl">🛒</span> },
-    { id: 'docs', label: 'Docs', icon: <span className="text-2xl">📖</span> },
-    { id: 'messages', label: 'Support', icon: <span className="text-2xl">💬</span> },
-    { id: 'settings', label: t('settings'), icon: <span className="text-2xl">⚙️</span> },
+    { id: 'home', label: t('home'), icon: <Home className="w-5 h-5" /> },
+    { id: 'learn', label: t('learn'), icon: <BookOpen className="w-5 h-5" /> },
+    { id: 'creations', label: t('creations'), icon: <Folder className="w-5 h-5" /> },
+    { id: 'goals', label: t('goals'), icon: <Award className="w-5 h-5" /> },
+    { id: 'leaderboard', label: t('leaderboard'), icon: <Trophy className="w-5 h-5" /> },
+    { id: 'store', label: t('store'), icon: <ShoppingBag className="w-5 h-5" /> },
+    { id: 'docs', label: 'Docs', icon: <FileText className="w-5 h-5" /> },
+    { id: 'messages', label: 'Support', icon: <MessageSquare className="w-5 h-5" /> },
+    { id: 'settings', label: t('settings'), icon: <Settings className="w-5 h-5" /> },
     {
       id: 'profile',
       label: currentUser.name,

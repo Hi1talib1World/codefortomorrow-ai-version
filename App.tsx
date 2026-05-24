@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, useNavigate, Navigate, useParams } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { RepoProvider } from './contexts/RepoContext';
 import SplashScreen from './components/SplashScreen';
 import { Lesson, User, ProgrammingPath, UserProgress } from './types';
 import { BADGES_BY_PATH } from './constants';

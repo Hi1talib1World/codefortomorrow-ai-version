@@ -2,6 +2,14 @@
 import React from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { DashboardView } from '../Dashboard';
+import { 
+  Home, 
+  BookOpen, 
+  Folder, 
+  MessageSquare, 
+  ShoppingBag, 
+  User 
+} from 'lucide-react';
 
 interface BottomNavProps {
   activeView: DashboardView;
@@ -12,12 +20,12 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeView, setActiveView }) => {
   const { t } = useLanguage();
 
   const navItems = [
-    { id: 'home', label: t('home'), icon: '🏠' },
-    { id: 'learn', label: t('learn'), icon: '📚' },
-    { id: 'creations', label: t('creations'), icon: '📁' },
-    { id: 'messages', label: 'Chat', icon: '💬' },
-    { id: 'store', label: t('store'), icon: '🛒' },
-    { id: 'profile', label: t('profile'), icon: '👤' },
+    { id: 'home', label: t('home'), icon: <Home className="w-6 h-6" /> },
+    { id: 'learn', label: t('learn'), icon: <BookOpen className="w-6 h-6" /> },
+    { id: 'creations', label: t('creations'), icon: <Folder className="w-6 h-6" /> },
+    { id: 'messages', label: 'Chat', icon: <MessageSquare className="w-6 h-6" /> },
+    { id: 'store', label: t('store'), icon: <ShoppingBag className="w-6 h-6" /> },
+    { id: 'profile', label: t('profile'), icon: <User className="w-6 h-6" /> },
   ];
 
   return (
@@ -30,7 +38,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeView, setActiveView }) => {
             className={`flex-1 flex flex-col items-center justify-center pt-4 pb-4 transition-all transform active:scale-95 ${activeView === item.id ? 'text-[#4285F4] dark:text-[#8ab4f8]' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
               }`}
           >
-            <span className={`text-2xl mb-1 transition-all ${activeView === item.id ? 'scale-110' : 'filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100'}`}>{item.icon}</span>
+            <div className={`mb-1 transition-all ${activeView === item.id ? 'scale-110' : 'opacity-70 hover:opacity-100'}`}>{item.icon}</div>
             <span className="text-[10px] font-bold uppercase tracking-wide">{item.label}</span>
             {activeView === item.id && (
               <div className="w-8 h-1 bg-[#4285F4] dark:bg-[#8ab4f8] rounded-full mt-1.5"></div>

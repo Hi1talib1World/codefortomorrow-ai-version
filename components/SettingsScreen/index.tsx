@@ -3,6 +3,7 @@ import React from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Language } from '../../types';
+import { Globe, Palette, Sun, Moon, Heart } from 'lucide-react';
 
 const SettingsScreen: React.FC = () => {
   const { t, language, setLanguage } = useLanguage();
@@ -22,7 +23,7 @@ const SettingsScreen: React.FC = () => {
         {/* Language Section */}
         <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-xl border-b-[10px] border-slate-200 dark:border-slate-900 transition-colors">
           <div className="flex items-center space-x-4 mb-6">
-            <span className="text-4xl">🌍</span>
+            <Globe className="w-8 h-8 text-brand-500" />
             <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">{t('language_label')}</h2>
           </div>
           <p className="text-slate-500 dark:text-slate-400 font-bold text-xl mb-6 leading-tight">
@@ -50,7 +51,7 @@ const SettingsScreen: React.FC = () => {
         {/* Theme / Appearance Section */}
         <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-xl border-b-[10px] border-slate-200 dark:border-slate-900 transition-colors">
           <div className="flex items-center space-x-4 mb-6">
-            <span className="text-4xl">🎨</span>
+            <Palette className="w-8 h-8 text-brand-500" />
             <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">{t('appearance')}</h2>
           </div>
           <p className="text-slate-500 dark:text-slate-400 font-bold text-xl mb-8 leading-tight">
@@ -66,7 +67,9 @@ const SettingsScreen: React.FC = () => {
                   : 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 grayscale opacity-60'
                 }`}
             >
-              <div className="w-20 h-20 bg-yellow-400 rounded-2xl flex items-center justify-center text-5xl mb-4 shadow-lg animate-pulse">☀️</div>
+              <div className="w-20 h-20 bg-yellow-400 rounded-2xl flex items-center justify-center mb-4 shadow-lg animate-pulse">
+                <Sun className="w-10 h-10 text-white" />
+              </div>
               <span className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">{t('light_mode')}</span>
               {theme === 'light' && (
                 <div className="absolute -top-3 -right-3 w-8 h-8 bg-brand-500 text-white rounded-full flex items-center justify-center font-black shadow-lg">✓</div>
@@ -81,7 +84,9 @@ const SettingsScreen: React.FC = () => {
                   : 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 grayscale opacity-60'
                 }`}
             >
-              <div className="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center text-5xl mb-4 shadow-lg">🌙</div>
+              <div className="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+                <Moon className="w-10 h-10 text-white" />
+              </div>
               <span className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">{t('dark_mode')}</span>
               {theme === 'dark' && (
                 <div className="absolute -top-3 -right-3 w-8 h-8 bg-brand-500 text-white rounded-full flex items-center justify-center font-black shadow-lg">✓</div>
@@ -92,8 +97,8 @@ const SettingsScreen: React.FC = () => {
 
         {/* Version Info */}
         <div className="text-center py-8">
-          <p className="text-slate-400 dark:text-slate-600 font-black uppercase text-sm tracking-widest">
-            Code For Tomorrow v1.2.0 • Made with ❤️
+          <p className="text-slate-400 dark:text-slate-600 font-black uppercase text-sm tracking-widest flex items-center justify-center gap-1.5">
+            Code For Tomorrow v1.2.0 • Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" />
           </p>
         </div>
       </div>
