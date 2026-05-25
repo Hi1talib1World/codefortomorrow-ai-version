@@ -4,6 +4,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import compression from 'compression';
+import rateLimit from 'express-rate-limit';
 import { createServer as createViteServer } from 'vite';
 import connectDB from './config/db';
 import authRoutes from './routes/auth.routes';
@@ -31,9 +33,36 @@ async function startServer() {
   // Initialize the Express application
   const app: express.Application = express();
 
+  // Enable trust proxy for correct IP tracking behind reverse proxies (like Cloudflare or Nginx)
+  app.set('trust proxy', 1);
+
+  // Global rate limiter to protect the server from abuse (150 requests per 15 minutes per IP)
+  const globalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 150,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: 'Too many requests from this IP, please try again after 15 minutes',
+  });
+
+  // Stricter rate limiter for authentication routes (15 attempts per 15 minutes per IP)
+  const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 15,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: 'Too many login or registration attempts, please try again after 15 minutes',
+  });
+
   // --- Core Middleware ---
+  // Enable response compression (gzip/deflate)
+  app.use(compression());
   // Enable Express to parse JSON formatted request bodies
   app.use(express.json());
+
+  // Apply rate limiters
+  app.use('/api', globalLimiter);
+  app.use('/api/auth', authLimiter);
 
   // --- API Routes ---
   // Health check for database connection
@@ -91,9 +120,12 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    // In production, serve the built static files
+    // In production, serve the built static files with 1 day cache-control headers
     const distPath = path.resolve(_dirname, 'dist');
-    app.use(express.static(distPath));
+    app.use(express.static(distPath, {
+      maxAge: '1d',
+      etag: true
+    }));
 
     // Fallback to index.html for SPA routing
     app.get('*', (req, res) => {

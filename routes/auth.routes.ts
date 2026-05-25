@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { register, login, getMe, googleLogin } from '../controllers/auth.controller';
+import { register, login, getMe, googleLogin, firebaseLogin } from '../controllers/auth.controller';
 import { protect } from '../middleware/auth.middleware';
 
 const router = express.Router();
@@ -25,6 +25,13 @@ router.post('/login', login);
  * @access  Public
  */
 router.post('/google', googleLogin);
+
+/**
+ * @route   POST /api/auth/firebase
+ * @desc    Verify Firebase Token and login/register
+ * @access  Public
+ */
+router.post('/firebase', firebaseLogin);
 
 /**
  * @route   GET /api/auth/me

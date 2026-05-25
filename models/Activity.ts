@@ -36,4 +36,8 @@ const ActivitySchema: Schema = new Schema({
   isPublic: { type: Boolean, default: false },
 }, { timestamps: true });
 
+// Optimizing for activity queries
+ActivitySchema.index({ teacher: 1 });
+ActivitySchema.index({ isPublic: 1 });
+
 export default mongoose.model<IActivity>('Activity', ActivitySchema);

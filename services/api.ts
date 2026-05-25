@@ -82,6 +82,25 @@ const api = {
   },
 
   /**
+   * Firebase login takes a Firebase ID token and authenticates with the backend.
+   */
+  loginWithFirebase: async (token: string): Promise<User> => {
+    const response = await fetch(`${API_BASE_URL}/auth/firebase`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to login with Firebase.');
+    }
+
+    localStorage.setItem('authToken', data.token);
+    return data;
+  },
+
+  /**
    * Logs out the current user by clearing the local token.
    */
   logout: (): Promise<void> => {

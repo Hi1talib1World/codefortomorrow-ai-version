@@ -16,4 +16,8 @@ const MessageSchema: Schema = new Schema({
   isRead: { type: Boolean, default: false },
 }, { timestamps: true });
 
+// Optimizing for message queries
+MessageSchema.index({ sender: 1, receiver: 1 });
+MessageSchema.index({ receiver: 1, sender: 1 });
+
 export default mongoose.model<IMessage>('Message', MessageSchema);

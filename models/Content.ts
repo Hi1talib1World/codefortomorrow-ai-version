@@ -37,6 +37,10 @@ const contentSchema = new Schema<IContent>(
   { timestamps: true }
 );
 
+// Optimizing for content queries
+contentSchema.index({ type: 1, status: 1 });
+contentSchema.index({ author: 1 });
+
 // Auto-generate slug from title before validate
 contentSchema.pre('validate', function (this: IContent, next: (err?: Error) => void) {
   if (this.isModified('title') && !this.slug) {

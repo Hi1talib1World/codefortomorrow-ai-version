@@ -34,4 +34,7 @@ const QuizSchema: Schema = new Schema({
   dueDate: { type: Date },
 }, { timestamps: true });
 
+// Optimizing for quiz queries
+QuizSchema.index({ teacher: 1 });
+
 export default mongoose.model<IQuiz>('Quiz', QuizSchema);

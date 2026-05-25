@@ -1,6 +1,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import User from '../models/user.model';
 import Progress from '../models/progress.model';
 import { generateToken } from '../services/token.service';
@@ -186,5 +187,88 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
     } catch (error) {
         console.error("Google Auth Error:", error);
         next(new ApiError(401, 'Google authentication failed'));
+    }
+};
+
+/**
+ * @desc    Firebase Auth login (Verify Firebase ID token and authenticate)
+ * @route   POST /api/auth/firebase
+ * @access  Public
+ */
+export const firebaseLogin = async (req: Request, res: Response, next: NextFunction) => {
+    const { token } = req.body;
+
+    if (!token) {
+       return next(new ApiError(400, 'Firebase ID token is required'));
+    }
+
+    try {
+        // Decode the Firebase ID Token
+        const decodedToken: any = jwt.decode(token);
+        if (!decodedToken) {
+            throw new ApiError(400, 'Invalid Firebase ID token');
+        }
+
+        const email = decodedToken.email;
+        const name = decodedToken.name || email.split('@')[0];
+        const picture = decodedToken.picture || `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`;
+        const googleId = decodedToken.sub; // Firebase user ID (uid)
+
+        // Find or create user
+        let user = await User.findOne({ 
+            $or: [{ googleId }, { email }] 
+        }).populate('progress');
+
+        if (!user) {
+            const newProgress = await Progress.create({
+                xp: 0,
+                streak: 0,
+                completedLessons: new Map(),
+                scores: new Map(),
+                badgesEarned: new Map(),
+                skillMastery: new Map(),
+                learningProfile: {
+                    strengths: [],
+                    weaknesses: [],
+                    recommendations: [],
+                    lastAIUpdate: new Date(),
+                },
+                skillGraph: {},
+                lastLessonCompletedDate: null
+            });
+
+            user = await User.create({
+                name,
+                email,
+                googleId,
+                profilePictureUrl: picture,
+                progress: newProgress._id,
+            });
+            user = await user.populate('progress');
+        } else if (!user.googleId) {
+             user.googleId = googleId;
+             await user.save();
+        }
+
+        const appToken = generateToken(user._id);
+
+        const userResponse = {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            profilePictureUrl: user.profilePictureUrl,
+            progress: user.progress,
+            currentPath: (user as any).currentPath,
+            role: (user as any).role,
+        };
+
+        res.status(200).json({
+            ...userResponse,
+            token: appToken,
+        });
+
+    } catch (error) {
+        console.error("Firebase Auth Error:", error);
+        next(new ApiError(401, 'Firebase authentication failed'));
     }
 };
