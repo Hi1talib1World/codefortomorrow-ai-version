@@ -160,11 +160,11 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
           <div className="hidden sm:flex items-center space-x-3">
             <div className="flex items-center space-x-2 text-[#EA4335] font-bold text-sm bg-[#EA4335]/10 px-3 py-1.5 rounded-full border border-[#EA4335]/20">
               <span>🔥</span>
-              <span>{currentUser.progress.streak}</span>
+              <span>{currentUser.progress?.streak ?? 0}</span>
             </div>
             <div className="flex items-center space-x-2 text-[#F29900] dark:text-[#fde293] font-bold text-sm bg-[#FBBC05]/10 px-3 py-1.5 rounded-full border border-[#FBBC05]/20">
               <span>⭐</span>
-              <span>{currentUser.progress.xp}</span>
+              <span>{currentUser.progress?.xp ?? 0}</span>
             </div>
           </div>
 

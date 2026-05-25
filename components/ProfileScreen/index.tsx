@@ -56,13 +56,13 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
   }, []);
 
   const pathBadges = currentPath ? BADGES_BY_PATH[currentPath] || [] : [];
-  const earnedBadgeIds = (currentPath && userProgress.badgesEarned[currentPath]) || [];
+  const earnedBadgeIds = (currentPath && userProgress?.badgesEarned?.[currentPath]) || [];
 
   // Compute additional stats
-  const totalLessons = Object.values(userProgress.completedLessons).reduce(
+  const totalLessons = Object.values(userProgress?.completedLessons || {}).reduce(
     (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0
   );
-  const quizScores = Object.values(userProgress.scores || {});
+  const quizScores = Object.values(userProgress?.scores || {});
   const avgScore = quizScores.length > 0
     ? Math.round((quizScores as number[]).reduce((a, b) => a + b, 0) / quizScores.length)
     : 0;
@@ -181,12 +181,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 text-center mb-12">
             <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1">
               <div className="text-4xl mb-2">🔥</div>
-              <p className="font-black text-3xl leading-none"><AnimatedCounter value={userProgress.streak} /></p>
+              <p className="font-black text-3xl leading-none"><AnimatedCounter value={userProgress?.streak || 0} /></p>
               <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">{t('streak')}</p>
             </div>
             <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1">
               <div className="text-4xl mb-2 text-[#FBBC05] drop-shadow-sm">⭐</div>
-              <p className="font-black text-3xl leading-none"><AnimatedCounter value={userProgress.xp} /></p>
+              <p className="font-black text-3xl leading-none"><AnimatedCounter value={userProgress?.xp || 0} /></p>
               <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">{t('xp')}</p>
             </div>
             <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1">

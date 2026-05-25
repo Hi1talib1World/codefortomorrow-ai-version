@@ -80,7 +80,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
         }
         return (
           <LearnScreen
-            completedLessons={currentUser.progress.completedLessons[pathId] || []}
+            completedLessons={currentUser.progress?.completedLessons?.[pathId] || []}
             onStartLesson={onStartLesson}
             path={pathId as ProgrammingPath['id']}
             onSwitchPath={(pId) => navigate(`/dashboard/learn/${pId}`)}

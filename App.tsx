@@ -43,6 +43,8 @@ const defaultProgress: UserProgress = {
   lastLessonCompletedDate: null,
 };
 
+const NOOP = () => {};
+
 // ─── LESSON OVERLAY ──────────────────────────────────────────────────────────
 // Rendered on top of the dashboard when a lesson is active.
 interface LessonOverlayProps {
@@ -157,6 +159,10 @@ export default function App() {
       try {
         const user = await api.getLoggedInUser();
         if (user) {
+          if (!user.progress) {
+            user.progress = { ...defaultProgress };
+          }
+          if (!user.progress.completedLessons) user.progress.completedLessons = {};
           if (!user.progress.scores) user.progress.scores = {};
           if (!user.progress.badgesEarned) user.progress.badgesEarned = {};
           if (user.progress.lastLessonCompletedDate === undefined) {
@@ -176,6 +182,12 @@ export default function App() {
   const handleAuthSuccess = useCallback(async (user: User) => {
     const roleToSet = user.role || selectedRole || 'student';
     const userWithRole = { ...user, role: roleToSet };
+    if (!userWithRole.progress) {
+      userWithRole.progress = { ...defaultProgress };
+    }
+    if (!userWithRole.progress.completedLessons) userWithRole.progress.completedLessons = {};
+    if (!userWithRole.progress.scores) userWithRole.progress.scores = {};
+    if (!userWithRole.progress.badgesEarned) userWithRole.progress.badgesEarned = {};
     setCurrentUser(userWithRole);
 
     const savedRoute = localStorage.getItem('lastVisitedRoute');
@@ -345,7 +357,7 @@ export default function App() {
 
   const renderContent = () => {
     if (!isSessionLoaded) {
-      return <SplashScreen onFinish={() => { }} />;
+      return <SplashScreen onFinish={NOOP} />;
     }
 
     // Shared dashboard route props

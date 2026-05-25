@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 interface SplashScreenProps {
   onFinish: () => void;
@@ -7,6 +7,11 @@ interface SplashScreenProps {
 
 const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
   const [progress, setProgress] = useState(0);
+  const onFinishRef = useRef(onFinish);
+
+  useEffect(() => {
+    onFinishRef.current = onFinish;
+  }, [onFinish]);
 
   useEffect(() => {
     // Animate progress from 0 to 100 over ~2.5 seconds
@@ -20,13 +25,13 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
       if (current >= 100) {
         current = 100;
         clearInterval(timer);
-        setTimeout(() => onFinish(), 400); // small pause at 100%
+        setTimeout(() => onFinishRef.current(), 400); // small pause at 100%
       }
       setProgress(current);
     }, interval);
 
     return () => clearInterval(timer);
-  }, [onFinish]);
+  }, []);
 
   return (
     <div className="bg-white dark:bg-slate-900 h-screen flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
