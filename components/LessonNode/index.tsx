@@ -40,42 +40,38 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
   const { t } = useLanguage();
   const emoji = EMOJI_MAP[lesson.icon] ?? '📚';
 
-  // Circle colors
+  // Circle colors: only completed lessons are green (in color).
+  // Next, unlocked, and locked are styled in clean gray/slate/neutral colors.
   const circleBg = isCompleted
     ? 'bg-[#58cc02]'
     : isNext
-      ? 'bg-[#4285F4]'
+      ? 'bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600'
       : isUnlocked
-        ? 'bg-white dark:bg-slate-700'
-        : 'bg-slate-200 dark:bg-slate-700';
+        ? 'bg-white dark:bg-slate-800'
+        : 'bg-slate-200 dark:bg-slate-900';
 
   const ringColor = isCompleted
     ? 'stroke-[#58cc02]'
-    : isNext
-      ? 'stroke-[#4285F4]'
-      : 'stroke-slate-200 dark:stroke-slate-600';
+    : 'stroke-slate-200 dark:stroke-slate-700';
 
   const shadowStyle = isCompleted
     ? 'shadow-[0_6px_0_#46a302]'
     : isNext
-      ? 'shadow-[0_6px_0_#1a73e8]'
+      ? 'shadow-[0_6px_0_#94a3b8] dark:shadow-[0_6px_0_#334155]'
       : isUnlocked
-        ? 'shadow-[0_6px_0_#d1d5db] dark:shadow-[0_6px_0_#475569]'
-        : 'shadow-[0_4px_0_#9ca3af] dark:shadow-[0_4px_0_#334155]';
+        ? 'shadow-[0_6px_0_#cbd5e1] dark:shadow-[0_6px_0_#1e293b]'
+        : 'shadow-[0_4px_0_#cbd5e1] dark:shadow-[0_4px_0_#1e293b]';
 
   return (
     <div className="relative flex flex-col items-center">
 
-      {/* "START" floating badge above next lesson */}
+      {/* "START" static badge above next lesson */}
       {isNext && (
-        <motion.div
-          initial={{ y: -4, opacity: 0 }}
-          animate={{ y: [-6, -2, -6], opacity: 1 }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-          className="mb-1 bg-white dark:bg-slate-800 text-[#4285F4] text-[10px] font-black px-3 py-1 rounded-lg shadow-md border border-slate-100 dark:border-slate-700 uppercase tracking-widest flex items-center gap-1"
+        <div
+          className="mb-1 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black px-3 py-1 rounded-lg shadow-md border border-slate-100 dark:border-slate-700 uppercase tracking-widest flex items-center gap-1"
         >
           START ⭐
-        </motion.div>
+        </div>
       )}
 
       {/* Progress ring + circle button */}
@@ -103,8 +99,8 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
         <motion.button
           onClick={() => isUnlocked && onStartLesson(lesson)}
           disabled={!isUnlocked}
-          whileHover={isUnlocked ? { scale: 1.08 } : {}}
-          whileTap={isUnlocked ? { scale: 0.92 } : {}}
+          whileHover={isUnlocked ? { scale: 1.05 } : {}}
+          whileTap={isUnlocked ? { scale: 0.95 } : {}}
           className={`
             relative w-[68px] h-[68px] rounded-full flex items-center justify-center
             transition-all duration-200 font-black m-[2px]
@@ -112,18 +108,13 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
             ${isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}
           `}
         >
-          {/* Pulse ring for next */}
-          {isNext && (
-            <span className="absolute inset-0 rounded-full bg-[#4285F4] opacity-30 animate-ping" />
-          )}
-
           {/* Content */}
           {isCompleted ? (
             <span className="text-white text-3xl font-black drop-shadow-sm">✓</span>
           ) : !isUnlocked ? (
-            <span className="text-slate-400 text-2xl">🔒</span>
+            <span className="text-slate-400 text-2xl filter grayscale opacity-40">🔒</span>
           ) : (
-            <span className="text-3xl select-none drop-shadow-sm">{emoji}</span>
+            <span className="text-3xl select-none drop-shadow-sm filter grayscale opacity-70">{emoji}</span>
           )}
         </motion.button>
       </div>

@@ -2100,3 +2100,14 @@ export const BADGES_BY_PATH: { [key: string]: Badge[] } = {
     { id: 'math_badge4', lessonId: 4, icon: '🏆', titleKey: 'math_badge_calc' },
   ],
 };
+
+// Post-process LESSONS_BY_PATH to fix duplicate copy-pasted lesson IDs programmatically
+Object.keys(LESSONS_BY_PATH).forEach((pathKey) => {
+  let currentId = 1;
+  LESSONS_BY_PATH[pathKey].forEach((section) => {
+    section.lessons.forEach((lesson) => {
+      lesson.id = currentId++;
+    });
+  });
+});
+
