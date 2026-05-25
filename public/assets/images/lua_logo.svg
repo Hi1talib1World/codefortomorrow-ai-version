@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <circle cx="64" cy="64" r="48" fill="#002b80" />
+  <circle cx="64" cy="64" r="56" fill="none" stroke="#002b80" stroke-width="2" stroke-dasharray="6 6" />
+  <circle cx="104" cy="24" r="12" fill="#002b80" />
+  <circle cx="50" cy="50" r="16" fill="#ffffff" />
+  <circle cx="104" cy="24" r="4" fill="#ffffff" />
+  <text x="64" y="104" font-family="'Inter', sans-serif" font-weight="900" font-size="20" fill="#002b80" text-anchor="middle">Lua</text>
+</svg>

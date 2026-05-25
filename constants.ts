@@ -28,7 +28,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'block_coding',
     titleKey: 'block_coding',
     descriptionKey: 'block_coding_desc',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scratch/scratch-original.svg',
+    icon: '/assets/images/scratch_logo.svg',
     color: 'bg-brand-500',
     isAvailable: true
   },
@@ -36,7 +36,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'python',
     titleKey: 'python',
     descriptionKey: 'python_desc',
-    icon: '/assets/images/python_logo.png',
+    icon: '/assets/images/python_logo.svg',
     color: 'bg-yellow-500',
     isAvailable: true
   },
@@ -44,7 +44,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'javascript',
     titleKey: 'javascript',
     descriptionKey: 'javascript_desc',
-    icon: '/assets/images/js_logo.png',
+    icon: '/assets/images/js_logo.svg',
     color: 'bg-red-500',
     isAvailable: true
   },
@@ -52,7 +52,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'lua',
     titleKey: 'lua',
     descriptionKey: 'lua_desc',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/lua/lua-original.svg',
+    icon: '/assets/images/lua_logo.svg',
     color: 'bg-brand-500',
     isAvailable: true
   },
@@ -84,7 +84,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'java',
     titleKey: 'java',
     descriptionKey: 'java_desc',
-    icon: '/assets/images/java_logo.png',
+    icon: '/assets/images/java_logo.svg',
     color: 'bg-orange-600',
     isAvailable: true
   },
@@ -100,7 +100,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'swift',
     titleKey: 'swift',
     descriptionKey: 'swift_desc',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg',
+    icon: '/assets/images/swift_logo.svg',
     color: 'bg-red-600',
     isAvailable: true
   },
@@ -156,7 +156,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'r',
     titleKey: 'r',
     descriptionKey: 'r_desc',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/r/r-original.svg',
+    icon: '/assets/images/r_logo.svg',
     color: 'bg-brand-600',
     isAvailable: true
   },

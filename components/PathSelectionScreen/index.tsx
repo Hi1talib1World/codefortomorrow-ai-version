@@ -21,34 +21,33 @@ const PathSelectionScreen: React.FC<PathSelectionScreenProps> = ({ onPathSelecte
   };
 
   return (
-    <div className="min-h-screen bg-brand-50 dark:bg-slate-900 transition-colors flex flex-col items-center justify-center p-4">
-      <header className="text-center mb-8">
-        <div className="w-24 h-24 mx-auto mb-4">
+    <div className="min-h-screen bg-brand-50 dark:bg-slate-900 transition-colors flex flex-col items-center justify-start py-12 px-4 md:px-8">
+      <header className="text-center mb-10">
+        <div className="w-20 h-20 mx-auto mb-4">
           <Mascot />
         </div>
-        <h1 className="text-4xl font-black text-slate-800 dark:text-white transition-colors">{t('choose_your_path')}</h1>
+        <h1 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white transition-colors">{t('choose_your_path')}</h1>
       </header>
-      <main className="max-w-2xl w-full grid md:grid-cols-2 gap-6">
+      <main className="max-w-6xl w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {PATHS.map((path) => (
           <button
             key={path.id}
             onClick={() => handleSelect(path.id)}
             disabled={!path.isAvailable}
-            className={`relative p-6 text-left rounded-2xl shadow-lg border-b-8 transition-all disabled:opacity-60 disabled:cursor-not-allowed ${path.isAvailable ? `${path.color} text-white` : 'bg-gray-300 dark:bg-slate-700 border-b-gray-500 dark:border-b-slate-800 text-gray-600 dark:text-slate-400'
+            className={`relative p-5 text-left rounded-2xl shadow-md border border-slate-200/60 dark:border-slate-700/60 bg-white dark:bg-slate-800 text-slate-800 dark:text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-lg hover:-translate-y-1 duration-200 flex flex-col justify-between min-h-[200px] ${path.isAvailable ? `border-b-4 ${path.color.replace('bg-', 'border-b-')}` : 'border-b-4 border-b-gray-200 dark:border-b-slate-700 opacity-50'
               }`}
-            style={{
-              borderColor: path.isAvailable ? 'rgba(0,0,0,0.2)' : undefined
-            }}
           >
-            <div className="text-5xl mb-4 flex justify-center items-center h-16">
-              {path.icon.startsWith('http') || path.icon.startsWith('/') ? (
-                <img src={path.icon} alt="" className="w-16 h-16 object-contain" referrerPolicy="no-referrer" />
-              ) : (
-                path.icon
-              )}
+            <div>
+              <div className="text-4xl mb-3.5 flex items-center justify-start h-12">
+                {path.icon.startsWith('http') || path.icon.startsWith('/') ? (
+                  <img src={path.icon} alt="" className="w-12 h-12 object-contain" referrerPolicy="no-referrer" />
+                ) : (
+                  path.icon
+                )}
+              </div>
+              <h2 className="text-base font-black tracking-tight leading-none text-slate-800 dark:text-white">{t(path.titleKey as any)}</h2>
+              <p className="mt-2.5 text-xs font-semibold text-slate-500 dark:text-slate-400 leading-snug line-clamp-3">{t(path.descriptionKey as any)}</p>
             </div>
-            <h2 className="text-2xl font-bold">{t(path.titleKey as any)}</h2>
-            <p className="mt-1">{t(path.descriptionKey as any)}</p>
           </button>
         ))}
       </main>
