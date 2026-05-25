@@ -72,7 +72,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
       case 'home':
         return <HomeHubScreen onNavigate={setActiveView} userName={currentUser.name} role={currentUser.role} currentPath={path} />;
       case 'learn':
-        if (!path && !pathId) {
+        if (!pathId) {
           return <PathSelectionScreen onPathSelected={(pId) => {
             onSwitchPath(pId);
             navigate(`/dashboard/learn/${pId}`);
@@ -80,9 +80,9 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
         }
         return (
           <LearnScreen
-            completedLessons={currentUser.progress.completedLessons[pathId || path || ''] || []}
+            completedLessons={currentUser.progress.completedLessons[pathId] || []}
             onStartLesson={onStartLesson}
-            path={(pathId || path) as ProgrammingPath['id']}
+            path={pathId as ProgrammingPath['id']}
             onSwitchPath={(pId) => navigate(`/dashboard/learn/${pId}`)}
           />
         );

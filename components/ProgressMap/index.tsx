@@ -10,12 +10,13 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { MODULES_BY_PATH, LESSONS_BY_PATH, PATHS } from '../../constants';
 import { Lesson, ProgrammingPath } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import LessonNode from '../LessonNode';
-import { Search, X, Lock, ChevronRight } from 'lucide-react';
+import { Search, X, Lock, ChevronRight, ArrowLeftRight } from 'lucide-react';
 
 interface LearnScreenProps {
   completedLessons: number[];
@@ -72,15 +73,42 @@ const SectionBanner: React.FC<{ title: string; index: number; isLocked: boolean;
 };
 
 /** Overall progress bar at the top. */
-const ProgressHeader: React.FC<{ completed: number; total: number; pathLabel: string }> = ({ completed, total, pathLabel }) => {
+const ProgressHeader: React.FC<{
+  completed: number;
+  total: number;
+  pathLabel: string;
+  pathIcon?: string;
+  onBackToSelection: () => void;
+}> = ({ completed, total, pathLabel, pathIcon, onBackToSelection }) => {
   const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
   return (
-    <div className="px-4 pt-4 pb-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-100 dark:border-slate-700">
-      <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{pathLabel}</span>
-        <span className="text-[11px] font-black text-[#4285F4]">{completed}/{total}</span>
+    <div className="px-4 pt-4 pb-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-100 dark:border-slate-700 transition-colors">
+      <div className="flex items-center justify-between mb-3 max-w-md mx-auto">
+        <div className="flex items-center space-x-3">
+          {pathIcon && (
+            <div className="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-700 rounded-xl p-1.5 shadow-sm border border-slate-200 dark:border-slate-600">
+              {pathIcon.startsWith('http') || pathIcon.startsWith('/') ? (
+                <img src={pathIcon} alt="" className="w-7 h-7 object-contain" referrerPolicy="no-referrer" />
+              ) : (
+                <span className="text-xl select-none">{pathIcon}</span>
+              )}
+            </div>
+          )}
+          <div className="flex flex-col">
+            <span className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-wide leading-none">{pathLabel}</span>
+            <span className="text-[10px] font-bold text-slate-400 mt-1.5 uppercase tracking-wider">{completed}/{total} Lessons</span>
+          </div>
+        </div>
+
+        <button
+          onClick={onBackToSelection}
+          className="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border border-slate-200/50 dark:border-slate-700/50 shadow-sm"
+        >
+          <ArrowLeftRight className="w-3.5 h-3.5 text-[#4285F4]" />
+          <span>Switch Path</span>
+        </button>
       </div>
-      <div className="h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+      <div className="h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden max-w-md mx-auto">
         <motion.div
           className="h-full bg-gradient-to-r from-[#4285F4] to-[#34A853] rounded-full"
           initial={{ width: 0 }}
@@ -96,6 +124,7 @@ const ProgressHeader: React.FC<{ completed: number; total: number; pathLabel: st
 
 const LearnScreen: React.FC<LearnScreenProps> = ({ completedLessons, onStartLesson, path, onSwitchPath }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
   const modules = MODULES_BY_PATH[path] || [];
@@ -189,7 +218,13 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ completedLessons, onStartLess
   return (
     <div className="w-full min-h-full bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 transition-colors pb-28">
 
-      <ProgressHeader completed={completedLessons.length} total={allLessons.length} pathLabel={pathLabel} />
+      <ProgressHeader
+        completed={completedLessons.length}
+        total={allLessons.length}
+        pathLabel={pathLabel}
+        pathIcon={pathMeta?.icon}
+        onBackToSelection={() => navigate('/dashboard/learn')}
+      />
 
       {/* Search */}
       <div className="px-4 pt-4 pb-2">
