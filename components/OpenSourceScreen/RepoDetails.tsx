@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft, Star, GitFork, Github, CheckCircle2, Bookmark, Share2, Twitter, Facebook, Linkedin, Link2, X } from 'lucide-react';
+import { ArrowLeft, Star, GitFork, Github, CheckCircle2, Bookmark, Share2, Twitter, Facebook, Linkedin, Link2, X, Sparkles, FileText } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { User } from '../../types';
@@ -15,14 +15,53 @@ interface RepoDetailsProps {
 }
 
 export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentUser, updateUser }) => {
+  const [activeTab, setActiveTab] = useState<'guide' | 'readme'>('guide');
+  const [guide, setGuide] = useState<string>('');
   const [readme, setReadme] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
+  // Reset state when active repo changes
+  useEffect(() => {
+    setGuide('');
+    setReadme('');
+    setActiveTab('guide');
+    setError(null);
+  }, [repo.full_name]);
+
+  // Fetch AI Setup Guide
+  useEffect(() => {
+    const fetchGuide = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const [owner, name] = repo.full_name.split('/');
+        const descriptionParam = encodeURIComponent(repo.description || '');
+        const res = await fetch(`/api/opensource/repos/${owner}/${name}/setup-guide?description=${descriptionParam}`);
+        if (!res.ok) {
+          throw new Error('Failed to fetch AI Setup Guide');
+        }
+        const text = await res.text();
+        setGuide(text);
+      } catch (err: any) {
+        setError(err.message || 'An error occurred while fetching the setup guide.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (activeTab === 'guide' && !guide) {
+      fetchGuide();
+    }
+  }, [repo.full_name, activeTab, guide, repo.description]);
+
+  // Fetch README
   useEffect(() => {
     const fetchReadme = async () => {
+      setLoading(true);
+      setError(null);
       try {
         const [owner, name] = repo.full_name.split('/');
         const res = await fetch(`/api/opensource/repos/${owner}/${name}/readme`);
@@ -43,8 +82,10 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
       }
     };
     
-    fetchReadme();
-  }, [repo.full_name]);
+    if (activeTab === 'readme' && !readme) {
+      fetchReadme();
+    }
+  }, [repo.full_name, activeTab, readme]);
 
   const formatNumber = (num: number) => {
     if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
@@ -218,11 +259,42 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
         </div>
       )}
 
-      {/* Readme Content */}
+      {/* Content Section (AI Setup Guide / README) */}
       <div className="bg-[#121212] rounded-3xl border border-slate-800 p-8 min-h-[50vh]">
+        {/* Tab Switcher */}
+        <div className="flex border-b border-slate-800 mb-6 gap-2">
+          <button
+            onClick={() => setActiveTab('guide')}
+            className={`pb-3 px-4 font-bold text-sm transition-colors border-b-2 -mb-[2px] flex items-center gap-2 ${
+              activeTab === 'guide'
+                ? 'border-brand-500 text-white'
+                : 'border-transparent text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-brand-400 fill-brand-400/20" />
+            <span>AI Beginner Guide</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('readme')}
+            className={`pb-3 px-4 font-bold text-sm transition-colors border-b-2 -mb-[2px] flex items-center gap-2 ${
+              activeTab === 'readme'
+                ? 'border-brand-500 text-white'
+                : 'border-transparent text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <FileText className="w-4 h-4 text-slate-400" />
+            <span>Full README</span>
+          </button>
+        </div>
+
         {loading ? (
-          <div className="flex justify-center items-center h-40">
+          <div className="flex flex-col justify-center items-center h-60 space-y-4">
             <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+            {activeTab === 'guide' && (
+              <p className="text-slate-400 text-sm animate-pulse font-medium">
+                AI is generating a beginner-friendly setup guide...
+              </p>
+            )}
           </div>
         ) : error ? (
           <div className="text-center text-slate-400 py-10 font-semibold">
@@ -231,7 +303,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
         ) : (
           <div className="prose prose-invert prose-slate max-w-none prose-headings:font-black prose-a:text-brand-400 hover:prose-a:text-brand-300 prose-img:rounded-xl">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {readme}
+              {activeTab === 'guide' ? guide : readme}
             </ReactMarkdown>
           </div>
         )}

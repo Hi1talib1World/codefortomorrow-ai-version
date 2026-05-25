@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
+import { AIEngine } from '../services/aiEngine';
 
 // Simple TTL cache implementation
 const cache = new Map<string, { data: any, timestamp: number }>();
@@ -418,3 +419,82 @@ export const getRepoReadme = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error fetching readme' });
   }
 };
+
+export const getRepoSetupGuide = async (req: Request, res: Response) => {
+  try {
+    const owner = typeof req.params.owner === 'string' ? req.params.owner : '';
+    const repo = typeof req.params.repo === 'string' ? req.params.repo : '';
+    const description = typeof req.query.description === 'string' ? req.query.description : '';
+    const cacheKey = `setup_guide_${owner}_${repo}`;
+
+    // 1. Check in-memory cache first
+    const cachedData = getCached(cacheKey);
+    if (cachedData) {
+      return res.send(cachedData);
+    }
+
+    // 2. Check persistent file cache
+    const readmeCacheDir = path.resolve(process.cwd(), 'readme-cache');
+    const guideCacheFile = path.resolve(readmeCacheDir, `setup_guide_${owner}__${repo}.md`);
+    
+    if (fs.existsSync(guideCacheFile)) {
+      const persistentCachedGuide = fs.readFileSync(guideCacheFile, 'utf-8');
+      setCached(cacheKey, persistentCachedGuide);
+      return res.send(persistentCachedGuide);
+    }
+
+    // 3. Get the raw README (read from cache or fetch)
+    const readmeCacheFile = path.resolve(readmeCacheDir, `${owner}__${repo}.md`);
+    let readmeContent = '';
+
+    if (fs.existsSync(readmeCacheFile)) {
+      readmeContent = fs.readFileSync(readmeCacheFile, 'utf-8');
+    } else {
+      // Fetch README from GitHub
+      try {
+        const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`, {
+          headers: {
+            'User-Agent': 'CodeForTomorrow-App',
+            'Accept': 'application/vnd.github.v3.raw',
+            ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
+          }
+        });
+
+        if (response.ok) {
+          readmeContent = await response.text();
+          // Cache raw readme for later use
+          if (!fs.existsSync(readmeCacheDir)) {
+            fs.mkdirSync(readmeCacheDir, { recursive: true });
+          }
+          fs.writeFileSync(readmeCacheFile, readmeContent);
+          setCached(`readme_${owner}_${repo}`, readmeContent);
+        } else {
+          console.warn(`[GitHub API] Error ${response.status} fetching README for ${owner}/${repo}`);
+        }
+      } catch (fetchErr) {
+        console.warn(`[GitHub API] Network error fetching README for ${owner}/${repo}:`, fetchErr);
+      }
+    }
+
+    // If we have no README, we can't generate a guide easily, but we can try to fall back
+    if (!readmeContent) {
+      readmeContent = `No README content was found on GitHub for ${owner}/${repo}. Please visit the repository for more details.`;
+    }
+
+    // 4. Generate AI guide
+    const guide = await AIEngine.getBeginnerSetupGuide(repo, description, readmeContent);
+
+    // 5. Cache and return the generated guide
+    if (!fs.existsSync(readmeCacheDir)) {
+      fs.mkdirSync(readmeCacheDir, { recursive: true });
+    }
+    fs.writeFileSync(guideCacheFile, guide);
+    setCached(cacheKey, guide);
+
+    return res.send(guide);
+  } catch (error) {
+    console.error('Error generating setup guide:', error);
+    res.status(500).json({ message: 'Error generating setup guide' });
+  }
+};
+
