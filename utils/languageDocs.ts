@@ -61,6 +61,27 @@ if (energy > 50) {
         isCode: true,
       },
       {
+        title: '🔄 Repeat Machine (Loops)',
+        content: `// A 'for' loop repeats code as many times as you need!
+for (let count = 1; count <= 5; count++) {
+  console.log('Spawning zombie 🧟 #' + count);
+}`,
+        isCode: true,
+      },
+      {
+        title: '🗺️ Secret Agents (Objects)',
+        content: `// An object is a collection of secrets with labels!
+const hero = {
+  name: 'Arthur',
+  level: 5,
+  sword: 'Excalibur'
+};
+
+// Access information using the dot!
+console.log(hero.name + ' wields ' + hero.sword + '! ⚔️');`,
+        isCode: true,
+      },
+      {
         title: '💡 Did you know?',
         content: 'JavaScript was created in just 10 days by a programmer named Brendan Eich! Today, it runs almost every interactive website in the world.',
         isCode: false,
@@ -113,6 +134,26 @@ else:
         isCode: true,
       },
       {
+        title: '📘 Codebooks (Dictionaries)',
+        content: `# Dictionaries link keys to values, like a real word book!
+spellbook = {
+    "fireball": "Shoots a hot ball of fire 🔥",
+    "freeze": "Freezes target in a block of ice ❄️"
+}
+print(spellbook["fireball"])`,
+        isCode: true,
+      },
+      {
+        title: '🧙‍♂️ Magic Imports (Libraries)',
+        content: `# Bring in tools made by other programmers!
+import random
+
+# Roll a 6-sided die
+dice_roll = random.randint(1, 6)
+print(f"You rolled a {dice_roll}! 🎲")`,
+        isCode: true,
+      },
+      {
         title: '💡 Did you know?',
         content: 'Python isn’t named after the snake! It was actually named after a funny British comedy show called "Monty Python’s Flying Circus".',
         isCode: false,
@@ -136,6 +177,16 @@ else:
       {
         title: '👁️ If/Then Secrets',
         content: 'You can teach your game to make decisions! Use an [If / Then] block: "IF the hero touches a coin, THEN add 1 to the score!"',
+        isCode: false,
+      },
+      {
+        title: '🧪 Variables (Points & Lives)',
+        content: 'Variables are like jars where you can store info that changes. You can make a variable called "Score", start it at 0, and tell the game to [Change Score by 1] every time you win!',
+        isCode: false,
+      },
+      {
+        title: '📢 Broadcast (Sprite Talk)',
+        content: 'Spriting talk is done using Broadcast Messages! Send a message like "Game Over" when lives hit 0. When other elements hear "Game Over", they can hide or show the ending screen!',
         isCode: false,
       },
       {
@@ -178,11 +229,24 @@ h1 {
         isCode: true,
       },
       {
-        title: '🎇 Buttons that Work',
-        content: `<!-- HTML buttons can be clicked, but they need JS to do magic! -->
-<button onclick="alert('BOOM! 💥')">
-  Do Not Press
-</button>`,
+        title: '📐 Flexbox (Layout Power)',
+        content: `/* Flexbox aligns elements neatly inside a box! */
+.container {
+  display: flex;
+  justify-content: space-between; /* Space out items */
+  align-items: center; /* Center items vertically */
+}`,
+        isCode: true,
+      },
+      {
+        title: '✨ Hover Animations',
+        content: `/* Make things scale or change color smoothly when hovered! */
+.button-pop {
+  transition: transform 0.2s ease-in-out;
+}
+.button-pop:hover {
+  transform: scale(1.1); /* Pop up 10% larger */
+}`,
         isCode: true,
       },
       {
@@ -333,6 +397,20 @@ local score = 100
 
 -- "print" throws the words onto the screen
 print("Hello, " .. hero .. "! Your score is " .. score)`,
+        isCode: true,
+      },
+      {
+        title: '🎯 Touching & Triggers',
+        content: `-- Trigger code in Roblox when a block is touched!
+local block = script.Parent
+
+local function onTouch(part)
+    local humanoid = part.Parent:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.Health = humanoid.Health - 10 -- Take damage! 💥
+    end
+end
+block.Touched:Connect(onTouch)`,
         isCode: true,
       },
       {

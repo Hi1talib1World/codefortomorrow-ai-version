@@ -25,7 +25,11 @@ const getEnv = (name: string): string => {
 };
 
 // Make sure to add VITE_GOOGLE_CLIENT_ID to your environment variables
-const clientId = getEnv('VITE_GOOGLE_CLIENT_ID') || getEnv('GEMINI_API_KEY') || 'YOUR_GOOGLE_CLIENT_ID';
+const clientId = getEnv('VITE_GOOGLE_CLIENT_ID') || getEnv('GOOGLE_CLIENT_ID') || '';
+
+if (!clientId) {
+  console.warn('⚠️ Google Client ID is missing. Google OAuth login will not function. Please configure VITE_GOOGLE_CLIENT_ID or GOOGLE_CLIENT_ID in your environment variables.');
+}
 
 const root = ReactDOM.createRoot(rootElement);
 root.render(

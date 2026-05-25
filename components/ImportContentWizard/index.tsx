@@ -394,8 +394,8 @@ const GeneratingPreviewStep = ({ formData, onComplete }: { formData: any; onComp
             <div className="w-full max-w-md bg-slate-700 rounded-full h-2.5 mb-6 overflow-hidden">
                 <div className="bg-red-500 h-2.5 rounded-full transition-all duration-700" style={{ width: `${progress}%` }}></div>
             </div>
-            <h3 className="text-2xl font-semibold mb-2">{t('ai_creating_quiz')}</h3>
-            <p className="text-slate-400 text-center max-w-lg">{t('ai_warning')}</p>
+            <h3 className="text-2xl font-semibold mb-2">{t('ai_creating_quiz' as any)}</h3>
+            <p className="text-slate-400 text-center max-w-lg">{t('ai_warning' as any)}</p>
         </div>
     )
 }
