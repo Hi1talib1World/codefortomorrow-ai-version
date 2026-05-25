@@ -89,73 +89,167 @@ console.log(hero.name + ' wields ' + hero.sword + '! ⚔️');`,
     ]
   },
   python: {
-    title: 'Python 🐍',
-    description: 'A super friendly snake that talks to your computer! Python is awesome because reading its code feels just like reading normal English.',
+    title: 'Python Specification',
+    description: 'A comprehensive, technical specification and reference guide for the Python programming language. Covers syntax, type systems, memory semantics, concurrency models, error-handling, and tooling.',
     sections: [
       {
-        title: '🏷️ Nametags (Variables)',
-        content: `# Give a name to anything you want!
-hero_name = "Super Coder"
-lives_left = 3
-has_magic_shield = True`,
-        isCode: true,
-      },
-      {
-        title: '🤖 Recipes (Functions)',
-        content: `# Teach the computer how to do a new trick!
-def cheer_up(friend):
-    return f"You are awesome, {friend}! ⭐"
+        title: '1. Setup & Virtual Environments',
+        content: `# Create a project-isolated virtual environment
+python -m venv venv
 
-# Let's test our trick!
-print(cheer_up("Alex"))`,
-        isCode: true,
-      },
-      {
-        title: '🚂 Magic Train (Lists & Loops)',
-        content: `# A list is like a train carrying all your favorite things!
-toys = ["robot", "dinosaur", "spaceship"]
-        
-# Visit every train car one by one
-for toy in toys:
-    print(f"Playing with my {toy}!")`,
-        isCode: true,
-      },
-      {
-        title: '🤔 Thinking Caps (Conditionals)',
-        content: `# Python is great at making decisions.
-weather = "rainy"
+# Activate environment on Linux/macOS
+source venv/bin/activate
 
-if weather == "sunny":
-    print("Let's play outside! ☀️")
-elif weather == "rainy":
-    print("Let's code inside! 🌧️")
-else:
-    print("Wait and see!")`,
+# Install dependencies and freeze versions
+pip install requests
+pip freeze > requirements.txt`,
         isCode: true,
       },
       {
-        title: '📘 Codebooks (Dictionaries)',
-        content: `# Dictionaries link keys to values, like a real word book!
-spellbook = {
-    "fireball": "Shoots a hot ball of fire 🔥",
-    "freeze": "Freezes target in a block of ice ❄️"
-}
-print(spellbook["fireball"])`,
+        title: '2. Syntax & Indentation Scoping',
+        content: `# Blocks are defined by four-space indentation (TabError on mixing)
+def calculate_area(width: float, height: float) -> float:
+    """
+    Docstring: Calculates the area of a rectangle.
+    """
+    return width * height`,
         isCode: true,
       },
       {
-        title: '🧙‍♂️ Magic Imports (Libraries)',
-        content: `# Bring in tools made by other programmers!
-import random
+        title: '3. Variables and Global/Nonlocal Scoping',
+        content: `# Dynamic references can be reassigned to any type
+counter = 0
 
-# Roll a 6-sided die
-dice_roll = random.randint(1, 6)
-print(f"You rolled a {dice_roll}! 🎲")`,
+def increment():
+    global counter
+    counter += 1
+
+def outer():
+    x = 1
+    def inner():
+        nonlocal x
+        x += 1
+    inner()
+    return x`,
         isCode: true,
       },
       {
-        title: '💡 Did you know?',
-        content: 'Python isn’t named after the snake! It was actually named after a funny British comedy show called "Monty Python’s Flying Circus".',
+        title: '4. Built-in Data Types',
+        content: `# Primitive Types: int, float, complex, bool, str, NoneType
+# Collection Types: list (mutable), tuple (immutable), set (unique), dict (hash map)
+x = [1, 2, 3]
+is_list = isinstance(x, list)  # Verification
+converted = int("123")  # Explicit cast`,
+        isCode: true,
+      },
+      {
+        title: '5. Arithmetic, Logical, & Identity Operators',
+        content: `# Division: '/' (float), '//' (floor), '%' (modulo), '**' (power)
+# Identity: 'is' (memory address check) vs '==' (value equality check)
+a = [1, 2]
+b = a
+c = [1, 2]
+print(a is b)  # True
+print(a is c)  # False (different addresses)
+print(a == c)  # True (values are equal)`,
+        isCode: true,
+      },
+      {
+        title: '6. Control Flow & Pattern Matching',
+        content: `# Conditionals, loops (with else blocks), and match-case structures
+def process_command(command):
+    match command.split():
+        case ["quit"]:
+            return "Exiting..."
+        case ["move", ("north"|"south") as dir]:
+            return f"Moving {dir}"
+        case _:
+            return "Unknown"`,
+        isCode: true,
+      },
+      {
+        title: '7. Functions, Parameters, & Generators',
+        content: `# '/'-Positional only, '*'-Keyword only parameters, generators
+def configure(host, port, /, timeout=30, *, secure=True):
+    pass
+
+def fibonacci(limit):
+    a, b = 0, 1
+    while a < limit:
+        yield a
+        a, b = b, a + b`,
+        isCode: true,
+      },
+      {
+        title: '8. Object-Oriented Programming (OOP) & MRO',
+        content: `# Multiple inheritance MRO, encapsulation via name mangling (double underscore)
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+class Dog(Animal):
+    def speak(self):
+        return f"{self.name} says Woof!"`,
+        isCode: true,
+      },
+      {
+        title: '9. Properties & Magic/Dunder Methods',
+        content: `class Account:
+    def __init__(self, balance):
+        self.__balance = balance  # Private
+
+    @property
+    def balance(self):
+        return self.__balance
+
+    def __add__(self, other):
+        return self.__balance + other.balance`,
+        isCode: true,
+      },
+      {
+        title: '10. Error Handling & Exception Chaining',
+        content: `try:
+    value = int("invalid")
+except ValueError as err:
+    # Exception chaining preserves context
+    raise RuntimeError("Calculation failed") from err
+finally:
+    # Always runs cleanup code
+    pass`,
+        isCode: true,
+      },
+      {
+        title: '11. Concurrency (GIL, Threads, Multiprocessing, Asyncio)',
+        content: `import asyncio
+
+async def fetch_item(item_id):
+    await asyncio.sleep(1)  # Non-blocking I/O
+    return f"Data_{item_id}"
+
+async def main():
+    results = await asyncio.gather(fetch_item(1), fetch_item(2))
+    print(results)
+
+asyncio.run(main())`,
+        isCode: true,
+      },
+      {
+        title: '12. File I/O & Context Managers',
+        content: `import json
+
+# Safe execution block (with statement) closes streams automatically
+with open("config.json", "w") as file:
+    json.dump({"timeout": 30}, file)
+
+with open("config.json", "r") as file:
+    config = json.load(file)`,
+        isCode: true,
+      },
+      {
+        title: '13. Memory Model & Garbage Collection',
+        content: `# 1. Reference Counting: Objects are deleted immediately when count hits 0
+# 2. Cyclic Garbage Collector: Detects referencing cycles across 3 generations
+# 3. Mutability: Lists/dicts are modified in place, strings/tuples are immutable`,
         isCode: false,
       }
     ]
@@ -768,52 +862,183 @@ let sword = String::from("Excalibur");
     ]
   },
   go: {
-    title: 'Go 🐹',
-    description: 'Created by Google! Go (or Golang) is famous for being able to do many tasks at the exact same time without slowing down.',
+    title: 'Go Specification',
+    description: 'A comprehensive, technical specification and reference guide for the Go programming language (Golang). Covers syntax, types, control flow, concurrency, and packages.',
     sections: [
       {
-        title: '🚀 Launch Time',
+        title: '1. Lexical Elements & Syntax rules',
         content: `package main
-import "fmt"
+
+// Semi-colons automatically inserted at line endings by the lexer
+// 25 strictly reserved keywords (e.g. chan, defer, go, select)
+// Operators: standard arithmetic and unique bit-clear '&^'`,
+        isCode: true,
+      },
+      {
+        title: '2. Variable & Constant Declarations',
+        content: `package main
+
+var packageVar string = "accessible to package"
+
+const Pi = 3.14159
+
+const (
+    Read = 1 << iota  // 1
+    Write             // 2
+    Execute           // 4
+)
 
 func main() {
-    fmt.Println("Ready for liftoff! 🚀")
+    localVar := "shorthand type-inferred variable"
 }`,
         isCode: true,
       },
       {
-        title: '🎒 Slices (Dynamic Arrays)',
+        title: '3. Composite Types: Slices & Maps',
         content: `package main
-import "fmt"
 
 func main() {
-    // Slices are dynamic arrays that grow automatically!
-    inventory := []string{"sword ⚔️", "shield 🛡️"}
-    inventory = append(inventory, "potion 🧪")
-    fmt.Println(inventory)
+    // Slices are headers pointing to backing arrays: [ptr, len, cap]
+    s := make([]int, 5, 10)
+    s = append(s, 100)
+
+    // Maps must be initialized using make before writes
+    m := make(map[string]int)
+    m["Alice"] = 90
+    
+    val, exists := m["Bob"]
 }`,
         isCode: true,
       },
       {
-        title: '⚙️ Functions (Multiple Returns)',
-        content: `// Go allows returning multiple values from one function!
-func getPlayerStatus() (int, string) {
-    return 100, "Shield Active"
+        title: '4. Flow Control & Multi-branch switches',
+        content: `package main
+
+func main() {
+    // Conditional with local variable initialization
+    if val := evaluate(); val > 10 {
+        // ...
+    }
+
+    // Switch case does not fall through automatically
+    switch os := getOS(); os {
+    case "linux":
+        // ...
+    case "windows":
+        // ...
+    }
 }`,
         isCode: true,
       },
       {
-        title: '🧵 Multitasking (Goroutines)',
-        content: `// Go uses "goroutines" to do things all at once!
-// Just put "go" in front of a command, and it runs in the background.
-// go runRobotPath()
-// go playMusic()`,
+        title: '5. Functions, Defer, & Recover',
+        content: `package main
+
+import "errors"
+
+func divide(a, b int) (int, error) {
+    if b == 0 {
+        return 0, errors.New("division by zero")
+    }
+    return a / b, nil
+}
+
+func safeExecute() {
+    defer func() {
+        if r := recover(); r != nil {
+            // Panic caught and handled
+        }
+    }()
+    panic("critical system error")
+}`,
         isCode: true,
       },
       {
-        title: '💡 Did you know?',
-        content: 'Go was designed by Google to fix the problem of giant programs taking way too long to build. Today, it powers heavy-duty stuff like massive online game servers!',
-        isCode: false,
+        title: '6. Structs, Pointers, & Methods',
+        content: `package main
+
+type User struct {
+    ID   int    \`json:"id"\`
+    Name string \`json:"name"\`
+}
+
+// Value receiver (reads copy of struct)
+func (u User) Print() { }
+
+// Pointer receiver (mutates original memory)
+func (u *User) Rename(newName string) {
+    u.Name = newName
+}`,
+        isCode: true,
+      },
+      {
+        title: '7. Interfaces & Type Assertions',
+        content: `package main
+
+type Reader interface {
+    Read() string
+}
+
+func checkType(val interface{}) {
+    // Type assertion (comma-ok)
+    str, ok := val.(string)
+    
+    // Type switch
+    switch v := val.(type) {
+    case int:
+        // ...
+    }
+}`,
+        isCode: true,
+      },
+      {
+        title: '8. Concurrency (Goroutines & Channels)',
+        content: `package main
+
+func worker(ch chan string) {
+    ch <- "task completed"
+}
+
+func main() {
+    ch := make(chan string)
+    go worker(ch) // Managed lightweight thread
+    msg := <-ch
+}`,
+        isCode: true,
+      },
+      {
+        title: '9. Error Handling Principles',
+        content: `package main
+
+import "errors"
+
+type DbError struct {
+    Query string
+}
+
+func (e *DbError) Error() string {
+    return "Database failure on " + e.Query
+}
+
+func check(err error) {
+    var dbErr *DbError
+    if errors.As(err, &dbErr) {
+        // Handle database specific error
+    }
+}`,
+        isCode: true,
+      },
+      {
+        title: '10. Command Line Tooling',
+        content: `# Run tests under current package tree
+go test ./...
+
+# Build executable binary for current platform
+go build -o myapp main.go
+
+# Verify common programming issues
+go vet ./...`,
+        isCode: true,
       }
     ]
   },
