@@ -288,6 +288,25 @@ std::string heroName = "Knight"; // Words and letters`,
         isCode: true,
       },
       {
+        title: '📦 Vectors (Stretchy Backpacks)',
+        content: `#include <vector>
+#include <string>
+
+// A vector is a stretchy backpack that grows automatically!
+std::vector<std::string> inventory;
+inventory.push_back("Steel Shield 🛡️");
+inventory.push_back("Health Potion 🧪");`,
+        isCode: true,
+      },
+      {
+        title: '🪄 Functions (Skills)',
+        content: `// Teach the hero how to calculate double damage!
+int dealDamage(int attackPower) {
+    return attackPower * 2;
+}`,
+        isCode: true,
+      },
+      {
         title: '⚔️ Loops of Power',
         content: `// A "while" loop keeps spinning as long as the rule is true!
 while (playerHealth > 0) {
@@ -319,12 +338,33 @@ public class Game {
         isCode: true,
       },
       {
+        title: '🏗️ Classes & Blueprints',
+        content: `// A Class is a blueprint to create custom objects!
+public class Hero {
+    String name;
+    int health = 100;
+    
+    public void takeDamage(int damage) {
+        health -= damage;
+    }
+}`,
+        isCode: true,
+      },
+      {
         title: '🎒 Inventories (Arrays)',
         content: `// Let's create an inventory of standard blocks!
 String[] inventory = {"Dirt", "Wood", "Diamond"};
 
 // Grabbing the very first item (they always start counting at 0!)
 System.out.println("Holding: " + inventory[0]);`,
+        isCode: true,
+      },
+      {
+        title: '🔁 Repeating Actions (Loops)',
+        content: `// Loop 5 times to mine block elements!
+for (int i = 1; i <= 5; i++) {
+    System.out.println("Mining block block #" + i + " ⛏️");
+}`,
         isCode: true,
       },
       {
@@ -369,6 +409,15 @@ if (speed > 5) {
         isCode: true,
       },
       {
+        title: '🎭 Methods (Skills)',
+        content: `// A method performs actions when called!
+void HealPlayer(int amount) {
+    health += amount;
+    Console.WriteLine("Healed by " + amount + " points! ❤️");
+}`,
+        isCode: true,
+      },
+      {
         title: '📦 Lists (Stretchy Backpacks)',
         content: `using System.Collections.Generic;
 
@@ -376,6 +425,19 @@ if (speed > 5) {
 List<string> treasures = new List<string>();
 treasures.Add("Gold Ring");
 treasures.Add("Magic Boots");`,
+        isCode: true,
+      },
+      {
+        title: '🏗️ Unity Script Check',
+        content: `using UnityEngine;
+
+// Unity runs Update() every single frame!
+public class MoveScript : MonoBehaviour {
+    void Update() {
+        float move = Input.GetAxis("Horizontal");
+        transform.Translate(move * 5f * Time.deltaTime, 0, 0);
+    }
+}`,
         isCode: true,
       },
       {
@@ -470,6 +532,28 @@ var secretCode: Int? = 404
         isCode: true,
       },
       {
+        title: '🔁 Loops & Ranges',
+        content: `// Repeat a process over a specific range of numbers!
+for score in 1...5 {
+    print("Level \(score) cleared! 🏆")
+}`,
+        isCode: true,
+      },
+      {
+        title: '🎨 SwiftUI (User Interfaces)',
+        content: `import SwiftUI
+
+// SwiftUI structures screens in simple, readable blocks!
+struct WelcomeView: View {
+    var body: some View {
+        Text("Hello, Swift Coder!")
+            .font(.largeTitle)
+            .padding()
+    }
+}`,
+        isCode: true,
+      },
+      {
         title: '💡 Did you know?',
         content: 'Swift originally had a logo that looked like a bird diving from the sky! Apple created it to replace their much older, clunkier language called Objective-C.',
         isCode: false,
@@ -494,6 +578,26 @@ fun main() {
         content: `// Kotlin protects you from "null" errors (empty boxes).
 // If a box MIGHT be empty, you mark it with a question mark!
 var umbrella: String? = null // It's raining but we have no umbrella!`,
+        isCode: true,
+      },
+      {
+        title: '🏗️ Classes & Header Constructors',
+        content: `// Kotlin creates classes and properties directly in the header definition!
+class Hero(val name: String, var level: Int) {
+    fun train() {
+        level++
+        println("$name trained up to level $level!")
+    }
+}`,
+        isCode: true,
+      },
+      {
+        title: '🔁 Scan Collections (Loops)',
+        content: `// Kotlin iterates lists with clean, simple variables
+val spellList = listOf("Fire 🔥", "Ice ❄️", "Bolt ⚡")
+for (spell in spellList) {
+    println("Spell ready: $spell")
+}`,
         isCode: true,
       },
       {
@@ -525,6 +629,23 @@ end`,
         isCode: true,
       },
       {
+        title: '🎒 Arrays & Lists',
+        content: `# Arrays are flexible lists that shrink and expand in Ruby!
+loot = ["Emerald 🟢", "Gold 🟡", "Ruby 🔴"]
+loot.push("Diamond 💎")
+puts "First item: " + loot.first`,
+        isCode: true,
+      },
+      {
+        title: '🪄 Methods (Recipes)',
+        content: `# Teach Ruby a function recipe with 'def' and 'end'
+def double_xp(points)
+  return points * 2
+end
+puts double_xp(50) # Prints 100`,
+        isCode: true,
+      },
+      {
         title: '🔁 Doing things many times',
         content: `# Rather than a complicated loop, Ruby uses ".times"!
 5.times do
@@ -553,11 +674,33 @@ echo "Welcome to the server, " . $playerName . "! 🧙‍♂️";
         isCode: true,
       },
       {
+        title: '📨 Form Data Retrieval',
+        content: `<?php
+// Read user entries sent through a website form!
+$userEmail = $_POST['email'];
+echo "Signing up user: " . htmlspecialchars($userEmail);
+?>`,
+        isCode: true,
+      },
+      {
         title: '📦 Arrays in PHP',
         content: `<?php
 // Creating a list of epic loot
 $loot = ["Gold Coin", "Health Potion", "Map"];
 echo "You found a " . $loot[1] . "!"; // Prints 'Health Potion'
+?>`,
+        isCode: true,
+      },
+      {
+        title: '🏗️ Classes & Blueprints',
+        content: `<?php
+class Mascot {
+    public $name;
+    public function __construct($name) {
+        $this->name = $name;
+    }
+}
+$hero = new Mascot("ElePHPant 🐘");
 ?>`,
         isCode: true,
       },
@@ -577,6 +720,36 @@ echo "You found a " . $loot[1] . "!"; // Prints 'Health Potion'
         content: `// The exclamation mark (!) means this is a special Rust 'macro'
 fn main() {
     println!("Hello, fearless coder! 🦀");
+}`,
+        isCode: true,
+      },
+      {
+        title: '📦 Enums & Match Patterns',
+        content: `// Enums contain standard choices
+enum Direction { North, South, East, West }
+
+fn move_hero(dir: Direction) {
+    // Rust forces you to handle EVERY single choice!
+    match dir {
+        Direction::North => println!("Moving Up! ⬆️"),
+        Direction::South => println!("Moving Down! ⬇️"),
+        _ => println!("Moving Sideways! ↔️"),
+    }
+}`,
+        isCode: true,
+      },
+      {
+        title: '🦀 Structs & Impl Block',
+        content: `// Define variables grouped together
+struct Player {
+    name: String,
+    hp: u32,
+}
+
+impl Player {
+    fn is_alive(&self) -> bool {
+        self.hp > 0
+    }
 }`,
         isCode: true,
       },
@@ -609,6 +782,27 @@ func main() {
         isCode: true,
       },
       {
+        title: '🎒 Slices (Dynamic Arrays)',
+        content: `package main
+import "fmt"
+
+func main() {
+    // Slices are dynamic arrays that grow automatically!
+    inventory := []string{"sword ⚔️", "shield 🛡️"}
+    inventory = append(inventory, "potion 🧪")
+    fmt.Println(inventory)
+}`,
+        isCode: true,
+      },
+      {
+        title: '⚙️ Functions (Multiple Returns)',
+        content: `// Go allows returning multiple values from one function!
+func getPlayerStatus() (int, string) {
+    return 100, "Shield Active"
+}`,
+        isCode: true,
+      },
+      {
         title: '🧵 Multitasking (Goroutines)',
         content: `// Go uses "goroutines" to do things all at once!
 // Just put "go" in front of a command, and it runs in the background.
@@ -628,7 +822,7 @@ func main() {
     description: 'The ultimate Data Detective! SQL is the special language used to talk to databases and quickly find or update the exact information you need.',
     sections: [
       {
-        title: '🔍 Finding Clues',
+        title: '🔍 Finding Clues (SELECT)',
         content: `-- Let's find all the players who have a score over 1000!
 SELECT name, score 
 FROM players 
@@ -636,10 +830,26 @@ WHERE score > 1000;`,
         isCode: true,
       },
       {
-        title: '➕ Adding Data',
+        title: '➕ Adding Data (INSERT)',
         content: `-- Let's add a brand new hero to the game database!
 INSERT INTO players (name, character_class)
 VALUES ('Alex', 'Mage');`,
+        isCode: true,
+      },
+      {
+        title: '🔄 Joining Tables (Relation Links)',
+        content: `-- Join two tables together to match profiles with game stats!
+SELECT players.name, stats.xp
+FROM players
+JOIN stats ON players.id = stats.player_id;`,
+        isCode: true,
+      },
+      {
+        title: '✏️ Updating Data (UPDATE)',
+        content: `-- Let's add points to a hero after they clear a level!
+UPDATE players
+SET score = score + 50
+WHERE name = 'Alex';`,
         isCode: true,
       },
       {
@@ -654,7 +864,7 @@ VALUES ('Alex', 'Mage');`,
     description: 'Imagine JavaScript, but wearing a protective helmet! TypeScript adds strict rules to JS to prevent bugs and mistakes before they happen.',
     sections: [
       {
-        title: '🏷️ Adding Labels',
+        title: '🏷️ Adding Labels (Types)',
         content: `// In TS, you tell the computer EXACTLY what type a box is.
 let heroName: string = "Zelda";
 let rupees: number = 50;
@@ -662,7 +872,25 @@ let isHero: boolean = true;`,
         isCode: true,
       },
       {
-        title: '🤝 Promises Made and Kept',
+        title: '🤝 Blueprints (Interfaces)',
+        content: `// Outline exactly what properties an object MUST contain!
+interface Player {
+    username: string;
+    xp: number;
+    hasShield: boolean;
+}`,
+        isCode: true,
+      },
+      {
+        title: '🎒 Dynamic Helpers (Generics)',
+        content: `// Generics let a function work with any type of variable!
+function firstItem<T>(arr: T[]): T {
+    return arr[0];
+}`,
+        isCode: true,
+      },
+      {
+        title: '🛡️ Promises Made and Kept',
         content: `// A function that guarantees it will ONLY return a number!
 function calculateDamage(attack: number, defense: number): number {
     return attack - defense;
@@ -751,6 +979,29 @@ void main() {
         isCode: true,
       },
       {
+        title: '🏗️ Shorthand Classes',
+        content: `class Avatar {
+  String nickname;
+  int rank;
+  
+  // Dart shorthand sets variables instantly!
+  Avatar(this.nickname, this.rank);
+}`,
+        isCode: true,
+      },
+      {
+        title: '📱 Flutter Screen Layout (Widgets)',
+        content: `import 'package:flutter/material.dart';
+
+// Flutter uses a hierarchy of widgets to build screens!
+Widget buildWelcomeScreen() {
+  return Center(
+    child: Text('Hello from Flutter! 📱'),
+  );
+}`,
+        isCode: true,
+      },
+      {
         title: '💡 Did you know?',
         content: 'Dart was made by Google specifically to build fast, beautiful phone screens without the stuttering limits of older programming tools.',
         isCode: false,
@@ -787,8 +1038,13 @@ void main() {
         isCode: false,
       },
       {
-        title: '📐 Angles and Geometry',
-        content: 'Want your game characters to bounce correctly off walls, trace cool magic spells, or calculate distances? You need math for that!',
+        title: '🧮 Binary Math (On/Off switches)',
+        content: 'Computers do not count from 1 to 9. They only know Binary: 0 (Off) and 1 (On). Programmers use bitwise operations (AND, OR, XOR) to toggles flags, hide data, and write ultra-fast code!',
+        isCode: false,
+      },
+      {
+        title: '📐 Coordinates & Screen Space',
+        content: 'Every 2D and 3D screen uses coordinate planes (X, Y, Z). To move sprites, check if elements touch (collision checking), or design custom shapes, you will need math coordinates!',
         isCode: false,
       },
       {
