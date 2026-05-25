@@ -203,7 +203,13 @@ export const getTrendingRepos = async (req: Request, res: Response) => {
     });
 
     if (!response.ok) {
-      if (response.status === 403) {
+      if (response.status === 403 || response.status === 429) {
+        console.warn('[GitHub API] Trending rate-limited. Falling back to local cache.');
+        const cacheFilePath = path.resolve(process.cwd(), 'repos-cache.json');
+        if (fs.existsSync(cacheFilePath)) {
+          const cacheData = JSON.parse(fs.readFileSync(cacheFilePath, 'utf-8'));
+          return res.json(cacheData.slice(0, 15));
+        }
         return res.status(429).json({ message: 'GitHub API rate limit exceeded.' });
       }
       throw new Error(`GitHub API error: ${response.status}`);
@@ -214,6 +220,11 @@ export const getTrendingRepos = async (req: Request, res: Response) => {
     res.json(data.items || []);
   } catch (error) {
     console.error('Error fetching trending repos:', error);
+    const cacheFilePath = path.resolve(process.cwd(), 'repos-cache.json');
+    if (fs.existsSync(cacheFilePath)) {
+      const cacheData = JSON.parse(fs.readFileSync(cacheFilePath, 'utf-8'));
+      return res.json(cacheData.slice(0, 15));
+    }
     res.status(500).json({ message: 'Error fetching trending repos' });
   }
 };
@@ -238,7 +249,10 @@ export const searchIssues = async (req: Request, res: Response) => {
     });
 
     if (!response.ok) {
-      if (response.status === 403) return res.status(429).json({ message: 'GitHub API rate limit exceeded.' });
+      if (response.status === 403 || response.status === 429) {
+        console.warn('[GitHub API] Issues search rate-limited. Returning empty array.');
+        return res.json({ items: [] });
+      }
       throw new Error(`GitHub API error: ${response.status}`);
     }
 
@@ -246,14 +260,13 @@ export const searchIssues = async (req: Request, res: Response) => {
     res.json(data);
   } catch (error) {
     console.error('Error searching issues:', error);
-    res.status(500).json({ message: 'Error searching issues' });
+    res.json({ items: [] });
   }
 };
 
 export const searchRepos = async (req: Request, res: Response) => {
+  const { q, language, sort = 'stars', order = 'desc', per_page = '30', page = '1' } = req.query as any;
   try {
-    const { q, language, sort = 'stars', order = 'desc', per_page = '30', page = '1' } = req.query as any;
-
     // Allow clients to pass a full q; otherwise return bad request
     if (!q || typeof q !== 'string') {
       return res.status(400).json({ message: 'Query parameter `q` is required.' });
@@ -276,7 +289,20 @@ export const searchRepos = async (req: Request, res: Response) => {
     });
 
     if (!response.ok) {
-      if (response.status === 403) return res.status(429).json({ message: 'GitHub API rate limit exceeded.' });
+      if (response.status === 403 || response.status === 429) {
+        console.warn('[GitHub API] Search rate-limited. Falling back to local search.');
+        const cacheFilePath = path.resolve(process.cwd(), 'repos-cache.json');
+        if (fs.existsSync(cacheFilePath)) {
+          const cacheData = JSON.parse(fs.readFileSync(cacheFilePath, 'utf-8'));
+          const filtered = cacheData.filter((r: any) => 
+            (r.name || '').toLowerCase().includes(q.toLowerCase()) ||
+            (r.description || '').toLowerCase().includes(q.toLowerCase()) ||
+            (r.language || '').toLowerCase().includes(q.toLowerCase())
+          );
+          return res.json(filtered);
+        }
+        return res.status(429).json({ message: 'GitHub API rate limit exceeded.' });
+      }
       throw new Error(`GitHub API error: ${response.status}`);
     }
 
@@ -285,6 +311,15 @@ export const searchRepos = async (req: Request, res: Response) => {
     res.json(data.items || []);
   } catch (error) {
     console.error('Error searching repos:', error);
+    const cacheFilePath = path.resolve(process.cwd(), 'repos-cache.json');
+    if (fs.existsSync(cacheFilePath)) {
+      const cacheData = JSON.parse(fs.readFileSync(cacheFilePath, 'utf-8'));
+      const filtered = cacheData.filter((r: any) => 
+        (r.name || '').toLowerCase().includes(q.toLowerCase()) ||
+        (r.description || '').toLowerCase().includes(q.toLowerCase())
+      );
+      return res.json(filtered);
+    }
     res.status(500).json({ message: 'Error searching repositories' });
   }
 };

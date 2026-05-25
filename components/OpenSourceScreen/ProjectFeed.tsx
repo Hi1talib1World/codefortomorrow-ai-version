@@ -71,6 +71,13 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
   // Fetch search results from GitHub when query or filters change
   useEffect(() => {
     const doSearch = async () => {
+      // If no query or filters are applied, don't trigger a rate-limiting API search.
+      // Simply reset searchResults to null to fallback to the trending/curated repos feed.
+      if (!searchQuery.trim() && !languageFilter && !sortBy) {
+        setSearchResults(null);
+        return;
+      }
+
       const baseQuery = searchQuery.trim() || 'stars:>10000';
       const queryParts = [baseQuery];
       if (languageFilter) queryParts.push(`language:${languageFilter}`);
@@ -99,6 +106,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
         setSearchResults(data);
       } catch (err) {
         console.error('Search failed:', err, 'URL:', url);
+        setSearchResults([]);
       }
     };
     const t = setTimeout(doSearch, 300);
