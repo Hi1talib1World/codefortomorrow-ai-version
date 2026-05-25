@@ -10,11 +10,13 @@ interface RepoContextValue {
 
 const RepoContext = createContext<RepoContextValue | undefined>(undefined);
 
-export const RepoProvider: React.FC<{children: React.ReactNode, initialSaved?: string[]}> = ({ children, initialSaved = [] }) => {
+const EMPTY_ARRAY: string[] = [];
+
+export const RepoProvider: React.FC<{children: React.ReactNode, initialSaved?: string[]}> = ({ children, initialSaved = EMPTY_ARRAY }) => {
   const [savedRepoIds, setSavedRepoIds] = useState<string[]>(initialSaved);
 
   useEffect(() => {
-    setSavedRepoIds(initialSaved || []);
+    setSavedRepoIds(initialSaved || EMPTY_ARRAY);
   }, [initialSaved]);
 
   const toggleSave = async (repoId: string) => {
