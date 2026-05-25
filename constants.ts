@@ -28,7 +28,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'block_coding',
     titleKey: 'block_coding',
     descriptionKey: 'block_coding_desc',
-    icon: '🧩',
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scratch/scratch-original.svg',
     color: 'bg-brand-500',
     isAvailable: true
   },
@@ -44,7 +44,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'javascript',
     titleKey: 'javascript',
     descriptionKey: 'javascript_desc',
-    icon: '📜',
+    icon: '/assets/images/js_logo.png',
     color: 'bg-red-500',
     isAvailable: true
   },
@@ -52,7 +52,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'lua',
     titleKey: 'lua',
     descriptionKey: 'lua_desc',
-    icon: '🎮',
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/lua/lua-original.svg',
     color: 'bg-brand-500',
     isAvailable: true
   },
@@ -60,7 +60,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'web_dev',
     titleKey: 'web_dev',
     descriptionKey: 'web_dev_desc',
-    icon: '🌐',
+    icon: '/assets/images/html_logo.svg',
     color: 'bg-pink-500',
     isAvailable: true
   },
@@ -68,7 +68,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'c++',
     titleKey: 'c++',
     descriptionKey: 'c++_desc',
-    icon: '🐉',
+    icon: '/assets/images/cpp_logo.svg',
     color: 'bg-gray-700',
     isAvailable: true
   },
@@ -76,7 +76,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'c_sharp',
     titleKey: 'c_sharp',
     descriptionKey: 'c_sharp_desc',
-    icon: '♯',
+    icon: '/assets/images/csharp_logo.svg',
     color: 'bg-purple-600',
     isAvailable: true
   },
@@ -84,7 +84,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'java',
     titleKey: 'java',
     descriptionKey: 'java_desc',
-    icon: '☕',
+    icon: '/assets/images/java_logo.png',
     color: 'bg-orange-600',
     isAvailable: true
   },
@@ -92,7 +92,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'kotlin',
     titleKey: 'kotlin',
     descriptionKey: 'kotlin_desc',
-    icon: '🤖',
+    icon: '/assets/images/kotlin_logo.svg',
     color: 'bg-brand-700',
     isAvailable: true
   },
@@ -100,7 +100,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'swift',
     titleKey: 'swift',
     descriptionKey: 'swift_desc',
-    icon: '🐦',
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg',
     color: 'bg-red-600',
     isAvailable: true
   },
@@ -108,7 +108,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'go',
     titleKey: 'go',
     descriptionKey: 'go_desc',
-    icon: '🐹',
+    icon: '/assets/images/go_logo.svg',
     color: 'bg-cyan-500',
     isAvailable: true
   },
@@ -116,7 +116,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'rust',
     titleKey: 'rust',
     descriptionKey: 'rust_desc',
-    icon: '🦀',
+    icon: '/assets/images/rust_logo.svg',
     color: 'bg-orange-800',
     isAvailable: true
   },
@@ -124,7 +124,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'php',
     titleKey: 'php',
     descriptionKey: 'php_desc',
-    icon: '🐘',
+    icon: '/assets/images/php_logo.png',
     color: 'bg-brand-400',
     isAvailable: true
   },
@@ -132,7 +132,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'ruby',
     titleKey: 'ruby',
     descriptionKey: 'ruby_desc',
-    icon: '💎',
+    icon: '/assets/images/ruby_logo.svg',
     color: 'bg-red-700',
     isAvailable: true
   },
@@ -140,7 +140,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'typescript',
     titleKey: 'typescript',
     descriptionKey: 'typescript_desc',
-    icon: '🔷',
+    icon: '/assets/images/typescript_logo.svg',
     color: 'bg-brand-600',
     isAvailable: true
   },
@@ -148,7 +148,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'sql',
     titleKey: 'sql',
     descriptionKey: 'sql_desc',
-    icon: '🗃️',
+    icon: '/assets/images/mysql_logo.svg',
     color: 'bg-gray-500',
     isAvailable: true
   },
@@ -156,7 +156,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'r',
     titleKey: 'r',
     descriptionKey: 'r_desc',
-    icon: '📊',
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/r/r-original.svg',
     color: 'bg-brand-600',
     isAvailable: true
   },
@@ -164,7 +164,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'dart',
     titleKey: 'dart',
     descriptionKey: 'dart_desc',
-    icon: '🎯',
+    icon: '/assets/images/dart_logo.svg',
     color: 'bg-teal-500',
     isAvailable: true
   },
