@@ -36,7 +36,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'python',
     titleKey: 'python',
     descriptionKey: 'python_desc',
-    icon: '🐍',
+    icon: '/assets/images/python_logo.png',
     color: 'bg-yellow-500',
     isAvailable: true
   },

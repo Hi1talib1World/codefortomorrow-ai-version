@@ -119,7 +119,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
               className="flex items-center space-x-2 rtl:space-x-reverse bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-600 transition-all font-bold border border-slate-200 dark:border-slate-600"
             >
               <span className="text-xl flex items-center justify-center w-6 h-6">
-                {currentPathData?.icon.startsWith('http') ? (
+                {currentPathData?.icon.startsWith('http') || currentPathData?.icon.startsWith('/') ? (
                   <img src={currentPathData.icon} alt="" className="w-6 h-6 object-contain" referrerPolicy="no-referrer" />
                 ) : (
                   currentPathData?.icon
@@ -143,7 +143,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
                       className="w-full text-left flex items-center space-x-3 rtl:space-x-reverse p-3 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-xl transition-all group"
                     >
                       <span className="text-2xl group-hover:scale-110 transition-transform flex items-center justify-center w-8 h-8">
-                        {path.icon.startsWith('http') ? (
+                        {path.icon.startsWith('http') || path.icon.startsWith('/') ? (
                           <img src={path.icon} alt="" className="w-8 h-8 object-contain" referrerPolicy="no-referrer" />
                         ) : (
                           path.icon

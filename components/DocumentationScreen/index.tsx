@@ -44,7 +44,13 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
                       : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
                   }`}
                 >
-                  <span className="mr-2">{path.icon}</span>
+                  <span className="mr-2 inline-flex items-center justify-center w-5 h-5 align-middle">
+                    {path.icon.startsWith('http') || path.icon.startsWith('/') ? (
+                      <img src={path.icon} alt="" className="w-5 h-5 object-contain" referrerPolicy="no-referrer" />
+                    ) : (
+                      path.icon
+                    )}
+                  </span>
                   {t(path.titleKey as any)}
                 </button>
               ))}

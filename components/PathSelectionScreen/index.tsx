@@ -41,7 +41,7 @@ const PathSelectionScreen: React.FC<PathSelectionScreenProps> = ({ onPathSelecte
             }}
           >
             <div className="text-5xl mb-4 flex justify-center items-center h-16">
-              {path.icon.startsWith('http') ? (
+              {path.icon.startsWith('http') || path.icon.startsWith('/') ? (
                 <img src={path.icon} alt="" className="w-16 h-16 object-contain" referrerPolicy="no-referrer" />
               ) : (
                 path.icon
