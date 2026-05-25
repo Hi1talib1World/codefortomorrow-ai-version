@@ -172,7 +172,7 @@ export const PATHS: ProgrammingPath[] = [
     id: 'math',
     titleKey: 'math_games',
     descriptionKey: 'math_games_desc',
-    icon: '🧮',
+    icon: '/assets/images/math_logo.svg',
     color: 'bg-indigo-500',
     isAvailable: true
   },
