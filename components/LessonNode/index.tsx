@@ -113,6 +113,12 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
             <span className="text-white text-3xl font-black drop-shadow-sm">✓</span>
           ) : !isUnlocked ? (
             <span className="text-slate-400 text-2xl filter grayscale opacity-40">🔒</span>
+          ) : emoji === '🏆' ? (
+            <img 
+              src="/assets/images/trophy.png" 
+              alt="Trophy" 
+              className="w-10 h-10 object-contain select-none"
+            />
           ) : (
             <span className="text-3xl select-none drop-shadow-sm filter grayscale opacity-70">{emoji}</span>
           )}
