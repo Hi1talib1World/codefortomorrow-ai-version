@@ -8,7 +8,8 @@ import api from '../../services/api';
 import { 
     Sparkles, Brain, Zap, RotateCcw, Play, Terminal, 
     Settings, ChevronRight, ChevronLeft, Bookmark, 
-    Trash2, Copy, ChevronDown, Check, X, Eye, EyeOff 
+    Trash2, Copy, ChevronDown, Check, X, Eye, EyeOff,
+    Cpu, Layers, Activity
 } from 'lucide-react';
 
 const LazyAvatarCanvas = React.lazy(() => import('../AvatarCanvas'));
@@ -22,6 +23,7 @@ interface LessonScreenProps {
     currentUser: User;
     onStartLesson?: (lesson: Lesson) => void;
 }
+
 
 const SuccessModal: React.FC<{ lesson: Lesson, onContinue: () => void }> = ({ lesson, onContinue }) => {
     const { t } = useLanguage();
@@ -46,33 +48,63 @@ const SuccessModal: React.FC<{ lesson: Lesson, onContinue: () => void }> = ({ le
 };
 
 const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: string, code: string }> = ({ output, isCorrect, mood, code }) => {
-    const hasLog = code.includes('console.log') || code.includes('print');
+    const hasLog = code.includes('console.log') || code.includes('print') || code.includes('System.out');
 
     return (
-        <div className="h-40 lg:h-48 bg-gradient-to-b from-sky-400 via-sky-300 to-emerald-300 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800 rounded-2xl relative overflow-hidden border-2 border-white dark:border-slate-600 shadow-xl mb-4 group kid-card">
-            <div className="absolute top-6 right-6 w-12 h-12 bg-white/20 rounded-full blur-xl animate-pulse"></div>
+        <div className="h-44 bg-slate-950 rounded-2xl relative overflow-hidden border border-cyan-500/25 shadow-[0_0_25px_rgba(6,182,212,0.08)] mb-3 group">
+            {/* Ambient holographic blue grid background */}
+            <div 
+                className="absolute inset-0 opacity-[0.08]"
+                style={{ 
+                    backgroundImage: 'linear-gradient(to right, rgba(6, 182, 212, 0.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(6, 182, 212, 0.12) 1px, transparent 1px)',
+                    backgroundSize: '12px 12px' 
+                }}
+            />
+
+            {/* Glowing orb behind mascot */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 bg-cyan-500/10 rounded-full blur-2xl animate-pulse"></div>
+
+            {/* Floating holo particles */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+                <span className="absolute w-[2px] h-[2px] bg-cyan-400 rounded-full animate-float-1 bottom-4 left-1/4" />
+                <span className="absolute w-1 h-1 bg-cyan-300 rounded-full animate-float-2 bottom-4 left-1/2" />
+                <span className="absolute w-[2px] h-[2px] bg-cyan-400 rounded-full animate-float-3 bottom-4 right-1/4" />
+            </div>
+
+            {/* Horizontal scanline effect */}
+            <div className="absolute inset-0 pointer-events-none opacity-10 bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent bg-[length:100%_6px]" />
 
             <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 transition-all duration-700 ease-out transform ${mood === 'happy' ? 'scale-105' : 'scale-95'} ${isCorrect ? 'animate-bounce' : ''}`}>
                 <div className="relative">
-                    <div className="w-20 h-20">
+                    {/* Holographic Cyan filter applied directly via css filters */}
+                    <div className="w-20 h-20 filter hue-rotate-[160deg] saturate-[2.2] brightness-[1.15] drop-shadow-[0_0_12px_rgba(6,182,212,0.8)] opacity-95 transition-opacity">
                         <Mascot />
                     </div>
+                    
                     {hasLog && !output && (
-                        <div className="absolute -top-6 -right-6 bg-white dark:bg-slate-700 p-1.5 rounded-lg shadow-lg border border-brand-200 dark:border-brand-800 animate-bounce">
-                            <span className="text-sm">💬</span>
+                        <div className="absolute -top-6 -right-6 bg-slate-950 border border-cyan-500/40 p-1.5 rounded-lg shadow-lg animate-bounce text-[9px] font-mono text-cyan-400 font-bold uppercase tracking-wider">
+                            💬 WAITING
                         </div>
                     )}
+                    
                     {output && (
-                        <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 p-2 rounded-xl rounded-bl-none shadow-xl min-w-[100px] animate-pop-in border-2 border-brand-400">
-                            <p className="text-slate-800 dark:text-slate-100 font-black text-sm text-center whitespace-pre-wrap tracking-tighter">{output}</p>
-                            <div className="absolute -bottom-2 left-0 w-4 h-4 bg-white dark:bg-slate-800 border-b-2 border-l-2 border-brand-400 rotate-45"></div>
+                        <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-slate-950 border border-cyan-500/50 p-2.5 rounded-xl rounded-bl-none shadow-[0_0_20px_rgba(6,182,212,0.3)] min-w-[120px] animate-pop-in backdrop-blur-md">
+                            <p className="text-cyan-400 font-mono text-[9px] font-black tracking-widest text-center whitespace-pre-wrap flex items-center justify-center gap-1.5 uppercase">
+                                <span className={output.includes('Error') ? 'text-red-400' : 'text-cyan-400'}>
+                                    {output.includes('Error') ? '⚡ SYSTEM_ERR' : '⚙️ RUN_STDOUT'}
+                                </span>
+                            </p>
+                            <p className="text-slate-200 font-mono text-[11px] font-bold text-center mt-1 truncate max-w-[150px]">{output}</p>
+                            <div className="absolute -bottom-2 left-0 w-3 h-3 bg-slate-950 border-b border-l border-cyan-500/50 rotate-45"></div>
                         </div>
                     )}
                 </div>
             </div>
         </div>
     );
-};const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit, path, onSwitchPath, currentUser, onStartLesson }) => {
+};
+
+const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit, path, onSwitchPath, currentUser, onStartLesson }) => {
     const { t } = useLanguage();
     const [code, setCode] = useState(lesson.starterCode);
     const [output, setOutput] = useState('');
@@ -90,11 +122,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
 
     // Upgraded IDE States
     const [activeFile, setActiveFile] = useState<string>('index.ts');
-    const [files, setFiles] = useState<{ [filename: string]: string }>({
-        'index.ts': lesson.starterCode,
-        'types.ts': '// Define custom interfaces and types here\nexport interface User {\n  id: number;\n  name: string;\n}',
-        'tests.ts': '// Unit tests to validate your code\n'
-    });
+    const [files, setFiles] = useState<{ [filename: string]: string }>({});
     const [isAutocompleteEnabled, setIsAutocompleteEnabled] = useState(true);
     const [showSettings, setShowSettings] = useState(false);
     const [fontSize, setFontSize] = useState<number>(14);
@@ -103,8 +131,11 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
     
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [isTestCasesExpanded, setIsTestCasesExpanded] = useState(true);
+    const [isObjectivesExpanded, setIsObjectivesExpanded] = useState(false);
     const [lineWrap, setLineWrap] = useState(false);
     const [foldedLines, setFoldedLines] = useState<Set<number>>(new Set());
+    const [breakpoints, setBreakpoints] = useState<Set<number>>(new Set());
+    const [isXpHovered, setIsXpHovered] = useState(false);
 
     const [activeConsoleTab, setActiveConsoleTab] = useState<'console' | 'terminal'>('console');
     const [executionMetrics, setExecutionMetrics] = useState<{ time: number, memory: number } | null>(null);
@@ -146,14 +177,24 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
         fetchContext();
     }, []);
 
+    // Set files dynamically on lesson change to match path languages
     useEffect(() => {
-        setShowHint(false);
-        setFiles({
-            'index.ts': lesson.starterCode,
-            'types.ts': '// Define custom interfaces and types here\nexport interface User {\n  id: number;\n  name: string;\n}',
+        let mainFile = 'index.ts';
+        if (path === 'python') mainFile = 'main.py';
+        else if (path === 'java') mainFile = 'Main.java';
+        else if (path === 'c++') mainFile = 'main.cpp';
+        else if (path === 'c_sharp') mainFile = 'Program.cs';
+        else if (path === 'ruby') mainFile = 'main.rb';
+        else if (path === 'rust') mainFile = 'main.rs';
+        else if (path === 'web_dev') mainFile = 'index.html';
+
+        const initialFiles = {
+            [mainFile]: lesson.starterCode,
+            'types.ts': '// Define custom interfaces and types here\n',
             'tests.ts': '// Unit tests to validate your code\n'
-        });
-        setActiveFile('index.ts');
+        };
+        setFiles(initialFiles);
+        setActiveFile(mainFile);
         setCode(lesson.starterCode);
         setIsCorrect(null);
         setOutput('');
@@ -161,7 +202,8 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
         setAiHint(null);
         setMascotMood('idle');
         setExecutionMetrics(null);
-    }, [lesson]);
+        setBreakpoints(new Set());
+    }, [lesson, path]);
 
     const handleCodeChange = (newCode: string) => {
         setCode(newCode);
@@ -335,6 +377,42 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
         document.addEventListener('mouseup', handleMouseUp);
     };
 
+    // Auto-scroll sync for transparent textarea overlay syntax highlighting
+    const editorScrollRef = useRef<HTMLDivElement>(null);
+    const handleScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
+        if (editorScrollRef.current) {
+            editorScrollRef.current.scrollTop = e.currentTarget.scrollTop;
+            editorScrollRef.current.scrollLeft = e.currentTarget.scrollLeft;
+        }
+    };
+
+    // Simple robust regex syntax highligher for code overlay
+    const highlightCode = (rawCode: string) => {
+        let html = rawCode
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        
+        // Keywords (Java / JS / TS / Python / C++)
+        const keywords = /\b(class|public|static|void|int|double|float|String|char|boolean|if|else|for|while|new|try|catch|finally|throw|extends|implements|interface|package|import|return|const|let|var|function|def|elif|import|from|as|print|println|System|out)\b/g;
+        html = html.replace(keywords, '<span class="text-cyan-400 font-bold">$1</span>');
+
+        // Functions / Method names
+        const functions = /\b(System\.out\.println|System\.out\.print|println|print|main)\b/g;
+        html = html.replace(functions, '<span class="text-sky-400 font-semibold">$1</span>');
+        
+        // Numbers
+        html = html.replace(/\b(\d+)\b/g, '<span class="text-amber-400">$1</span>');
+
+        // Strings
+        html = html.replace(/(["'`])(.*?)\1/g, '<span class="text-emerald-400">$1$2$1</span>');
+
+        // Comments
+        html = html.replace(/(\/\/.*|#.*)/g, '<span class="text-slate-500 italic">$1</span>');
+
+        return { __html: html };
+    };
+
     const toggleFold = (lineIndex: number) => {
         setFoldedLines(prev => {
             const next = new Set(prev);
@@ -348,35 +426,61 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
     };
 
     return (
-        <div className="fixed inset-0 bg-[#0f172a] dark:bg-[#020617] font-sans flex flex-col z-50 overflow-hidden select-none transition-colors">
+        <div className="fixed inset-0 bg-[#070b13] font-sans flex flex-col z-50 overflow-hidden select-none transition-colors text-slate-100">
+            {/* Inline keyframe style block for high-immersion animations */}
+            <style>{`
+                @keyframes floatHolo {
+                    0% { transform: translateY(40px) scale(0.6); opacity: 0; }
+                    50% { opacity: 0.7; }
+                    100% { transform: translateY(-70px) scale(1.1); opacity: 0; }
+                }
+                .animate-float-1 { animation: floatHolo 3.2s infinite ease-in-out; }
+                .animate-float-2 { animation: floatHolo 4.8s infinite ease-in-out 1.2s; }
+                .animate-float-3 { animation: floatHolo 3.9s infinite ease-in-out 0.6s; }
+                
+                @keyframes sparkAnim {
+                    0% { transform: scale(0.8) rotate(0deg); opacity: 0.8; }
+                    50% { transform: scale(1.25) rotate(180deg); opacity: 1; }
+                    100% { transform: scale(0.8) rotate(360deg); opacity: 0.8; }
+                }
+                .animate-spark { animation: sparkAnim 2.5s infinite linear; }
+            `}</style>
+
             {showSuccessModal && <SuccessModal lesson={lesson} onContinue={handleComplete} />}
 
             {/* Top Navigation / Progress Header */}
-            <header className="flex-shrink-0 bg-slate-900 border-b border-slate-800 p-3 shadow-lg">
+            <header className="flex-shrink-0 bg-[#0b0f19] border-b border-slate-800 p-3 shadow-lg">
                 <div className="flex items-center justify-between max-w-7xl mx-auto">
-                    <button onClick={onExit} className="w-9 h-9 flex items-center justify-center bg-slate-800 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-all border border-slate-700 active:translate-y-0.5">
+                    <button onClick={onExit} className="w-9 h-9 flex items-center justify-center bg-slate-900 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-all border border-slate-850 active:translate-y-0.5">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
 
                     <div className="flex-grow mx-6 flex items-center gap-4">
-                        <div className="flex-grow bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700 shadow-inner relative">
+                        <div className="flex-grow bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800 shadow-inner relative">
                             <div
-                                className="bg-gradient-to-r from-yellow-400 via-orange-500 to-emerald-500 h-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+                                className="bg-gradient-to-r from-cyan-400 via-sky-500 to-emerald-500 h-full transition-all duration-1000 ease-out shadow-[0_0_12px_rgba(6,182,212,0.6)]"
                                 style={{ width: isCorrect ? '100%' : `${((currentLessonIndex + 1) / allLessonsInPath.length) * 100}%` }}
                             ></div>
                         </div>
                         {aiContext?.recommendation && (
-                            <div className="flex items-center gap-2 bg-indigo-950/40 px-3 py-1 rounded-full border border-indigo-500/25">
-                                <Sparkles className="w-3 h-3 text-indigo-400" />
-                                <span className="text-[9px] font-black text-indigo-300 uppercase tracking-wider">AI Coach Active</span>
+                            <div className="flex items-center gap-2 bg-cyan-950/20 px-3 py-1 rounded-full border border-cyan-500/30">
+                                <Sparkles className="w-3 h-3 text-cyan-400" />
+                                <span className="text-[9px] font-black text-cyan-300 uppercase tracking-wider">HOLO ASSISTANT</span>
                             </div>
                         )}
                     </div>
 
-                    <div className="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 shadow-md font-bold text-yellow-500 text-xs flex items-center gap-1">
+                    <div 
+                        onMouseEnter={() => setIsXpHovered(true)}
+                        onMouseLeave={() => setIsXpHovered(false)}
+                        className="relative bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 shadow-md font-bold text-yellow-500 text-xs flex items-center gap-1 cursor-pointer transition-all hover:scale-105 hover:border-yellow-500/20"
+                    >
                         <span>⭐</span> {currentUser?.progress?.xp || 0} XP
+                        {isXpHovered && (
+                            <span className="absolute -top-1 -right-1 text-xs animate-spark select-none">✨</span>
+                        )}
                     </div>
                 </div>
             </header>
@@ -387,20 +491,20 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                 {/* 1. Left Panel: Instructions, Objectives & Test Cases */}
                 <aside 
                     style={{ width: `${leftWidth}%` }}
-                    className="hidden lg:flex flex-col bg-slate-900 border-r border-slate-800 p-4 overflow-y-auto space-y-4 shrink-0"
+                    className="hidden lg:flex flex-col bg-[#0b0f19]/90 border-r border-slate-850 p-4 overflow-y-auto space-y-4 shrink-0"
                 >
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                            <div className="bg-brand-500/10 border border-brand-500/30 text-brand-400 px-2 py-0.5 rounded-lg font-bold text-xs">
+                            <div className="bg-cyan-500/10 border border-cyan-500/35 text-cyan-400 px-2.5 py-1 rounded-lg font-bold text-xs shadow-[0_0_12px_rgba(6,182,212,0.2)] animate-pulse">
                                 Level {lesson.level}
                             </div>
-                            <h2 className="text-sm font-black text-white uppercase tracking-wider">
+                            <h2 className="text-sm font-black text-white uppercase tracking-wider font-mono">
                                 {t(lesson.titleKey as any)}
                             </h2>
                         </div>
                         <button 
                             onClick={() => setIsBookmarked(!isBookmarked)}
-                            className={`p-1.5 rounded-lg border transition-all ${isBookmarked ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : 'border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white'}`}
+                            className={`p-1.5 rounded-lg border transition-all ${isBookmarked ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : 'border-slate-850 hover:border-slate-700 text-slate-500 hover:text-white'}`}
                             title="Save for Later"
                         >
                             <Bookmark className="w-3.5 h-3.5" />
@@ -410,15 +514,15 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                     {/* Metadata Pills */}
                     <div className="flex flex-wrap items-center gap-1.5">
                         {lesson.difficulty && (
-                            <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider 
-                                ${lesson.difficulty === 'Beginner' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                                  lesson.difficulty === 'Intermediate' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                                  'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}>
+                            <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border 
+                                ${lesson.difficulty === 'Beginner' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                                  lesson.difficulty === 'Intermediate' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                                  'bg-rose-500/10 text-rose-400 border-rose-500/20'}`}>
                                 {lesson.difficulty}
                             </span>
                         )}
                         {lesson.estimatedMinutes && (
-                            <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[9px] font-bold flex items-center gap-1">
+                            <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 text-[9px] font-bold flex items-center gap-1">
                                 ⏱️ {lesson.estimatedMinutes} min
                             </span>
                         )}
@@ -429,10 +533,12 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
 
                     {/* Rich Theory / Explanation */}
                     {lesson.explanationKey && (
-                        <div className="bg-slate-950 border border-slate-800/80 p-4 rounded-xl relative overflow-hidden group">
-                            <div className="absolute -right-4 -top-4 text-slate-800 text-5xl transform rotate-12 select-none pointer-events-none opacity-40">💡</div>
+                        <div className="bg-slate-950/80 border border-slate-850 p-4 rounded-xl relative overflow-hidden group">
+                            <div className="absolute -right-4 -top-4 text-slate-800 text-5xl transform rotate-12 select-none pointer-events-none opacity-20">💡</div>
                             <div className="relative z-10 flex flex-col gap-2">
-                                <h3 className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Concept Guide</h3>
+                                <h3 className="text-[10px] font-black text-cyan-400 uppercase tracking-widest flex items-center gap-1">
+                                    <Cpu className="w-3.5 h-3.5 text-cyan-400" /> Concept Guide
+                                </h3>
                                 <p className="text-xs text-slate-300 leading-relaxed font-medium">
                                     {t(lesson.explanationKey as any)}
                                 </p>
@@ -443,7 +549,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                     {/* Challenge Prompt */}
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('challenge')}</h3>
+                            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{t('challenge')}</h3>
                             {(lesson.hintKey || lesson.solutionCode) && (
                                 <button
                                     onClick={() => setShowHint(!showHint)}
@@ -454,16 +560,39 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                                 </button>
                             )}
                         </div>
-                        <p className="text-xs font-semibold text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800">
+                        <p className="text-xs font-semibold text-slate-300 leading-relaxed bg-slate-950/80 p-3 rounded-lg border border-slate-850">
                             {t(lesson.challengeDescriptionKey as any)}
                         </p>
                     </div>
 
+                    {/* Expandable Learning Objectives Accordion */}
+                    {lesson.objectivesKey && (
+                        <div className="border border-slate-850 rounded-xl bg-slate-950/80 overflow-hidden">
+                            <button 
+                                onClick={() => setIsObjectivesExpanded(!isObjectivesExpanded)}
+                                className="w-full flex items-center justify-between p-3 bg-[#0b0f19] border-b border-slate-850 font-black text-[10px] text-slate-400 uppercase tracking-wider"
+                            >
+                                <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-cyan-400" /> Learning Objectives</span>
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isObjectivesExpanded ? 'transform rotate-180' : ''}`} />
+                            </button>
+                            {isObjectivesExpanded && (
+                                <ul className="p-3 space-y-2">
+                                    {((t(lesson.objectivesKey as any) as string) || '').split('|').map((objective, idx) => (
+                                        <li key={idx} className="flex items-start gap-2 text-xs text-slate-300">
+                                            <span className="text-[10px] mt-0.5">⚙️</span>
+                                            <span className="font-semibold leading-relaxed">{objective}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    )}
+
                     {/* Dynamic Interactive Test Cases */}
-                    <div className="border border-slate-800 rounded-xl bg-slate-950 overflow-hidden mt-3">
+                    <div className="border border-slate-850 rounded-xl bg-slate-950/85 overflow-hidden">
                         <button 
                             onClick={() => setIsTestCasesExpanded(!isTestCasesExpanded)}
-                            className="w-full flex items-center justify-between p-3 bg-slate-900 border-b border-slate-800 font-black text-[10px] text-slate-400 uppercase tracking-wider"
+                            className="w-full flex items-center justify-between p-3 bg-[#0b0f19] border-b border-slate-850 font-black text-[10px] text-slate-400 uppercase tracking-wider"
                         >
                             <span className="flex items-center gap-1.5">🎯 Test Cases Checklist</span>
                             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isTestCasesExpanded ? 'transform rotate-180' : ''}`} />
@@ -471,10 +600,10 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                         {isTestCasesExpanded && (
                             <ul className="p-3 space-y-2">
                                 {testCases.map((tc) => (
-                                    <li key={tc.id} className="flex items-center justify-between text-xs font-bold text-slate-300 bg-slate-900/50 px-2.5 py-2 rounded border border-slate-800/40">
+                                    <li key={tc.id} className="flex items-center justify-between text-xs font-bold text-slate-300 bg-slate-900/50 px-2.5 py-2 rounded border border-slate-850/40">
                                         <span>{tc.desc}</span>
                                         {tc.status ? (
-                                            <span className="text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 border border-emerald-500/20">
+                                            <span className="text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 border border-cyan-500/20">
                                                 <Check className="w-3 h-3" /> PASS
                                             </span>
                                         ) : (
@@ -510,19 +639,19 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                     <div className="flex-grow"></div>
 
                     {/* Navigation Actions Panel */}
-                    <div className="space-y-2 pt-4 border-t border-slate-800">
+                    <div className="space-y-2 pt-4 border-t border-slate-800/80">
                         <div className="grid grid-cols-2 gap-2">
                             <button
                                 onClick={handlePrevLesson}
                                 disabled={!onStartLesson || currentLessonIndex <= 0}
-                                className="bg-slate-800 hover:bg-slate-750 text-slate-300 hover:text-white disabled:opacity-40 font-bold py-2 rounded-lg text-xs uppercase transition-all flex items-center justify-center gap-1 border border-slate-700"
+                                className="bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-slate-300 hover:text-white disabled:opacity-30 font-bold py-2 rounded-xl text-xs uppercase transition-all flex items-center justify-center gap-1"
                             >
                                 <ChevronLeft className="w-3.5 h-3.5" /> Previous
                             </button>
                             <button
                                 onClick={handleNextLesson}
                                 disabled={!onStartLesson || currentLessonIndex >= allLessonsInPath.length - 1}
-                                className="bg-slate-800 hover:bg-slate-750 text-slate-300 hover:text-white disabled:opacity-40 font-bold py-2 rounded-lg text-xs uppercase transition-all flex items-center justify-center gap-1 border border-slate-700"
+                                className="bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-slate-300 hover:text-white disabled:opacity-30 font-bold py-2 rounded-xl text-xs uppercase transition-all flex items-center justify-center gap-1"
                             >
                                 Next <ChevronRight className="w-3.5 h-3.5" />
                             </button>
@@ -530,7 +659,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                         <div className="grid grid-cols-3 gap-2">
                             <button
                                 onClick={handleResetCode}
-                                className="bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white font-bold py-2 rounded-lg text-[10px] uppercase transition-all flex items-center justify-center gap-1"
+                                className="bg-slate-900 border border-slate-850 hover:border-slate-700 text-slate-400 hover:text-white font-bold py-2 rounded-xl text-[10px] uppercase transition-all flex items-center justify-center gap-1"
                                 title="Reset Code"
                             >
                                 <RotateCcw className="w-3 h-3" /> Reset
@@ -538,7 +667,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                             <button
                                 onClick={handleRunCode}
                                 disabled={isRunning}
-                                className="col-span-2 bg-brand-500 hover:bg-brand-400 text-white font-black py-2 rounded-lg text-xs uppercase transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-brand-500/10 active:translate-y-0.5"
+                                className="col-span-2 bg-cyan-600 hover:bg-cyan-500 text-white font-black py-2 rounded-xl text-xs uppercase transition-all flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(6,182,212,0.25)] active:translate-y-0.5"
                             >
                                 <Play className="w-3.5 h-3.5 fill-current" />
                                 {isRunning ? t('running') : t('run_code')}
@@ -550,26 +679,27 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                 {/* Left Split Pane Resizer */}
                 <div 
                     onMouseDown={startResizeLeft}
-                    className="hidden lg:block w-[4px] hover:w-[6px] bg-slate-800 hover:bg-brand-500 cursor-col-resize z-10 transition-colors shrink-0"
+                    className="hidden lg:block w-[4px] hover:w-[6px] bg-slate-850 hover:bg-cyan-500 cursor-col-resize z-10 transition-colors shrink-0"
                 />
 
                 {/* 2. Center Panel: Code Editor (Multi-file tabs, Autocomplete, preference controls) */}
-                <main className="flex-grow flex flex-col bg-slate-950 overflow-hidden relative shrink-0">
+                <main className="flex-grow flex flex-col bg-[#070b13] overflow-hidden relative shrink-0">
                     
                     {/* Multi-File Tab Header Bar */}
-                    <div className="bg-slate-900 border-b border-slate-800 p-2 flex items-center justify-between z-20">
+                    <div className="bg-[#0b0f19] border-b border-slate-850 p-2 flex items-center justify-between z-20">
                         <div className="flex items-center space-x-1">
                             {Object.keys(files).map((filename) => (
                                 <button
                                     key={filename}
                                     onClick={() => handleSwitchFile(filename)}
-                                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all border ${
+                                    className={`px-4 py-1.5 rounded-t-lg text-xs font-bold transition-all border-t-2 flex items-center gap-2 ${
                                         activeFile === filename
-                                            ? 'bg-slate-950 border-slate-800 text-white'
-                                            : 'border-transparent text-slate-400 hover:text-slate-200'
+                                            ? 'bg-slate-950/80 border-cyan-500 text-white'
+                                            : 'border-transparent text-slate-500 hover:text-slate-350'
                                     }`}
                                 >
-                                    {filename}
+                                    <span>{filename}</span>
+                                    <span className="text-[10px] text-slate-600 hover:text-white ml-1">×</span>
                                 </button>
                             ))}
                         </div>
@@ -579,9 +709,9 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                             {/* Autocomplete active dot */}
                             <button 
                                 onClick={() => setIsAutocompleteEnabled(!isAutocompleteEnabled)}
-                                className={`flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-bold border transition-colors ${
+                                className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-[9px] font-bold border transition-colors ${
                                     isAutocompleteEnabled 
-                                        ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
+                                        ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400' 
                                         : 'bg-slate-800 border-slate-700 text-slate-500'
                                 }`}
                                 title="Toggle Autocomplete / IntelliSense"
@@ -594,7 +724,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                             <div className="relative">
                                 <button 
                                     onClick={() => setShowSettings(!showSettings)}
-                                    className={`p-1.5 rounded-lg border transition-all ${showSettings ? 'bg-slate-800 border-slate-700 text-white' : 'border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white'}`}
+                                    className={`p-1.5 rounded-lg border transition-all ${showSettings ? 'bg-slate-800 border-slate-700 text-white' : 'border-slate-850 hover:border-slate-700 text-slate-400 hover:text-white'}`}
                                     title="Editor Preferences"
                                 >
                                     <Settings className="w-3.5 h-3.5" />
@@ -602,7 +732,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
 
                                 {/* Preferences dropdown */}
                                 {showSettings && (
-                                    <div className="absolute right-0 top-full mt-2 z-50 bg-slate-900 border border-slate-800 p-4 rounded-xl shadow-xl w-60 text-slate-300 font-sans text-xs space-y-4">
+                                    <div className="absolute right-0 top-full mt-2 z-50 bg-slate-900 border border-slate-850 p-4 rounded-xl shadow-xl w-60 text-slate-300 font-sans text-xs space-y-4">
                                         <h4 className="font-black text-white uppercase tracking-wider text-[10px]">Editor Settings</h4>
                                         <div className="space-y-1.5">
                                             <label className="text-[10px] font-bold text-slate-400 uppercase">Font Size ({fontSize}px)</label>
@@ -610,7 +740,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                                                 type="range" min="12" max="20" step="2"
                                                 value={fontSize} 
                                                 onChange={(e) => setFontSize(parseInt(e.target.value))}
-                                                className="w-full accent-brand-500"
+                                                className="w-full accent-cyan-500"
                                             />
                                         </div>
                                         <div className="space-y-1.5">
@@ -618,7 +748,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                                             <select 
                                                 value={keybindings} 
                                                 onChange={(e) => setKeybindings(e.target.value)}
-                                                className="w-full bg-slate-950 border border-slate-800 rounded p-1.5 font-bold text-white text-xs"
+                                                className="w-full bg-slate-950 border border-slate-850 rounded p-1.5 font-bold text-white text-xs"
                                             >
                                                 <option value="standard">Standard</option>
                                                 <option value="vim">Vim</option>
@@ -632,7 +762,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                                                     <button
                                                         key={spacing}
                                                         onClick={() => setTabSpacing(spacing)}
-                                                        className={`py-1 rounded border text-xs font-bold transition-all ${tabSpacing === spacing ? 'bg-brand-500/10 border-brand-500/30 text-brand-400' : 'bg-slate-950 border-slate-800 text-slate-400'}`}
+                                                        className={`py-1 rounded border text-xs font-bold transition-all ${tabSpacing === spacing ? 'bg-cyan-500/10 border-cyan-500/25 text-cyan-400' : 'bg-slate-950 border-slate-850 text-slate-400'}`}
                                                     >
                                                         {spacing} Spaces
                                                     </button>
@@ -645,26 +775,37 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                         </div>
                     </div>
 
-                    {/* Main Workspace Text Editor */}
-                    <div className="flex-grow flex relative">
+                    {/* Main Workspace Text Editor with Synchronized Highlight Layer */}
+                    <div className="flex-grow flex relative overflow-hidden bg-slate-950/80">
                         
-                        {/* Custom gutter supporting fold indicators and controls */}
-                        <div className="w-12 bg-slate-900 border-r border-slate-800 flex flex-col items-center py-4 select-none font-mono text-xs text-slate-500 space-y-[2px]">
+                        {/* Custom gutter supporting fold indicators and active breakpoints */}
+                        <div className="w-12 bg-slate-900/60 border-r border-slate-850 flex flex-col items-center py-4 select-none font-mono text-xs text-slate-500 space-y-[2px] z-10">
                             {codeLines.map((lineContent, i) => {
                                 const isFoldable = lineContent.trim().endsWith('{') || lineContent.trim().endsWith('[') || lineContent.trim().endsWith('(');
                                 const isFolded = foldedLines.has(i);
+                                const hasBreakpoint = breakpoints.has(i);
                                 return (
-                                    <div key={i} className="h-6 flex items-center justify-between w-full px-2">
-                                        <span className="opacity-50 text-[10px]">{i + 1}</span>
-                                        {isFoldable && (
-                                            <button 
-                                                onClick={() => toggleFold(i)}
-                                                className="text-[9px] text-slate-600 hover:text-brand-400 cursor-pointer font-black"
-                                                title="Fold Code Block"
-                                            >
-                                                {isFolded ? '►' : '▼'}
-                                            </button>
-                                        )}
+                                    <div key={i} className="h-6 flex items-center justify-between w-full px-2 relative group/gutter">
+                                        <button
+                                            onClick={() => {
+                                                setBreakpoints(prev => {
+                                                    const next = new Set(prev);
+                                                    if (next.has(i)) {
+                                                        next.delete(i);
+                                                    } else {
+                                                        next.add(i);
+                                                    }
+                                                    return next;
+                                                });
+                                            }}
+                                            className={`w-2.5 h-2.5 rounded-full border transition-all ${
+                                                hasBreakpoint 
+                                                    ? 'bg-rose-500 border-rose-450 shadow-[0_0_8px_rgba(244,63,94,0.8)] animate-pulse' 
+                                                    : 'border-transparent group-hover/gutter:border-rose-500/40 group-hover/gutter:bg-rose-500/10'
+                                            }`}
+                                            title="Toggle Breakpoint"
+                                        />
+                                        <span className={`text-[10px] ${hasBreakpoint ? 'text-rose-400 font-bold' : 'opacity-40'}`}>{i + 1}</span>
                                     </div>
                                 );
                             })}
@@ -674,55 +815,71 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                         <div className="absolute top-2 right-4 z-10 flex gap-2">
                             <button
                                 onClick={() => setLineWrap(!lineWrap)}
-                                className={`px-2 py-1 rounded text-[9px] font-bold border transition-colors ${lineWrap ? 'bg-brand-500/15 border-brand-500/30 text-brand-400' : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'}`}
+                                className={`px-2 py-1 rounded text-[9px] font-bold border transition-colors ${lineWrap ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400' : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'}`}
                                 title="Toggle Line Wrap"
                             >
                                 Wrap
                             </button>
                         </div>
 
-                        <textarea
-                            ref={textAreaRef}
-                            value={code}
-                            onChange={(e) => handleCodeChange(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            style={{ fontSize: `${fontSize}px` }}
-                            wrap={lineWrap ? "soft" : "off"}
-                            className="flex-grow p-4 leading-6 font-mono bg-transparent focus:outline-none resize-none text-slate-200 selection:bg-brand-500/20"
-                            spellCheck={false}
-                            placeholder="Write your code here..."
-                        />
+                        {/* Interactive scroll-synchronized layers */}
+                        <div className="flex-grow h-full relative overflow-hidden">
+                            {/* Syntax Highlighting Layer */}
+                            <div 
+                                ref={editorScrollRef}
+                                className="absolute inset-0 p-4 pointer-events-none overflow-auto font-mono text-sm leading-6 whitespace-pre select-none bg-transparent"
+                                style={{ 
+                                    fontSize: `${fontSize}px`,
+                                    backgroundImage: 'radial-gradient(rgba(6, 182, 212, 0.08) 1px, transparent 1px)', 
+                                    backgroundSize: '20px 20px' 
+                                }}
+                                dangerouslySetInnerHTML={highlightCode(code)}
+                            />
+                            {/* Input text-area layer (text invisible, caret active) */}
+                            <textarea
+                                ref={textAreaRef}
+                                value={code}
+                                onChange={(e) => handleCodeChange(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                onScroll={handleScroll}
+                                style={{ fontSize: `${fontSize}px` }}
+                                wrap={lineWrap ? "soft" : "off"}
+                                className="absolute inset-0 p-4 font-mono bg-transparent focus:outline-none resize-none text-transparent caret-cyan-400 selection:bg-cyan-500/20 overflow-auto leading-6 whitespace-pre font-mono text-sm"
+                                spellCheck={false}
+                                placeholder="Write your code here..."
+                            />
+                        </div>
                     </div>
                 </main>
 
                 {/* Right Split Pane Resizer */}
                 <div 
                     onMouseDown={startResizeRight}
-                    className="hidden lg:block w-[4px] hover:w-[6px] bg-slate-800 hover:bg-brand-500 cursor-col-resize z-10 transition-colors shrink-0"
+                    className="hidden lg:block w-[4px] hover:w-[6px] bg-slate-850 hover:bg-cyan-500 cursor-col-resize z-10 transition-colors shrink-0"
                 />
 
                 {/* 3. Right Panel: Visualizer Stage, Switchable Console/Terminal & Metrics */}
                 <aside 
                     style={{ width: `${rightWidth}%` }}
-                    className="hidden lg:flex flex-col bg-slate-900 border-l border-slate-800 p-4 shrink-0 overflow-y-auto space-y-4"
+                    className="hidden lg:flex flex-col bg-[#0b0f19]/90 border-l border-slate-850 p-4 shrink-0 overflow-y-auto space-y-4"
                 >
                     {/* Visualizer mascot card */}
                     <VisualStage output={output} isCorrect={isCorrect} mood={mascotMood} code={code} />
 
                     {/* Console / Terminal Container */}
-                    <div className="flex-grow flex flex-col bg-slate-950 border border-slate-800 rounded-xl overflow-hidden font-mono text-xs text-slate-300 min-h-[250px]">
+                    <div className="flex-grow flex flex-col bg-slate-950 border border-slate-850 rounded-xl overflow-hidden font-mono text-xs text-slate-350 min-h-[250px] shadow-inner">
                         {/* Terminal Tab Bar */}
-                        <div className="bg-slate-900 p-2 border-b border-slate-800 flex items-center justify-between">
+                        <div className="bg-[#0b0f19] p-2 border-b border-slate-850 flex items-center justify-between">
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => setActiveConsoleTab('console')}
-                                    className={`px-3 py-1 rounded text-[10px] font-black uppercase tracking-wider transition-colors ${activeConsoleTab === 'console' ? 'bg-slate-950 text-white' : 'text-slate-500 hover:text-slate-300'}`}
+                                    className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-colors ${activeConsoleTab === 'console' ? 'bg-slate-950 text-white' : 'text-slate-500 hover:text-slate-300'}`}
                                 >
                                     Console Output
                                 </button>
                                 <button
                                     onClick={() => setActiveConsoleTab('terminal')}
-                                    className={`px-3 py-1 rounded text-[10px] font-black uppercase tracking-wider transition-colors ${activeConsoleTab === 'terminal' ? 'bg-slate-950 text-white' : 'text-slate-500 hover:text-slate-300'}`}
+                                    className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-colors ${activeConsoleTab === 'terminal' ? 'bg-slate-950 text-white' : 'text-slate-500 hover:text-slate-300'}`}
                                 >
                                     Terminal / Shell
                                 </button>
@@ -736,23 +893,23 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                                         setOutputHistory(prev => [...prev, { id: historyCounter + 1, text: '📋 Console output copied to clipboard.', type: 'info' }]);
                                         setHistoryCounter(prev => prev + 1);
                                     }}
-                                    className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 transition-colors"
+                                    className="p-1 rounded bg-slate-900 border border-slate-850 text-slate-400 hover:text-white transition-colors"
                                     title="Copy Console Output"
                                 >
-                                    <Copy className="w-3 h-3" />
+                                    <Copy className="w-3.5 h-3.5" />
                                 </button>
                                 <button
                                     onClick={() => setOutputHistory([])}
-                                    className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 transition-colors"
+                                    className="p-1 rounded bg-slate-900 border border-slate-850 text-slate-400 hover:text-white transition-colors"
                                     title="Clear Console"
                                 >
-                                    <Trash2 className="w-3 h-3" />
+                                    <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                             </div>
                         </div>
 
                         {/* Interactive Console Pane */}
-                        <div className="flex-grow p-4 overflow-y-auto space-y-2">
+                        <div className="flex-grow p-4 overflow-y-auto space-y-3">
                             {activeConsoleTab === 'console' ? (
                                 outputHistory.length === 0 ? (
                                     <div className="opacity-40 italic">Waiting for compiler trigger...</div>
@@ -761,37 +918,45 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                                         <div key={item.id} className="border-b border-white/5 pb-2 mb-2 last:border-0 last:mb-0">
                                             <div className="flex items-center justify-between text-[9px] opacity-40 mb-1">
                                                 <span>❯ Run #{item.id}</span>
-                                                <span className="bg-slate-900 border border-slate-800 px-1 rounded text-[8px]">LOG</span>
+                                                <span className="bg-slate-900 border border-slate-850 px-1.5 py-0.5 rounded text-[8px] tracking-widest font-black">LOG</span>
                                             </div>
-                                            <div className={`whitespace-pre-wrap ${
-                                                item.type === 'error' ? 'text-red-400' :
-                                                item.type === 'success' ? 'text-emerald-400' : 'text-slate-300'
-                                            }`}>
-                                                {item.text}
-                                            </div>
+                                            {item.text.includes('Error') ? (
+                                                <div className="border border-red-500/20 bg-red-950/15 p-2.5 rounded-lg flex items-start gap-2 text-red-400 font-semibold leading-relaxed shadow-sm">
+                                                    <span className="shrink-0 text-red-500 font-bold animate-pulse">⚡ SYSTEM_ERROR:</span>
+                                                    <span className="whitespace-pre-wrap">{item.text}</span>
+                                                </div>
+                                            ) : (
+                                                <div className={`whitespace-pre-wrap ${
+                                                    item.type === 'success' ? 'text-emerald-400' : 'text-slate-350'
+                                                }`}>
+                                                    {item.text}
+                                                </div>
+                                            )}
                                         </div>
                                     ))
                                 )
                             ) : (
                                 <div className="space-y-1">
                                     <div className="text-slate-500">// Simulated Sandboxed Environment</div>
-                                    <div className="text-emerald-500">cft-sandbox@morocco:~# node run index.ts</div>
+                                    <div className="text-cyan-400">cft-sandbox@morocco:~# node run index.ts</div>
                                     {output ? (
-                                        <div className="text-slate-300">{output}</div>
+                                        <div className="text-slate-300 font-semibold">{output}</div>
                                     ) : (
                                         <div className="opacity-40 italic">Terminal active. Run code to feed standard output.</div>
                                     )}
-                                    <div className="text-emerald-500">cft-sandbox@morocco:~# <span className="animate-pulse">_</span></div>
+                                    <div className="text-cyan-400">cft-sandbox@morocco:~# <span className="animate-pulse">_</span></div>
                                 </div>
                             )}
                         </div>
 
-                        {/* Execution performance metrics footer */}
+                        {/* Execution performance metrics footer with small bar graphs */}
                         {executionMetrics && (
-                            <div className="bg-slate-900 border-t border-slate-800/80 px-3 py-1.5 text-[9px] text-slate-500 flex items-center justify-between select-none">
-                                <span>Compiler: V8 Node Engine</span>
-                                <span className="font-bold text-slate-400 uppercase">
-                                    Executed in {executionMetrics.time}ms | Memory: {executionMetrics.memory}MB
+                            <div className="bg-slate-900 border-t border-slate-850 px-3 py-1.5 text-[9px] text-slate-500 flex items-center justify-between select-none">
+                                <span className="flex items-center gap-1"><Activity className="w-3.5 h-3.5 text-cyan-500 animate-pulse" /> V8 Engine Status</span>
+                                <span className="font-bold text-slate-400 uppercase flex items-center gap-3">
+                                    <span className="flex items-center gap-1">⏱️ Runtime: <strong className="text-cyan-400">{executionMetrics.time}ms</strong></span>
+                                    <span className="w-[1px] h-3 bg-slate-800" />
+                                    <span className="flex items-center gap-1">💾 RAM: <strong className="text-cyan-400">{executionMetrics.memory}MB</strong></span>
                                 </span>
                             </div>
                         )}
