@@ -54,10 +54,11 @@ interface LessonOverlayProps {
   onComplete: (lessonId: number, xpGained: number, score?: number) => void;
   onExit: () => void;
   onSwitchPath: (pathId: ProgrammingPath['id']) => void;
+  onStartLesson?: (lesson: Lesson) => void;
 }
 
 const LessonOverlay: React.FC<LessonOverlayProps> = ({
-  lesson, currentPath, currentUser, onComplete, onExit, onSwitchPath
+  lesson, currentPath, currentUser, onComplete, onExit, onSwitchPath, onStartLesson
 }) => {
   if (currentPath === 'math') {
     return (
@@ -88,6 +89,7 @@ const LessonOverlay: React.FC<LessonOverlayProps> = ({
       path={currentPath || 'javascript'}
       onSwitchPath={onSwitchPath}
       currentUser={currentUser}
+      onStartLesson={onStartLesson}
     />
   );
 };
@@ -127,6 +129,7 @@ const DashboardRoute: React.FC<DashboardRouteProps> = ({
         onComplete={onComplete}
         onExit={onExit}
         onSwitchPath={onSwitchPath}
+        onStartLesson={onStartLesson}
       />
     );
   }
