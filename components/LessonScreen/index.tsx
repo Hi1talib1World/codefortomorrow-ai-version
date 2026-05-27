@@ -51,51 +51,65 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
     const hasLog = code.includes('console.log') || code.includes('print') || code.includes('System.out');
 
     return (
-        <div className="h-44 bg-slate-950 rounded-2xl relative overflow-hidden border border-cyan-500/25 shadow-[0_0_25px_rgba(6,182,212,0.08)] mb-3 group">
+        <div className="h-44 bg-[#0a0f1d] rounded-2xl relative overflow-hidden border border-cyan-500/35 shadow-[0_0_30px_rgba(6,182,212,0.12)] mb-3 group">
             {/* Ambient holographic blue grid background */}
             <div 
-                className="absolute inset-0 opacity-[0.08]"
+                className="absolute inset-0 opacity-[0.1]"
                 style={{ 
-                    backgroundImage: 'linear-gradient(to right, rgba(6, 182, 212, 0.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(6, 182, 212, 0.12) 1px, transparent 1px)',
-                    backgroundSize: '12px 12px' 
+                    backgroundImage: 'linear-gradient(to right, rgba(6, 182, 212, 0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(6, 182, 212, 0.15) 1px, transparent 1px)',
+                    backgroundSize: '10px 10px' 
                 }}
             />
 
+            {/* Glowing holographic projector light beam cone */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-28 bg-gradient-to-t from-cyan-500/20 via-cyan-500/5 to-transparent opacity-60 animate-pulse-glow" style={{ clipPath: 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)' }}></div>
+
+            {/* Holographic projection rings at base */}
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-16 h-3 bg-cyan-500/10 border border-cyan-500/30 rounded-full blur-[1px] transform -rotate-1 opacity-70"></div>
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-20 h-4 bg-cyan-500/5 border border-cyan-500/15 rounded-full blur-[2px] transform -rotate-1 opacity-40"></div>
+
             {/* Glowing orb behind mascot */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 bg-cyan-500/10 rounded-full blur-2xl animate-pulse"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-cyan-500/15 rounded-full blur-3xl animate-pulse"></div>
 
             {/* Floating holo particles */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
                 <span className="absolute w-[2px] h-[2px] bg-cyan-400 rounded-full animate-float-1 bottom-4 left-1/4" />
-                <span className="absolute w-1 h-1 bg-cyan-300 rounded-full animate-float-2 bottom-4 left-1/2" />
-                <span className="absolute w-[2px] h-[2px] bg-cyan-400 rounded-full animate-float-3 bottom-4 right-1/4" />
+                <span className="absolute w-1.5 h-1.5 bg-cyan-300 rounded-full animate-float-2 bottom-6 left-[40%]" />
+                <span className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-float-3 bottom-5 right-[35%]" />
+                <span className="absolute w-[2.5px] h-[2.5px] bg-cyan-300 rounded-full animate-float-1 bottom-2 right-[20%]" style={{ animationDelay: '1.5s' }} />
             </div>
 
             {/* Horizontal scanline effect */}
-            <div className="absolute inset-0 pointer-events-none opacity-10 bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent bg-[length:100%_6px]" />
+            <div className="absolute inset-0 pointer-events-none opacity-15 bg-gradient-to-b from-transparent via-cyan-400/15 to-transparent bg-[length:100%_4px] animate-pulse" />
 
             <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 transition-all duration-700 ease-out transform ${mood === 'happy' ? 'scale-105' : 'scale-95'} ${isCorrect ? 'animate-bounce' : ''}`}>
                 <div className="relative">
-                    {/* Holographic Cyan filter applied directly via css filters */}
-                    <div className="w-20 h-20 filter hue-rotate-[160deg] saturate-[2.2] brightness-[1.15] drop-shadow-[0_0_12px_rgba(6,182,212,0.8)] opacity-95 transition-opacity">
+                    {/* Semi-transparent Holographic Cyan filter */}
+                    <div className="w-20 h-20 filter hue-rotate-[160deg] saturate-[2.5] brightness-[1.25] drop-shadow-[0_0_15px_rgba(6,182,212,0.9)] opacity-80 hover:opacity-95 transition-opacity duration-300">
                         <Mascot />
                     </div>
                     
                     {hasLog && !output && (
-                        <div className="absolute -top-6 -right-6 bg-slate-950 border border-cyan-500/40 p-1.5 rounded-lg shadow-lg animate-bounce text-[9px] font-mono text-cyan-400 font-bold uppercase tracking-wider">
-                            💬 WAITING
+                        <div className="absolute -top-7 -right-8 bg-slate-950/90 border border-cyan-500/50 px-2 py-1 rounded text-[8px] font-mono text-cyan-400 font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(6,182,212,0.3)] animate-pulse">
+                            ⚡ CONNECTING...
                         </div>
                     )}
                     
                     {output && (
-                        <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-slate-950 border border-cyan-500/50 p-2.5 rounded-xl rounded-bl-none shadow-[0_0_20px_rgba(6,182,212,0.3)] min-w-[120px] animate-pop-in backdrop-blur-md">
-                            <p className="text-cyan-400 font-mono text-[9px] font-black tracking-widest text-center whitespace-pre-wrap flex items-center justify-center gap-1.5 uppercase">
-                                <span className={output.includes('Error') ? 'text-red-400' : 'text-cyan-400'}>
-                                    {output.includes('Error') ? '⚡ SYSTEM_ERR' : '⚙️ RUN_STDOUT'}
+                        <div className="absolute -top-20 left-1/2 -translate-x-1/2 bg-slate-950/90 border border-cyan-500/50 p-2.5 rounded-lg shadow-[0_0_20px_rgba(6,182,212,0.4)] min-w-[140px] animate-pop-in backdrop-blur-md">
+                            {/* HUD corners */}
+                            <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-cyan-400"></div>
+                            <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-cyan-400"></div>
+                            <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-cyan-400"></div>
+                            <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-cyan-400"></div>
+                            
+                            <p className="text-cyan-400 font-mono text-[8px] font-black tracking-widest text-center whitespace-pre-wrap flex items-center justify-center gap-1 uppercase border-b border-cyan-500/20 pb-1 mb-1">
+                                <span className={output.includes('Error') ? 'text-rose-455 font-bold' : 'text-cyan-400'}>
+                                    {output.includes('Error') ? '⚡ SYSTEM_ERR : ERROR' : '⚙️ RUN_STDOUT : SUCCESS'}
                                 </span>
                             </p>
-                            <p className="text-slate-200 font-mono text-[11px] font-bold text-center mt-1 truncate max-w-[150px]">{output}</p>
-                            <div className="absolute -bottom-2 left-0 w-3 h-3 bg-slate-950 border-b border-l border-cyan-500/50 rotate-45"></div>
+                            <p className="text-slate-100 font-mono text-[11px] font-bold text-center mt-1 truncate max-w-[160px]">{output}</p>
+                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-950 rotate-45 border-r border-b border-cyan-500/50"></div>
                         </div>
                     )}
                 </div>
@@ -393,23 +407,43 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
         
-        // Keywords (Java / JS / TS / Python / C++)
-        const keywords = /\b(class|public|static|void|int|double|float|String|char|boolean|if|else|for|while|new|try|catch|finally|throw|extends|implements|interface|package|import|return|const|let|var|function|def|elif|import|from|as|print|println|System|out)\b/g;
-        html = html.replace(keywords, '<span class="text-cyan-400 font-bold">$1</span>');
-
-        // Functions / Method names
-        const functions = /\b(System\.out\.println|System\.out\.print|println|print|main)\b/g;
-        html = html.replace(functions, '<span class="text-sky-400 font-semibold">$1</span>');
+        const placeholders: string[] = [];
         
-        // Numbers
-        html = html.replace(/\b(\d+)\b/g, '<span class="text-amber-400">$1</span>');
+        // 1. Extract Comments (block comments and line comments) to protect them from regex highlighting
+        html = html.replace(/(\/\*[\s\S]*?\*\/|\/\/.*|#.*)/g, (match) => {
+            placeholders.push(`<span class="text-slate-500 italic font-mono">${match}</span>`);
+            return `___PH_${placeholders.length - 1}___`;
+        });
+        
+        // 2. Extract Strings
+        html = html.replace(/(["'`])((?:\\.|[^\\])*?)\1/g, (match) => {
+            placeholders.push(`<span class="text-emerald-300 font-mono">${match}</span>`);
+            return `___PH_${placeholders.length - 1}___`;
+        });
 
-        // Strings
-        html = html.replace(/(["'`])(.*?)\1/g, '<span class="text-emerald-400">$1$2$1</span>');
+        // 3. Highlight Annotations
+        html = html.replace(/(@\w+)/g, '<span class="text-indigo-400 font-bold">$1</span>');
 
-        // Comments
-        html = html.replace(/(\/\/.*|#.*)/g, '<span class="text-slate-500 italic">$1</span>');
+        // 4. Highlight Java / standard keywords
+        const keywords = /\b(class|public|private|protected|static|final|void|int|double|float|long|short|byte|boolean|char|if|else|for|while|do|switch|case|default|break|continue|return|new|this|super|extends|implements|try|catch|finally|throw|throws|import|package|const|let|var|function|def|elif|from|as)\b/g;
+        html = html.replace(keywords, '<span class="text-sky-400 font-bold">$1</span>');
 
+        // 5. Highlight Common Types & Predefined Classes (capitalized words like System, String, Math, etc.)
+        const types = /\b(System|String|Math|Object|Scanner|List|ArrayList|Map|HashMap|Integer|Double|Float|Boolean|Character|Byte|Short|Long|Void|Exception|Thread)\b/g;
+        html = html.replace(types, '<span class="text-rose-400 font-bold">$1</span>');
+
+        // 6. Highlight Method Calls (word followed by open parenthesis)
+        html = html.replace(/\b(\w+)(?=\()/g, '<span class="text-cyan-400 font-semibold">$1</span>');
+
+        // 7. Highlight Numbers
+        html = html.replace(/\b(\d+(\.\d+)?)\b/g, '<span class="text-amber-400 font-medium">$1</span>');
+
+        // 8. Highlight Operators
+        html = html.replace(/([+\-*/%=!&|<>:?^~]+)/g, '<span class="text-slate-400">$1</span>');
+
+        // 9. Re-insert strings and comments in reverse order
+        html = html.replace(/___PH_(\d+)___/g, (_, index) => placeholders[parseInt(index)]);
+        
         return { __html: html };
     };
 
@@ -444,6 +478,12 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                     100% { transform: scale(0.8) rotate(360deg); opacity: 0.8; }
                 }
                 .animate-spark { animation: sparkAnim 2.5s infinite linear; }
+
+                @keyframes pulseGlow {
+                    0%, 100% { box-shadow: 0 0 8px rgba(6, 182, 212, 0.25); border-color: rgba(6, 182, 212, 0.3); }
+                    50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.65); border-color: rgba(6, 182, 212, 0.75); }
+                }
+                .animate-pulse-glow { animation: pulseGlow 2s infinite ease-in-out; }
             `}</style>
 
             {showSuccessModal && <SuccessModal lesson={lesson} onContinue={handleComplete} />}
@@ -465,7 +505,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                             ></div>
                         </div>
                         {aiContext?.recommendation && (
-                            <div className="flex items-center gap-2 bg-cyan-950/20 px-3 py-1 rounded-full border border-cyan-500/30">
+                            <div className="flex items-center gap-2 bg-cyan-950/20 px-3 py-1 rounded-full border border-cyan-500/30 animate-pulse">
                                 <Sparkles className="w-3 h-3 text-cyan-400" />
                                 <span className="text-[9px] font-black text-cyan-300 uppercase tracking-wider">HOLO ASSISTANT</span>
                             </div>
@@ -479,7 +519,10 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                     >
                         <span>⭐</span> {currentUser?.progress?.xp || 0} XP
                         {isXpHovered && (
-                            <span className="absolute -top-1 -right-1 text-xs animate-spark select-none">✨</span>
+                            <>
+                                <span className="absolute -top-1 -right-1 text-xs animate-spark select-none pointer-events-none">✨</span>
+                                <span className="absolute -bottom-1 -left-1 text-[10px] animate-spark select-none pointer-events-none" style={{ animationDelay: '0.6s' }}>✨</span>
+                            </>
                         )}
                     </div>
                 </div>
@@ -495,7 +538,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                 >
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                            <div className="bg-cyan-500/10 border border-cyan-500/35 text-cyan-400 px-2.5 py-1 rounded-lg font-bold text-xs shadow-[0_0_12px_rgba(6,182,212,0.2)] animate-pulse">
+                            <div className="bg-cyan-500/10 border border-cyan-500/35 text-cyan-400 px-2.5 py-1 rounded-lg font-bold text-xs shadow-[0_0_12px_rgba(6,182,212,0.25)] animate-pulse-glow">
                                 Level {lesson.level}
                             </div>
                             <h2 className="text-sm font-black text-white uppercase tracking-wider font-mono">
@@ -565,29 +608,6 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         </p>
                     </div>
 
-                    {/* Expandable Learning Objectives Accordion */}
-                    {lesson.objectivesKey && (
-                        <div className="border border-slate-850 rounded-xl bg-slate-950/80 overflow-hidden">
-                            <button 
-                                onClick={() => setIsObjectivesExpanded(!isObjectivesExpanded)}
-                                className="w-full flex items-center justify-between p-3 bg-[#0b0f19] border-b border-slate-850 font-black text-[10px] text-slate-400 uppercase tracking-wider"
-                            >
-                                <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-cyan-400" /> Learning Objectives</span>
-                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isObjectivesExpanded ? 'transform rotate-180' : ''}`} />
-                            </button>
-                            {isObjectivesExpanded && (
-                                <ul className="p-3 space-y-2">
-                                    {((t(lesson.objectivesKey as any) as string) || '').split('|').map((objective, idx) => (
-                                        <li key={idx} className="flex items-start gap-2 text-xs text-slate-300">
-                                            <span className="text-[10px] mt-0.5">⚙️</span>
-                                            <span className="font-semibold leading-relaxed">{objective}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                    )}
-
                     {/* Dynamic Interactive Test Cases */}
                     <div className="border border-slate-850 rounded-xl bg-slate-950/85 overflow-hidden">
                         <button 
@@ -607,7 +627,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                                 <Check className="w-3 h-3" /> PASS
                                             </span>
                                         ) : (
-                                            <span className="text-slate-500 bg-slate-800 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 border border-slate-700">
+                                            <span className="text-slate-555 bg-slate-800 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 border border-slate-700">
                                                 <X className="w-3 h-3" /> PENDING
                                             </span>
                                         )}
@@ -639,21 +659,21 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                     <div className="flex-grow"></div>
 
                     {/* Navigation Actions Panel */}
-                    <div className="space-y-2 pt-4 border-t border-slate-800/80">
+                    <div className="space-y-3 pt-4 border-t border-slate-800/80">
                         <div className="grid grid-cols-2 gap-2">
                             <button
                                 onClick={handlePrevLesson}
                                 disabled={!onStartLesson || currentLessonIndex <= 0}
-                                className="bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-slate-300 hover:text-white disabled:opacity-30 font-bold py-2 rounded-xl text-xs uppercase transition-all flex items-center justify-center gap-1"
+                                className="bg-slate-900/40 hover:bg-cyan-500/10 backdrop-blur-md border border-slate-700/50 hover:border-cyan-500/30 text-slate-300 hover:text-white disabled:opacity-20 font-bold py-2.5 rounded-xl text-xs uppercase transition-all flex items-center justify-center gap-1.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.07)]"
                             >
-                                <ChevronLeft className="w-3.5 h-3.5" /> Previous
+                                <ChevronLeft className="w-4 h-4 text-cyan-400" /> Previous
                             </button>
                             <button
                                 onClick={handleNextLesson}
                                 disabled={!onStartLesson || currentLessonIndex >= allLessonsInPath.length - 1}
-                                className="bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-slate-300 hover:text-white disabled:opacity-30 font-bold py-2 rounded-xl text-xs uppercase transition-all flex items-center justify-center gap-1"
+                                className="bg-slate-900/40 hover:bg-cyan-500/10 backdrop-blur-md border border-slate-700/50 hover:border-cyan-500/30 text-slate-300 hover:text-white disabled:opacity-20 font-bold py-2.5 rounded-xl text-xs uppercase transition-all flex items-center justify-center gap-1.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.07)]"
                             >
-                                Next <ChevronRight className="w-3.5 h-3.5" />
+                                Next <ChevronRight className="w-4 h-4 text-cyan-400" />
                             </button>
                         </div>
                         <div className="grid grid-cols-3 gap-2">
@@ -673,6 +693,44 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 {isRunning ? t('running') : t('run_code')}
                             </button>
                         </div>
+
+                        {/* Relocated Expandable Learning Objectives Accordion with icons */}
+                        {lesson.objectivesKey && (
+                            <div className="border border-slate-850 rounded-xl bg-slate-950/60 overflow-hidden mt-2">
+                                <button 
+                                    onClick={() => setIsObjectivesExpanded(!isObjectivesExpanded)}
+                                    className="w-full flex items-center justify-between p-3 bg-[#0b0f19] border-b border-slate-850 font-black text-[10px] text-slate-400 uppercase tracking-wider hover:text-white transition-colors"
+                                >
+                                    <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-cyan-400" /> Learning Objectives</span>
+                                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isObjectivesExpanded ? 'transform rotate-180' : ''}`} />
+                                </button>
+                                {isObjectivesExpanded && (
+                                    <ul className="p-3 space-y-2.5">
+                                        {((t(lesson.objectivesKey as any) as string) || '').split('|').map((objective, idx) => {
+                                            let icon = "⚙️"; // default
+                                            const lowercaseObj = objective.toLowerCase();
+                                            if (lowercaseObj.includes('jvm') || lowercaseObj.includes('compile') || lowercaseObj.includes('run') || lowercaseObj.includes('execut')) {
+                                                icon = "⚙️";
+                                            } else if (lowercaseObj.includes('variable') || lowercaseObj.includes('data') || lowercaseObj.includes('type')) {
+                                                icon = "📦";
+                                            } else if (lowercaseObj.includes('syntax') || lowercaseObj.includes('code') || lowercaseObj.includes('error') || lowercaseObj.includes('trace')) {
+                                                icon = "🔍";
+                                            } else if (lowercaseObj.includes('class') || lowercaseObj.includes('method') || lowercaseObj.includes('object') || lowercaseObj.includes('main')) {
+                                                icon = "🎛️";
+                                            } else if (lowercaseObj.includes('print') || lowercaseObj.includes('output') || lowercaseObj.includes('console')) {
+                                                icon = "🖥️";
+                                            }
+                                            return (
+                                                <li key={idx} className="flex items-start gap-2 text-xs text-slate-300">
+                                                    <span className="text-sm shrink-0 leading-none">{icon}</span>
+                                                    <span className="font-semibold leading-relaxed">{objective}</span>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </aside>
 
@@ -692,14 +750,21 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 <button
                                     key={filename}
                                     onClick={() => handleSwitchFile(filename)}
-                                    className={`px-4 py-1.5 rounded-t-lg text-xs font-bold transition-all border-t-2 flex items-center gap-2 ${
+                                    className={`px-5 py-2.5 rounded-t-lg text-xs font-black transition-all border-b-2 flex items-center gap-2 ${
                                         activeFile === filename
-                                            ? 'bg-slate-950/80 border-cyan-500 text-white'
-                                            : 'border-transparent text-slate-500 hover:text-slate-350'
+                                            ? 'bg-slate-950 border-cyan-400 text-cyan-300 shadow-[0_-4px_12px_rgba(6,182,212,0.12)]'
+                                            : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-900/40'
                                     }`}
                                 >
                                     <span>{filename}</span>
-                                    <span className="text-[10px] text-slate-600 hover:text-white ml-1">×</span>
+                                    <span 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                        }}
+                                        className="text-[10px] text-slate-600 hover:text-rose-450 hover:bg-rose-500/10 p-0.5 rounded transition-all ml-1 w-3.5 h-3.5 flex items-center justify-center font-bold"
+                                    >
+                                        ×
+                                    </span>
                                 </button>
                             ))}
                         </div>
@@ -779,13 +844,13 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                     <div className="flex-grow flex relative overflow-hidden bg-slate-950/80">
                         
                         {/* Custom gutter supporting fold indicators and active breakpoints */}
-                        <div className="w-12 bg-slate-900/60 border-r border-slate-850 flex flex-col items-center py-4 select-none font-mono text-xs text-slate-500 space-y-[2px] z-10">
+                        <div className="w-14 bg-[#0a0f1d] border-r border-slate-800/80 flex flex-col items-center py-4 select-none font-mono text-xs text-slate-500 space-y-0 z-10">
                             {codeLines.map((lineContent, i) => {
                                 const isFoldable = lineContent.trim().endsWith('{') || lineContent.trim().endsWith('[') || lineContent.trim().endsWith('(');
                                 const isFolded = foldedLines.has(i);
                                 const hasBreakpoint = breakpoints.has(i);
                                 return (
-                                    <div key={i} className="h-6 flex items-center justify-between w-full px-2 relative group/gutter">
+                                    <div key={i} className="h-6 flex items-center justify-between w-full px-2 relative group/gutter cursor-pointer select-none">
                                         <button
                                             onClick={() => {
                                                 setBreakpoints(prev => {
@@ -798,14 +863,16 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                                     return next;
                                                 });
                                             }}
-                                            className={`w-2.5 h-2.5 rounded-full border transition-all ${
+                                            className={`w-2.5 h-2.5 rounded-full border transition-all duration-300 ${
                                                 hasBreakpoint 
-                                                    ? 'bg-rose-500 border-rose-450 shadow-[0_0_8px_rgba(244,63,94,0.8)] animate-pulse' 
-                                                    : 'border-transparent group-hover/gutter:border-rose-500/40 group-hover/gutter:bg-rose-500/10'
+                                                    ? 'bg-rose-500 border-rose-455 shadow-[0_0_10px_#ef4444] animate-pulse scale-110' 
+                                                    : 'border-transparent bg-transparent group-hover/gutter:bg-rose-500/20 group-hover/gutter:border-rose-500/40'
                                             }`}
                                             title="Toggle Breakpoint"
                                         />
-                                        <span className={`text-[10px] ${hasBreakpoint ? 'text-rose-400 font-bold' : 'opacity-40'}`}>{i + 1}</span>
+                                        <span className={`text-[10px] text-right w-full font-bold select-none tracking-tighter ${hasBreakpoint ? 'text-rose-400 font-extrabold shadow-sm' : 'text-slate-500 opacity-40 group-hover/gutter:opacity-85 transition-opacity'}`}>
+                                            {i + 1}
+                                        </span>
                                     </div>
                                 );
                             })}
@@ -830,8 +897,8 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 className="absolute inset-0 p-4 pointer-events-none overflow-auto font-mono text-sm leading-6 whitespace-pre select-none bg-transparent"
                                 style={{ 
                                     fontSize: `${fontSize}px`,
-                                    backgroundImage: 'radial-gradient(rgba(6, 182, 212, 0.08) 1px, transparent 1px)', 
-                                    backgroundSize: '20px 20px' 
+                                    backgroundImage: 'linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px), radial-gradient(rgba(6, 182, 212, 0.08) 1px, transparent 1px)',
+                                    backgroundSize: '24px 24px, 24px 24px, 12px 12px'
                                 }}
                                 dangerouslySetInnerHTML={highlightCode(code)}
                             />
@@ -915,19 +982,22 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                     <div className="opacity-40 italic">Waiting for compiler trigger...</div>
                                 ) : (
                                     outputHistory.map((item) => (
-                                        <div key={item.id} className="border-b border-white/5 pb-2 mb-2 last:border-0 last:mb-0">
+                                        <div key={item.id} className="border-b border-white/5 pb-2.5 mb-2.5 last:border-0 last:mb-0">
                                             <div className="flex items-center justify-between text-[9px] opacity-40 mb-1">
                                                 <span>❯ Run #{item.id}</span>
-                                                <span className="bg-slate-900 border border-slate-850 px-1.5 py-0.5 rounded text-[8px] tracking-widest font-black">LOG</span>
+                                                <span className="bg-slate-900 border border-slate-850 px-1.5 py-0.5 rounded text-[8px] tracking-widest font-black text-cyan-500">LOG</span>
                                             </div>
                                             {item.text.includes('Error') ? (
-                                                <div className="border border-red-500/20 bg-red-950/15 p-2.5 rounded-lg flex items-start gap-2 text-red-400 font-semibold leading-relaxed shadow-sm">
-                                                    <span className="shrink-0 text-red-500 font-bold animate-pulse">⚡ SYSTEM_ERROR:</span>
+                                                <div className="border-l-4 border-red-500/80 bg-gradient-to-r from-red-950/20 to-transparent p-3 rounded-r-lg flex items-start gap-2.5 text-red-400 font-mono text-[11px] leading-relaxed shadow-[0_2px_8px_rgba(239,68,68,0.05)] border-t border-b border-r border-slate-900/50">
+                                                    <span className="shrink-0 text-red-500 font-black animate-pulse flex items-center gap-1">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_6px_#ef4444]" />
+                                                        SYS_ERR:
+                                                    </span>
                                                     <span className="whitespace-pre-wrap">{item.text}</span>
                                                 </div>
                                             ) : (
-                                                <div className={`whitespace-pre-wrap ${
-                                                    item.type === 'success' ? 'text-emerald-400' : 'text-slate-350'
+                                                <div className={`whitespace-pre-wrap text-[11px] font-medium ${
+                                                    item.type === 'success' ? 'text-emerald-400 font-semibold' : 'text-slate-300'
                                                 }`}>
                                                     {item.text}
                                                 </div>
@@ -936,13 +1006,13 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                     ))
                                 )
                             ) : (
-                                <div className="space-y-1">
+                                <div className="space-y-1.5 font-mono text-xs">
                                     <div className="text-slate-500">// Simulated Sandboxed Environment</div>
                                     <div className="text-cyan-400">cft-sandbox@morocco:~# node run index.ts</div>
                                     {output ? (
-                                        <div className="text-slate-300 font-semibold">{output}</div>
+                                        <div className="text-slate-200 font-semibold">{output}</div>
                                     ) : (
-                                        <div className="opacity-40 italic">Terminal active. Run code to feed standard output.</div>
+                                        <div className="opacity-45 italic text-[11px]">Terminal active. Run code to feed standard output.</div>
                                     )}
                                     <div className="text-cyan-400">cft-sandbox@morocco:~# <span className="animate-pulse">_</span></div>
                                 </div>
@@ -951,12 +1021,30 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
 
                         {/* Execution performance metrics footer with small bar graphs */}
                         {executionMetrics && (
-                            <div className="bg-slate-900 border-t border-slate-850 px-3 py-1.5 text-[9px] text-slate-500 flex items-center justify-between select-none">
-                                <span className="flex items-center gap-1"><Activity className="w-3.5 h-3.5 text-cyan-500 animate-pulse" /> V8 Engine Status</span>
-                                <span className="font-bold text-slate-400 uppercase flex items-center gap-3">
-                                    <span className="flex items-center gap-1">⏱️ Runtime: <strong className="text-cyan-400">{executionMetrics.time}ms</strong></span>
+                            <div className="bg-[#0b0f19] border-t border-slate-850 px-3 py-2 text-[10px] text-slate-500 flex items-center justify-between select-none">
+                                <span className="flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-cyan-500 animate-pulse" /> V8 Engine Status</span>
+                                <span className="font-bold text-slate-400 uppercase flex flex-wrap items-center gap-3">
+                                    <span className="flex items-center gap-1.5">
+                                        ⏱️ Runtime: <strong className="text-cyan-400 font-mono font-black">{executionMetrics.time}ms</strong>
+                                        <svg className="w-6 h-3 text-cyan-500/80" viewBox="0 0 24 12" fill="none">
+                                            <rect x="1" y="8" width="3" height="4" fill="currentColor" opacity="0.3" />
+                                            <rect x="5" y="6" width="3" height="6" fill="currentColor" opacity="0.5" />
+                                            <rect x="9" y="4" width="3" height="8" fill="currentColor" opacity="0.7" />
+                                            <rect x="13" y="2" width="3" height="10" fill="currentColor" />
+                                            <line x1="1" y1="2" x2="20" y2="2" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 1" opacity="0.4" />
+                                        </svg>
+                                    </span>
                                     <span className="w-[1px] h-3 bg-slate-800" />
-                                    <span className="flex items-center gap-1">💾 RAM: <strong className="text-cyan-400">{executionMetrics.memory}MB</strong></span>
+                                    <span className="flex items-center gap-1.5">
+                                        💾 RAM: <strong className="text-cyan-400 font-mono font-black">{executionMetrics.memory}MB</strong>
+                                        <svg className="w-6 h-3 text-cyan-500/80" viewBox="0 0 24 12" fill="none">
+                                            <rect x="1" y="9" width="3" height="3" fill="currentColor" opacity="0.4" />
+                                            <rect x="5" y="7" width="3" height="5" fill="currentColor" opacity="0.4" />
+                                            <rect x="9" y="8" width="3" height="4" fill="currentColor" opacity="0.4" />
+                                            <rect x="13" y="5" width="3" height="7" fill="currentColor" />
+                                            <path d="M1 9 L5 7 L9 8 L13 5" stroke="currentColor" strokeWidth="1" />
+                                        </svg>
+                                    </span>
                                 </span>
                             </div>
                         )}
