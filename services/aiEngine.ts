@@ -45,7 +45,7 @@ export class AIEngine {
     `;
 
     try {
-      const response = await ai.models.generateContent({
+      const response = await getAi().models.generateContent({
         model: this.model,
         contents: prompt,
         config: {
@@ -82,7 +82,7 @@ export class AIEngine {
     `;
 
     try {
-      const response = await ai.models.generateContent({
+      const response = await getAi().models.generateContent({
         model: this.model,
         contents: prompt
       });
@@ -118,7 +118,7 @@ export class AIEngine {
     `;
 
     try {
-      const response = await ai.models.generateContent({
+      const response = await getAi().models.generateContent({
         model: this.model,
         contents: prompt
       });
