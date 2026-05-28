@@ -65,12 +65,26 @@ async function startServer() {
 
   // --- HTTP Security Headers ---
   // - Strict-Transport-Security (HSTS): Yes
-  // - Others (CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy, Cross-Origin-Resource-Policy, Cross-Origin-Embedder-Policy): No
+  // - Content-Security-Policy (CSP): Yes
+  // - Others (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy, Cross-Origin-Resource-Policy, Cross-Origin-Embedder-Policy): No
   app.use((req, res, next) => {
     res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
     
+    const cspDirectives = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://*.posthog.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "img-src 'self' data: blob: https://*.googleusercontent.com https://*.posthog.com https://*.cloudinary.com",
+      "connect-src 'self' ws: wss: https://*.googleapis.com https://*.firebaseio.com https://*.posthog.com https://*.heygen.com wss://*.heygen.com",
+      "frame-src 'self' https://accounts.google.com https://*.firebaseapp.com https://*.heygen.com",
+      "media-src 'self' blob: data: https://*.heygen.com https://*.cloudinary.com",
+      "object-src 'none'"
+    ].join('; ');
+    
+    res.setHeader('Content-Security-Policy', cspDirectives);
+    
     // Explicitly remove headers to ensure they are not sent
-    res.removeHeader('Content-Security-Policy');
     res.removeHeader('X-Content-Type-Options');
     res.removeHeader('X-Frame-Options');
     res.removeHeader('Referrer-Policy');
