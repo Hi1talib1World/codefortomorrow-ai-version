@@ -7,6 +7,15 @@ import Progress from '../models/progress.model';
 import { generateToken } from '../services/token.service';
 import ApiError from '../utils/ApiError';
 
+const setAuthCookie = (res: Response, token: string) => {
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+  });
+};
+
 /**
  * @desc    Register a new user
  * @route   POST /api/auth/register
@@ -44,9 +53,12 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         currentPath: null,
       };
 
+      const token = generateToken(user._id);
+      setAuthCookie(res, token);
+
       res.status(201).json({
         ...userResponse,
-        token: generateToken(user._id),
+        token,
       });
     } else {
       throw new ApiError(400, 'Invalid user data');
@@ -79,9 +91,12 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         currentPath: (user as any).currentPath,
       };
       
+      const token = generateToken(user._id);
+      setAuthCookie(res, token);
+
       res.json({
         ...userResponse,
-        token: generateToken(user._id),
+        token,
       });
     } else {
       throw new ApiError(401, 'Invalid email or password');
@@ -179,6 +194,8 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
             role: (user as any).role,
         };
 
+        setAuthCookie(res, appToken);
+
         res.status(200).json({
             ...userResponse,
             token: appToken,
@@ -262,6 +279,8 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
             role: (user as any).role,
         };
 
+        setAuthCookie(res, appToken);
+
         res.status(200).json({
             ...userResponse,
             token: appToken,
@@ -271,4 +290,22 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
         console.error("Firebase Auth Error:", error);
         next(new ApiError(401, 'Firebase authentication failed'));
     }
+};
+
+/**
+ * @desc    Log out a user (clear the token cookie)
+ * @route   POST /api/auth/logout
+ * @access  Private
+ */
+export const logout = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    next(error);
+  }
 };
