@@ -20,13 +20,21 @@ const getAuthHeaders = () => {
   };
 };
 
+// --- Helper for fetch to always include credentials (cookies) ---
+const customFetch = (input: RequestInfo | URL, init?: RequestInit) => {
+  return window.fetch(input, {
+    ...init,
+    credentials: 'include',
+  });
+};
+
 // --- API Endpoints ---
 const api = {
   /**
    * Registers a new user by sending their details to the backend.
    */
   register: async (name: string, email: string, password: string): Promise<User> => {
-    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    const response = await customFetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password }),
@@ -46,7 +54,7 @@ const api = {
    * Logs in a user by sending credentials to the backend.
    */
   login: async (email: string, password: string): Promise<User> => {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const response = await customFetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -66,7 +74,7 @@ const api = {
    * how a real implementation would start.
    */
   loginWithGoogle: async (token: string): Promise<User> => {
-    const response = await fetch(`${API_BASE_URL}/auth/google`, {
+    const response = await customFetch(`${API_BASE_URL}/auth/google`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),
@@ -85,7 +93,7 @@ const api = {
    * Firebase login takes a Firebase ID token and authenticates with the backend.
    */
   loginWithFirebase: async (token: string): Promise<User> => {
-    const response = await fetch(`${API_BASE_URL}/auth/firebase`, {
+    const response = await customFetch(`${API_BASE_URL}/auth/firebase`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),
@@ -101,37 +109,37 @@ const api = {
   },
 
   /**
-   * Logs out the current user by clearing the local token.
+   * Logs out the current user by clearing the local token and server cookies.
    */
-  logout: (): Promise<void> => {
-    return new Promise(resolve => {
-      localStorage.removeItem('authToken');
-      resolve();
-    });
+  logout: async (): Promise<void> => {
+    try {
+      await customFetch(`${API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+      });
+    } catch (err) {
+      console.error('Failed to logout from server:', err);
+    }
+    localStorage.removeItem('authToken');
   },
 
   /**
-   * Gets the currently logged-in user's profile from the backend using the stored token.
+   * Gets the currently logged-in user's profile from the backend using cookies or token.
    */
   getLoggedInUser: async (): Promise<User | null> => {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      return null;
+    try {
+      const response = await customFetch(`${API_BASE_URL}/auth/me`, {
+        headers: getAuthHeaders(),
+      });
+
+      if (response.ok) {
+        return response.json();
+      }
+    } catch (error) {
+      console.error('Error fetching logged in user:', error);
     }
 
-    const response = await fetch(`${API_BASE_URL}/auth/me`, {
-      headers: getAuthHeaders(),
-    });
-
-    if (response.ok) {
-      return response.json();
-    }
-
-    // If the token is invalid or expired, clear it
-    if (response.status === 401) {
-      localStorage.removeItem('authToken');
-    }
-
+    localStorage.removeItem('authToken');
     return null;
   },
 
@@ -139,7 +147,7 @@ const api = {
    * Updates the user's profile information on the backend.
    */
   updateUserProfile: async (updatedData: Partial<User>): Promise<User> => {
-    const response = await fetch(`${API_BASE_URL}/users/profile`, {
+    const response = await customFetch(`${API_BASE_URL}/users/profile`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       body: JSON.stringify(updatedData),
@@ -156,7 +164,7 @@ const api = {
    * Toggles the saved state of a repository or blog post.
    */
   toggleSaveItem: async (itemId: string, type: 'repo' | 'post'): Promise<User> => {
-    const response = await fetch(`${API_BASE_URL}/users/save`, {
+    const response = await customFetch(`${API_BASE_URL}/users/save`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       body: JSON.stringify({ itemId, type }),
@@ -171,9 +179,29 @@ const api = {
 
   /**
    * Updates the user's learning progress on the backend.
+   * If the browser is offline, buffers the progress update locally and triggers a sync event.
    */
   updateUserProgress: async (newProgress: Partial<UserProgress>): Promise<UserProgress> => {
-    const response = await fetch(`${API_BASE_URL}/users/progress`, {
+    if (!navigator.onLine) {
+      console.log('📡 Offline Sync Manager: Buffering progress update locally...');
+      try {
+        const queueStr = localStorage.getItem('cft_offline_progress_queue');
+        const queue = queueStr ? JSON.parse(queueStr) : [];
+        queue.push({
+          timestamp: new Date().toISOString(),
+          data: newProgress,
+        });
+        localStorage.setItem('cft_offline_progress_queue', JSON.stringify(queue));
+        
+        // Dispatch custom event to notify Header/SyncContext
+        window.dispatchEvent(new Event('cft_offline_queue_updated'));
+      } catch (e) {
+        console.error('Failed to buffer progress locally:', e);
+      }
+      return newProgress as UserProgress;
+    }
+
+    const response = await customFetch(`${API_BASE_URL}/users/progress`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       body: JSON.stringify(newProgress)
@@ -188,7 +216,7 @@ const api = {
 
   // --- Quiz Endpoints ---
   createQuiz: async (quizData: any): Promise<any> => {
-    const response = await fetch(`${API_BASE_URL}/quizzes`, {
+    const response = await customFetch(`${API_BASE_URL}/quizzes`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(quizData),
@@ -202,7 +230,7 @@ const api = {
   },
 
   getTeacherQuizzes: async (): Promise<any[]> => {
-    const response = await fetch(`${API_BASE_URL}/quizzes/teacher`, {
+    const response = await customFetch(`${API_BASE_URL}/quizzes/teacher`, {
       headers: getAuthHeaders(),
     });
 
@@ -214,7 +242,7 @@ const api = {
   },
 
   deleteQuiz: async (quizId: string): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/quizzes/${quizId}`, {
+    const response = await customFetch(`${API_BASE_URL}/quizzes/${quizId}`, {
       method: 'DELETE',
       headers: getAuthHeaders(),
     });
@@ -227,7 +255,7 @@ const api = {
 
   // --- Activity Endpoints ---
   createActivity: async (activityData: any): Promise<any> => {
-    const response = await fetch(`${API_BASE_URL}/activities`, {
+    const response = await customFetch(`${API_BASE_URL}/activities`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(activityData),
@@ -241,7 +269,7 @@ const api = {
   },
 
   getTeacherActivities: async (): Promise<any[]> => {
-    const response = await fetch(`${API_BASE_URL}/activities/teacher`, {
+    const response = await customFetch(`${API_BASE_URL}/activities/teacher`, {
       headers: getAuthHeaders(),
     });
 
@@ -253,7 +281,7 @@ const api = {
   },
 
   deleteActivity: async (activityId: string): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/activities/${activityId}`, {
+    const response = await customFetch(`${API_BASE_URL}/activities/${activityId}`, {
       method: 'DELETE',
       headers: getAuthHeaders(),
     });
@@ -266,7 +294,7 @@ const api = {
 
   // --- Message Endpoints ---
   sendMessage: async (receiverId: string, content: string): Promise<any> => {
-    const response = await fetch(`${API_BASE_URL}/messages`, {
+    const response = await customFetch(`${API_BASE_URL}/messages`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ receiverId, content }),
@@ -280,7 +308,7 @@ const api = {
   },
 
   getConversations: async (): Promise<any[]> => {
-    const response = await fetch(`${API_BASE_URL}/messages/conversations`, {
+    const response = await customFetch(`${API_BASE_URL}/messages/conversations`, {
       headers: getAuthHeaders(),
     });
 
@@ -292,7 +320,7 @@ const api = {
   },
 
   getConversation: async (userId: string): Promise<any[]> => {
-    const response = await fetch(`${API_BASE_URL}/messages/conversation/${userId}`, {
+    const response = await customFetch(`${API_BASE_URL}/messages/conversation/${userId}`, {
       headers: getAuthHeaders(),
     });
 
@@ -304,7 +332,7 @@ const api = {
   },
 
   getTeachers: async (): Promise<any[]> => {
-    const response = await fetch(`${API_BASE_URL}/users/teachers`, {
+    const response = await customFetch(`${API_BASE_URL}/users/teachers`, {
       headers: getAuthHeaders(),
     });
 
@@ -317,7 +345,7 @@ const api = {
 
   // --- AI Endpoints ---
   getAILearningProfile: async (): Promise<any> => {
-    const response = await fetch(`${API_BASE_URL}/ai/profile`, {
+    const response = await customFetch(`${API_BASE_URL}/ai/profile`, {
       headers: getAuthHeaders(),
     });
 
@@ -329,7 +357,7 @@ const api = {
   },
 
   getClassAnalytics: async (): Promise<any> => {
-    const response = await fetch(`${API_BASE_URL}/ai/analytics`, {
+    const response = await customFetch(`${API_BASE_URL}/ai/analytics`, {
       headers: getAuthHeaders(),
     });
 
@@ -342,7 +370,7 @@ const api = {
 
   generateQuizFromAI: async (prompt: string, fileData?: { data: string, mimeType: string }): Promise<any> => {
     // This will call a new backend endpoint that handles the Gemini logic
-    const response = await fetch(`${API_BASE_URL}/ai/generate-quiz`, {
+    const response = await customFetch(`${API_BASE_URL}/ai/generate-quiz`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ prompt, fileData }),
