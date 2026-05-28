@@ -66,7 +66,8 @@ async function startServer() {
   // --- HTTP Security Headers ---
   // - Strict-Transport-Security (HSTS): Yes
   // - Content-Security-Policy (CSP): Yes
-  // - Others (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy, Cross-Origin-Resource-Policy, Cross-Origin-Embedder-Policy): No
+  // - X-Content-Type-Options: Yes (nosniff)
+  // - Others (X-Frame-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy, Cross-Origin-Resource-Policy, Cross-Origin-Embedder-Policy): No
   app.use((req, res, next) => {
     res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
     
@@ -83,15 +84,16 @@ async function startServer() {
     ].join('; ');
     
     res.setHeader('Content-Security-Policy', cspDirectives);
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     
     // Explicitly remove headers to ensure they are not sent
-    res.removeHeader('X-Content-Type-Options');
     res.removeHeader('X-Frame-Options');
     res.removeHeader('Referrer-Policy');
     res.removeHeader('Permissions-Policy');
     res.removeHeader('Cross-Origin-Opener-Policy');
     res.removeHeader('Cross-Origin-Resource-Policy');
     res.removeHeader('Cross-Origin-Embedder-Policy');
+
     
     next();
   });
