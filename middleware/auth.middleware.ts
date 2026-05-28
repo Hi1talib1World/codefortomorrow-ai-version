@@ -41,8 +41,22 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
     // Verify the token using the secret
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
 
-    // Attach the user's document from the database to the request object
-    const user = await User.findById(decoded.id).select('-password');
+    // Attach the user's document to the request object. If MongoDB is unconfigured, return a mock user profile.
+    const isDbConnected = require('mongoose').connection.readyState === 1;
+    let user;
+    
+    if (isDbConnected) {
+      user = await User.findById(decoded.id).select('-password');
+    } else {
+      user = {
+        _id: decoded.id,
+        name: 'Developer Wizard 🪄',
+        email: 'wizard@codefortomorrow.org',
+        profilePictureUrl: 'https://ui-avatars.com/api/?name=W&background=random&color=fff',
+        role: 'student',
+      };
+    }
+
     if (!user) {
       res.status(401).json({ message: 'Not authorized, user not found' });
       return;
@@ -56,3 +70,4 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
     return;
   }
 };
+
