@@ -5,6 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { PATHS } from '../../constants';
 import DbSetupGuide from '../DbSetupGuide';
+import { useSync } from '../../contexts/SyncContext';
 
 interface HeaderProps {
   currentUser: User;
@@ -14,6 +15,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) => {
   const { language, setLanguage, t } = useLanguage();
+  const { isOnline, syncPending, triggerSync } = useSync();
   const { theme, toggleTheme } = useTheme();
   const [isPathDropdownOpen, setIsPathDropdownOpen] = useState(false);
   const [isDbGuideOpen, setIsDbGuideOpen] = useState(false);
@@ -78,6 +80,31 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
         <div className="flex-grow md:hidden"></div>
         <div className="flex items-center space-x-3 sm:space-x-6 rtl:space-x-reverse">
 
+          {/* Network / Sync Status Indicator */}
+          <div className="flex items-center gap-2 border-r border-slate-200 dark:border-slate-700 pr-3 sm:pr-4">
+            <div
+              className={`w-2.5 h-2.5 rounded-full shadow-sm ${
+                !isOnline ? 'bg-amber-500 animate-pulse' :
+                syncPending ? 'bg-cyan-500 animate-spin border border-dashed border-cyan-400' : 'bg-emerald-500'
+              }`}
+              title={
+                !isOnline ? 'Offline - Progress cached locally' :
+                syncPending ? 'Unsynced actions pending' : 'Synced & Online'
+              }
+            />
+            <span className="text-[10px] font-black uppercase text-slate-500 select-none">
+              {!isOnline ? 'Offline' : syncPending ? 'Sync Pending' : 'Online'}
+            </span>
+            {syncPending && isOnline && (
+              <button
+                onClick={triggerSync}
+                className="text-[8px] font-black text-cyan-500 hover:text-cyan-600 transition-colors uppercase border border-cyan-500/20 px-2 py-0.5 rounded-full hover:bg-cyan-500/5 cursor-pointer ml-1"
+              >
+                Sync
+              </button>
+            )}
+          </div>
+
           {/* DB Status Indicator */}
           <div className="flex items-center gap-2">
             <div
@@ -89,7 +116,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
             {dbStatus === 'disconnected' && (
               <button
                 onClick={() => setIsDbGuideOpen(true)}
-                className="text-[10px] font-black text-red-500 uppercase hover:underline"
+                className="text-[10px] font-black text-red-500 uppercase hover:underline cursor-pointer"
               >
                 Fix Connection
               </button>
