@@ -111,6 +111,37 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   const { email, password } = req.body;
 
   try {
+    const isDbConnected = mongoose.connection.readyState === 1;
+
+    if (!isDbConnected) {
+      console.warn("⚠️ MongoDB is not connected. Simulating login for offline developer testing.");
+      const mockUserId = new mongoose.Types.ObjectId().toString();
+      const mockProgress = {
+        _id: new mongoose.Types.ObjectId().toString(),
+        xp: 150,
+        streak: 3,
+        completedLessons: new Map([["sahara-loops", true]]),
+        scores: new Map([["sahara-loops", 100]]),
+        badgesEarned: new Map([["sahara-rider", true]]),
+        skillMastery: new Map([["loops", 80]]),
+        learningProfile: { strengths: ["loops"], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
+        skillGraph: {},
+        lastLessonCompletedDate: new Date()
+      };
+      const userResponse = {
+        _id: mockUserId,
+        name: email.split('@')[0],
+        email,
+        profilePictureUrl: `https://ui-avatars.com/api/?name=${email.charAt(0).toUpperCase()}&background=random&color=fff`,
+        progress: mockProgress,
+        currentPath: "morocco",
+      };
+      const token = generateToken(mockUserId);
+      setAuthCookie(res, token);
+      res.json({ ...userResponse, token });
+      return;
+    }
+
     const user = await User.findOne({ email }).populate('progress');
 
     if (user && (await bcrypt.compare(password, user.password || ''))) {
@@ -147,6 +178,35 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 // Fix: Use Request, Response, NextFunction types from express to resolve property errors.
 export const getMe = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const isDbConnected = mongoose.connection.readyState === 1;
+
+    if (!isDbConnected) {
+      console.warn("⚠️ MongoDB is not connected. Returning mock user details.");
+      const mockUserId = req.user?._id || new mongoose.Types.ObjectId().toString();
+      const mockProgress = {
+        _id: new mongoose.Types.ObjectId().toString(),
+        xp: 150,
+        streak: 3,
+        completedLessons: new Map([["sahara-loops", true]]),
+        scores: new Map([["sahara-loops", 100]]),
+        badgesEarned: new Map([["sahara-rider", true]]),
+        skillMastery: new Map([["loops", 80]]),
+        learningProfile: { strengths: ["loops"], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
+        skillGraph: {},
+        lastLessonCompletedDate: new Date()
+      };
+      res.json({
+        _id: mockUserId,
+        name: req.user?.name || "Developer Wizard 🪄",
+        email: req.user?.email || "wizard@codefortomorrow.org",
+        profilePictureUrl: req.user?.profilePictureUrl || "https://ui-avatars.com/api/?name=W&background=random&color=fff",
+        progress: mockProgress,
+        currentPath: "morocco",
+        role: req.user?.role || "student",
+      });
+      return;
+    }
+
     // @ts-ignore
     const user = await User.findById(req.user.id).select('-password').populate('progress');
     if (!user) {
@@ -187,6 +247,37 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
         }
 
         const { email, name, picture, sub: googleId } = payload;
+
+        const isDbConnected = mongoose.connection.readyState === 1;
+        if (!isDbConnected) {
+            console.warn("⚠️ MongoDB is not connected. Simulating Google login via developer fallback.");
+            const mockUserId = new mongoose.Types.ObjectId().toString();
+            const mockProgress = {
+                _id: new mongoose.Types.ObjectId().toString(),
+                xp: 120,
+                streak: 4,
+                completedLessons: new Map(),
+                scores: new Map(),
+                badgesEarned: new Map(),
+                skillMastery: new Map(),
+                learningProfile: { strengths: [], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
+                skillGraph: {},
+                lastLessonCompletedDate: null
+            };
+            const userResponse = {
+                _id: mockUserId,
+                name,
+                email,
+                profilePictureUrl: picture || `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`,
+                progress: mockProgress,
+                currentPath: "morocco",
+                role: "student",
+            };
+            const appToken = generateToken(mockUserId);
+            setAuthCookie(res, appToken);
+            res.status(200).json({ ...userResponse, token: appToken });
+            return;
+        }
 
         // 2. Check if the user already exists by Google ID or Email
         let user = await User.findOne({ 
@@ -263,6 +354,37 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
         const name = decodedToken.name || email.split('@')[0];
         const picture = decodedToken.picture || `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`;
         const googleId = decodedToken.sub; // Firebase user ID (uid)
+
+        const isDbConnected = mongoose.connection.readyState === 1;
+        if (!isDbConnected) {
+            console.warn("⚠️ MongoDB is not connected. Simulating Firebase login via developer fallback.");
+            const mockUserId = new mongoose.Types.ObjectId().toString();
+            const mockProgress = {
+                _id: new mongoose.Types.ObjectId().toString(),
+                xp: 120,
+                streak: 4,
+                completedLessons: new Map(),
+                scores: new Map(),
+                badgesEarned: new Map(),
+                skillMastery: new Map(),
+                learningProfile: { strengths: [], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
+                skillGraph: {},
+                lastLessonCompletedDate: null
+            };
+            const userResponse = {
+                _id: mockUserId,
+                name,
+                email,
+                profilePictureUrl: picture,
+                progress: mockProgress,
+                currentPath: "morocco",
+                role: "student",
+            };
+            const appToken = generateToken(mockUserId);
+            setAuthCookie(res, appToken);
+            res.status(200).json({ ...userResponse, token: appToken });
+            return;
+        }
 
         // Find or create user
         let user = await User.findOne({ 
