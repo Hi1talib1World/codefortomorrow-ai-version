@@ -78,7 +78,10 @@ export const useAvatarChat = (wizardData: WizardFormData) => {
     const animationFrameRef = useRef<number | undefined>(undefined);
 
     // Initialize Gemini AI
-    const ai = useRef(new GoogleGenAI({apiKey: process.env.API_KEY}));
+    const ai = useRef<any>(null);
+    if (!ai.current) {
+        ai.current = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+    }
 
     // Generate the initial AI prompt from the wizard data
     const generateInitialPrompt = useCallback(() => {
