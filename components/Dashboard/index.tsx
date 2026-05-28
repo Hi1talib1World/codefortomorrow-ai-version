@@ -117,7 +117,13 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
       case 'ai-assistant':
         return <AIAssistantScreen currentUser={currentUser} />;
       default:
-        return <HomeHubScreen onNavigate={setActiveView} userName={currentUser.name} role={currentUser.role} currentPath={path} />;
+        return (
+          <HomeHubScreen 
+            onNavigate={setActiveView} 
+            currentUser={currentUser} 
+            onUpdateUser={onUpdateUser}
+          />
+        );
     }
   };
 
