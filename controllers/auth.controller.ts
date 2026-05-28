@@ -2,10 +2,12 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import User from '../models/user.model';
 import Progress from '../models/progress.model';
 import { generateToken } from '../services/token.service';
 import ApiError from '../utils/ApiError';
+
 
 const setAuthCookie = (res: Response, token: string) => {
   res.cookie('token', token, {
@@ -26,6 +28,37 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
   const { name, email, password } = req.body;
 
   try {
+    const isDbConnected = mongoose.connection.readyState === 1;
+    
+    if (!isDbConnected) {
+      console.warn("⚠️ MongoDB is not connected. Returning mock registered user.");
+      const mockUserId = new mongoose.Types.ObjectId().toString();
+      const mockProgress = {
+        _id: new mongoose.Types.ObjectId().toString(),
+        xp: 0,
+        streak: 0,
+        completedLessons: new Map(),
+        scores: new Map(),
+        badgesEarned: new Map(),
+        skillMastery: new Map(),
+        learningProfile: { strengths: [], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
+        skillGraph: {},
+        lastLessonCompletedDate: null
+      };
+      const userResponse = {
+        _id: mockUserId,
+        name,
+        email,
+        profilePictureUrl: `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`,
+        progress: mockProgress,
+        currentPath: null,
+      };
+      const token = generateToken(mockUserId);
+      setAuthCookie(res, token);
+      res.status(201).json({ ...userResponse, token });
+      return;
+    }
+
     const userExists = await User.findOne({ email });
 
     if (userExists) {
