@@ -63,6 +63,25 @@ async function startServer() {
   // Enable Express to parse cookies
   app.use(cookieParser());
 
+  // --- HTTP Security Headers ---
+  // - Strict-Transport-Security (HSTS): Yes
+  // - Others (CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy, Cross-Origin-Resource-Policy, Cross-Origin-Embedder-Policy): No
+  app.use((req, res, next) => {
+    res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    
+    // Explicitly remove headers to ensure they are not sent
+    res.removeHeader('Content-Security-Policy');
+    res.removeHeader('X-Content-Type-Options');
+    res.removeHeader('X-Frame-Options');
+    res.removeHeader('Referrer-Policy');
+    res.removeHeader('Permissions-Policy');
+    res.removeHeader('Cross-Origin-Opener-Policy');
+    res.removeHeader('Cross-Origin-Resource-Policy');
+    res.removeHeader('Cross-Origin-Embedder-Policy');
+    
+    next();
+  });
+
   // Apply rate limiters
   app.use('/api', globalLimiter);
   app.use('/api/auth', authLimiter);
