@@ -67,7 +67,12 @@ async function startServer() {
   // - Strict-Transport-Security (HSTS): Yes
   // - Content-Security-Policy (CSP): Yes
   // - X-Content-Type-Options: Yes (nosniff)
-  // - Others (X-Frame-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy, Cross-Origin-Resource-Policy, Cross-Origin-Embedder-Policy): No
+  // - X-Frame-Options: Yes (SAMEORIGIN)
+  // - Referrer-Policy: Yes (strict-origin-when-cross-origin)
+  // - Permissions-Policy: Yes (camera=(), microphone=(), geolocation=())
+  // - Cross-Origin-Opener-Policy (COOP): Yes (same-origin)
+  // - Cross-Origin-Resource-Policy (CORP): Yes (same-origin)
+  // - Cross-Origin-Embedder-Policy (COEP): Yes (credentialless)
   app.use((req, res, next) => {
     res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
     
@@ -85,18 +90,16 @@ async function startServer() {
     
     res.setHeader('Content-Security-Policy', cspDirectives);
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    
-    // Explicitly remove headers to ensure they are not sent
-    res.removeHeader('X-Frame-Options');
-    res.removeHeader('Referrer-Policy');
-    res.removeHeader('Permissions-Policy');
-    res.removeHeader('Cross-Origin-Opener-Policy');
-    res.removeHeader('Cross-Origin-Resource-Policy');
-    res.removeHeader('Cross-Origin-Embedder-Policy');
-
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+    res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
     
     next();
   });
+
 
   // Apply rate limiters
   app.use('/api', globalLimiter);
@@ -121,6 +124,18 @@ async function startServer() {
       database: isConnected ? 'connected' : 'disconnected'
     });
   });
+
+  // Serve security.txt for vulnerability disclosures
+  const serveSecurityTxt = (req: express.Request, res: express.Response) => {
+    res.type('text/plain');
+    res.send(
+      "Contact: mailto:security@codefortomorrow.org\n" +
+      "Expires: 2027-05-28T00:00:00.000Z\n" +
+      "Preferred-Languages: en, fr, ar\n"
+    );
+  };
+  app.get('/.well-known/security.txt', serveSecurityTxt);
+  app.get('/security.txt', serveSecurityTxt);
 
   // Mount the authentication routes under the /api/auth prefix
   app.use('/api/auth', authRoutes);
