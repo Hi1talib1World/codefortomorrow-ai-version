@@ -34,6 +34,9 @@ const EMOJI_MAP: Record<string, string> = {
   math: '∑',
   web: '🌐',
   game: '🎮',
+  camel: '🐫',
+  tea: '🍵',
+  zellige: '🎨',
 };
 
 const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked, isNext, onStartLesson }) => {
