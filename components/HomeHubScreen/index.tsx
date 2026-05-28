@@ -50,7 +50,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
     // Trigger auto-initialization of daily quests if not present for today
     useEffect(() => {
         if (dailyQuestsDate !== todayStr || dailyQuests.length === 0) {
-            const initialQuests = [
+            const initialQuests: Array<{ id: string; type: 'lesson' | 'xp' | 'quiz'; targetValue: number; currentValue: number; titleKey: string; xpReward: number }> = [
                 { id: 'q1', type: 'lesson', targetValue: 1, currentValue: 0, titleKey: 'quest_lesson', xpReward: 15 },
                 { id: 'q2', type: 'xp', targetValue: 30, currentValue: 0, titleKey: 'quest_xp', xpReward: 20 },
                 { id: 'q3', type: 'quiz', targetValue: 1, currentValue: 0, titleKey: 'quest_quiz', xpReward: 15 },
