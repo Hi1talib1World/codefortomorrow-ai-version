@@ -797,6 +797,10 @@ const translations = {
     morocco_badge_tea: 'Mint Tea Master',
     morocco_badge_zellige: 'Zellige Architect',
     morocco_badge_master: 'Moroccan Explorer Trophy',
+    daily_quests_title: 'Daily Quests',
+    quest_lesson: 'Complete a Coding Lesson',
+    quest_xp: 'Earn 30 XP in Lessons',
+    quest_quiz: 'Solve a Coding Quiz',
   },
   fr: {
     block_coding_masterclass_title: 'Masterclass Block Coding',
@@ -1390,6 +1394,10 @@ const translations = {
     morocco_badge_tea: 'Maître du Thé à la Menthe',
     morocco_badge_zellige: 'Architecte du Zellige',
     morocco_badge_master: "Trophée de l'Explorateur Marocain",
+    daily_quests_title: 'Missions Quotidiennes',
+    quest_lesson: 'Compléter une leçon de code',
+    quest_xp: 'Gagner 30 XP dans les leçons',
+    quest_quiz: 'Résoudre un quiz de code',
   },
   ar: {
     block_coding_masterclass_title: 'ماستر كلاس Block Coding',
@@ -1982,6 +1990,10 @@ const translations = {
     morocco_badge_tea: 'معلم أتاي',
     morocco_badge_zellige: 'مهندس الزليج',
     morocco_badge_master: 'كأس المستكشف المغربي',
+    daily_quests_title: 'المهام اليومية',
+    quest_lesson: 'أكمل درساً برمجياً',
+    quest_xp: 'احصل على 30 نقطة خبرة',
+    quest_quiz: 'حل اختباراً برمجياً',
   },
 };
 
