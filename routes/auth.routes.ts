@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { register, login, getMe, googleLogin, firebaseLogin } from '../controllers/auth.controller';
+import { register, login, getMe, googleLogin, firebaseLogin, logout } from '../controllers/auth.controller';
 import { protect } from '../middleware/auth.middleware';
 
 const router = express.Router();
@@ -39,5 +39,12 @@ router.post('/firebase', firebaseLogin);
  * @access  Private (requires JWT)
  */
 router.get('/me', protect, getMe);
+
+/**
+ * @route   POST /api/auth/logout
+ * @desc    Log out the user (clears auth cookie)
+ * @access  Private (requires JWT)
+ */
+router.post('/logout', protect, logout);
 
 export default router;
