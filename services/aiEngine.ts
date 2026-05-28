@@ -4,7 +4,13 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+let aiInstance: GoogleGenAI | null = null;
+const getAi = () => {
+  if (!aiInstance) {
+    aiInstance = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+  }
+  return aiInstance;
+};
 
 export interface AIContext {
   studentName: string;
