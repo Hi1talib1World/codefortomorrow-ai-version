@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
 import { createServer as createViteServer } from 'vite';
 import connectDB from './config/db';
 import authRoutes from './routes/auth.routes';
@@ -59,6 +60,8 @@ async function startServer() {
   app.use(compression());
   // Enable Express to parse JSON formatted request bodies
   app.use(express.json());
+  // Enable Express to parse cookies
+  app.use(cookieParser());
 
   // Apply rate limiters
   app.use('/api', globalLimiter);
