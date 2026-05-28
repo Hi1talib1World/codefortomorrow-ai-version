@@ -1,11 +1,18 @@
-
 import React, { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { User as UserType } from '../../types';
+import api from '../../services/api';
 import { Zap, Tag, Palette, User, Coins } from 'lucide-react';
 
 const TokenIcon = () => <Coins className="w-4 h-4 text-yellow-500 dark:text-yellow-400 inline-block drop-shadow-sm align-middle" />;
 
-const StoreTabsCount = ({ activeTab, setActiveTab, counts }: { activeTab: string, setActiveTab: (tab: string) => void, counts: Record<string, number> }) => {
+interface StoreTabsProps {
+    activeTab: string;
+    setActiveTab: (tab: string) => void;
+    counts: Record<string, number>;
+}
+
+const StoreTabsCount: React.FC<StoreTabsProps> = ({ activeTab, setActiveTab, counts }) => {
     const tabs = [
         { id: 'Boosters', label: 'Boosters', icon: <Zap className="w-5 h-5" /> },
         { id: 'Titles', label: 'Titles', icon: <Tag className="w-5 h-5" /> },
@@ -18,8 +25,9 @@ const StoreTabsCount = ({ activeTab, setActiveTab, counts }: { activeTab: string
                 {tabs.map(tab => (
                     <button
                         key={tab.id}
+                        type="button"
                         onClick={() => setActiveTab(tab.id)}
-                        className={`py-4 px-2 font-black text-sm sm:text-base transition-all relative flex items-center space-x-2 ${activeTab === tab.id ? 'text-brand-500' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}
+                        className={`py-4 px-2 font-black text-sm sm:text-base transition-all relative flex items-center space-x-2 cursor-pointer ${activeTab === tab.id ? 'text-brand-500' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}
                     >
                         <span>{tab.icon}</span>
                         <span>{tab.label.toUpperCase()}</span>
@@ -34,28 +42,45 @@ const StoreTabsCount = ({ activeTab, setActiveTab, counts }: { activeTab: string
     );
 };
 
-const StoreItem: React.FC<{ item: any }> = ({ item }) => {
+interface StoreItemProps {
+    item: any;
+    isUnlocked: boolean;
+    isEquipped: boolean;
+    onAction: () => void;
+}
+
+const StoreItem: React.FC<StoreItemProps> = ({ item, isUnlocked, isEquipped, onAction }) => {
     const renderButton = () => {
-        const baseClasses = "text-xs font-black py-3 px-4 rounded-xl transition-all border-b-4 uppercase tracking-tighter active:border-b-0 active:translate-y-1 transform";
-        switch (item.type) {
-            case 'free':
-                return <button className={`${baseClasses} bg-green-500 border-green-700 text-white hover:bg-green-400`}>OPEN</button>;
-            case 'cost':
-            case 'equip':
-            case 'active':
+        const baseClasses = "text-xs font-black py-3 px-4 rounded-xl transition-all border-b-4 uppercase tracking-tighter active:border-b-0 active:translate-y-1 transform cursor-pointer focus:outline-none";
+        
+        if (item.type === 'free') {
+            return <button onClick={onAction} className={`${baseClasses} bg-green-500 border-green-700 text-white hover:bg-green-400`}>OPEN</button>;
+        }
+
+        if (isUnlocked) {
+            if (item.category === 'Avatar') {
                 return (
-                    <button className={`${baseClasses} bg-brand-600 border-brand-800 text-white hover:bg-brand-500 flex items-center space-x-2`}>
-                        <span>{item.type === 'cost' ? 'OPEN' : item.type === 'equip' ? 'EQUIP' : 'ACTIVATE'}</span>
-                        <span className="text-yellow-300 ml-1">{item.cost} <TokenIcon /></span>
+                    <button 
+                        onClick={onAction} 
+                        className={`${baseClasses} ${
+                            isEquipped 
+                                ? 'bg-rose-500 border-rose-700 text-white hover:bg-rose-405' 
+                                : 'bg-emerald-500 border-emerald-700 text-white hover:bg-emerald-400'
+                        }`}
+                    >
+                        {isEquipped ? 'UNEQUIP' : 'EQUIP'}
                     </button>
                 );
-            case 'full':
-                return <button disabled className={`${baseClasses} bg-slate-200 dark:bg-slate-700 border-slate-400 dark:border-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-50`}>FULL</button>;
-            case 'pro':
-                return <button className={`${baseClasses} bg-gradient-to-r from-purple-500 to-brand-600 border-brand-800 text-white hover:brightness-110`}>GO PRO</button>;
-            default:
-                return null;
+            }
+            return <button disabled className={`${baseClasses} bg-slate-200 dark:bg-slate-700 border-slate-400 dark:border-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-50`}>UNLOCKED</button>;
         }
+
+        return (
+            <button onClick={onAction} className={`${baseClasses} bg-brand-600 border-brand-800 text-white hover:bg-brand-500 flex items-center space-x-2`}>
+                <span>BUY</span>
+                <span className="text-yellow-300 ml-1">{item.cost} <TokenIcon /></span>
+            </button>
+        );
     };
 
     return (
@@ -96,17 +121,61 @@ const TokenPurchaseSection = () => {
                         <div className="text-6xl mb-4 transform transition-transform group-hover/item:scale-125 group-hover/item:rotate-6 drop-shadow-xl">{item.icon}</div>
                         <p className="font-black text-slate-800 dark:text-white text-xl uppercase tracking-tight">{item.title}</p>
                         <p className="text-yellow-500 font-black text-2xl mt-1 tracking-tighter">{item.amount} <TokenIcon /></p>
-                        <button className="mt-8 w-full bg-brand-600 text-white font-black py-4 px-6 rounded-2xl shadow-lg hover:bg-brand-500 transition-all border-b-4 border-brand-800 active:border-b-0 active:translate-y-1 text-sm tracking-widest uppercase">
+                        <button className="mt-8 w-full bg-brand-600 text-white font-black py-4 px-6 rounded-2xl shadow-lg hover:bg-brand-500 transition-all border-b-4 border-brand-800 active:border-b-0 active:translate-y-1 text-sm tracking-widest uppercase cursor-pointer">
                             {item.price}
                         </button>
                     </div>
                 ))}
             </div>
         </div>
-    )
+    );
+};
+
+export const AvatarPreview: React.FC<{ equipped: number[]; className?: string }> = ({ equipped, className }) => {
+    const hasHat = equipped.includes(301);
+    const hasGlasses = equipped.includes(302);
+    const hasWand = equipped.includes(303);
+    const hasArm = equipped.includes(304);
+
+    return (
+        <div className={`relative bg-slate-950 border-2 border-cyan-500/35 rounded-2xl flex items-center justify-center shadow-md overflow-hidden select-none group ${className || 'w-16 h-16 text-3xl'}`}>
+            {/* Cone glow */}
+            <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/10 via-transparent to-transparent opacity-60"></div>
+            
+            <div className="relative group-hover:scale-105 transition-transform duration-300">
+                🤖
+                
+                {hasHat && (
+                    <div className="absolute -top-[55%] left-1/2 -translate-x-1/2 text-[0.7em] z-10">
+                        🎓
+                    </div>
+                )}
+                {hasGlasses && (
+                    <div className="absolute top-[10%] left-1/2 -translate-x-1/2 text-[0.6em] z-10">
+                        👓
+                    </div>
+                )}
+                {hasWand && (
+                    <div className="absolute -right-[30%] bottom-0 text-[0.5em] animate-pulse">
+                        ✨
+                    </div>
+                )}
+                {hasArm && (
+                    <div className="absolute -left-[30%] bottom-0.5 text-[0.5em] transform -rotate-12">
+                        🦾
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+interface StoreScreenProps {
+    currentUser: UserType;
+    onUpdateUser: (updatedData: Partial<UserType>) => void;
 }
 
-const StoreScreen: React.FC = () => {
+const StoreScreen: React.FC<StoreScreenProps> = ({ currentUser, onUpdateUser }) => {
     const { t } = useLanguage();
     const [activeTab, setActiveTab] = useState('Boosters');
     const [searchQuery, setSearchQuery] = useState('');
@@ -143,6 +212,60 @@ const StoreScreen: React.FC = () => {
 
     const allItems = [...boosterItems, ...titleItems, ...themeItems, ...avatarItems];
 
+    const progress = currentUser.progress;
+    const skillGraph = progress.skillGraph || {};
+    const unlocked = skillGraph.unlockedAvatarItems || [];
+    const equipped = skillGraph.equippedAvatarItems || [];
+
+    const handleAction = async (item: any) => {
+        if (!currentUser) return;
+        
+        const isUnlocked = unlocked.includes(item.id) || item.type === 'free';
+        
+        let newXp = progress.xp;
+        let newUnlocked = [...unlocked];
+        let newEquipped = [...equipped];
+
+        if (!isUnlocked) {
+            // Purchase flow
+            if (progress.xp < item.cost) {
+                alert(`Insufficient Stars/XP! You need ${item.cost} XP but you only have ${progress.xp} XP. Keep completing lessons to earn more! 🌟`);
+                return;
+            }
+            newXp -= item.cost;
+            newUnlocked.push(item.id);
+        } else {
+            // Equip flow (only for Avatar items)
+            if (item.category === 'Avatar') {
+                if (equipped.includes(item.id)) {
+                    newEquipped = equipped.filter((id: number) => id !== item.id);
+                } else {
+                    newEquipped.push(item.id);
+                }
+            }
+        }
+
+        const updatedProgress: UserType['progress'] = {
+            ...progress,
+            xp: newXp,
+            skillGraph: {
+                ...skillGraph,
+                unlockedAvatarItems: newUnlocked,
+                equippedAvatarItems: newEquipped,
+            }
+        };
+
+        try {
+            await api.updateUserProgress(updatedProgress);
+            onUpdateUser({
+                ...currentUser,
+                progress: updatedProgress,
+            });
+        } catch (e) {
+            console.error('Failed to purchase/equip item:', e);
+        }
+    };
+
     const filteredItems = allItems.filter(item => {
         const matchesTab = item.category === activeTab;
         const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -158,26 +281,39 @@ const StoreScreen: React.FC = () => {
     return (
         <div className="bg-brand-50 dark:bg-slate-900 min-h-full transition-colors p-4 sm:p-12 font-sans relative overflow-x-hidden">
             <div className="max-w-5xl mx-auto pb-20">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12 border-b border-slate-100 dark:border-slate-800 pb-6">
                     <h1 className="text-6xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">
                         {t('store')}
                     </h1>
-                    <div className="flex items-center gap-4">
-                        <div className="relative flex-grow md:w-64">
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Search items..."
-                                className="w-full bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 rounded-2xl py-3.5 pl-11 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-500/10 transition-all shadow-sm"
-                            />
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
+                    
+                    <div className="flex flex-wrap items-center gap-6">
+                        {/* Avatar Customizer HUD */}
+                        <div className="flex items-center gap-3 bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-md">
+                            <AvatarPreview equipped={equipped} />
+                            <div className="text-left max-w-[150px]">
+                                <h4 className="text-[10px] font-black text-cyan-500 dark:text-cyan-400 uppercase tracking-widest leading-none">Coding Bot</h4>
+                                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold mt-1.5 uppercase leading-tight">Equip custom accessories below!</p>
+                            </div>
                         </div>
-                        <div className="bg-white dark:bg-slate-800 px-6 py-3 rounded-2xl border-b-4 border-slate-200 dark:border-slate-950 flex items-center space-x-3 shadow-xl">
-                            <span className="text-2xl font-black text-slate-800 dark:text-white leading-none">450</span>
-                            <TokenIcon />
+
+                        {/* Search and Balance */}
+                        <div className="flex items-center gap-4 flex-grow sm:flex-grow-0">
+                            <div className="relative w-full sm:w-56">
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder="Search items..."
+                                    className="w-full bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 rounded-2xl py-3 pl-11 pr-4 text-xs font-bold focus:outline-none focus:ring-4 focus:ring-brand-500/10 transition-all shadow-sm"
+                                />
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                            <div className="bg-white dark:bg-slate-800 px-5 py-3 rounded-2xl border-b-4 border-slate-200 dark:border-slate-950 flex items-center space-x-2.5 shadow-md">
+                                <span className="text-xl font-black text-slate-800 dark:text-white leading-none">{progress.xp}</span>
+                                <TokenIcon />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -187,7 +323,15 @@ const StoreScreen: React.FC = () => {
                 <div className="bg-white dark:bg-slate-800 rounded-[3rem] p-4 sm:p-8 shadow-2xl border border-slate-100 dark:border-slate-700 transition-colors relative">
                     {filteredItems.length > 0 ? (
                         <div className="divide-y-2 divide-slate-50 dark:divide-slate-900/50">
-                            {filteredItems.map(item => <StoreItem key={item.id} item={item} />)}
+                            {filteredItems.map(item => (
+                                <StoreItem 
+                                    key={item.id} 
+                                    item={item} 
+                                    isUnlocked={unlocked.includes(item.id) || item.type === 'free'}
+                                    isEquipped={equipped.includes(item.id)}
+                                    onAction={() => handleAction(item)}
+                                />
+                            ))}
                         </div>
                     ) : (
                         <div className="text-center py-20 animate-pop-in">
@@ -196,7 +340,7 @@ const StoreScreen: React.FC = () => {
                             <p className="text-slate-400 font-bold mt-2">Try searching for something else!</p>
                             <button
                                 onClick={() => setSearchQuery('')}
-                                className="mt-8 px-8 py-3 bg-brand-50 dark:bg-slate-700 text-brand-600 dark:text-brand-400 rounded-xl font-black uppercase tracking-widest hover:bg-brand-100 dark:hover:bg-slate-600 transition-colors"
+                                className="mt-8 px-8 py-3 bg-brand-50 dark:bg-slate-700 text-brand-600 dark:text-brand-400 rounded-xl font-black uppercase tracking-widest hover:bg-brand-100 dark:hover:bg-slate-600 transition-colors cursor-pointer"
                             >
                                 Clear Search
                             </button>
