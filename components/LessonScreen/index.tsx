@@ -11,6 +11,7 @@ import {
     Trash2, Copy, ChevronDown, Check, X, Eye, EyeOff,
     Cpu, Layers, Activity
 } from 'lucide-react';
+import { GoogleGenAI } from '@google/genai';
 
 const LazyAvatarCanvas = React.lazy(() => import('../AvatarCanvas'));
 
@@ -264,10 +265,78 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
     const runMagicScanner = async (failedCode: string) => {
         setIsScanning(true);
         setAiHint(null);
+        
+        const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
+        const isSimulation = !apiKey || apiKey === 'your-gemini-api-key-here';
+
         try {
-            setAiHint("Check your brackets! 🤖");
+            if (isSimulation) {
+                // Let's run a smart local regex diagnostics rule set
+                await new Promise(resolve => setTimeout(resolve, 800)); // simulation delay
+                
+                const lower = failedCode.toLowerCase();
+                
+                // 1. Check brackets mismatch
+                const openCurly = (failedCode.match(/\{/g) || []).length;
+                const closeCurly = (failedCode.match(/\}/g) || []).length;
+                if (openCurly !== closeCurly) {
+                    setAiHint(`It looks like you have a bracket mismatch! You have ${openCurly} open curly braces '{' and ${closeCurly} closing braces '}'. Double check that every block is closed properly! 🧩`);
+                    return;
+                }
+                
+                // 2. Check parenthesis mismatch
+                const openParen = (failedCode.match(/\(/g) || []).length;
+                const closeParen = (failedCode.match(/\)/g) || []).length;
+                if (openParen !== closeParen) {
+                    setAiHint(`Parenthesis mismatch detected! Make sure every open '(' has a matching closing ')' in your code. 🔍`);
+                    return;
+                }
+
+                // 3. Check for quotes mismatch
+                const singleQuotes = (failedCode.match(/'/g) || []).length;
+                const doubleQuotes = (failedCode.match(/"/g) || []).length;
+                if (singleQuotes % 2 !== 0 || doubleQuotes % 2 !== 0) {
+                    setAiHint(`You have an unclosed string value! Check your quotation marks ('' or "") to ensure strings are fully closed. 💬`);
+                    return;
+                }
+
+                // 4. Check for print statement in Python
+                if (path === 'python' && !failedCode.includes('print(')) {
+                    setAiHint(`In Python, you need to output results using print(). Example:\n\`print("your_output")\`\nMake sure you are calling the print function! 🔁`);
+                    return;
+                }
+
+                // 5. Check for console.log in JavaScript
+                if (path === 'javascript' && !failedCode.includes('console.log(')) {
+                    setAiHint(`In JavaScript, you need to output results using console.log(). Example:\n\`console.log(your_result);\`\nMake sure to call console.log! ⚡`);
+                    return;
+                }
+
+                // Generic fallback
+                setAiHint(`The output did not match "${lesson.expectedOutput}". Double-check your logic to make sure you are calculating and printing the correct result! 💡`);
+            } else {
+                // Call Google GenAI directly
+                const ai = new GoogleGenAI({ apiKey });
+                const promptText = `You are a helpful and encouraging coding teacher for children (ages 8-15) on the "Code for Tomorrow" platform. 
+The student is working on a lesson about: "${lesson.titleKey}".
+Their goal is to write code that outputs EXACTLY: "${lesson.expectedOutput}".
+They wrote the following code which failed:
+\`\`\`
+${failedCode}
+\`\`\`
+Provide a concise, encouraging hint (1-2 sentences) of what is wrong and how they can fix it.
+Do not give them the complete solution code directly. Focus on guidance and debug clues.`;
+
+                const response = await ai.models.generateContent({
+                    model: 'gemini-3-flash-preview',
+                    contents: [{ role: 'user', parts: [{ text: promptText }] }],
+                });
+                
+                setAiHint(response.text || "Let's review the code logic together! 💡");
+            }
         } catch (e) {
-            setAiHint("Let's check the quotes together! 🕵️");
+            console.error('Magic Scanner Error:', e);
+            setAiHint("Let's review the code logic together! 💡");
         } finally {
             setIsScanning(false);
         }
@@ -932,6 +1001,28 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                 >
                     {/* Visualizer mascot card */}
                     <VisualStage output={output} isCorrect={isCorrect} mood={mascotMood} code={code} />
+
+                    {/* AI Hint Card */}
+                    {aiHint && (
+                        <div className="bg-slate-950 border border-cyan-500/50 p-4 rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.2)] animate-pop-in relative overflow-hidden backdrop-blur-md">
+                            <div className="absolute top-0 left-0 w-2 h-full bg-cyan-500"></div>
+                            <div className="flex gap-2.5 items-start">
+                                <div className="p-1 rounded bg-cyan-500/10 text-cyan-400 shrink-0">
+                                    <Sparkles className="w-4 h-4 animate-pulse" />
+                                </div>
+                                <div className="text-left">
+                                    <h4 className="text-cyan-400 text-[10px] font-black uppercase tracking-wider mb-0.5">AI Code Doctor</h4>
+                                    <p className="text-slate-200 text-[11px] leading-relaxed whitespace-pre-line">{aiHint}</p>
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => setAiHint(null)} 
+                                className="absolute top-2 right-2 text-slate-500 hover:text-white p-0.5 rounded cursor-pointer border-0 bg-transparent"
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
+                        </div>
+                    )}
 
                     {/* Console / Terminal Container */}
                     <div className="flex-grow flex flex-col bg-slate-950 border border-slate-850 rounded-xl overflow-hidden font-mono text-xs text-slate-350 min-h-[250px] shadow-inner">
