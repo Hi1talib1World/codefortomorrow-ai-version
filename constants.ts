@@ -176,6 +176,14 @@ export const PATHS: ProgrammingPath[] = [
     color: 'bg-indigo-500',
     isAvailable: true
   },
+  {
+    id: 'morocco',
+    titleKey: 'morocco_coding',
+    descriptionKey: 'morocco_coding_desc',
+    icon: '🇲🇦',
+    color: 'bg-emerald-600',
+    isAvailable: true
+  },
 ];
 
 export const MODULES_BY_PATH: { [key: string]: Module[] } = {
