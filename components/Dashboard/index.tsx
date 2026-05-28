@@ -72,7 +72,13 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
   const renderActiveView = () => {
     switch (activeView) {
       case 'home':
-        return <HomeHubScreen onNavigate={setActiveView} userName={currentUser.name} role={currentUser.role} currentPath={path} />;
+        return (
+          <HomeHubScreen 
+            onNavigate={setActiveView} 
+            currentUser={currentUser} 
+            onUpdateUser={onUpdateUser}
+          />
+        );
       case 'learn':
         if (!pathId) {
           return <PathSelectionScreen onPathSelected={(pId) => {
