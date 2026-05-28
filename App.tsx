@@ -273,9 +273,136 @@ export default function App() {
   const startLesson = useCallback((lesson: Lesson) => {
     setActiveLesson(lesson);
   }, []);
+  const completeLesson = useCallback(async (lessonId: number, xpGained: number, score?: number) => {
+    if (!currentUser || !currentUser.currentPath) return;
 
+    let updatedUser: User | null = null;
+    setCurrentUser(prevUser => {
+      if (!prevUser || !prevUser.currentPath) return prevUser;
 
+      const path = prevUser.currentPath;
+      const progress = prevUser.progress;
 
+      const currentPathCompletions = progress.completedLessons[path] || [];
+      const isAlreadyCompleted = currentPathCompletions.includes(lessonId);
+      const newCompleted = isAlreadyCompleted ? currentPathCompletions : [...currentPathCompletions, lessonId];
+      
+      // Calculate Streak Multiplier
+      const streak = progress.streak || 0;
+      const multiplier = streak >= 5 ? 1.5 : (streak >= 3 ? 1.2 : 1.0);
+      const finalXpGained = isAlreadyCompleted ? 0 : Math.round(xpGained * multiplier);
+      const baseNewXp = progress.xp + finalXpGained;
+
+      const newScores = { ...progress.scores };
+      if (score !== undefined) {
+        newScores[lessonId] = score;
+      }
+
+      const pathBadges = BADGES_BY_PATH[path] || [];
+      const earnedBadgesForPath = progress.badgesEarned[path] || [];
+      const newlyEarnedBadges = pathBadges
+        .filter(badge => badge.lessonId === lessonId && !earnedBadgesForPath.includes(badge.id))
+        .map(badge => badge.id);
+      const allEarnedForPath = [...earnedBadgesForPath, ...newlyEarnedBadges];
+
+      let newStreak = progress.streak;
+      const today = new Date();
+      const lastCompletion = progress.lastLessonCompletedDate ? new Date(progress.lastLessonCompletedDate) : null;
+
+      if (lastCompletion) {
+        const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const lastCompletionDateOnly = new Date(lastCompletion.getFullYear(), lastCompletion.getMonth(), lastCompletion.getDate());
+        const diffTime = todayDateOnly.getTime() - lastCompletionDateOnly.getTime();
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays === 1) {
+          newStreak += 1;
+        } else if (diffDays > 1) {
+          newStreak = 1;
+        }
+      } else {
+        newStreak = 1;
+      }
+
+      // Update Daily Quests in skillGraph
+      const skillGraph = progress.skillGraph || {};
+      let dailyQuests = skillGraph.dailyQuests ? [...skillGraph.dailyQuests] : [];
+      let dailyQuestsDate = skillGraph.dailyQuestsDate || '';
+      let chestOpenedToday = skillGraph.chestOpenedToday || false;
+      const todayStr = today.toISOString().split('T')[0];
+
+      // Auto-initialize daily quests if they are not generated for today
+      if (dailyQuestsDate !== todayStr || dailyQuests.length === 0) {
+        dailyQuests = [
+          { id: 'q1', type: 'lesson', targetValue: 1, currentValue: 0, titleKey: 'quest_lesson', xpReward: 15 },
+          { id: 'q2', type: 'xp', targetValue: 30, currentValue: 0, titleKey: 'quest_xp', xpReward: 20 },
+          { id: 'q3', type: 'quiz', targetValue: 1, currentValue: 0, titleKey: 'quest_quiz', xpReward: 15 },
+        ];
+        dailyQuestsDate = todayStr;
+        chestOpenedToday = false;
+      }
+
+      let xpEarnedFromQuests = 0;
+      if (!isAlreadyCompleted) {
+        dailyQuests = dailyQuests.map(quest => {
+          let curr = quest.currentValue;
+          if (quest.type === 'lesson') {
+            curr = Math.min(quest.targetValue, curr + 1);
+          } else if (quest.type === 'xp') {
+            curr = Math.min(quest.targetValue, curr + finalXpGained);
+          } else if (quest.type === 'quiz' && activeLesson?.type === 'quiz') {
+            curr = Math.min(quest.targetValue, curr + 1);
+          }
+
+          const wasCompleted = quest.currentValue >= quest.targetValue;
+          const isCompleted = curr >= quest.targetValue;
+          if (isCompleted && !wasCompleted) {
+            xpEarnedFromQuests += quest.xpReward;
+          }
+
+          return { ...quest, currentValue: curr };
+        });
+      }
+
+      updatedUser = {
+        ...prevUser,
+        progress: {
+          ...progress,
+          xp: baseNewXp + xpEarnedFromQuests,
+          scores: newScores,
+          streak: newStreak,
+          lastLessonCompletedDate: today.toISOString(),
+          completedLessons: {
+            ...progress.completedLessons,
+            [path]: newCompleted,
+          },
+          badgesEarned: {
+            ...progress.badgesEarned,
+            [path]: allEarnedForPath
+          },
+          skillGraph: {
+            ...skillGraph,
+            dailyQuests,
+            dailyQuestsDate,
+            chestOpenedToday,
+          }
+        },
+      };
+      return updatedUser;
+    });
+
+    // Trigger confetti celebration!
+    setShowConfetti(true);
+
+    setActiveLesson(null);
+
+    if (updatedUser) {
+      try {
+        await api.updateUserProgress((updatedUser as User).progress);
+      } catch (error) {
+        console.error("Failed to save progress:", error);
+      }
+    }
+  }, [currentUser, activeLesson]);
   const exitLesson = useCallback(() => {
     setActiveLesson(null);
   }, []);
