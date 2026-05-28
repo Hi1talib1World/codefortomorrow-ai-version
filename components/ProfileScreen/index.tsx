@@ -7,6 +7,7 @@ import EditProfileModal from '../EditProfileModal';
 import api from '../../services/api';
 import { Sparkles, Target, Zap, Brain, Plus, Pencil, Award, BookOpen } from 'lucide-react';
 import AnimatedCounter from '../AnimatedCounter';
+import { AvatarPreview } from '../StoreScreen';
 
 // Mock data
 const mockFollowing = 12;
@@ -96,7 +97,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
             </div>
             <div className="absolute -bottom-14 left-1/2 -translate-x-1/2">
               <div className="w-40 h-40 rounded-full bg-white dark:bg-slate-800 border-8 border-white dark:border-slate-900 flex items-center justify-center relative overflow-hidden shadow-lg transition-colors">
-                <img src={currentUser.profilePictureUrl} alt={currentUser.name} className="w-full h-full object-cover transition-transform duration-500" />
+                <AvatarPreview 
+                  equipped={userProgress?.skillGraph?.equippedAvatarItems || []} 
+                  className="w-full h-full text-7xl rounded-full border-none shadow-none"
+                />
               </div>
             </div>
           </div>
