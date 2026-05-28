@@ -154,6 +154,16 @@ export interface UserProgress {
     edges?: Array<{ from: string; to: string }>;
     unlockedAvatarItems?: number[];
     equippedAvatarItems?: number[];
+    dailyQuestsDate?: string;
+    chestOpenedToday?: boolean;
+    dailyQuests?: Array<{
+      id: string;
+      type: 'lesson' | 'xp' | 'quiz';
+      targetValue: number;
+      currentValue: number;
+      titleKey: string;
+      xpReward: number;
+    }>;
   };
 }
 
