@@ -129,3 +129,28 @@ button:active:not(:disabled),
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ─── Chest Shake Animation ─── */
+@keyframes chest-shake {
+  0%, 100% { transform: rotate(0deg); }
+  15%, 45%, 75% { transform: rotate(-8deg); }
+  30%, 60%, 90% { transform: rotate(8deg); }
+}
+.animate-chest-shake {
+  animation: chest-shake 0.8s ease-in-out infinite;
+}
+
+/* ─── Particle Burst Animation ─── */
+@keyframes particle-fade {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0.5);
+    opacity: 0;
+  }
+}
+.animate-particle-fade {
+  animation: particle-fade 1.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
