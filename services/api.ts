@@ -9,7 +9,7 @@ import { User, UserProgress } from '../types';
 // Authentication is handled via JSON Web Tokens (JWT).
 // ========================================================================================
 
-const API_BASE_URL = '/api'; // Using a relative URL for proxying in development
+const API_BASE_URL = (import.meta.env.VITE_API_URL as string) || '/api';
 
 // --- Helper for making authenticated requests ---
 const getAuthHeaders = () => {
