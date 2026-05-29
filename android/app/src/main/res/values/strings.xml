@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">code-for-tomorrow-morocco</string>
     <string name="title_activity_main">code-for-tomorrow-morocco</string>
-    <string name="package_name">com.example.app</string>
-    <string name="custom_url_scheme">com.example.app</string>
+    <string name="package_name">com.codefortomorrow.app</string>
+    <string name="custom_url_scheme">com.codefortomorrow.app</string>
 </resources>
