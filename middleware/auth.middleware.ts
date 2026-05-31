@@ -37,13 +37,19 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
     return res.status(401).json({ message: 'Not authorized, no token' });
   }
 
-  try {
-    // Try to verify as our backend JWT first
-    const secret = process.env.JWT_SECRET || 'dev-secret';
-    const decoded = jwt.verify(token, secret) as { id: string };
-    console.log('TOKEN TYPE: Backend JWT');
-    console.log('VERIFY METHOD: jwt.verify');
+  console.log('SECRET:', process.env.JWT_SECRET);
+  console.log('TOKEN:', token);
 
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('DECODED:', decoded);
+  } catch (e) {
+    console.log('JWT VERIFY FAILED:', e.message);
+  }
+
+  const user = await User.findById(decoded?.id);
+  console.log('USER FOUND:', user);
     const isDbConnected = require('mongoose').connection.readyState === 1;
     let user;
 
