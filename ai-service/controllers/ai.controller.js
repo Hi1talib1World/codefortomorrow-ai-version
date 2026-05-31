@@ -1,6 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
-import { enqueueTask } from '../services/taskQueue.js';
-import { publishAnalyticsEvent, publishTokenUsageEvent } from '../services/pubsubClient.js';
+import { createAiJob, AIJobType, normalizePriority } from '../services/aiJobContract.js';
+import { enqueueAiJob } from '../services/taskQueue.js';
+import { publishAiJob, getJobStatus } from '../services/pubsubClient.js';
 import { AIEngine } from '../services/aiEngine.js';
 
 export const handleLearningProfile = async (req, res) => {
@@ -11,97 +11,98 @@ export const handleLearningProfile = async (req, res) => {
       return res.status(400).json({ message: 'studentId and context are required.' });
     }
 
-    const profile = await AIEngine.generateLearningProfile(context);
+    const job = createAiJob(
+      AIJobType.STUDENT_ANALYSIS,
+      { studentId, context },
+      'api',
+      normalizePriority(AIJobType.STUDENT_ANALYSIS)
+    );
 
-    return res.json({ studentId, profile, generatedAt: new Date().toISOString() });
+    await publishAiJob(process.env.PUBSUB_AI_JOB_TOPIC || 'ai-jobs-topic', job);
+    await enqueueAiJob(job);
+
+    return res.status(202).json({ job_id: job.job_id, status: job.status, message: 'Learning profile job created.' });
   } catch (error) {
     console.error('Learning profile error:', error);
-    return res.status(500).json({ message: 'Unable to generate learning profile.' });
+    return res.status(500).json({ message: 'Unable to create learning profile job.' });
   }
 };
 
 export const handleAnalyticsRequest = async (req, res) => {
   try {
-    const requestId = uuidv4();
     const { teacherId, classData, metadata } = req.body;
 
     if (!teacherId || !Array.isArray(classData)) {
       return res.status(400).json({ message: 'teacherId and classData are required.' });
     }
 
-    const event = {
-      requestId,
-      teacherId,
-      classData,
-      metadata: metadata || {},
-      createdAt: new Date().toISOString(),
-    };
+    const job = createAiJob(
+      AIJobType.STUDENT_ANALYSIS,
+      { teacherId, classData, metadata: metadata || {} },
+      'api',
+      normalizePriority(AIJobType.STUDENT_ANALYSIS)
+    );
 
-    await publishAnalyticsEvent('ai-analytics-events', event);
-    await enqueueTask('analytics-report', event);
+    await publishAiJob(process.env.PUBSUB_AI_JOB_TOPIC || 'ai-jobs-topic', job);
+    await enqueueAiJob(job);
 
-    return res.status(202).json({ requestId, status: 'accepted', message: 'Analytics event queued and published.' });
+    return res.status(202).json({ job_id: job.job_id, status: job.status, message: 'Analytics job created and queued.' });
   } catch (error) {
     console.error('Analytics request error:', error);
-    return res.status(500).json({ message: 'Failed to enqueue analytics event.' });
+    return res.status(500).json({ message: 'Failed to create analytics job.' });
   }
 };
 
 export const handleGenerateQuiz = async (req, res) => {
   try {
-    const requestId = uuidv4();
     const { prompt, fileData } = req.body;
 
     if (!prompt) {
       return res.status(400).json({ message: 'prompt is required.' });
     }
 
-    await enqueueTask('generate-quiz', { requestId, prompt, fileData, createdAt: new Date().toISOString() });
+    const job = createAiJob(
+      AIJobType.CURRICULUM_GENERATION,
+      { prompt, fileData },
+      'api',
+      normalizePriority(AIJobType.CURRICULUM_GENERATION)
+    );
 
-    return res.status(202).json({ requestId, status: 'queued', message: 'Quiz generation task has been queued.' });
+    await publishAiJob(process.env.PUBSUB_AI_JOB_TOPIC || 'ai-jobs-topic', job);
+    await enqueueAiJob(job);
+
+    return res.status(202).json({ job_id: job.job_id, status: job.status, message: 'Curriculum generation job queued.' });
   } catch (error) {
     console.error('Quiz queue error:', error);
-    return res.status(500).json({ message: 'Failed to queue quiz generation.' });
+    return res.status(500).json({ message: 'Failed to queue curriculum generation job.' });
   }
 };
 
-export const handleAnalyticsStatus = async (req, res) => {
+export const handleProcessJob = async (req, res) => {
   try {
-    const requestId = req.params.requestId;
-    const { getAnalyticsResult } = await import('../services/pubsubClient.js');
-
-    const result = getAnalyticsResult(requestId);
-    if (!result) {
-      return res.status(404).json({ message: 'Analytics result not found. Processing may still be underway.' });
+    const job = req.body;
+    if (!job || !job.job_id || !job.type || !job.payload) {
+      return res.status(400).json({ message: 'Invalid AI job payload.' });
     }
 
-    return res.json({ requestId, result });
+    await enqueueAiJob({ ...job, source: 'cloud-tasks' });
+    return res.status(202).json({ job_id: job.job_id, status: 'accepted' });
   } catch (error) {
-    console.error('Analytics status error:', error);
-    return res.status(500).json({ message: 'Unable to fetch analytics status.' });
+    console.error('Process job error:', error);
+    return res.status(500).json({ message: 'Failed to enqueue AI job from Cloud Tasks.' });
   }
 };
 
-export const handleLogUsage = async (req, res) => {
+export const handleJobStatus = async (req, res) => {
   try {
-    const { userId, usage } = req.body;
-
-    if (!userId || !usage) {
-      return res.status(400).json({ message: 'userId and usage details are required.' });
+    const jobId = req.params.jobId;
+    const job = getJobStatus(jobId);
+    if (!job) {
+      return res.status(404).json({ message: 'AI job not found.' });
     }
-
-    const event = {
-      userId,
-      usage,
-      type: 'token-usage',
-      recordedAt: new Date().toISOString(),
-    };
-
-    await publishTokenUsageEvent('ai-token-usage-events', event);
-
-    return res.json({ status: 'logged' });
+    return res.json(job);
   } catch (error) {
-    console.error('Token usage error:', error);
-    return res.status(500).json({ message: 'Failed to log token usage.' });
+    console.error('Job status error:', error);
+    return res.status(500).json({ message: 'Unable to fetch AI job status.' });
   }
 };
