@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { createServer as createViteServer } from 'vite';
 import connectDB from './config/db';
@@ -54,6 +55,8 @@ async function startServer() {
   app.use(express.json());
   // Enable Express to parse cookies
   app.use(cookieParser());
+  // Enable CORS with credentials support
+  app.use(cors({ origin: true, credentials: true }));
 
   // --- HTTP Security Headers ---
   // - Strict-Transport-Security (HSTS): Yes
