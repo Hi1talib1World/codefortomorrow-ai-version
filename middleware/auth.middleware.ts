@@ -38,7 +38,8 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
 
   try {
     // Try to verify as our backend JWT first
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+    const secret = process.env.JWT_SECRET || 'dev-secret';
+    const decoded = jwt.verify(token, secret) as { id: string };
     console.log('TOKEN TYPE: Backend JWT');
     console.log('VERIFY METHOD: jwt.verify');
 
