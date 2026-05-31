@@ -4,24 +4,26 @@ import IORedis from 'ioredis';
 
 const redisUrl = process.env.REDIS_URL;
 const useBull = Boolean(redisUrl);
+const QUEUE_NAME = process.env.BULL_QUEUE_NAME || 'ai-jobs';
 
 let queue;
 
 if (useBull) {
   const connection = new IORedis(redisUrl);
-  queue = new Queue(process.env.BULL_QUEUE_NAME || 'ai-jobs', { connection });
+  queue = new Queue(QUEUE_NAME, { connection });
 }
 
-export async function enqueueTask(jobName, payload) {
+export async function enqueueAiJob(job) {
   if (useBull && queue) {
-    const job = await queue.add(jobName, payload, {
+    const bullJob = await queue.add(QUEUE_NAME, job, {
       attempts: 3,
       backoff: { type: 'exponential', delay: 3000 },
       removeOnComplete: true,
       removeOnFail: false,
+      priority: job.priority === 'high' ? 1 : job.priority === 'low' ? 10 : 5,
     });
-    console.log(`Enqueued BullMQ job ${jobName} id=${job.id}`);
-    return job.id;
+    console.log(`Enqueued BullMQ AI job ${job.job_id} id=${bullJob.id}`);
+    return bullJob.id;
   }
 
   const tasksClient = new CloudTasksClient();
@@ -40,14 +42,14 @@ export async function enqueueTask(jobName, payload) {
       httpMethod: 'POST',
       url,
       headers: { 'Content-Type': 'application/json' },
-      body: Buffer.from(JSON.stringify({ jobName, payload })).toString('base64'),
+      body: Buffer.from(JSON.stringify(job)).toString('base64'),
     },
     scheduleTime: {
-      seconds: Date.now() / 1000 + 5,
+      seconds: Math.floor(Date.now() / 1000) + 5,
     },
   };
 
   const [response] = await tasksClient.createTask({ parent, task });
-  console.log(`Created Cloud Task ${response.name}`);
+  console.log(`Created Cloud Task for AI job ${job.job_id}: ${response.name}`);
   return response.name;
 }
