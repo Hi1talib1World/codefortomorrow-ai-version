@@ -3,7 +3,7 @@ import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { User, Language } from '../../types';
 import api from '../../services/api';
-import { auth, firebaseService } from '../../services/firebase';
+import { auth, firebaseService, handleGoogleRedirectResult } from '../../services/firebase';
 import { Mail, Lock, User as UserIcon, Globe } from 'lucide-react';
 
 const generateMockFirebaseToken = (emailAddress: string, displayName: string): string => {
@@ -196,6 +196,22 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
     };
   }, []);
 
+  // Handle Google sign‑in redirect result on component mount
+  React.useEffect(() => {
+    const processRedirect = async () => {
+      const idToken = await handleGoogleRedirectResult();
+      if (idToken) {
+        try {
+          const user = await api.loginWithFirebase(idToken);
+          onAuthSuccess(user);
+        } catch (e) {
+          console.error('Redirect login failed:', e);
+        }
+      }
+    };
+    processRedirect();
+  }, []);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
@@ -233,9 +249,20 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
       const user = await api.loginWithFirebase(idToken);
       onAuthSuccess(user);
     } catch (err) {
-      console.error('Google Sign In Error:', err);
-      setError(err instanceof Error ? err.message : 'Google Login failed.');
-    } finally {
+        console.error('Google Sign In Error:', err);
+        // Fallback to redirect flow if popup was closed by user
+        if ((err as any).code === 'auth/popup-closed-by-user') {
+          try {
+            await firebaseService.loginWithGoogleRedirect();
+            setError('Redirecting to Google for sign‑in...');
+          } catch (redirectErr) {
+            console.error('Redirect initiation failed:', redirectErr);
+            setError(redirectErr instanceof Error ? redirectErr.message : 'Google redirect failed.');
+          }
+        } else {
+          setError(err instanceof Error ? err.message : 'Google Login failed.');
+        }
+      } finally {
       setIsLoading(false);
     }
   };
