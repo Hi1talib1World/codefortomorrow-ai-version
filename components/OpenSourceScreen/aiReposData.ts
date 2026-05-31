@@ -6,6 +6,7 @@ export interface RepoData {
   name: string;
   full_name: string;
   description: string;
+  description_ar?: string;
   stargazers_count: number;
   forks_count: number;
   language: string;
@@ -14,6 +15,12 @@ export interface RepoData {
   icon: any;
   topics: string[];
   article: {
+    title: string;
+    readTime: string;
+    date: string;
+    sections: { heading: string; content: string }[];
+  };
+  article_ar?: {
     title: string;
     readTime: string;
     date: string;
