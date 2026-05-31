@@ -1,30 +1,59 @@
 import React, { useState } from 'react';
 import { User, ProgrammingPath } from '../../types';
-import { LANGUAGE_DOCS, FALLBACK_DOC } from '../../utils/languageDocs';
+import { LANGUAGE_DOCS, FALLBACK_DOC, LANGUAGE_DOCS_FR, LANGUAGE_DOCS_AR } from '../../utils/languageDocs';
 import { PATHS } from '../../constants';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { BookOpen } from 'lucide-react';
+import CodeBlock from '../CodeBlock';
 
 interface DocumentationScreenProps {
   currentUser: User;
 }
 
 const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }) => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const defaultPath = currentUser.currentPath || 'javascript';
   const [selectedPath, setSelectedPath] = useState<ProgrammingPath['id']>(defaultPath);
 
-  const doc = LANGUAGE_DOCS[selectedPath] || FALLBACK_DOC;
+  const doc = (() => {
+    if (language === 'fr' && LANGUAGE_DOCS_FR[selectedPath]) {
+      return LANGUAGE_DOCS_FR[selectedPath]!;
+    }
+    if (language === 'ar' && LANGUAGE_DOCS_AR[selectedPath]) {
+      return LANGUAGE_DOCS_AR[selectedPath]!;
+    }
+    return LANGUAGE_DOCS[selectedPath] || FALLBACK_DOC;
+  })();
+
+  const localizedUI = {
+    en: {
+      title: "Documentation",
+      description: "Quick reference guides and cheat sheets for various languages.",
+      languages: "Languages"
+    },
+    fr: {
+      title: "Documentation",
+      description: "Guides de référence rapide et aide-mémoire pour divers langages.",
+      languages: "Langages"
+    },
+    ar: {
+      title: "المستندات المرجعية",
+      description: "أدلة مرجعية سريعة وملخصات لمختلف اللغات البرمجية.",
+      languages: "اللغات"
+    }
+  };
+
+  const ui = localizedUI[language as 'en' | 'fr' | 'ar'] || localizedUI.en;
 
   return (
     <div className="max-w-4xl mx-auto pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <header className="mb-8">
         <h1 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-3">
           <BookOpen className="w-8 h-8 text-[#4285F4]" />
-          Documentation
+          {ui.title}
         </h1>
         <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">
-          Quick reference guides and cheat sheets for various languages.
+          {ui.description}
         </p>
       </header>
 
@@ -32,7 +61,7 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
         {/* Sidebar / Path selector */}
         <div className="lg:w-1/4">
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 sticky top-4">
-            <h2 className="text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-3">Languages</h2>
+            <h2 className="text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-3">{ui.languages}</h2>
             <div className="space-y-1">
               {PATHS.filter(p => p.isAvailable || LANGUAGE_DOCS[p.id]).map(path => (
                 <button
@@ -78,11 +107,7 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
                   </h3>
                   
                   {section.isCode ? (
-                    <div className="bg-slate-900 dark:bg-[#0f172a] rounded-xl p-4 overflow-x-auto shadow-inner">
-                      <pre className="text-sm font-mono text-emerald-400 leading-relaxed whitespace-pre block">
-                        <code>{section.content}</code>
-                      </pre>
-                    </div>
+                    <CodeBlock code={section.content} language={selectedPath} />
                   ) : (
                     <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                       {section.content}
