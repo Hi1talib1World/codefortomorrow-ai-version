@@ -236,33 +236,13 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
     setError('');
     setIsLoading(true);
     try {
-      let idToken: string;
-      const isDummyConfig = !auth.app.options.apiKey || auth.app.options.apiKey === 'dummy-api-key';
-
-      if (isDummyConfig) {
-        console.warn('⚠️ Firebase has a dummy configuration. Simulating successful Google login via developer fallback.');
-        idToken = generateMockFirebaseToken('wizard@codefortomorrow.org', 'Developer Wizard 🪄');
-      } else {
-        idToken = await firebaseService.loginWithGooglePopup();
-      }
-
-      const user = await api.loginWithFirebase(idToken);
-      onAuthSuccess(user);
+      // Directly start the redirect flow for Google sign‑in.
+      await firebaseService.loginWithGoogleRedirect();
+      setError('Redirecting to Google for sign‑in...');
     } catch (err) {
-        console.error('Google Sign In Error:', err);
-        // Fallback to redirect flow if popup was closed by user
-        if ((err as any).code === 'auth/popup-closed-by-user') {
-          try {
-            await firebaseService.loginWithGoogleRedirect();
-            setError('Redirecting to Google for sign‑in...');
-          } catch (redirectErr) {
-            console.error('Redirect initiation failed:', redirectErr);
-            setError(redirectErr instanceof Error ? redirectErr.message : 'Google redirect failed.');
-          }
-        } else {
-          setError(err instanceof Error ? err.message : 'Google Login failed.');
-        }
-      } finally {
+      console.error('Google Sign In Error:', err);
+      setError(err instanceof Error ? err.message : 'Google login failed.');
+    } finally {
       setIsLoading(false);
     }
   };
