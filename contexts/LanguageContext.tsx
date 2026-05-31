@@ -273,6 +273,10 @@ const translations = {
     time_left: 'Time left',
     // Curriculum
     curriculum_moroccan: 'Moroccan National Curriculum',
+    curriculum_tunisian: 'Tunisian National Curriculum',
+    curriculum_algerian: 'Algerian National Curriculum',
+    curriculum_egyptian: 'Egyptian National Curriculum',
+    curriculum_lebanese: 'Lebanese National Curriculum',
     curriculum_ib: 'International Baccalaureate (IB)',
     curriculum_us_core: 'U.S. Core Standards',
     stage_preschool: 'Preschool (4-5 yrs)',
@@ -1066,6 +1070,10 @@ const translations = {
     time_left: 'Temps restant',
     // Curriculum
     curriculum_moroccan: 'Programme National Marocain',
+    curriculum_tunisian: 'Programme National Tunisien',
+    curriculum_algerian: 'Programme National Algérien',
+    curriculum_egyptian: 'Programme National Égyptien',
+    curriculum_lebanese: 'Programme National Libanais',
     curriculum_ib: 'Baccalauréat International (IB)',
     curriculum_us_core: 'Normes US Core',
     stage_preschool: 'Préscolaire (4-5 ans)',
@@ -1657,6 +1665,10 @@ const translations = {
     time_left: 'الوقت المتبقي',
     // Curriculum
     curriculum_moroccan: 'المنهاج الوطني المغربي',
+    curriculum_tunisian: 'المنهاج الوطني التونسي',
+    curriculum_algerian: 'المنهاج الوطني الجزائري',
+    curriculum_egyptian: 'المنهاج الوطني المصري',
+    curriculum_lebanese: 'المنهاج الوطني اللبناني',
     curriculum_ib: 'البكالوريا الدولية (IB)',
     curriculum_us_core: 'المعايير الأساسية الأمريكية',
     stage_preschool: 'التعليم الأولي (4-5 سنوات)',
