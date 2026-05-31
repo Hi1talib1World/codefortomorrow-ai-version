@@ -1099,13 +1099,13 @@ Do not give them the complete solution code directly. Focus on guidance and debu
                             ) : (
                                 <div className="space-y-1.5 font-mono text-xs">
                                     <div className="text-slate-500">// Simulated Sandboxed Environment</div>
-                                    <div className="text-cyan-400">cft-sandbox@morocco:~# node run index.ts</div>
+                                    <div className="text-cyan-400">cft-sandbox@main:~# node run index.ts</div>
                                     {output ? (
                                         <div className="text-slate-200 font-semibold">{output}</div>
                                     ) : (
                                         <div className="opacity-45 italic text-[11px]">Terminal active. Run code to feed standard output.</div>
                                     )}
-                                    <div className="text-cyan-400">cft-sandbox@morocco:~# <span className="animate-pulse">_</span></div>
+                                    <div className="text-cyan-400">cft-sandbox@main:~# <span className="animate-pulse">_</span></div>
                                 </div>
                             )}
                         </div>
