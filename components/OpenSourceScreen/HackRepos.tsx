@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search, CheckCircle2, Star, GitFork, ExternalLink, Shield } from 'lucide-react';
 import { HACK_REPOS_DATA } from './hackReposData';
+import { useI18n } from './i18n';
 
 const CATEGORIES = ['All', 'Web Security', 'Exploitation', 'Network', 'Database', 'Cryptography', 'Reverse Engineering', 'Toolkit'];
 const containerVariants = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.08 } } };
@@ -10,6 +11,7 @@ const itemVariants = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0, 
 const formatNumber = (num: number) => num >= 1000 ? (num / 1000).toFixed(1) + 'k' : num.toString();
 
 export const HackRepos: React.FC = () => {
+  const { t } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [repos, setRepos] = useState<any[]>([]);
@@ -49,14 +51,14 @@ export const HackRepos: React.FC = () => {
       <div>
         <div className="flex items-center gap-3 mb-2">
           <Shield className="w-8 h-8 text-emerald-400" />
-          <h1 className="text-3xl font-black text-white tracking-tight">Hack Repos</h1>
+          <h1 className="text-3xl font-black text-white tracking-tight">{t('hackRepos.title')}</h1>
         </div>
-        <p className="text-slate-400 text-sm font-medium mb-8">Essential open-source tools for ethical hacking & cybersecurity. Click to read the full article.</p>
+        <p className="text-slate-400 text-sm font-medium mb-8">{t('hackRepos.subtitle')}</p>
 
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
           <div className="relative w-full md:max-w-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><Search className="h-5 w-5 text-slate-600" /></div>
-            <input type="text" placeholder="Search security tools..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+            <input type="text" placeholder={t('hackRepos.searchPlaceholder')} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
               className="block w-full pl-10 pr-3 py-2.5 border border-slate-800 rounded-lg bg-[#0e0e11] text-slate-300 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 sm:text-sm transition-colors" />
           </div>
           <div className="flex items-center gap-2 flex-wrap">
@@ -77,7 +79,7 @@ export const HackRepos: React.FC = () => {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="text-center py-20 bg-[#121212] rounded-2xl border border-slate-800"><p className="text-slate-500 font-semibold">No hack repos match your search.</p></div>
+        <div className="text-center py-20 bg-[#121212] rounded-2xl border border-slate-800"><p className="text-slate-500 font-semibold">{t('hackRepos.noResults')}</p></div>
       ) : (
         <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(repo => {
@@ -105,8 +107,8 @@ export const HackRepos: React.FC = () => {
                   {repo.topics.map(t => <div key={t} className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">{t}</div>)}
                 </div>
                 <div className="flex items-center gap-6 pt-5 border-t border-slate-800/60 text-sm font-semibold">
-                  <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-500 fill-current" /><span className="text-white">Stars</span><span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span></div>
-                  <div className="flex items-center gap-1.5"><GitFork className="w-4 h-4 text-slate-500" /><span className="text-white">Forks</span><span className="text-slate-400">{formatNumber(repo.forks_count)}</span></div>
+                  <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-500 fill-current" /><span className="text-white">{t('feed.stars')}</span><span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span></div>
+                  <div className="flex items-center gap-1.5"><GitFork className="w-4 h-4 text-slate-500" /><span className="text-white">{t('feed.forks')}</span><span className="text-slate-400">{formatNumber(repo.forks_count)}</span></div>
                 </div>
               </motion.div>
             );
