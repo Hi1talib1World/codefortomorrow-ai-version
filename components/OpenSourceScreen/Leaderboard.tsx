@@ -9,13 +9,34 @@ interface GitHubUser {
   html_url: string;
 }
 
-const COUNTRIES = ['Global', 'Morocco', 'USA', 'India', 'UK', 'Germany', 'France', 'Brazil'];
+const ARAB_COUNTRIES = [
+  'Algeria', 'Bahrain', 'Comoros', 'Djibouti', 'Egypt', 'Iraq', 'Jordan', 
+  'Kuwait', 'Lebanon', 'Libya', 'Mauritania', 'Morocco', 'Oman', 'Palestine', 
+  'Qatar', 'Saudi Arabia', 'Somalia', 'Sudan', 'Syria', 'Tunisia', 
+  'United Arab Emirates', 'Yemen'
+];
+
+const EUROPE_COUNTRIES = [
+  'Albania', 'Andorra', 'Austria', 'Belarus', 'Belgium', 'Bosnia and Herzegovina', 
+  'Bulgaria', 'Croatia', 'Cyprus', 'Czechia', 'Denmark', 'Estonia', 'Finland', 
+  'France', 'Germany', 'Greece', 'Hungary', 'Iceland', 'Ireland', 'Italy', 
+  'Latvia', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Malta', 'Moldova', 
+  'Monaco', 'Montenegro', 'Netherlands', 'North Macedonia', 'Norway', 'Poland', 
+  'Portugal', 'Romania', 'Russia', 'San Marino', 'Serbia', 'Slovakia', 
+  'Slovenia', 'Spain', 'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom'
+];
+
+const OTHER_COUNTRIES = [
+  'USA', 'India', 'Brazil', 'Japan', 'Canada', 'Australia'
+];
 
 export const Leaderboard: React.FC = () => {
   const [users, setUsers] = useState<GitHubUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [country, setCountry] = useState('Global');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -35,12 +56,26 @@ export const Leaderboard: React.FC = () => {
     fetchLeaderboard();
   }, [country]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const getRankBadge = (index: number) => {
     if (index === 0) return <span className="text-2xl" title="Rank 1">🥇</span>;
     if (index === 1) return <span className="text-2xl" title="Rank 2">🥈</span>;
     if (index === 2) return <span className="text-2xl" title="Rank 3">🥉</span>;
     return <span className="text-lg font-mono text-slate-500 w-8 text-center">{index + 1}</span>;
   };
+
+  const filteredArab = ARAB_COUNTRIES.filter(c => c.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredEurope = EUROPE_COUNTRIES.filter(c => c.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredOther = OTHER_COUNTRIES.filter(c => c.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <div className="max-w-4xl mx-auto pb-24 md:pb-0">
@@ -55,29 +90,102 @@ export const Leaderboard: React.FC = () => {
           </p>
         </div>
 
-        <div className="relative z-20">
+        <div ref={dropdownRef} className="relative z-20">
           <button 
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center justify-between w-40 bg-[#121212]/80 backdrop-blur-sm border border-dashed border-[#facc15]/50 px-4 py-2 rounded-lg font-mono text-sm text-[#facc15] hover:bg-[#facc15]/10 transition-colors"
+            className="flex items-center justify-between w-48 bg-[#121212]/80 backdrop-blur-sm border border-dashed border-[#facc15]/50 px-4 py-2 rounded-lg font-mono text-sm text-[#facc15] hover:bg-[#facc15]/10 transition-colors"
           >
-            <span className="flex items-center gap-2"><MapPin className="w-4 h-4" /> {country}</span>
+            <span className="flex items-center gap-2 truncate"><MapPin className="w-4 h-4 shrink-0" /> {country}</span>
           </button>
           
           {isDropdownOpen && (
-            <div className="absolute top-full mt-2 w-40 bg-[#09090b] border border-dashed border-slate-800 rounded-lg overflow-hidden shadow-xl">
-              {COUNTRIES.map(c => (
-                <button
-                  key={c}
-                  onClick={() => {
-                    setCountry(c);
-                    setIsDropdownOpen(false);
-                  }}
-                  className={`w-full text-left px-4 py-2 font-mono text-sm transition-colors
-                    ${country === c ? 'bg-[#facc15]/20 text-[#facc15]' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
-                >
-                  {c}
-                </button>
-              ))}
+            <div className="absolute right-0 top-full mt-2 w-72 bg-[#09090b] border border-dashed border-slate-800 rounded-xl overflow-hidden shadow-2xl z-30 p-2">
+              <div className="flex items-center gap-2 px-3 py-2 border-b border-dashed border-slate-800 mb-2">
+                <Search className="w-4 h-4 text-slate-500" />
+                <input
+                  type="text"
+                  placeholder="Search country..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-transparent text-white font-mono text-xs focus:outline-none w-full border-none p-0 focus:ring-0"
+                />
+              </div>
+
+              <div className="max-h-64 overflow-y-auto pr-1 space-y-3 no-scrollbar">
+                {('global'.includes(searchQuery.toLowerCase())) && (
+                  <button
+                    onClick={() => {
+                      setCountry('Global');
+                      setIsDropdownOpen(false);
+                      setSearchQuery('');
+                    }}
+                    className={`w-full text-left px-3 py-1.5 rounded font-mono text-xs transition-colors
+                      ${country === 'Global' ? 'bg-[#facc15]/20 text-[#facc15] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
+                  >
+                    🌍 Global
+                  </button>
+                )}
+
+                {filteredArab.length > 0 && (
+                  <div>
+                    <div className="text-[10px] font-bold text-slate-600 font-mono px-3 uppercase tracking-wider mb-1">Arab Countries</div>
+                    {filteredArab.map(c => (
+                      <button
+                        key={c}
+                        onClick={() => {
+                          setCountry(c);
+                          setIsDropdownOpen(false);
+                          setSearchQuery('');
+                        }}
+                        className={`w-full text-left px-3 py-1.5 rounded font-mono text-xs transition-colors pl-5
+                          ${country === c ? 'bg-[#facc15]/20 text-[#facc15] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {filteredEurope.length > 0 && (
+                  <div>
+                    <div className="text-[10px] font-bold text-slate-600 font-mono px-3 uppercase tracking-wider mb-1">Europe</div>
+                    {filteredEurope.map(c => (
+                      <button
+                        key={c}
+                        onClick={() => {
+                          setCountry(c);
+                          setIsDropdownOpen(false);
+                          setSearchQuery('');
+                        }}
+                        className={`w-full text-left px-3 py-1.5 rounded font-mono text-xs transition-colors pl-5
+                          ${country === c ? 'bg-[#facc15]/20 text-[#facc15] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {filteredOther.length > 0 && (
+                  <div>
+                    <div className="text-[10px] font-bold text-slate-600 font-mono px-3 uppercase tracking-wider mb-1">Other Regions</div>
+                    {filteredOther.map(c => (
+                      <button
+                        key={c}
+                        onClick={() => {
+                          setCountry(c);
+                          setIsDropdownOpen(false);
+                          setSearchQuery('');
+                        }}
+                        className={`w-full text-left px-3 py-1.5 rounded font-mono text-xs transition-colors pl-5
+                          ${country === c ? 'bg-[#facc15]/20 text-[#facc15] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
