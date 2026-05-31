@@ -43,6 +43,20 @@ export class AIEngine {
     return response.text || 'No summary generated.';
   }
 
+  static async generateSalesProposal(payload) {
+    const prompt = `You are an expert B2B EdTech growth marketer. Build a concise sales proposal for a North African school or NGO based on this payload:\n\n${JSON.stringify(payload, null, 2)}\n\nReturn valid JSON with keys: proposal, pricing, keyBenefits, nextSteps.`;
+
+    const response = await client.models.generateContent({
+      model: MODEL,
+      contents: prompt,
+      config: {
+        responseMimeType: 'application/json'
+      }
+    });
+
+    return JSON.parse(response.text || '{}');
+  }
+
   static async generateQuiz(payload) {
     const prompt = `Generate a short, localized quiz for North African primary students based on this prompt:\n\n${payload.prompt}`;
     const input = payload.fileData ? { parts: [{ inlineData: { data: payload.fileData.data, mimeType: payload.fileData.mimeType } }, { text: prompt }] } : prompt;
