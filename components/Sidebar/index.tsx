@@ -14,7 +14,8 @@ import {
   FileText, 
   MessageSquare, 
   Settings,
-  Sparkles
+  Sparkles,
+  Target
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -29,6 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, currentUse
   const navItems = [
     { id: 'home', label: t('home'), icon: <Home className="w-5 h-5" /> },
     { id: 'learn', label: t('learn'), icon: <BookOpen className="w-5 h-5" /> },
+    { id: 'missions', label: t('missions') || 'Missions', icon: <Target className="w-5 h-5" /> },
     { id: 'ai-assistant', label: t('ai_assistant') || 'AI Assistant', icon: <Sparkles className="w-5 h-5" /> },
     { id: 'creations', label: t('creations'), icon: <Folder className="w-5 h-5" /> },
     { id: 'goals', label: t('goals'), icon: <Award className="w-5 h-5" /> },
