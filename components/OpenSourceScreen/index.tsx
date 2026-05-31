@@ -15,16 +15,17 @@ import { User } from '../../types';
 interface OpenSourceScreenProps {
   currentUser?: User | null;
   updateUser?: (data: Partial<User>) => Promise<void>;
+  onLogout?: () => void;
 }
 
 import { useSearchParams } from 'react-router-dom';
 
-export default function OpenSourceScreen({ currentUser, updateUser }: OpenSourceScreenProps) {
+export default function OpenSourceScreen({ currentUser, updateUser, onLogout }: OpenSourceScreenProps) {
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'feed';
 
   return (
-    <DashboardLayout>
+    <DashboardLayout currentUser={currentUser} onLogout={onLogout}>
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
