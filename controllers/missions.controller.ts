@@ -59,10 +59,10 @@ export const getSkillStates = async (req: Request, res: Response, next: NextFunc
     if (!isDbConnected()) {
       console.warn("⚠️ MongoDB offline. Returning mock skill states.");
       return res.json([
-        { skill_id: 'variables', proficiency: 0.85, successes: 8, attempts: 10, trend: 'improving', confidence: 0.9, updated_at: new Date() },
-        { skill_id: 'conditionals', proficiency: 0.70, successes: 5, attempts: 8, trend: 'stable', confidence: 0.8, updated_at: new Date() },
-        { skill_id: 'loops', proficiency: 0.45, successes: 3, attempts: 7, trend: 'improving', confidence: 0.6, updated_at: new Date() },
-        { skill_id: 'arrays', proficiency: 0.15, successes: 1, attempts: 4, trend: 'stable', confidence: 0.4, updated_at: new Date() },
+        { skill_id: 'variables', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, updated_at: new Date() },
+        { skill_id: 'conditionals', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, updated_at: new Date() },
+        { skill_id: 'loops', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, updated_at: new Date() },
+        { skill_id: 'arrays', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, updated_at: new Date() },
         { skill_id: 'functions', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, updated_at: new Date() },
         { skill_id: 'objects', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, updated_at: new Date() }
       ]);
@@ -91,22 +91,22 @@ export const getMissions = async (req: Request, res: Response, next: NextFunctio
     if (!isDbConnected()) {
       // Offline/Mock simulation
       skillStatesList = [
-        { skill_id: 'variables', proficiency: 0.85, successes: 8, attempts: 10, trend: 'improving', confidence: 0.9, failures: 2 },
-        { skill_id: 'conditionals', proficiency: 0.70, successes: 5, attempts: 8, trend: 'stable', confidence: 0.8, failures: 3 },
-        { skill_id: 'loops', proficiency: 0.45, successes: 3, attempts: 7, trend: 'improving', confidence: 0.6, failures: 4 },
-        { skill_id: 'arrays', proficiency: 0.15, successes: 1, attempts: 4, trend: 'stable', confidence: 0.4, failures: 3 },
+        { skill_id: 'variables', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, failures: 0 },
+        { skill_id: 'conditionals', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, failures: 0 },
+        { skill_id: 'loops', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, failures: 0 },
+        { skill_id: 'arrays', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, failures: 0 },
         { skill_id: 'functions', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, failures: 0 },
         { skill_id: 'objects', proficiency: 0.0, successes: 0, attempts: 0, trend: 'stable', confidence: 0.0, failures: 0 }
       ];
       successEventsCountMap = {
-        variables: 8,
-        conditionals: 5,
-        loops: 3,
-        arrays: 1,
+        variables: 0,
+        conditionals: 0,
+        loops: 0,
+        arrays: 0,
         functions: 0,
         objects: 0
       };
-      aiJobsCount = 1;
+      aiJobsCount = 0;
     } else {
       // Online DB queries
       skillStatesList = await SkillState.find({ student_id: userId }).lean();
