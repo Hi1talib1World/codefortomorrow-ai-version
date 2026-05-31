@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
 import { AIEngine } from '../services/aiEngine';
+import { JSDOM } from 'jsdom';
 
 // Simple TTL cache implementation
 const cache = new Map<string, { data: any, timestamp: number }>();
@@ -184,41 +185,66 @@ export const addCuratedRepo = async (req: Request, res: Response) => {
 
 export const getTrendingRepos = async (req: Request, res: Response) => {
   try {
-    // Trending = created in the last 7 days, sorted by stars
-    const date = new Date();
-    date.setDate(date.getDate() - 7);
-    const dateStr = date.toISOString().split('T')[0];
-
-    const cacheKey = `trending_repos_${dateStr}`;
+    const todayStr = new Date().toISOString().split('T')[0];
+    const cacheKey = `trending_repos_scraped_${todayStr}`;
     const cachedData = getCached(cacheKey);
     if (cachedData) {
       return res.json(cachedData);
     }
 
-    const query = `created:>${dateStr}`;
-    const response = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=15`, {
+    const response = await fetch('https://github.com/trending', {
       headers: {
-        'User-Agent': 'CodeForTomorrow-App',
-        ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
       }
     });
 
     if (!response.ok) {
-      if (response.status === 403 || response.status === 429) {
-        console.warn('[GitHub API] Trending rate-limited. Falling back to local cache.');
-        const cacheFilePath = path.resolve(process.cwd(), 'repos-cache.json');
-        if (fs.existsSync(cacheFilePath)) {
-          const cacheData = JSON.parse(fs.readFileSync(cacheFilePath, 'utf-8'));
-          return res.json(cacheData.slice(0, 15));
-        }
-        return res.status(429).json({ message: 'GitHub API rate limit exceeded.' });
-      }
-      throw new Error(`GitHub API error: ${response.status}`);
+      throw new Error(`GitHub HTML trending request failed: ${response.status}`);
     }
 
-    const data = await response.json();
-    setCached(cacheKey, data.items || []);
-    res.json(data.items || []);
+    const html = await response.text();
+    const dom = new JSDOM(html);
+    const document = dom.window.document;
+    const rows = document.querySelectorAll('article.Box-row');
+
+    const repos: any[] = [];
+    rows.forEach((row, i) => {
+      const titleAnchor = row.querySelector('h2 a');
+      const href = titleAnchor ? titleAnchor.getAttribute('href') : '';
+      const fullName = href ? href.substring(1) : '';
+      
+      const p = row.querySelector('p');
+      const description = p ? p.textContent.trim() : '';
+
+      const langSpan = row.querySelector('[itemprop="programmingLanguage"]');
+      const language = langSpan ? langSpan.textContent.trim() : '';
+
+      const starAnchor = row.querySelector(`a[href$="/stargazers"]`);
+      const starsText = starAnchor ? starAnchor.textContent.trim().replace(/,/g, '') : '0';
+      const stargazers_count = parseInt(starsText, 10) || 0;
+
+      const forkAnchor = row.querySelector(`a[href$="/forks"]`);
+      const forksText = forkAnchor ? forkAnchor.textContent.trim().replace(/,/g, '') : '0';
+      const forks_count = parseInt(forksText, 10) || 0;
+
+      repos.push({
+        id: i,
+        name: fullName.split('/')[1] || '',
+        full_name: fullName,
+        description,
+        language,
+        stargazers_count,
+        forks_count,
+        html_url: `https://github.com/${fullName}`
+      });
+    });
+
+    if (repos.length > 0) {
+      setCached(cacheKey, repos);
+      return res.json(repos);
+    } else {
+      throw new Error('No repositories found on trending page');
+    }
   } catch (error) {
     console.error('Error fetching trending repos:', error);
     const cacheFilePath = path.resolve(process.cwd(), 'repos-cache.json');
