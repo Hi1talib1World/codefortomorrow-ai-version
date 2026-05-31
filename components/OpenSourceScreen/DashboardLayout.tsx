@@ -3,9 +3,11 @@ import { motion } from 'motion/react';
 import { 
   Home, Zap, Users, TrendingUp, Search, 
   BookOpen, DollarSign, Bell, Star, 
-  Twitter, Github, Mail, Menu, X, ChevronRight, CheckCircle2
+  Twitter, Github, Mail, Menu, X, ChevronRight, CheckCircle2,
+  Globe
 } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useI18n } from './i18n';
 
 import { User } from '../../types';
 
@@ -15,31 +17,32 @@ interface DashboardLayoutProps {
   onLogout?: () => void;
 }
 
-const GENERAL_ITEMS = [
-  { id: 'feed', icon: Home, label: 'Home' },
-  { id: 'yc-oss', icon: Zap, label: 'AI Repos' },
-  { id: 'gsoc', icon: Users, label: 'Hack Repos' },
-  { id: 'trending', icon: TrendingUp, label: 'Hot Now' },
-  { id: 'issues', icon: Search, label: 'Good First Issues' },
-];
-
-const COMMUNITY_ITEMS = [
-  { id: 'leaderboard', icon: Users, label: 'Top Contributors' },
-  { id: 'resources', icon: BookOpen, label: 'Starter Kits' },
-  { id: 'bounties', icon: DollarSign, label: 'Earn & Code' },
-];
-
-const MY_DASHBOARD_ITEMS = [
-  { id: 'admin', icon: Search, label: 'My Saved' },
-];
-
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, currentUser, onLogout }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'feed';
+  const { t, lang, setLang } = useI18n();
 
-      const renderNavSection = (title: string, items: typeof GENERAL_ITEMS) => (
+  const GENERAL_ITEMS = [
+    { id: 'feed', icon: Home, label: t('nav.home') },
+    { id: 'yc-oss', icon: Zap, label: t('nav.aiRepos') },
+    { id: 'gsoc', icon: Users, label: t('nav.hackRepos') },
+    { id: 'trending', icon: TrendingUp, label: t('nav.hotNow') },
+    { id: 'issues', icon: Search, label: t('nav.goodFirstIssues') },
+  ];
+
+  const COMMUNITY_ITEMS = [
+    { id: 'leaderboard', icon: Users, label: t('nav.topContributors') },
+    { id: 'resources', icon: BookOpen, label: t('nav.starterKits') },
+    { id: 'bounties', icon: DollarSign, label: t('nav.earnAndCode') },
+  ];
+
+  const MY_DASHBOARD_ITEMS = [
+    { id: 'admin', icon: Search, label: t('nav.mySaved') },
+  ];
+
+  const renderNavSection = (title: string, items: typeof GENERAL_ITEMS) => (
     <div className="mb-6">
       <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4 mb-3">{title}</h3>
       <div className="space-y-1">
@@ -70,6 +73,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
     </div>
   );
 
+  const toggleLang = () => setLang(lang === 'en' ? 'ar' : 'en');
+
   return (
     <div className="min-h-screen bg-[#09090b] text-slate-100 flex flex-col font-sans selection:bg-[#facc15]/30 selection:text-white">
       {/* Top Navigation Bar */}
@@ -80,11 +85,43 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
         </div>
 
         <div className="hidden md:flex items-center gap-6">
+          {/* Language Toggle */}
+          <button
+            onClick={toggleLang}
+            className="group relative flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700 hover:border-[#facc15]/50 bg-slate-900/50 hover:bg-[#facc15]/5 transition-all duration-300"
+            title={lang === 'en' ? 'التبديل إلى العربية' : 'Switch to English'}
+          >
+            <Globe className="w-4 h-4 text-slate-400 group-hover:text-[#facc15] transition-colors" />
+            <div className="relative flex items-center bg-slate-800 rounded-md overflow-hidden">
+              <span 
+                className={`px-2 py-0.5 text-[11px] font-bold tracking-wide transition-all duration-300 ${
+                  lang === 'en' 
+                    ? 'bg-[#facc15] text-black' 
+                    : 'text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                EN
+              </span>
+              <span 
+                className={`px-2 py-0.5 text-[11px] font-bold tracking-wide transition-all duration-300 ${
+                  lang === 'ar' 
+                    ? 'bg-[#facc15] text-black' 
+                    : 'text-slate-500 hover:text-slate-300'
+                }`}
+                style={{ fontFamily: "'Noto Kufi Arabic', sans-serif" }}
+              >
+                عر
+              </span>
+            </div>
+          </button>
+
+          <div className="h-6 w-px bg-slate-800"></div>
+
           <button className="text-slate-400 hover:text-white transition-colors">
             <Bell className="w-5 h-5" />
           </button>
           <button className="flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 hover:bg-yellow-500/20 px-3 py-1.5 rounded-md text-xs font-bold transition-colors">
-            <Star className="w-3.5 h-3.5 fill-current" /> Premium
+            <Star className="w-3.5 h-3.5 fill-current" /> {t('header.premium')}
           </button>
           
           <div className="h-6 w-px bg-slate-800 mx-2"></div>
@@ -98,7 +135,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
           <div className="h-6 w-px bg-slate-800 mx-2"></div>
 
           <button className="text-[10px] font-bold text-slate-300 border border-dashed border-slate-600 px-4 py-2 rounded uppercase tracking-widest hover:border-slate-400 hover:text-white transition-colors">
-            Follow on X
+            {t('header.followOnX')}
           </button>
 
           <div className="h-6 w-px bg-slate-800 mx-2"></div>
@@ -121,7 +158,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
                 }}
                 className="text-[10px] font-bold text-red-400 hover:text-red-300 border border-dashed border-red-500/30 hover:border-red-500/50 px-3 py-1.5 rounded uppercase tracking-widest transition-colors ml-2"
               >
-                Logout
+                {t('header.logout')}
               </button>
             </div>
           ) : (
@@ -132,26 +169,43 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
               }}
               className="bg-[#facc15] hover:bg-[#facc15]/90 text-black px-4 py-2 rounded-lg font-mono text-xs font-bold transition-all shadow-md shadow-[#facc15]/10 hover:shadow-[#facc15]/20"
             >
-              Sign In
+              {t('header.signIn')}
             </button>
           )}
         </div>
 
-        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-white p-2">
-          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        {/* Mobile: Language toggle + hamburger */}
+        <div className="md:hidden flex items-center gap-3">
+          <button
+            onClick={toggleLang}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900/50 transition-all"
+          >
+            <Globe className="w-3.5 h-3.5 text-slate-400" />
+            <span className={`text-[10px] font-bold ${lang === 'en' ? 'text-[#facc15]' : 'text-slate-500'}`}>EN</span>
+            <span className="text-[10px] text-slate-600">/</span>
+            <span 
+              className={`text-[10px] font-bold ${lang === 'ar' ? 'text-[#facc15]' : 'text-slate-500'}`}
+              style={{ fontFamily: "'Noto Kufi Arabic', sans-serif" }}
+            >
+              عر
+            </span>
+          </button>
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-white p-2">
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop Sidebar */}
         <aside className="hidden md:flex flex-col w-64 border-r border-slate-800 bg-[#09090b] overflow-y-auto py-6 shrink-0">
-          {renderNavSection('General', GENERAL_ITEMS)}
-          {renderNavSection('Community', COMMUNITY_ITEMS)}
-          {renderNavSection('My Dashboard', MY_DASHBOARD_ITEMS)}
+          {renderNavSection(t('nav.general'), GENERAL_ITEMS)}
+          {renderNavSection(t('nav.community'), COMMUNITY_ITEMS)}
+          {renderNavSection(t('nav.myDashboard'), MY_DASHBOARD_ITEMS)}
           
           <div className="mt-auto px-4 pt-6">
             <Link to="/" className="text-xs font-bold text-slate-600 hover:text-[#facc15] transition-colors flex items-center gap-2">
-              ← Back to Main App
+              {t('nav.backToMainApp')}
             </Link>
           </div>
         </aside>
@@ -164,9 +218,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
             exit={{ opacity: 0, x: -20 }}
             className="md:hidden fixed inset-y-16 left-0 right-0 bg-[#09090b] border-t border-slate-800 p-4 z-40 overflow-y-auto"
           >
-            {renderNavSection('General', GENERAL_ITEMS)}
-            {renderNavSection('Community', COMMUNITY_ITEMS)}
-            {renderNavSection('My Dashboard', MY_DASHBOARD_ITEMS)}
+            {renderNavSection(t('nav.general'), GENERAL_ITEMS)}
+            {renderNavSection(t('nav.community'), COMMUNITY_ITEMS)}
+            {renderNavSection(t('nav.myDashboard'), MY_DASHBOARD_ITEMS)}
             
             <div className="pt-4 mt-4 border-t border-slate-800 flex flex-col gap-4">
               {currentUser && !currentUser._id.startsWith('guest_') ? (
@@ -189,7 +243,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
                     }}
                     className="text-xs font-bold text-red-400 hover:text-red-300 font-mono px-3 py-2 border border-dashed border-red-500/20 rounded uppercase"
                   >
-                    Logout
+                    {t('header.logout')}
                   </button>
                 </div>
               ) : (
@@ -200,15 +254,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
                   }}
                   className="bg-[#facc15] hover:bg-[#facc15]/90 text-black px-4 py-2.5 rounded-lg font-mono text-sm font-bold transition-all w-full text-center"
                 >
-                  Sign In
+                  {t('header.signIn')}
                 </button>
               )}
 
               <button className="flex items-center justify-center gap-1.5 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 hover:bg-yellow-500/20 px-3 py-2 rounded-md text-xs font-bold transition-colors w-full">
-                <Star className="w-3.5 h-3.5 fill-current" /> Premium
+                <Star className="w-3.5 h-3.5 fill-current" /> {t('header.premium')}
               </button>
               <Link to="/" className="text-xs font-bold text-slate-500 hover:text-white transition-colors flex items-center justify-center gap-2 py-2">
-                ← Back to Main App
+                {t('nav.backToMainApp')}
               </Link>
             </div>
           </motion.div>
@@ -224,3 +278,4 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
     </div>
   );
 };
+
