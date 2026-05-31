@@ -455,7 +455,7 @@ export default function App() {
           } />
 
           <Route path="/auth" element={
-            currentUser ? <Navigate to="/dashboard" replace /> : <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} role={selectedRole || undefined} />
+            (currentUser && !currentUser._id.startsWith('guest_')) ? <Navigate to="/dashboard" replace /> : <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} role={selectedRole || undefined} />
           } />
 
           {/* ─── Teacher dashboard ───────────────────────────────────────── */}
