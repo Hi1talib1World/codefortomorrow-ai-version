@@ -32,7 +32,7 @@ export const getLeaderboard = async (req: Request, res: Response) => {
 
     let query = 'type:user';
     if (country !== 'Global') {
-      query += ` location:${country}`;
+      query += ` location:"${country}"`;
     }
 
     // Only get top 30
