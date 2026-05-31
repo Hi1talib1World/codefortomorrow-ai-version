@@ -28,6 +28,24 @@ const customFetch = (input: RequestInfo | URL, init?: RequestInit) => {
   });
 };
 
+// --- Unified response handler ---
+const handleResponse = async (response: Response) => {
+  if (!response.ok) {
+    let errorMessage = response.statusText;
+    try {
+      const errData = await response.json();
+      errorMessage = errData.message || JSON.stringify(errData);
+    } catch {
+      try {
+        const txt = await response.text();
+        errorMessage = txt;
+      } catch {}
+    }
+    throw new Error(errorMessage);
+  }
+  return response.json();
+};
+
 // --- API Endpoints ---
 const api = {
   /**
@@ -39,12 +57,7 @@ const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password }),
     });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to register.');
-    }
-
+    const data = await handleResponse(response);
     // Store the token and return the user object
     localStorage.setItem('authToken', data.token);
     return data;
@@ -59,12 +72,7 @@ const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to login.');
-    }
-
+    const data = await handleResponse(response);
     localStorage.setItem('authToken', data.token);
     return data;
   },
@@ -79,12 +87,7 @@ const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),
     });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to login with Google.');
-    }
-
+    const data = await handleResponse(response);
     localStorage.setItem('authToken', data.token);
     return data;
   },
@@ -98,12 +101,7 @@ const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),
     });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to login with Firebase.');
-    }
-
+    const data = await handleResponse(response);
     localStorage.setItem('authToken', data.token);
     return data;
   },
@@ -131,14 +129,11 @@ const api = {
       const response = await customFetch(`${API_BASE_URL}/auth/me`, {
         headers: getAuthHeaders(),
       });
-
-      if (response.ok) {
-        return response.json();
-      }
+      const data = await handleResponse(response);
+      return data;
     } catch (error) {
       console.error('Error fetching logged in user:', error);
     }
-
     localStorage.removeItem('authToken');
     return null;
   },
@@ -152,11 +147,7 @@ const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(updatedData),
     });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to update profile.');
-    }
+    const data = await handleResponse(response);
     return data;
   },
 
@@ -169,11 +160,7 @@ const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ itemId, type }),
     });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || `Failed to toggle save for ${type}.`);
-    }
+    const data = await handleResponse(response);
     return data;
   },
 
@@ -206,11 +193,7 @@ const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(newProgress)
     });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to update progress.');
-    }
+    const data = await handleResponse(response);
     return data;
   },
 

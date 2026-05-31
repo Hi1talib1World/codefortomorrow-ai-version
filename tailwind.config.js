@@ -28,7 +28,20 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Nunito', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+      },
+      backdropSaturate: {
+        150: '1.5',
+      },
+      keyframes: {
+        shake: {
+          '0%, 100%': { transform: 'rotate(0deg)' },
+          '15%, 45%, 75%': { transform: 'rotate(-8deg)' },
+          '30%, 60%, 90%': { transform: 'rotate(8deg)' },
+        },
+      },
+      animation: {
+        shake: 'shake 0.5s ease-in-out infinite',
       },
     },
   },

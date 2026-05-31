@@ -221,19 +221,17 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
     setIsLoading(true);
     try {
       let idToken: string;
-      const isDummyConfig = !auth.app.options.apiKey || auth.app.options.apiKey === 'dummy-api-key';
-
-      if (isDummyConfig) {
-        console.warn('⚠️ Firebase has a dummy configuration. Simulating successful Google login via developer fallback.');
-        idToken = generateMockFirebaseToken('wizard@codefortomorrow.org', 'Developer Wizard 🪄');
-      } else {
-        idToken = await firebaseService.loginWithGooglePopup();
-      }
+      console.log('Attempting Google Sign-In with Firebase...');
+      idToken = await firebaseService.loginWithGooglePopup();
 
       const user = await api.loginWithFirebase(idToken);
       onAuthSuccess(user);
     } catch (err) {
       console.error('Google Sign In Error:', err);
+      // Handle popup blocked error specifically
+      if (err && typeof err === 'object' && 'code' in err && (err as any).code === 'auth/popup-blocked') {
+        alert('Please enable pop-ups for this website to sign in with Google.');
+      }
       setError(err instanceof Error ? err.message : 'Google Login failed.');
     } finally {
       setIsLoading(false);

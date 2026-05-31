@@ -19,25 +19,18 @@ const getEnv = (name: string): string => {
   return '';
 };
 
-// Firebase configuration settings.
-// These fall back to safe placeholder values if env variables are not set in .env.
-const firebaseConfig = {
-  apiKey: getEnv('VITE_FIREBASE_API_KEY') || "dummy-api-key",
-  authDomain: getEnv('VITE_FIREBASE_AUTH_DOMAIN') || "dummy-project.firebaseapp.com",
-  projectId: getEnv('VITE_FIREBASE_PROJECT_ID') || "dummy-project",
-  storageBucket: getEnv('VITE_FIREBASE_STORAGE_BUCKET') || "dummy-project.appspot.com",
-  messagingSenderId: getEnv('VITE_FIREBASE_MESSAGING_SENDER_ID') || "123456789",
-  appId: getEnv('VITE_FIREBASE_APP_ID') || "1:1234:web:1234"
-};
+const app = initializeApp({
+  apiKey: getEnv('VITE_FIREBASE_API_KEY'),
+  authDomain: getEnv('VITE_FIREBASE_AUTH_DOMAIN'),
+  projectId: getEnv('VITE_FIREBASE_PROJECT_ID'),
+  storageBucket: getEnv('VITE_FIREBASE_STORAGE_BUCKET'),
+  messagingSenderId: getEnv('VITE_FIREBASE_MESSAGING_SENDER_ID'),
+  appId: getEnv('VITE_FIREBASE_APP_ID'),
+});
 
-// Initialize Firebase App
-const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase Auth
-export const auth = getAuth(app);
-
-// Google Auth Provider instance
+const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 export const firebaseService = {
   /**

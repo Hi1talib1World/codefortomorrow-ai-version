@@ -43,7 +43,9 @@ async function startServer() {
     max: 150,
     standardHeaders: true,
     legacyHeaders: false,
-    message: 'Too many requests from this IP, please try again after 15 minutes',
+    handler: (req, res) => {
+      res.status(429).json({ error: 'Too many requests from this IP, please try again after 15 minutes' });
+    },
   });
 
   // Stricter rate limiter for authentication routes (15 attempts per 15 minutes per IP)
@@ -52,7 +54,9 @@ async function startServer() {
     max: 15,
     standardHeaders: true,
     legacyHeaders: false,
-    message: 'Too many login or registration attempts, please try again after 15 minutes',
+    handler: (req, res) => {
+      res.status(429).json({ error: 'Too many login or registration attempts, please try again after 15 minutes' });
+    },
   });
 
   // --- Core Middleware ---
@@ -78,7 +82,7 @@ async function startServer() {
     
     const cspDirectives = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://*.posthog.com",
+      "script-src 'self' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://*.posthog.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' data: https://fonts.gstatic.com",
       "img-src 'self' data: blob: https://*.googleusercontent.com https://*.posthog.com https://*.cloudinary.com",

@@ -33,6 +33,24 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
     return () => clearInterval(timer);
   }, []);
 
+  // Development bypass for auth failures
+  const bypassAuth = () => {
+    console.warn('⚙️ Development bypass activated');
+    localStorage.setItem('user', JSON.stringify({ email: 'offline-student@c4t.ma', role: 'student', name: 'Dev Guest' }));
+    try {
+      onFinishRef.current();
+    } catch (e) {
+      console.error('Error finishing splash:', e);
+    }
+  };
+
+  // Auto bypass in development mode
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      bypassAuth();
+    }
+  }, []);
+
   return (
     <div className="bg-white dark:bg-slate-900 h-screen flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
       {/* Background decorations */}
