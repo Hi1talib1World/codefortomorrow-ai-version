@@ -82,12 +82,12 @@ const translations: Record<string, Record<Lang, string>> = {
 
   // ── AIRepos ──
   'aiRepos.title': { en: 'AI Repositories', ar: 'مستودعات الذكاء الاصطناعي' },
-  'aiRepos.subtitle': { en: 'Curated collection of the best open-source AI/ML projects.', ar: 'مجموعة مختارة من أفضل مشاريع الذكاء الاصطناعي مفتوحة المصدر.' },
+  'aiRepos.subtitle': { en: 'Curated open-source AI & ML projects. Click to read the full article.', ar: 'مشاريع ذكاء اصطناعي وتعلم آلي مفتوحة المصدر. انقر لقراءة المقال الكامل.' },
   'aiRepos.searchPlaceholder': { en: 'Search AI repos...', ar: 'ابحث عن مستودعات الذكاء الاصطناعي...' },
 
   // ── HackRepos ──
   'hackRepos.title': { en: 'Hack Repos', ar: 'مستودعات الهاك' },
-  'hackRepos.subtitle': { en: 'Find awesome repositories for hackathons and side projects.', ar: 'اكتشف مستودعات رائعة للهاكاثون والمشاريع الجانبية.' },
+  'hackRepos.subtitle': { en: 'Essential open-source tools for ethical hacking & cybersecurity. Click to read the full article.', ar: 'أدوات مفتوحة المصدر أساسية للاختراق الأخلاقي والأمن السيبراني. انقر لقراءة المقال الكامل.' },
   'hackRepos.searchPlaceholder': { en: 'Search hack repos...', ar: 'ابحث عن مستودعات الهاك...' },
   'hackRepos.viewArticle': { en: 'View Article', ar: 'عرض المقال' },
   'hackRepos.viewOnGithub': { en: 'View on GitHub', ar: 'عرض على GitHub' },
