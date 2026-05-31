@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import aiRouter from './routes/ai.routes.js';
 import { startAiWorkers } from './workers/aiWorker.js';
-import { startAnalyticsSubscriber } from './services/pubsubClient.js';
+import { startAiJobSubscriber } from './services/pubsubClient.js';
 
 dotenv.config();
 
@@ -21,5 +21,4 @@ app.get('/health', (_req, res) => {
 app.listen(PORT, () => {
   console.log(`AI microservice listening on http://localhost:${PORT}`);
   startAiWorkers();
-  startAnalyticsSubscriber();
-});
+    startAiJobSubscriber();
