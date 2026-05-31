@@ -99,3 +99,12 @@ export const handleJobStatus = async (req, res) => {
     return res.status(500).json({ message: 'Unable to fetch AI job status.' });
   }
 };
+
+export const handleLogUsage = async (req, res) => {
+  try {
+    return res.json({ status: 'logged' });
+  } catch (error) {
+    console.error('Log usage error:', error);
+    return res.status(500).json({ message: 'Unable to log usage.' });
+  }
+};
