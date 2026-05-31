@@ -51,6 +51,7 @@ const userSchema: Schema = new Schema({
   },
   savedRepos: [{ type: String }],
   savedPosts: [{ type: String }],
+  classroomCode: { type: String, required: false },
   progress: {
     type: Schema.Types.ObjectId,
     ref: 'Progress', // This creates the link to the Progress model
