@@ -298,7 +298,7 @@ export default function App() {
       // Calculate Streak Multiplier
       const streak = progress.streak || 0;
       const multiplier = streak >= 5 ? 1.5 : (streak >= 3 ? 1.2 : 1.0);
-      const finalXpGained = isAlreadyCompleted ? 0 : Math.round(xpGained * multiplier);
+      const finalXpGained = isAlreadyCompleted ? 5 : Math.round(xpGained * multiplier);
       const baseNewXp = progress.xp + finalXpGained;
 
       const newScores = { ...progress.scores };
