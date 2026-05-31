@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import HomeDashboard from './components/HomeDashboard.jsx';
+import App from './App';
 
 const root = document.getElementById('root');
 if (!root) {
@@ -9,6 +9,6 @@ if (!root) {
 
 ReactDOM.createRoot(root).render(
   <React.StrictMode>
-      <HomeDashboard />
+    <App />
   </React.StrictMode>
 );
