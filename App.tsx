@@ -226,12 +226,20 @@ export default function App() {
   }, [selectedRole, navigate]);
 
   const handleLogout = useCallback(async () => {
+    if (currentUser && currentUser.progress) {
+      try {
+        console.log("Saving user progress before logout...");
+        await api.updateUserProgress(currentUser.progress);
+      } catch (error) {
+        console.error("Failed to save progress on logout:", error);
+      }
+    }
     await api.logout();
     setCurrentUser(null);
     setActiveLesson(null);
     localStorage.removeItem('lastVisitedRoute');
     navigate('/auth');
-  }, [navigate]);
+  }, [currentUser, navigate]);
 
   const onSplashFinish = useCallback(() => {
     if (currentUser) {
@@ -447,7 +455,7 @@ export default function App() {
           } />
 
           <Route path="/auth" element={
-            currentUser ? <Navigate to="/dashboard" replace /> : <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} />
+            currentUser ? <Navigate to="/dashboard" replace /> : <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} role={selectedRole || undefined} />
           } />
 
           {/* ─── Teacher dashboard ───────────────────────────────────────── */}
