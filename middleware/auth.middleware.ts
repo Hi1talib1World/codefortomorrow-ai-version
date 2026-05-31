@@ -1,16 +1,8 @@
-
-import admin from 'firebase-admin';
+import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/user.model';
 
-// Initialize Firebase Admin SDK if not already initialized
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.applicationDefault()
-  });
-}
-
-// Augment Express Request type to include our user payload from the JWT
+// Augment Express Request type to include our user payload
 declare global {
   namespace Express {
     interface Request {
@@ -20,10 +12,9 @@ declare global {
 }
 
 /**
- * @desc Middleware to protect routes that require authentication.
- * It verifies the JWT from the Authorization header.
+ * Middleware to protect routes that require authentication.
+ * It verifies the JWT stored in the cookie or Authorization header.
  */
-// Fix: Use Request, Response, NextFunction types from express to resolve property errors.
 export const protect = async (req: Request, res: Response, next: NextFunction) => {
   let token: string | undefined;
 
@@ -39,43 +30,81 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
     token = req.headers.authorization.split(' ')[1];
   }
 
+  console.log('COOKIE TOKEN:', token);
+
   if (!token) {
-    res.status(401).json({ message: 'Not authorized, no token' });
-    return;
+    return res.status(401).json({ message: 'Not authorized, no token' });
   }
 
   try {
-    // Verify the Firebase ID token using Firebase Admin SDK
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    const uid = decodedToken.uid;
+    // Try to verify as our backend JWT first
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+    console.log('TOKEN TYPE: Backend JWT');
+    console.log('VERIFY METHOD: jwt.verify');
 
-    // Attach the user's document to the request object. If MongoDB is unconfigured, return a mock user profile.
     const isDbConnected = require('mongoose').connection.readyState === 1;
     let user;
 
     if (isDbConnected) {
-      user = await User.findById(uid).select('-password');
+      user = await User.findById(decoded.id).select('-password');
     } else {
+      // Mock user for offline dev
       user = {
-        _id: uid,
-        name: decodedToken.name || 'Developer Wizard 🪄',
-        email: decodedToken.email || 'wizard@codefortomorrow.org',
-        profilePictureUrl: decodedToken.picture || 'https://ui-avatars.com/api/?name=W&background=random&color=fff',
-        role: decodedToken.role || 'student',
+        _id: decoded.id,
+        name: 'Developer Wizard 🪄',
+        email: 'wizard@codefortomorrow.org',
+        profilePictureUrl: 'https://ui-avatars.com/api/?name=W&background=random&color=fff',
+        role: 'student',
       };
     }
 
     if (!user) {
-      res.status(401).json({ message: 'Not authorized, user not found' });
-      return;
+      return res.status(401).json({ message: 'Not authorized, user not found' });
     }
 
     req.user = user;
-    next(); // Proceed to the next middleware or the controller function
-  } catch (error) {
-    console.error(error);
-    res.status(401).json({ message: 'Not authorized, token failed' });
-    return;
+    next();
+  } catch (jwtError) {
+    console.warn('Backend JWT verification failed, trying Firebase ID token', jwtError);
+    // Fallback: try Firebase Admin verification (for tokens coming directly from client)
+    try {
+      const admin = require('firebase-admin');
+      if (!admin.apps.length) {
+        admin.initializeApp({
+          credential: admin.credential.applicationDefault(),
+        });
+      }
+      const decodedToken = await admin.auth().verifyIdToken(token);
+      console.log('TOKEN TYPE: Firebase ID Token');
+      console.log('VERIFY METHOD: admin.auth().verifyIdToken');
+
+      const uid = decodedToken.uid;
+      const isDbConnected = require('mongoose').connection.readyState === 1;
+      let user;
+
+      if (isDbConnected) {
+        user = await User.findById(uid).select('-password');
+      } else {
+        user = {
+          _id: uid,
+          name: decodedToken.name || 'Developer Wizard 🪄',
+          email: decodedToken.email || 'wizard@codefortomorrow.org',
+          profilePictureUrl:
+            decodedToken.picture ||
+            'https://ui-avatars.com/api/?name=W&background=random&color=fff',
+          role: decodedToken.role || 'student',
+        };
+      }
+
+      if (!user) {
+        return res.status(401).json({ message: 'Not authorized, user not found' });
+      }
+
+      req.user = user;
+      next();
+    } catch (firebaseError) {
+      console.error('Auth verification error:', firebaseError);
+      return res.status(401).json({ message: 'Not authorized, token failed' });
+    }
   }
 };
-
