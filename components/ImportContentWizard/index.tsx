@@ -133,28 +133,31 @@ const ImportContentWizard: React.FC<ImportContentWizardProps> = ({ onBack, onSav
 
 const SelectCurriculumStep = ({ formData, setFormData }: { formData: any, setFormData: any }) => {
     const { t } = useLanguage();
+    const curriculumOptions = [
+        { id: 'MOROCCAN', titleKey: 'curriculum_moroccan' },
+        { id: 'TUNISIAN', titleKey: 'curriculum_tunisian' },
+        { id: 'ALGERIAN', titleKey: 'curriculum_algerian' },
+        { id: 'EGYPTIAN', titleKey: 'curriculum_egyptian' },
+        { id: 'LEBANESE', titleKey: 'curriculum_lebanese' },
+        { id: 'IB', titleKey: 'curriculum_ib' },
+        { id: 'US_CORE', titleKey: 'curriculum_us_core' },
+    ];
     const handleSelect = (value: string) => setFormData({ ...formData, curriculum: value, stage: '' });
     return (
         <div className="space-y-4">
             <h2 className="text-xl font-bold mb-6 dark:text-white">{t('select_curriculum')}</h2>
-            <button
-                onClick={() => handleSelect('MOROCCAN')}
-                className={`w-full text-left p-4 border-2 rounded-lg flex items-center space-x-3 transition ${formData.curriculum === 'MOROCCAN' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30' : 'border-gray-200 dark:border-slate-700 hover:border-brand-300'}`}
-            >
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.curriculum === 'MOROCCAN' ? 'border-brand-600' : 'border-gray-400'}`}>
-                    {formData.curriculum === 'MOROCCAN' && <div className="w-2.5 h-2.5 bg-brand-600 rounded-full"></div>}
-                </div>
-                <span className="font-bold dark:text-white">{t('curriculum_moroccan')}</span>
-            </button>
-            <button
-                onClick={() => handleSelect('IB')}
-                className={`w-full text-left p-4 border-2 rounded-lg flex items-center space-x-3 transition ${formData.curriculum === 'IB' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30' : 'border-gray-200 dark:border-slate-700 hover:border-brand-300'}`}
-            >
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.curriculum === 'IB' ? 'border-brand-600' : 'border-gray-400'}`}>
-                    {formData.curriculum === 'IB' && <div className="w-2.5 h-2.5 bg-brand-600 rounded-full"></div>}
-                </div>
-                <span className="font-bold dark:text-white">{t('curriculum_ib')}</span>
-            </button>
+            {curriculumOptions.map(option => (
+                <button
+                    key={option.id}
+                    onClick={() => handleSelect(option.id)}
+                    className={`w-full text-left p-4 border-2 rounded-lg flex items-center space-x-3 transition ${formData.curriculum === option.id ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30' : 'border-gray-200 dark:border-slate-700 hover:border-brand-300'}`}
+                >
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.curriculum === option.id ? 'border-brand-600' : 'border-gray-400'}`}>
+                        {formData.curriculum === option.id && <div className="w-2.5 h-2.5 bg-brand-600 rounded-full"></div>}
+                    </div>
+                    <span className="font-bold dark:text-white">{t(option.titleKey as any)}</span>
+                </button>
+            ))}
         </div>
     );
 };
@@ -164,7 +167,9 @@ const SelectStageStep = ({ formData, setFormData }: { formData: any, setFormData
 
     let stageOptions: { id: string; titleKey: string }[] = [];
 
-    if (formData.curriculum === 'MOROCCAN') {
+    const isNationalCurriculum = ['MOROCCAN', 'TUNISIAN', 'ALGERIAN', 'EGYPTIAN', 'LEBANESE'].includes(formData.curriculum);
+
+    if (isNationalCurriculum) {
         stageOptions = [
             { id: 'preschool', titleKey: 'stage_preschool' },
             { id: 'primary', titleKey: 'stage_primary' },
