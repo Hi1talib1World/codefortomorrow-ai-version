@@ -147,7 +147,6 @@ async function startServer() {
   app.use('/api/activities', activityRoutes);
   // Mount the message-related routes under the /api/messages prefix
   app.use('/api/messages', messageRoutes);
-  app.use('/api/ai', aiRoutes);
   app.use('/api/opensource', openSourceRoutes);
   app.use('/api/admin', adminRoutes);
 
