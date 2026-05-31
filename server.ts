@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import { createServer as createViteServer } from 'vite';
 import connectDB from './config/db';
 import authRoutes from './routes/auth.routes';
@@ -14,7 +15,6 @@ import userRoutes from './routes/user.routes';
 import quizRoutes from './routes/quiz.routes';
 import activityRoutes from './routes/activity.routes';
 import messageRoutes from './routes/message.routes';
-import aiRoutes from './routes/ai.routes';
 import openSourceRoutes from './routes/opensource.routes';
 import adminRoutes from './routes/admin.routes';
 import { errorHandler } from './middleware/error.middleware';
@@ -150,6 +150,20 @@ async function startServer() {
   app.use('/api/ai', aiRoutes);
   app.use('/api/opensource', openSourceRoutes);
   app.use('/api/admin', adminRoutes);
+
+  const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:5001';
+  app.use(
+    '/api/ai',
+    createProxyMiddleware({
+      target: aiServiceUrl,
+      changeOrigin: true,
+      pathRewrite: { '^/api/ai': '' },
+      onError: (err, _req, res) => {
+        console.error('AI proxy error:', err);
+        res.status(502).json({ message: 'AI service is unavailable' });
+      }
+    })
+  );
 
   // --- Vite Middleware or Static Files ---
   if (process.env.NODE_ENV !== 'production') {
