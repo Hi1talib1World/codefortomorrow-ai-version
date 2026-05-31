@@ -1,8 +1,11 @@
 import { Worker, QueueScheduler } from 'bullmq';
 import IORedis from 'ioredis';
 import { AIEngine } from '../services/aiEngine.js';
+import { AIJobStatus, AIJobType } from '../services/aiJobContract.js';
+import { updateJobStatus } from '../services/jobStore.js';
 
 const redisUrl = process.env.REDIS_URL;
+const QUEUE_NAME = process.env.BULL_QUEUE_NAME || 'ai-jobs';
 
 export function startAiWorkers() {
   if (!redisUrl) {
@@ -11,32 +14,48 @@ export function startAiWorkers() {
   }
 
   const connection = new IORedis(redisUrl);
-  const queueName = process.env.BULL_QUEUE_NAME || 'ai-jobs';
-  const scheduler = new QueueScheduler(queueName, { connection });
+  const scheduler = new QueueScheduler(QUEUE_NAME, { connection });
 
   const worker = new Worker(
-    queueName,
+    QUEUE_NAME,
     async (job) => {
-      console.log(`Processing job ${job.id} type=${job.name}`);
+      const aiJob = job.data;
+      console.log(`Processing AI job ${aiJob.job_id} type=${aiJob.type}`);
+      updateJobStatus(aiJob.job_id, AIJobStatus.PROCESSING);
 
-      switch (job.name) {
-        case 'generate-quiz':
-          return AIEngine.generateQuiz(job.data);
-        case 'analytics-report':
-          return AIEngine.generateTeacherSummary(job.data.classData);
-        default:
-          throw new Error(`Unsupported job type: ${job.name}`);
+      try {
+        let result;
+
+        switch (aiJob.type) {
+          case AIJobType.CURRICULUM_GENERATION:
+            result = await AIEngine.generateQuiz(aiJob.payload);
+            break;
+          case AIJobType.STUDENT_ANALYSIS:
+            result = await AIEngine.generateTeacherSummary(aiJob.payload.classData || []);
+            break;
+          case AIJobType.SALES_PROPOSAL:
+            result = await AIEngine.generateSalesProposal(aiJob.payload);
+            break;
+          default:
+            throw new Error(`Unsupported AI job type: ${aiJob.type}`);
+        }
+
+        updateJobStatus(aiJob.job_id, AIJobStatus.DONE, result);
+        return result;
+      } catch (error) {
+        updateJobStatus(aiJob.job_id, AIJobStatus.FAILED, null, error.message);
+        throw error;
       }
     },
     { connection }
   );
 
   worker.on('completed', (job) => {
-    console.log(`BullMQ job completed: ${job.id} (${job.name})`);
+    console.log(`BullMQ AI job completed: ${job.id}`);
   });
 
   worker.on('failed', (job, err) => {
-    console.error(`BullMQ job failed: ${job?.id} (${job?.name})`, err);
+    console.error(`BullMQ AI job failed: ${job?.id}`, err);
   });
 
   console.log('AI BullMQ workers started.');
