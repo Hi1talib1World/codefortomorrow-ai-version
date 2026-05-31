@@ -427,6 +427,7 @@ export default function App() {
     return (
       <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="w-12 h-12 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div></div>}>
         <Routes>
+          <Route path="/missions" element={<Navigate to="/dashboard/missions" replace />} />
           <Route path="/" element={<SplashScreen onFinish={onSplashFinish} />} />
 
           <Route path="/language-selection" element={
