@@ -44,16 +44,7 @@ async function startServer() {
     max: 150,
     standardHeaders: true,
     legacyHeaders: false,
-    message: 'Too many requests from this IP, please try again after 15 minutes',
-  });
-
-  // Stricter rate limiter for authentication routes (15 attempts per 15 minutes per IP)
-  const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 15,
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: 'Too many login or registration attempts, please try again after 15 minutes',
+    message: { message: 'Too many requests from this IP, please try again after 15 minutes' },
   });
 
   // --- Core Middleware ---
@@ -104,7 +95,6 @@ async function startServer() {
 
   // Apply rate limiters
   app.use('/api', globalLimiter);
-  app.use('/api/auth', authLimiter);
 
   // --- API Routes ---
   // Health check for database connection
