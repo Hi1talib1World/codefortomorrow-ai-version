@@ -73,5 +73,22 @@ export const firebaseService = {
     const userCredential = await signInWithPopup(auth, googleProvider);
     const idToken = await userCredential.user.getIdToken();
     return idToken;
+  },
+  // New method for redirect flow
+  loginWithGoogleRedirect: async (): Promise<void> => {
+    await signInWithRedirect(auth, googleProvider);
+  },
+};
+
+// Helper to handle redirect result; should be called on app load
+export const handleGoogleRedirectResult = async (): Promise<string | null> => {
+  try {
+    const result = await getAuth(app).getRedirectResult();
+    if (result && result.user) {
+      return await result.user.getIdToken();
+    }
+  } catch (error) {
+    console.error('Google redirect sign-in error:', error);
   }
+  return null;
 };
