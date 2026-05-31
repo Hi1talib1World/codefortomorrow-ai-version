@@ -308,6 +308,82 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
         );
     };
 
+    const renderSuggestedCourses = () => {
+        const suggestedPaths = PATHS.filter(p => p.isAvailable && p.id !== currentPath && p.id !== 'math').slice(0, 3);
+
+        if (suggestedPaths.length === 0) return null;
+
+        return (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {suggestedPaths.map(path => {
+                    const pathSections = LESSONS_BY_PATH[path.id] || [];
+                    const totalLessons = pathSections.reduce((sum, sec) => sum + sec.lessons.length, 0);
+                    const completedLessonIds = progress.completedLessons?.[path.id] || [];
+                    const completedLessonsCount = completedLessonIds.length;
+                    const completionPercent = totalLessons > 0 ? Math.round((completedLessonsCount / totalLessons) * 100) : 0;
+                    
+                    const isEmoji = !path.icon.startsWith('/');
+
+                    return (
+                        <div
+                            key={path.id}
+                            onClick={() => navigate(`/dashboard/learn/${path.id}`)}
+                            className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer flex flex-col justify-between h-full"
+                        >
+                            <div className="aspect-[16/10] w-full bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center relative overflow-hidden">
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-cyan-500/5 to-brand-500/5 transition-opacity duration-300"></div>
+                                <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center shadow-sm transform group-hover:scale-110 transition-transform duration-500">
+                                    {isEmoji ? (
+                                        <span className="text-3xl select-none">{path.icon}</span>
+                                    ) : (
+                                        <img src={path.icon} alt={t(path.titleKey)} className="w-10 h-10 object-contain select-none" />
+                                    )}
+                                </div>
+                            </div>
+                            
+                            <div className="p-4 flex flex-col justify-between flex-1">
+                                <div>
+                                    <h4 className="text-sm font-bold text-slate-800 dark:text-white group-hover:text-cyan-500 transition-colors">
+                                        {t(path.titleKey) || path.titleKey}
+                                    </h4>
+                                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 min-h-[2rem]">
+                                        {t(path.descriptionKey) || path.descriptionKey}
+                                    </p>
+                                </div>
+
+                                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
+                                    {completionPercent > 0 ? (
+                                        <div className="flex flex-col w-full gap-1">
+                                            <div className="flex items-center justify-between text-[9px] font-bold text-slate-400 uppercase">
+                                                <span>{t('completed') || 'Completed'}</span>
+                                                <span>{completionPercent}%</span>
+                                            </div>
+                                            <div className="w-full bg-slate-200 dark:bg-slate-700 h-1 rounded-full overflow-hidden">
+                                                <div 
+                                                    className="h-full bg-gradient-to-r from-cyan-500 to-brand-500 rounded-full"
+                                                    style={{ width: `${completionPercent}%` }}
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <span className="text-[10px] bg-cyan-500/10 text-cyan-500 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                                {t('new') || 'New'}
+                                            </span>
+                                            <div className="w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-500 transition-all">
+                                                <span className="text-xs">→</span>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    };
+
     if (role === 'student') {
         return (
             <div className="min-h-full w-full bg-transparent overflow-x-hidden relative p-4 md:p-8">
@@ -331,37 +407,47 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Brain Training Section */}
-                        <div className="lg:col-span-2 space-y-4">
-                            <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">{t('brain_training')}</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <button onClick={() => navigate('/brain-training')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
-                                    <div className="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-700">
-                                        <img src="/brain_training_challenges.png" alt="Challenges" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                    </div>
-                                    <div className="p-4 flex items-center justify-between">
-                                        <div>
-                                            <p className="text-[10px] font-bold text-[#EA4335] uppercase">{t('brain_training')}</p>
-                                            <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{t('brain_training_challenges')}</p>
+                        <div className="lg:col-span-2 space-y-8">
+                            <div className="space-y-4">
+                                <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">{t('brain_training')}</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <button onClick={() => navigate('/brain-training')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
+                                        <div className="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-700">
+                                            <img src="/brain_training_challenges.png" alt="Challenges" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                         </div>
-                                        <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#4285F4] group-hover:text-white group-hover:border-[#4285F4] transition-all shadow-sm">
-                                            <span className="text-lg">→</span>
+                                        <div className="p-4 flex items-center justify-between">
+                                            <div>
+                                                <p className="text-[10px] font-bold text-[#EA4335] uppercase">{t('brain_training')}</p>
+                                                <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{t('brain_training_challenges')}</p>
+                                            </div>
+                                            <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#4285F4] group-hover:text-white group-hover:border-[#4285F4] transition-all shadow-sm">
+                                                <span className="text-lg">→</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </button>
-                                <button onClick={() => navigate('/brain-training')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
-                                    <div className="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-700">
-                                        <img src="/brain_training_workouts.png" alt="Workouts" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                    </div>
-                                    <div className="p-4 flex items-center justify-between">
-                                        <div>
-                                            <p className="text-[10px] font-bold text-[#EA4335] uppercase">{t('brain_training')}</p>
-                                            <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{t('brain_training_workouts')}</p>
+                                    </button>
+                                    <button onClick={() => navigate('/brain-training')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
+                                        <div className="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-700">
+                                            <img src="/brain_training_workouts.png" alt="Workouts" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                         </div>
-                                        <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#4285F4] group-hover:text-white group-hover:border-[#4285F4] transition-all shadow-sm">
-                                            <span className="text-lg">→</span>
+                                        <div className="p-4 flex items-center justify-between">
+                                            <div>
+                                                <p className="text-[10px] font-bold text-[#EA4335] uppercase">{t('brain_training')}</p>
+                                                <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{t('brain_training_workouts')}</p>
+                                            </div>
+                                            <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#4285F4] group-hover:text-white group-hover:border-[#4285F4] transition-all shadow-sm">
+                                                <span className="text-lg">→</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </button>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Suggested Courses */}
+                            <div className="space-y-4">
+                                <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">
+                                    {t('suggested_courses') || 'Suggested Courses'}
+                                </h2>
+                                {renderSuggestedCourses()}
                             </div>
                         </div>
 
@@ -397,7 +483,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     <div className="space-y-4">
                         <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">Math Games</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <button className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
+                            <button onClick={() => navigate('/dashboard/learn/math')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
                                 <div className="aspect-[16/10] bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center p-8">
                                     <div className="grid grid-cols-2 gap-2 transform group-hover:scale-105 transition-transform">
                                         <div className="w-10 h-10 bg-[#4285F4] rounded-lg flex items-center justify-center text-white font-bold text-lg">＋</div>
@@ -413,12 +499,23 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     </div>
                                 </div>
                             </button>
-                            <button className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
+                            <button onClick={() => navigate('/dashboard/learn/math')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
                                 <div className="aspect-[16/10] bg-[#f8f9fa] dark:bg-slate-900/50 flex items-center justify-center">
                                     <div className="text-6xl transform group-hover:-translate-y-1 transition-transform">🎮</div>
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
                                     <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Quick Play</p>
+                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#4285F4] group-hover:text-white group-hover:border-[#4285F4] transition-all shadow-sm">
+                                        <span className="text-lg">→</span>
+                                    </div>
+                                </div>
+                            </button>
+                            <button onClick={() => navigate('/dashboard/learn/math')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
+                                <div className="aspect-[16/10] bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center p-8">
+                                    <div className="text-6xl transform group-hover:scale-110 group-hover:rotate-12 transition-transform">🧮</div>
+                                </div>
+                                <div className="p-4 flex items-center justify-between">
+                                    <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Math Arena</p>
                                     <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#4285F4] group-hover:text-white group-hover:border-[#4285F4] transition-all shadow-sm">
                                         <span className="text-lg">→</span>
                                     </div>
@@ -617,6 +714,14 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             {t('brain_training_play')}
                         </div>
                     </button>
+                </div>
+
+                {/* Suggested Courses */}
+                <div className="space-y-4">
+                    <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">
+                        {t('suggested_courses') || 'Suggested Courses'}
+                    </h2>
+                    {renderSuggestedCourses()}
                 </div>
 
                 {/* Quests and Tip Footer Panel */}
