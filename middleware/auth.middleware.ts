@@ -1,7 +1,14 @@
 
-import jwt from 'jsonwebtoken';
+import admin from 'firebase-admin';
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/user.model';
+
+// Initialize Firebase Admin SDK if not already initialized
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault()
+  });
+}
 
 // Augment Express Request type to include our user payload from the JWT
 declare global {
@@ -38,22 +45,23 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
   }
 
   try {
-    // Verify the token using the secret
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+    // Verify the Firebase ID token using Firebase Admin SDK
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    const uid = decodedToken.uid;
 
     // Attach the user's document to the request object. If MongoDB is unconfigured, return a mock user profile.
     const isDbConnected = require('mongoose').connection.readyState === 1;
     let user;
-    
+
     if (isDbConnected) {
-      user = await User.findById(decoded.id).select('-password');
+      user = await User.findById(uid).select('-password');
     } else {
       user = {
-        _id: decoded.id,
-        name: 'Developer Wizard 🪄',
-        email: 'wizard@codefortomorrow.org',
-        profilePictureUrl: 'https://ui-avatars.com/api/?name=W&background=random&color=fff',
-        role: 'student',
+        _id: uid,
+        name: decodedToken.name || 'Developer Wizard 🪄',
+        email: decodedToken.email || 'wizard@codefortomorrow.org',
+        profilePictureUrl: decodedToken.picture || 'https://ui-avatars.com/api/?name=W&background=random&color=fff',
+        role: decodedToken.role || 'student',
       };
     }
 
