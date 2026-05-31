@@ -197,9 +197,10 @@ export interface User {
   bio?: string;
   password?: string; // Optional for OAuth users
   provider: 'google' | 'email';
+  role: 'teacher' | 'student';
+  classroomCode?: string; // Optional code provided by teacher for class enrollment
   progress: UserProgress;
   currentPath: ProgrammingPath['id'] | null;
-  role: 'teacher' | 'student' | null;
   savedRepos?: string[];
   savedPosts?: string[];
   createdAt: string;
