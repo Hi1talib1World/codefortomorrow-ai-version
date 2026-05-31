@@ -4,6 +4,7 @@ import { Search, ChevronDown, CheckCircle2, Star, GitFork, Bookmark, Share2 } fr
 import { RepoDetails } from './RepoDetails';
 import { User } from '../../types';
 import api from '../../services/api';
+import { useI18n } from './i18n';
 import { AuthPromptModal } from '../AuthPromptModal';
 
 interface Repo {
@@ -50,6 +51,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
   const [searchResults, setSearchResults] = useState<Repo[] | null>(null);
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const { t } = useI18n();
 
   useEffect(() => {
     const fetchTrending = async () => {
@@ -109,8 +111,8 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
         setSearchResults([]);
       }
     };
-    const t = setTimeout(doSearch, 300);
-    return () => clearTimeout(t);
+    const timer = setTimeout(doSearch, 300);
+    return () => clearTimeout(timer);
   }, [searchQuery, languageFilter, sortBy]);
 
   const sourceRepos = searchResults !== null ? searchResults : repos;
@@ -125,9 +127,9 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
   };
 
   const getTierBadge = (stars: number) => {
-    if (stars > 5000) return { label: 'Legendary', class: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500' };
-    if (stars > 1000) return { label: 'Popular', class: 'bg-blue-500/10 border-blue-500/20 text-blue-400' };
-    return { label: 'Rising', class: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' };
+    if (stars > 5000) return { label: t('feed.legendary'), class: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500' };
+    if (stars > 1000) return { label: t('feed.popular'), class: 'bg-blue-500/10 border-blue-500/20 text-blue-400' };
+    return { label: t('feed.rising'), class: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' };
   };
 
   const handleShareInFeed = (e: React.MouseEvent, repo: Repo) => {
@@ -163,7 +165,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
       <AuthPromptModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-black text-white mb-8 tracking-tight">Trending Repos</h1>
+        <h1 className="text-3xl font-black text-white mb-8 tracking-tight">{t('feed.title')}</h1>
         
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           {/* Search Bar */}
@@ -173,7 +175,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
             </div>
             <input
               type="text"
-              placeholder="Search projects..."
+              placeholder={t('feed.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="block w-full pl-10 pr-3 py-2.5 border border-slate-800 rounded-lg leading-5 bg-[#0e0e11] text-slate-300 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-slate-700 sm:text-sm transition-colors"
@@ -184,7 +186,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
           <div className="flex items-center gap-3 w-full md:w-auto">
             <div className="flex items-center gap-2">
               <select value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)} className="px-3 py-2 bg-[#0e0e11] border border-slate-800 rounded-lg text-sm text-slate-300">
-                <option value="">All Languages</option>
+                <option value="">{t('feed.allLanguages')}</option>
                 <option value="JavaScript">JavaScript</option>
                 <option value="TypeScript">TypeScript</option>
                 <option value="Python">Python</option>
@@ -192,10 +194,10 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
                 <option value="Rust">Rust</option>
               </select>
               <select value={sortBy} onChange={(e) => setSortBy(e.target.value as any)} className="px-3 py-2 bg-[#0e0e11] border border-slate-800 rounded-lg text-sm text-slate-300">
-                <option value="">Sort</option>
-                <option value="stars">Most stars</option>
-                <option value="forks">Most forks</option>
-                <option value="updated">Recently updated</option>
+                <option value="">{t('feed.sort')}</option>
+                <option value="stars">{t('feed.mostStars')}</option>
+                <option value="forks">{t('feed.mostForks')}</option>
+                <option value="updated">{t('feed.recentlyUpdated')}</option>
               </select>
             </div>
           </div>
@@ -211,7 +213,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
         </div>
       ) : displayedRepos.length === 0 ? (
         <div className="text-center py-20 bg-[#121212] rounded-2xl border border-slate-800">
-          <p className="text-slate-500 font-semibold">No repositories match your search.</p>
+          <p className="text-slate-500 font-semibold">{t('feed.noResults')}</p>
         </div>
       ) : (
         <motion.div 
@@ -243,7 +245,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
                       <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                     </div>
                     <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
-                      {repo.description || 'No description provided.'}
+                      {repo.description || t('feed.noDescription')}
                     </p>
                   </div>
                   <button 
@@ -277,17 +279,17 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
                 <div className="flex items-center gap-6 pt-5 border-t border-slate-800/60 text-sm font-semibold">
                   <div className="flex items-center gap-1.5">
                     <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className="text-white">Stars</span>
+                    <span className="text-white">{t('feed.stars')}</span>
                     <span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <GitFork className="w-4 h-4 text-slate-500" />
-                    <span className="text-white">Forks</span>
+                    <span className="text-white">{t('feed.forks')}</span>
                     <span className="text-slate-400">{formatNumber(repo.forks_count || 0)}</span>
                   </div>
                   <button onClick={(e) => handleShareInFeed(e, repo)} className="flex items-center gap-1.5 p-2 rounded-md bg-slate-800 hover:bg-slate-700">
                     <Share2 className="w-4 h-4 text-slate-300" />
-                    <span className="text-slate-300">Share</span>
+                    <span className="text-slate-300">{t('feed.share')}</span>
                   </button>
                 </div>
               </motion.div>
