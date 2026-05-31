@@ -185,6 +185,12 @@ export const Leaderboard: React.FC = () => {
                     ))}
                   </div>
                 )}
+
+                {filteredArab.length === 0 && filteredEurope.length === 0 && filteredOther.length === 0 && !('global'.includes(searchQuery.toLowerCase())) && (
+                  <div className="text-slate-500 font-mono text-xs text-center py-4">
+                    No countries found
+                  </div>
+                )}
               </div>
             </div>
           )}
