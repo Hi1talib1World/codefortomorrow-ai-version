@@ -1292,3 +1292,747 @@ export const FALLBACK_DOC: LanguageDoc = {
     }
   ]
 };
+
+export const LANGUAGE_DOCS_FR: Partial<Record<ProgrammingPath['id'], LanguageDoc>> = {
+  block_coding: {
+    title: 'Programmation par Blocs 🧩',
+    description: "Coder, c'est comme jouer avec des briques LEGO® ! Assemblez des pièces de puzzle visuelles pour faire courir, sauter et jouer vos personnages.",
+    sections: [
+      {
+        title: '🎮 Comment jouer',
+        content: 'Choisissez un bloc dans la boîte à outils et faites-le glisser dans votre espace de travail. Lorsque vous connectez des blocs comme [Avancer] et [Tourner à droite], votre personnage suivra exactement ces étapes !',
+        isCode: false,
+      },
+      {
+        title: '🔁 La magie de la répétition',
+        content: "Vous voulez que votre personnage tourne 10 fois ? Au lieu d'utiliser 10 blocs de rotation, enveloppez simplement un bloc de rotation dans un bloc géant [Répéter 10 fois] ! Cela fait gagner du temps et c'est super amusant à regarder.",
+        isCode: false,
+      },
+      {
+        title: '👁️ Secrets du Si/Alors',
+        content: 'Vous pouvez apprendre à votre jeu à prendre des décisions ! Utilisez un bloc [Si / Alors] : "SI le héros touche une pièce, ALORS ajoutez 1 au score !"',
+        isCode: false,
+      },
+      {
+        title: '🧪 Variables (Points & Vies)',
+        content: 'Les variables sont comme des bocaux où vous pouvez stocker des informations qui changent. Vous pouvez créer une variable appelée "Score", la démarrer à 0 et dire au jeu de [Changer le score de 1] chaque fois que vous gagnez !',
+        isCode: false,
+      },
+      {
+        title: '📢 Messages (Communication)',
+        content: "Les personnages parlent en utilisant des messages diffusés ! Envoyez un message comme \"Game Over\" lorsque les vies atteignent 0. Lorsque d'autres éléments entendent \"Game Over\", ils peuvent se cacher ou afficher l'écran de fin !",
+        isCode: false,
+      },
+      {
+        title: '🎭 Événements (Quand commencer)',
+        content: "Chaque jeu extraordinaire a besoin d'un signal de départ ! Utilisez des blocs comme [Quand le drapeau vert est cliqué] ou [Quand la touche Espace est pressée] pour dire à vos personnages exactement quand passer à l'action.",
+        isCode: false,
+      },
+      {
+        title: '💡 Le saviez-vous ?',
+        content: "La programmation par blocs a été inventée pour aider à sauter l'étape de la saisie au clavier et passer directement au plaisir d'inventer la logique ! Le moteur de blocs le plus célèbre est Scratch du MIT.",
+        isCode: false,
+      }
+    ]
+  },
+  javascript: {
+    title: 'JavaScript ⚡',
+    description: 'Le langage magique qui donne vie aux sites Web ! Avec JavaScript, vous pouvez faire cliquer, bouger et apparaître des choses sur votre écran.',
+    sections: [
+      {
+        title: '📦 Boîtes (Variables)',
+        content: `// Imaginez 'let' comme une boîte magique qui contient un secret !
+let monAnimal = 'Dragon'; 
+// Vous pouvez changer le contenu de la boîte plus tard
+monAnimal = 'Licorne';
+
+// 'const' est un coffre au trésor verrouillé. Vous ne pouvez pas le changer !
+const monAge = 10;`,
+        isCode: true,
+      },
+      {
+        title: '🪄 Sortilèges (Fonctions)',
+        content: `// Une fonction est comme un sort que vous créez pour l'utiliser encore et encore.
+function superBonjour(nom) {
+  return 'Super Bonjour, ' + nom + '! 🚀';
+}
+
+// Maintenant jetons notre sort !
+superBonjour('Héros');`,
+        isCode: true,
+      },
+      {
+        title: '🎒 Sacs à dos (Tableaux)',
+        content: `// Un tableau est comme un sac à dos rempli d'objets amusants !
+const sac = ['pomme', 'biscuit', 'carte'];
+        
+// Le premier élément est toujours à la position 0 !
+console.log(sac[0]); // Affiche 'pomme'`,
+        isCode: true,
+      },
+      {
+        title: '🔀 Carrefours (If/Else)',
+        content: `// Utilisez 'if' pour rendre votre programme intelligent !
+let energie = 100;
+
+if (energie > 50) {
+  console.log('Vous pouvez continuer à courir ! 🏃‍♂️');
+} else {
+  console.log('Il est temps de manger un biscuit et de se reposer ! 🍪');
+}`,
+        isCode: true,
+      },
+      {
+        title: '🔄 Répétition (Boucles)',
+        content: `// Une boucle 'for' répète le code autant de fois que vous le souhaitez !
+for (let compte = 1; compte <= 5; compte++) {
+  console.log('Apparition du zombie 🧟 #' + compte);
+}`,
+        isCode: true,
+      },
+      {
+        title: '🗺️ Agents Secrets (Objets)',
+        content: `// Un objet est une collection de secrets avec des étiquettes !
+const heros = {
+  nom: 'Arthur',
+  niveau: 5,
+  epee: 'Excalibur'
+};
+
+// Accédez aux informations en utilisant le point !
+console.log(heros.nom + ' brandit ' + heros.epee + '! ⚔️');`,
+        isCode: true,
+      },
+      {
+        title: '💡 Le saviez-vous ?',
+        content: "JavaScript a été créé en seulement 10 jours par un programmeur nommé Brendan Eich ! Aujourd'hui, il fait tourner presque tous les sites Web interactifs du monde.",
+        isCode: false,
+      }
+    ]
+  },
+  python: {
+    title: 'Spécification Python 🐍',
+    description: 'Une spécification technique complète et un guide de référence pour le langage de programmation Python. Couvre la syntaxe, les types, la mémoire, la concurrence, la gestion des erreurs et l\'outillage.',
+    sections: [
+      {
+        title: '1. Configuration & Environnements Virtuels',
+        content: `# Créer un environnement virtuel isolé
+python -m venv venv
+
+# Activer l'environnement sur Linux/macOS
+source venv/bin/activate
+
+# Installer des dépendances et figer les versions
+pip install requests
+pip freeze > requirements.txt`,
+        isCode: true,
+      },
+      {
+        title: '2. Syntaxe & Indentation Scoping',
+        content: `# Les blocs de code sont définis par une indentation de 4 espaces
+def calculer_aire(largeur: float, hauteur: float) -> float:
+    """
+    Docstring : Calcule l'aire d'un rectangle.
+    """
+    return largeur * hauteur`,
+        isCode: true,
+      },
+      {
+        title: '3. Variables & Scopes Globaux/Nonlocaux',
+        content: `# Les références dynamiques peuvent être réassignées à n'importe quel type
+compteur = 0
+
+def incrementer():
+    global compteur
+    compteur += 1
+
+def externe():
+    x = 1
+    def interne():
+        nonlocal x
+        x += 1
+    interne()
+    return x`,
+        isCode: true,
+      },
+      {
+        title: '4. Types de Données Intégrés',
+        content: `# Types Primitifs : int, float, complex, bool, str, NoneType
+# Types Collections : list (mutable), tuple (immutable), set (unique), dict (table de hachage)
+x = [1, 2, 3]
+est_liste = isinstance(x, list) # Vérification
+valeur_convertie = int("123") # Cast explicite`,
+        isCode: true,
+      },
+      {
+        title: '5. Opérateurs Arithmétiques, Logiques & Identité',
+        content: `# Division : '/' (float), '//' (partie entière), '%' (modulo), '**' (puissance)
+# Identité : 'is' (adresse mémoire) vs '==' (égalité des valeurs)
+a = [1, 2]
+b = a
+c = [1, 2]
+print(a is b) # True
+print(a is c) # False (adresses mémoires différentes)
+print(a == c) # True (les valeurs sont égales)`,
+        isCode: true,
+      },
+      {
+        title: '6. Flux de Contrôle & Pattern Matching',
+        content: `# Conditions, boucles (avec blocs else), et match-case
+def traiter_commande(commande):
+    match commande.split():
+        case ["quitter"]:
+            return "Arrêt..."
+        case ["deplacer", ("nord"|"sud") as dir]:
+            return f"Déplacement vers le {dir}"
+        case _:
+            return "Inconnu"`,
+        isCode: true,
+      },
+      {
+        title: '7. Fonctions, Paramètres & Générateurs',
+        content: `# Paramètres positionnels seuls '/' et nommés seuls '*'
+def configurer(hote, port, /, timeout=30, *, securise=True):
+    pass
+
+def fibonacci(limite):
+    a, b = 0, 1
+    while a < limite:
+        yield a
+        a, b = b, a + b`,
+        isCode: true,
+      },
+      {
+        title: '8. Programmation Orientée Objet (OOP) & MRO',
+        content: `# Héritage multiple MRO, encapsulation via double underscore
+class Animal:
+    def __init__(self, nom):
+        self.nom = nom
+
+class Chien(Animal):
+    def parler(self):
+        return f"{self.name} dit Wouf!"`,
+        isCode: true,
+      },
+      {
+        title: '9. Propriétés & Méthodes Spéciales Dunder',
+        content: `class Compte:
+    def __init__(self, solde):
+        self.__solde = solde # Privé
+
+    @property
+    def solde(self):
+        return self.__solde
+
+    def __add__(self, autre):
+        return self.__solde + autre.solde`,
+        isCode: true,
+      },
+      {
+        title: '10. Gestion des Erreurs & Exceptions Chain',
+        content: `try:
+    valeur = int("invalide")
+except ValueError as err:
+    # Chaînage d'exceptions
+    raise RuntimeError("Échec du calcul") from err
+finally:
+    # Nettoyage toujours exécuté
+    pass`,
+        isCode: true,
+      },
+      {
+        title: '11. Concurrence (Threads, Processus, Asyncio)',
+        content: `import asyncio
+
+async def recuperer_item(item_id):
+    await asyncio.sleep(1) # I/O non-bloquant
+    return f"Donnees_{item_id}"
+
+async def main():
+    resultats = await asyncio.gather(recuperer_item(1), recuperer_item(2))
+    print(resultats)
+
+asyncio.run(main())`,
+        isCode: true,
+      },
+      {
+        title: '12. I/O Fichiers & Context Managers',
+        content: `import json
+
+# Le bloc contextuel 'with' ferme le flux automatiquement
+with open("config.json", "w") as fichier:
+    json.dump({"timeout": 30}, fichier)
+
+with open("config.json", "r") as fichier:
+    config = json.load(fichier)`,
+        isCode: true,
+      },
+      {
+        title: '13. Modèle Mémoire & Garbage Collection',
+        content: `# 1. Référence Counting : Les objets sont supprimés dès que le compteur tombe à 0
+# 2. Garbage Collector Cyclique : Détecte les cycles de références sur 3 générations
+# 3. Mutabilité : Les listes/dictionnaires sont modifiés in-place, les chaînes/tuples sont immutables`,
+        isCode: false,
+      }
+    ]
+  },
+  web_dev: {
+    title: 'Design Web 🎨',
+    description: "Devenez l'architecte d'Internet ! Créez vos propres pages Web colorées à partir de zéro en utilisant HTML et CSS.",
+    sections: [
+      {
+        title: '🧱 Blocs de Construction (HTML)',
+        content: `<!-- Considérez le HTML comme le squelette de votre site ! -->
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Bienvenue dans ma base secrète ! 🏰</h1>
+    <p>Seuls les codeurs cools sont autorisés à entrer.</p>
+  </body>
+</html>`,
+        isCode: true,
+      },
+      {
+        title: '🖌️ Peinture (CSS)',
+        content: `/* Le CSS est comme un pinceau ! Colorons notre texte ! */
+h1 {
+  color: purple;
+  font-size: 40px;
+  background-color: yellow;
+  border-radius: 10px; /* Bords arrondis ! */
+}`,
+        isCode: true,
+      },
+      {
+        title: '📐 Flexbox (Mise en page)',
+        content: `/* Flexbox aligne les éléments proprement à l'intérieur d'une boîte ! */
+.container {
+  display: flex;
+  justify-content: space-between; /* Espace les éléments */
+  align-items: center; /* Centre les éléments verticalement */
+}`,
+        isCode: true,
+      },
+      {
+        title: '✨ Animations au survol',
+        content: `/* Agrandissez ou changez la couleur en survolant ! */
+.bouton-pop {
+  transition: transform 0.2s ease-in-out;
+}
+.bouton-pop:hover {
+  transform: scale(1.1); /* Zoom de 10% */
+}`,
+        isCode: true,
+      },
+      {
+        title: '🖼️ Insérer des Images',
+        content: `<!-- La balise img permet d'insérer des images ! -->
+<img src="mignon-chien.jpg" alt="Un tout petit chiot heureux" width="300" />`,
+        isCode: true,
+      },
+      {
+        title: '💡 Le saviez-vous ?',
+        content: "La première page Web de l'histoire a été mise en ligne en 1991. Elle était très simple, sans aucune image, avec uniquement du texte noir et des liens bleus !",
+        isCode: false,
+      }
+    ]
+  },
+  math: {
+    title: 'Jeux Mathématiques ✖️',
+    description: 'Boostez vos neurones ! Combinez logique de programmation et mathématiques pour résoudre des énigmes épiques.',
+    sections: [
+      {
+        title: '🧠 Puissance cérébrale',
+        content: "Les mathématiques sont la structure secrète de toute la programmation ! En apprenant à résoudre des problèmes de maths rapidement, vous entraînez votre cerveau à traquer les bugs et à concevoir d'excellents codes.",
+        isCode: false,
+      },
+      {
+        title: '🧮 Mathématiques binaires',
+        content: "Les ordinateurs ne comptent pas de 1 à 9. Ils ne connaissent que le binaire : 0 (éteint) et 1 (allumé). Les programmeurs utilisent des opérations de bits (AND, OR, XOR) pour manipuler des options et écrire du code ultra-rapide !",
+        isCode: false,
+      },
+      {
+        title: '📐 Coordonnées & Espace Écran',
+        content: "Chaque écran 2D et 3D utilise un plan de coordonnées (X, Y, Z). Pour déplacer des personnages, détecter des collisions ou concevoir des formes personnalisées, vous aurez besoin de mathématiques !",
+        isCode: false,
+      },
+      {
+        title: '💡 Le saviez-vous ?',
+        content: "Les premiers \"programmeurs\" de l'histoire étaient en réalité des mathématiciens qui concevaient des calculs complexes sur papier bien avant l'invention des écrans électroniques !",
+        isCode: false,
+      }
+    ]
+  }
+};
+
+export const LANGUAGE_DOCS_AR: Partial<Record<ProgrammingPath['id'], LanguageDoc>> = {
+  block_coding: {
+    title: 'البرمجة بالكتل 🧩',
+    description: "البرمجة تشبه تمامًا اللعب بقطع LEGO®! قم بتركيب قطع الأحجية المرئية معًا لجعل شخصياتك تركض وتقفز وتلعب.",
+    sections: [
+      {
+        title: '🎮 كيف تلعب',
+        content: 'اختر كتلة من صندوق الأدوات واسحبها إلى مساحة العمل الخاصة بك. عندما تقوم بتوصيل كتل مثل [تحرك للأمام] و [در يمينًا]، ستتبع شخصيتك هذه الخطوات تمامًا!',
+        isCode: false,
+      },
+      {
+        title: '🔁 سحر التكرار',
+        content: 'هل تريد أن تدور شخصيتك 10 مرات؟ بدلاً من استخدام 10 كتل دوران، ما عليك سوى وضع كتلة دوران واحدة داخل كتلة [كرر 10 مرات] العملاقة! هذا يوفر الوقت ومن الممتع مشاهدته.',
+        isCode: false,
+      },
+      {
+        title: '👁️ أسرار (إذا / ثم)',
+        content: 'يمكنك تعليم لعبتك اتخاذ القرارات! استخدم كتلة [إذا / ثم]: "إذا لمس البطل عملة معدنية، إذن أضف 1 إلى النتيجة!"',
+        isCode: false,
+      },
+      {
+        title: '🧪 المتغيرات (النقاط والمحاولات)',
+        content: 'المتغيرات تشبه البرطمانات حيث يمكنك تخزين المعلومات التي تتغير. يمكنك إنشاء متغير يسمى "النتيجة"، وتجعل قيمته تبدأ من 0، وتخبر اللعبة بـ [تغيير النتيجة بمقدار 1] في كل مرة تفوز فيها!',
+        isCode: false,
+      },
+      {
+        title: '📢 البث (تحدث الشخصيات)',
+        content: 'تتحدث الشخصيات باستخدام رسائل البث! أرسل رسالة مثل "انتهت اللعبة" عندما تصبح المحاولات 0. عندما تسمع العناصر الأخرى "انتهت اللعبة"، يمكنها الاختفاء أو إظهار شاشة النهاية!',
+        isCode: false,
+      },
+      {
+        title: '🎭 الأحداث (متى نبدأ)',
+        content: 'يحتاج كل تحدٍ مذهل إلى إشارة بدء! استخدم كتل مثل [عند النقر على العلم الأخضر] أو [عند الضغط على مفتاح المسافة] لتخبر شخصياتك متى تبدأ العمل تمامًا.',
+        isCode: false,
+      },
+      {
+        title: '💡 هل تعلم؟',
+        content: 'تم اختراع البرمجة بالكتل لمساعدة الأطفال على تخطي مرحلة الكتابة الصعبة والقفز مباشرة إلى متعة ابتكار المنطق! محرك الكتل الأكثر شهرة هو Scratch من معهد MIT.',
+        isCode: false,
+      }
+    ]
+  },
+  javascript: {
+    title: 'جافا سكريبت ⚡',
+    description: 'اللغة السحرية التي تجعل مواقع الويب تنبض بالحياة! باستخدام جافا سكريبت، يمكنك جعل الأشياء تنقر وتتحرك وتظهر على شاشتك.',
+    sections: [
+      {
+        title: '📦 الصناديق (المتغيرات)',
+        content: `// تخيل 'let' كصندوق سحري يحتوي على سر!
+let myPet = 'Dragon'; 
+// يمكنك تغيير محتوى الصندوق لاحقًا
+myPet = 'Unicorn';
+
+// 'const' هو صندوق كنز مقفل. لا يمكنك تغييره!
+const myAge = 10;`,
+        isCode: true,
+      },
+      {
+        title: '🪄 التعاويذ (الدوال)',
+        content: `// الدالة تشبه تعويذة تصنعها لتستخدمها مرارًا وتكرارًا.
+function saySuperHello(name) {
+  return 'Super Hello, ' + name + '! 🚀';
+}
+
+// الآن دعنا نلقي تعويذتنا!
+saySuperHello('Hero');`,
+        isCode: true,
+      },
+      {
+        title: '🎒 حقائب الظهر (المصفوفات)',
+        content: `// المصفوفة تشبه حقيبة ظهر مليئة بالعناصر الممتعة!
+const backpack = ['apple', 'cookie', 'map'];
+        
+// العنصر الأول يكون دائمًا في الموقع 0!
+console.log(backpack[0]); // يطبع 'apple'`,
+        isCode: true,
+      },
+      {
+        title: '🔀 مفترق الطرق (الشروط)',
+        content: `// استخدم 'if' لتجعل برنامجك ذكيًا!
+let energy = 100;
+
+if (energy > 50) {
+  console.log('يمكنك مواصلة الجري! 🏃‍♂️');
+} else {
+  console.log('حان الوقت لتناول كعكة والاستراحة! 🍪');
+}`,
+        isCode: true,
+      },
+      {
+        title: '🔄 آلة التكرار (الحلقات)',
+        content: `// حلقة 'for' تكرر الكود بقدر ما تريد!
+for (let count = 1; count <= 5; count++) {
+  console.log('ظهور زومبي 🧟 #' + count);
+}`,
+        isCode: true,
+      },
+      {
+        title: '🗺️ العملاء السريون (الكائنات)',
+        content: `// الكائن هو مجموعة من الأسرار المصنفة بعلامات!
+const hero = {
+  name: 'Arthur',
+  level: 5,
+  sword: 'Excalibur'
+};
+
+// الوصول إلى المعلومات باستخدام النقطة!
+console.log(hero.name + ' wields ' + hero.sword + '! ⚔️');`,
+        isCode: true,
+      },
+      {
+        title: '💡 هل تعلم؟',
+        content: 'تم إنشاء جافا سكريبت في 10 أيام فقط بواسطة مبرمج يدعى بريندان إيك! واليوم، تدير هذه اللغة كل مواقع الويب التفاعلية تقريبًا في العالم.',
+        isCode: false,
+      }
+    ]
+  },
+  python: {
+    title: 'دليل لغة بايثون 🐍',
+    description: 'مواصفات تقنية شاملة ودليل مرجعي للغة البرمجة بايثون. يغطي بناء الجملة، وأنظمة الأنواع، وإدارة الذاكرة، والتزامن، ومعالجة الأخطاء.',
+    sections: [
+      {
+        title: '1. الإعداد والبيئات الافتراضية',
+        content: `# إنشاء بيئة افتراضية معزولة
+python -m venv venv
+
+# تفعيل البيئة على Linux/macOS
+source venv/bin/activate
+
+# تثبيت المكتبات وتجميد الإصدارات
+pip install requests
+pip freeze > requirements.txt`,
+        isCode: true,
+      },
+      {
+        title: '2. بناء الجملة ومجال الإزاحة',
+        content: `# يتم تحديد الكتل البرمجية بواسطة إزاحة من 4 مسافات
+def calculate_area(width: float, height: float) -> float:
+    """
+    حساب مساحة المستطيل
+    """
+    return width * height`,
+        isCode: true,
+      },
+      {
+        title: '3. المتغيرات ونطاق Scoping',
+        content: `# يمكن إعادة تخصيص المراجع الديناميكية إلى أي نوع
+counter = 0
+
+def increment():
+    global counter
+    counter += 1
+
+def outer():
+    x = 1
+    def inner():
+        nonlocal x
+        x += 1
+    inner()
+    return x`,
+        isCode: true,
+      },
+      {
+        title: '4. أنواع البيانات المضمنة',
+        content: `# الأنواع الأولية: int, float, complex, bool, str, NoneType
+# المجموعات: list (قابلة للتعديل), tuple (غير قابلة للتعديل), set (فريدة), dict (قاموس)
+x = [1, 2, 3]
+is_list = isinstance(x, list)  # التحقق
+converted = int("123")  # التحويل الصريح`,
+        isCode: true,
+      },
+      {
+        title: '5. العمليات الحسابية والمنطقية والتحقق من الهوية',
+        content: `# القسمة: '/' (عشري), '//' (صحيح), '%' (باقي القسمة), '**' (الأس)
+# الهوية: 'is' (موقع الذاكرة) vs '==' (تساوي القيمة)
+a = [1, 2]
+b = a
+c = [1, 2]
+print(a is b)  # True
+print(a is c)  # False (مواقع ذاكرة مختلفة)
+print(a == c)  # True (القيم متساوية)`,
+        isCode: true,
+      },
+      {
+        title: '6. التحكم في التدفق ومطابقة الأنماط',
+        content: `# الشرطيات، الحلقات، وهياكل match-case
+def process_command(command):
+    match command.split():
+        case ["quit"]:
+            return "Exiting..."
+        case ["move", ("north"|"south") as dir]:
+            return f"Moving {dir}"
+        case _:
+            return "Unknown"`,
+        isCode: true,
+      },
+      {
+        title: '7. الدوال والمعاملات والمولدات',
+        content: `# المعاملات الموضعية فقط '/' والمعاملات الاسمية فقط '*'
+def configure(host, port, /, timeout=30, *, secure=True):
+    pass
+
+def fibonacci(limit):
+    a, b = 0, 1
+    while a < limit:
+        yield a
+        a, b = b, a + b`,
+        isCode: true,
+      },
+      {
+        title: '8. البرمجة كائنية التوجه OOP',
+        content: `# وراثة متعددة وكبسلة عبر العلامة السفلية المزدوجة
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+class Dog(Animal):
+    def speak(self):
+        return f"{self.name} says Woof!"`,
+        isCode: true,
+      },
+      {
+        title: '9. الخصائص ودوال Magic Dunder',
+        content: `class Account:
+    def __init__(self, balance):
+        self.__balance = balance  # خاص
+
+    @property
+    def balance(self):
+        return self.__balance
+
+    def __add__(self, other):
+        return self.__balance + other.balance`,
+        isCode: true,
+      },
+      {
+        title: '10. معالجة الأخطاء وتسلسل الاستثناءات',
+        content: `try:
+    value = int("invalid")
+except ValueError as err:
+    # تسلسل الاستثناءات يحافظ على السياق
+    raise RuntimeError("Calculation failed") from err
+finally:
+    # كود التنظيف النهائي
+    pass`,
+        isCode: true,
+      },
+      {
+        title: '11. التزامن (Threads, Multiprocessing, Asyncio)',
+        content: `import asyncio
+
+async def fetch_item(item_id):
+    await asyncio.sleep(1)  # مدخلات ومخرجات غير معطلة
+    return f"Data_{item_id}"
+
+async def main():
+    results = await asyncio.gather(fetch_item(1), fetch_item(2))
+    print(results)
+
+asyncio.run(main())`,
+        isCode: true,
+      },
+      {
+        title: '12. إدخال/إخراج الملفات ومديري السياق',
+        content: `import json
+
+# كتلة with تغلق التدفق تلقائيًا بعد الانتهاء
+with open("config.json", "w") as file:
+    json.dump({"timeout": 30}, file)
+
+with open("config.json", "r") as file:
+    config = json.load(file)`,
+        isCode: true,
+      },
+      {
+        title: '13. نموذج الذاكرة وجمع المهملات GC',
+        content: `# 1. عد المراجع: يتم حذف الكائنات فور وصول العداد لـ 0
+# 2. مجمع المهملات الدوري: يكتشف حلقات الإسناد عبر 3 أجيال
+# 3. القابلية للتعديل: القوائم والقواميس تعدل في مكانها، النصوص والصفوف ثابتة`,
+        isCode: false,
+      }
+    ]
+  },
+  web_dev: {
+    title: 'تصميم الويب 🎨',
+    description: 'كن مهندسًا للإنترنت! ابنِ صفحات الويب الملونة الخاصة بك من الصفر باستخدام HTML و CSS.',
+    sections: [
+      {
+        title: '🧱 لبنات البناء (HTML)',
+        content: `<!-- فكر في HTML على أنه الهيكل العظمي لصفحتك! -->
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>مرحباً بك في قاعدتي السرية! 🏰</h1>
+    <p>يُسمح فقط للمبرمجين الرائعين بالدخول.</p>
+  </body>
+</html>`,
+        isCode: true,
+      },
+      {
+        title: '🖌️ التلوين والتزيين (CSS)',
+        content: `/* الـ CSS يشبه الفرشاة التي نلون بها كود الـ HTML */
+h1 {
+  color: purple;
+  font-size: 40px;
+  background-color: yellow;
+  border-radius: 10px; /* يجعل الحواف منحنية! */
+}`,
+        isCode: true,
+      },
+      {
+        title: '📐 Flexbox (قوة التخطيط)',
+        content: `/* يقوم Flexbox بمحاذاة العناصر بدقة داخل الصندوق! */
+.container {
+  display: flex;
+  justify-content: space-between; /* مباعدة العناصر */
+  align-items: center; /* توسيط العناصر عموديًا */
+}`,
+        isCode: true,
+      },
+      {
+        title: '✨ تأثيرات الحركية (Hover)',
+        content: `/* اجعل العناصر تتكبر أو يتغير لونها عند مرور مؤشر الفأرة عليها! */
+.button-pop {
+  transition: transform 0.2s ease-in-out;
+}
+.button-pop:hover {
+  transform: scale(1.1); /* يكبر بنسبة 10% */
+}`,
+        isCode: true,
+      },
+      {
+        title: '🖼️ وضع الصور على الصفحة',
+        content: `<!-- وسم img هو الطريقة التي نضع بها الصور على الإنترنت! -->
+<img src="cute-dog.jpg" alt="A tiny happy puppy" width="300" />`,
+        isCode: true,
+      },
+      {
+        title: '💡 هل تعلم؟',
+        content: 'أول صفحة ويب تم إنشاؤها في التاريخ ظهرت للوجود عام 1991. كانت بسيطة للغاية، لا تحتوي على صور، وفقط نصوص سوداء مع روابط زرقاء!',
+        isCode: false,
+      }
+    ]
+  },
+  math: {
+    title: 'ألعاب الرياضيات ✖️',
+    description: 'ارفع مستوى ذكائك! استخدم منطق البرمجة مع الرياضيات لحل الألغاز الملحمية والتفوق على خصومك.',
+    sections: [
+      {
+        title: '🧠 القوة الذهنية',
+        content: 'الرياضيات هي العمود الفقري السري لجميع لغات البرمجة! من خلال تعلم حل مسائل الرياضيات بسرعة، فإنك تدرب عقلك ليكون صائد أخطاء ممتاز ومطور أكواد رائع.',
+        isCode: false,
+      },
+      {
+        title: '🧮 الرياضيات الثنائية (مفاتيح تشغيل/إيقاف)',
+        content: 'الحواسيب لا تعد من 1 إلى 9. هي تفهم فقط النظام الثنائي: 0 (إيقاف) و 1 (تشغيل). يستخدم المبرمجون عمليات البت لكتابة كود فائق السرعة!',
+        isCode: false,
+      },
+      {
+        title: '📐 الإحداثيات ومساحة الشاشة',
+        content: 'تستخدم كل شاشة ثنائية أو ثلاثية الأبعاد مستويات الإحداثيات (X، Y، Z). لتحريك الأشكال، أو فحص تصادم العناصر، ستحتاج حتمًا للرياضيات!',
+        isCode: false,
+      },
+      {
+        title: '💡 هل تعلم؟',
+        content: 'أول "مبرمجي حاسوب" في التاريخ كانوا في الواقع علماء رياضيات قاموا بوضع الحسابات المعقدة يدويًا قبل اختراع الشاشات الإلكترونية بفترة طويلة!',
+        isCode: false,
+      }
+    ]
+  }
+};
