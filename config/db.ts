@@ -26,6 +26,7 @@ const connectDB = async () => {
       maxPoolSize: 100, // Increase connection pool size to 100 (default is 10)
       minPoolSize: 10,  // Keep a minimum of 10 connections alive
       socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+      bufferCommands: false, // Don't buffer operations when disconnected — fail fast
     });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
