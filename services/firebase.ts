@@ -5,6 +5,8 @@ import {
   signInWithEmailAndPassword as fbSignInWithEmailAndPassword,
   createUserWithEmailAndPassword as fbCreateUserWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider
 } from 'firebase/auth';
 
@@ -83,7 +85,7 @@ export const firebaseService = {
 // Helper to handle redirect result; should be called on app load
 export const handleGoogleRedirectResult = async (): Promise<string | null> => {
   try {
-    const result = await getAuth(app).getRedirectResult();
+    const result = await getRedirectResult(auth);
     if (result && result.user) {
       return await result.user.getIdToken();
     }
