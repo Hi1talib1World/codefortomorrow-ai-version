@@ -56,7 +56,7 @@ async function startServer() {
   // Enable Express to parse cookies
   app.use(cookieParser());
   // Enable CORS with credentials support
-  app.use(cors({ origin: true, credentials: true }));
+  app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
   // --- HTTP Security Headers ---
   // - Strict-Transport-Security (HSTS): Yes
