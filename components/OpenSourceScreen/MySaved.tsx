@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Star, GitFork, Bookmark, ExternalLink } from 'lucide-react';
 import { useRepo } from '../../contexts/RepoContext';
+import { useI18n } from './i18n';
 
 export const MySaved: React.FC = () => {
   const { savedRepoIds, toggleSave } = useRepo();
+  const { t } = useI18n();
   const [repos, setRepos] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -30,12 +32,12 @@ export const MySaved: React.FC = () => {
     fetchSaved();
   }, [savedRepoIds]);
 
-  if (loading) return <div className="py-20 text-center">Loading...</div>;
-  if (repos.length === 0) return <div className="py-20 text-center text-slate-500">No saved repositories yet.</div>;
+  if (loading) return <div className="py-20 text-center">{t('saved.loading')}</div>;
+  if (repos.length === 0) return <div className="py-20 text-center text-slate-500">{t('saved.empty')}</div>;
 
   return (
     <div>
-      <h2 className="text-3xl font-black text-white mb-6">My Saved Repositories</h2>
+      <h2 className="text-3xl font-black text-white mb-6">{t('saved.title')}</h2>
       <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {repos.map(repo => (
           <div key={repo.id} className="bg-[#121212] rounded-2xl border border-slate-800/60 p-6 flex flex-col">
