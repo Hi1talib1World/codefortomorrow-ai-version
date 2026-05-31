@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Trophy, Users, MapPin, Search } from 'lucide-react';
+import { useI18n } from './i18n';
 
 interface GitHubUser {
   id: number;
@@ -37,6 +38,7 @@ export const Leaderboard: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -83,10 +85,10 @@ export const Leaderboard: React.FC = () => {
         <div>
           <div className="flex items-center gap-3 mb-2">
             <Trophy className="w-8 h-8 text-[#facc15]" />
-            <h1 className="text-3xl font-bold font-mono uppercase tracking-widest text-white">Top Contributors</h1>
+            <h1 className="text-3xl font-bold font-mono uppercase tracking-widest text-white">{t('leaderboard.title')}</h1>
           </div>
           <p className="text-slate-400 font-mono text-sm max-w-xl">
-            Ranked by followers across the open source ecosystem. Filtering by {country}.
+            {t('leaderboard.subtitle')} {country}.
           </p>
         </div>
 
@@ -104,7 +106,7 @@ export const Leaderboard: React.FC = () => {
                 <Search className="w-4 h-4 text-slate-500" />
                 <input
                   type="text"
-                  placeholder="Search country..."
+                  placeholder={t('leaderboard.searchCountry')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="bg-transparent text-white font-mono text-xs focus:outline-none w-full border-none p-0 focus:ring-0"
@@ -128,7 +130,7 @@ export const Leaderboard: React.FC = () => {
 
                 {filteredArab.length > 0 && (
                   <div>
-                    <div className="text-[10px] font-bold text-slate-600 font-mono px-3 uppercase tracking-wider mb-1">Arab Countries</div>
+                    <div className="text-[10px] font-bold text-slate-600 font-mono px-3 uppercase tracking-wider mb-1">{t('leaderboard.arabWorld')}</div>
                     {filteredArab.map(c => (
                       <button
                         key={c}
@@ -148,7 +150,7 @@ export const Leaderboard: React.FC = () => {
 
                 {filteredEurope.length > 0 && (
                   <div>
-                    <div className="text-[10px] font-bold text-slate-600 font-mono px-3 uppercase tracking-wider mb-1">Europe</div>
+                    <div className="text-[10px] font-bold text-slate-600 font-mono px-3 uppercase tracking-wider mb-1">{t('leaderboard.europe')}</div>
                     {filteredEurope.map(c => (
                       <button
                         key={c}
@@ -168,7 +170,7 @@ export const Leaderboard: React.FC = () => {
 
                 {filteredOther.length > 0 && (
                   <div>
-                    <div className="text-[10px] font-bold text-slate-600 font-mono px-3 uppercase tracking-wider mb-1">Other Regions</div>
+                    <div className="text-[10px] font-bold text-slate-600 font-mono px-3 uppercase tracking-wider mb-1">{t('leaderboard.other')}</div>
                     {filteredOther.map(c => (
                       <button
                         key={c}
@@ -188,7 +190,7 @@ export const Leaderboard: React.FC = () => {
 
                 {filteredArab.length === 0 && filteredEurope.length === 0 && filteredOther.length === 0 && !('global'.includes(searchQuery.toLowerCase())) && (
                   <div className="text-slate-500 font-mono text-xs text-center py-4">
-                    No countries found
+                    {t('leaderboard.noCountries')}
                   </div>
                 )}
               </div>
@@ -246,7 +248,7 @@ export const Leaderboard: React.FC = () => {
                 
                 <div className="hidden sm:flex shrink-0">
                   <span className="bg-[#09090b] text-slate-400 border border-slate-800 rounded px-3 py-1 font-mono text-xs group-hover:bg-[#facc15]/10 group-hover:border-[#facc15]/30 group-hover:text-[#facc15] transition-all">
-                    VIEW_PROFILE
+                    {t('leaderboard.viewProfile')}
                   </span>
                 </div>
               </motion.a>
