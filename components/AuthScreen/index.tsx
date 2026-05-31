@@ -200,6 +200,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
   React.useEffect(() => {
     const processRedirect = async () => {
       const idToken = await handleGoogleRedirectResult();
+      console.log('Google redirect result token:', idToken);
       if (idToken) {
         try {
           const user = await api.loginWithFirebase(idToken);
@@ -236,9 +237,17 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
     setError('');
     setIsLoading(true);
     try {
-      // Directly start the redirect flow for Google sign‑in.
-      await firebaseService.loginWithGoogleRedirect();
-      setError('Redirecting to Google for sign‑in...');
+      const isDummyConfig = !auth.app.options.apiKey || auth.app.options.apiKey === 'dummy-api-key';
+      if (isDummyConfig) {
+        console.warn('⚠️ Firebase has a dummy configuration. Using mock Google token.');
+        const mockToken = generateMockFirebaseToken('wizard@codefortomorrow.org', 'Developer Wizard 🪄');
+        const user = await api.loginWithFirebase(mockToken);
+        onAuthSuccess(user);
+      } else {
+        // Initiate real Google redirect flow
+        await firebaseService.loginWithGoogleRedirect();
+        setError('Redirecting to Google for sign‑in...');
+      }
     } catch (err) {
       console.error('Google Sign In Error:', err);
       setError(err instanceof Error ? err.message : 'Google login failed.');
