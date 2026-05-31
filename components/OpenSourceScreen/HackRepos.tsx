@@ -104,7 +104,7 @@ export const HackRepos: React.FC = () => {
                   <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-bold rounded-md flex items-center gap-1"><IconComp className="w-3 h-3" /> {repo.category}</span>
                 </div>
                 <div className="flex items-center gap-2 mb-6 mt-auto flex-wrap">
-                  {repo.topics.map(t => <div key={t} className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">{t}</div>)}
+                  {repo.topics.map(topic => <div key={topic} className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">{topic}</div>)}
                 </div>
                 <div className="flex items-center gap-6 pt-5 border-t border-slate-800/60 text-sm font-semibold">
                   <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-500 fill-current" /><span className="text-white">{t('feed.stars')}</span><span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span></div>
