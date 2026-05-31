@@ -1,28 +1,23 @@
 import { PubSub } from '@google-cloud/pubsub';
-import { AIEngine } from './aiEngine.js';
+import { enqueueAiJob } from './taskQueue.js';
+import { AIJobStatus } from './aiJobContract.js';
+import { saveJob, updateJobStatus, getJob } from './jobStore.js';
 
 const projectId = process.env.GCP_PROJECT_ID;
 const pubsub = new PubSub({ projectId });
-const analyticsResults = new Map();
 
-export async function publishAnalyticsEvent(topicName, payload) {
+export async function publishAiJob(topicName, job) {
   const topic = pubsub.topic(topicName);
-  const dataBuffer = Buffer.from(JSON.stringify(payload));
+  const dataBuffer = Buffer.from(JSON.stringify(job));
   await topic.publishMessage({ data: dataBuffer });
-  console.log(`Published analytics event ${payload.requestId} to ${topicName}`);
+  saveJob(job);
+  console.log(`Published AI job ${job.job_id} to ${topicName}`);
 }
 
-export async function publishTokenUsageEvent(topicName, payload) {
-  const topic = pubsub.topic(topicName);
-  const dataBuffer = Buffer.from(JSON.stringify(payload));
-  await topic.publishMessage({ data: dataBuffer });
-  console.log(`Published token usage event for user ${payload.userId}`);
-}
-
-export async function startAnalyticsSubscriber() {
-  const subscriptionName = process.env.PUBSUB_ANALYTICS_SUBSCRIPTION;
+export async function startAiJobSubscriber() {
+  const subscriptionName = process.env.PUBSUB_AI_JOB_SUBSCRIPTION;
   if (!subscriptionName) {
-    console.warn('PUBSUB_ANALYTICS_SUBSCRIPTION is not configured. Analytics subscriber is disabled.');
+    console.warn('PUBSUB_AI_JOB_SUBSCRIPTION is not configured. AI job subscriber is disabled.');
     return;
   }
 
@@ -30,13 +25,13 @@ export async function startAnalyticsSubscriber() {
 
   subscription.on('message', async (message) => {
     try {
-      const payload = JSON.parse(message.data.toString('utf8'));
-      console.log(`Received analytics event ${payload.requestId}`);
-      const summary = await AIEngine.generateTeacherSummary(payload.classData);
-      analyticsResults.set(payload.requestId, { summary, processedAt: new Date().toISOString() });
+      const job = JSON.parse(message.data.toString('utf8'));
+      console.log(`Received AI job ${job.job_id} from Pub/Sub`);
+      updateJobStatus(job.job_id, AIJobStatus.PENDING);
+      await enqueueAiJob({ ...job, source: 'pubsub' });
       message.ack();
     } catch (error) {
-      console.error('Analytics subscriber error:', error);
+      console.error('AI job subscriber error:', error);
       message.nack();
     }
   });
@@ -46,6 +41,6 @@ export async function startAnalyticsSubscriber() {
   });
 }
 
-export function getAnalyticsResult(requestId) {
-  return analyticsResults.get(requestId);
+export function getJobStatus(jobId) {
+  return getJob(jobId);
 }
