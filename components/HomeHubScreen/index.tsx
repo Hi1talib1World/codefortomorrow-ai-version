@@ -67,6 +67,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 }
             };
             
+            // SQLite Edge Sync: api.updateUserProgress maps directly to the Local Storage cache.
+            // When offline, this progress state is buffered locally and subsequently synchronized
+            // to our Google Cloud / central database as 'learning_events' when connectivity is restored.
             api.updateUserProgress(updatedProgress).then(() => {
                 onUpdateUser({
                     ...currentUser,
@@ -129,6 +132,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     }
                 };
 
+                // SQLite Edge Sync: Updates user XP stars (+50) and equipped items locally.
+                // Serialized as a client progress state transaction, this event is recorded by the edge system
+                // and synced back to MongoDB and our central GCP database for processing by the Gemini AI Agents.
                 api.updateUserProgress(updatedProgress).then(() => {
                     onUpdateUser({
                         ...currentUser,
@@ -202,6 +208,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 {/* Moroccan Chest Graphic Node */}
                 <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-700/50 flex flex-col items-center relative">
                     <div 
+                        id="moroccan-chest-hud"
+                        data-agent-track="treasure_chest_click"
+                        data-sync-metric="chest_opening"
                         className={`relative cursor-pointer select-none group w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500/5 to-yellow-500/5 hover:from-amber-500/10 hover:to-yellow-500/10 border border-yellow-500/20 shadow-inner ${
                             chestState === 'shaking' ? 'animate-chest-shake' : 
                             chestState === 'opening' ? 'scale-110 opacity-75' : 
@@ -297,6 +306,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     </div>
                     
                     <button 
+                        id="btn-resume-last-course"
+                        data-agent-track="resume_last_course_click"
+                        data-sync-metric="path_resume"
                         onClick={goToLearn}
                         className="bg-cyan-500 hover:bg-cyan-600 text-white font-black py-3 px-6 rounded-xl text-xs uppercase tracking-wider flex items-center gap-2 border-b-4 border-cyan-700 active:border-b-2 active:translate-y-0.5 transition-all shadow-md group/btn cursor-pointer shrink-0"
                     >
@@ -327,6 +339,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     return (
                         <div
                             key={path.id}
+                            id={`suggested-course-card-${path.id}`}
+                            data-agent-track={`suggested_course_click_${path.id}`}
+                            data-sync-metric="curriculum_selection"
                             onClick={() => navigate(`/dashboard/learn/${path.id}`)}
                             className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer flex flex-col justify-between h-full"
                         >
@@ -460,7 +475,12 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                             <div className="space-y-4">
                                 <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">Educational Brain Games</h2>
-                                <button className="group w-full bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
+                                <button 
+                                    id="card-mentalup"
+                                    data-agent-track="mentalup_click"
+                                    data-sync-metric="third_party_redirect"
+                                    className="group w-full bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
+                                >
                                     <div className="aspect-[16/10] bg-[#4285F4] flex items-center justify-center p-8 relative overflow-hidden">
                                         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
                                         <div className="text-center space-y-4 relative z-10">
@@ -483,7 +503,13 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     <div className="space-y-4">
                         <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">Math Games</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <button onClick={() => navigate('/dashboard/learn/math')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
+                            <button 
+                                id="btn-math-pick"
+                                data-agent-track="math_pick_play"
+                                data-sync-metric="math_game_select"
+                                onClick={() => navigate('/dashboard/learn/math')} 
+                                className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
+                            >
                                 <div className="aspect-[16/10] bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center p-8">
                                     <div className="grid grid-cols-2 gap-2 transform group-hover:scale-105 transition-transform">
                                         <div className="w-10 h-10 bg-[#4285F4] rounded-lg flex items-center justify-center text-white font-bold text-lg">＋</div>
@@ -499,7 +525,13 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     </div>
                                 </div>
                             </button>
-                            <button onClick={() => navigate('/dashboard/learn/math')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
+                            <button 
+                                id="btn-math-quick"
+                                data-agent-track="math_quick_play"
+                                data-sync-metric="math_game_select"
+                                onClick={() => navigate('/dashboard/learn/math')} 
+                                className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
+                            >
                                 <div className="aspect-[16/10] bg-[#f8f9fa] dark:bg-slate-900/50 flex items-center justify-center">
                                     <div className="text-6xl transform group-hover:-translate-y-1 transition-transform">🎮</div>
                                 </div>
@@ -510,7 +542,13 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     </div>
                                 </div>
                             </button>
-                            <button onClick={() => navigate('/dashboard/learn/math')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
+                            <button 
+                                id="btn-math-arena"
+                                data-agent-track="math_arena_play"
+                                data-sync-metric="math_game_select"
+                                onClick={() => navigate('/dashboard/learn/math')} 
+                                className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
+                            >
                                 <div className="aspect-[16/10] bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center p-8">
                                     <div className="text-6xl transform group-hover:scale-110 group-hover:rotate-12 transition-transform">🧮</div>
                                 </div>
@@ -524,11 +562,16 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         </div>
                     </div>
 
-                    {/* Smart Books Section */}
                     <div className="space-y-4">
                         <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">Smart Books</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <button onClick={() => navigate('/smart-books')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
+                            <button 
+                                id="btn-smart-books"
+                                data-agent-track="smart_books_click"
+                                data-sync-metric="books_nav"
+                                onClick={() => navigate('/smart-books')} 
+                                className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
+                            >
                                 <div className="aspect-[16/10] overflow-hidden bg-[#fce4ec]">
                                     <img src="/esl_books.png" alt="ESL Books" className="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-500" />
                                 </div>
@@ -546,7 +589,13 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     <div className="space-y-4">
                         <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">Speaking Hub</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <button onClick={() => navigate('/speaking-hub')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
+                            <button 
+                                id="btn-speaking-hub"
+                                data-agent-track="speaking_hub_click"
+                                data-sync-metric="language_practice_nav"
+                                onClick={() => navigate('/speaking-hub')} 
+                                className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
+                            >
                                 <div className="aspect-[16/10] overflow-hidden bg-[#e3f2fd]">
                                     <img src="/speaking_practice.png" alt="Practice a Language" className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500" />
                                 </div>
@@ -599,6 +648,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             </div>
 
                             <button
+                                id="btn-claim-rewards"
+                                data-agent-track="claim_rewards_click"
+                                data-sync-metric="modal_dismiss"
                                 onClick={() => {
                                     setShowRewardModal(false);
                                     setChestState('closed');
@@ -659,6 +711,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
                     {/* Learn Card */}
                     <button
+                        id="card-guest-learn"
+                        data-agent-track="guest_learn_select"
+                        data-sync-metric="curriculum_onboarding"
                         onClick={goToLearn}
                         className="group relative bg-[#4285F4] rounded-3xl p-8 text-center transition-all transform hover:-translate-y-2 hover:shadow-xl overflow-hidden cursor-pointer"
                     >
@@ -679,6 +734,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                     {/* Create Card */}
                     <button
+                        id="card-guest-create"
+                        data-agent-track="guest_create_select"
+                        data-sync-metric="creations_onboarding"
                         onClick={() => onNavigate('creations')}
                         className="group relative bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 rounded-3xl p-8 text-center transition-all transform hover:-translate-y-2 hover:shadow-md overflow-hidden cursor-pointer"
                     >
@@ -698,6 +756,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                     {/* Brain Training Card */}
                     <button
+                        id="card-guest-brain"
+                        data-agent-track="guest_brain_select"
+                        data-sync-metric="brain_training_onboarding"
                         onClick={() => navigate('/brain-training')}
                         className="group relative bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 rounded-3xl p-8 text-center transition-all transform hover:-translate-y-2 hover:shadow-md overflow-hidden cursor-pointer"
                     >
