@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
 if (!MONGODB_URI) {
-  throw new Error('MONGODB_URI is required for AI service MongoDB connection.');
+  throw new Error('MONGODB_URI or MONGO_URI is required for AI service MongoDB connection.');
 }
 
 export async function connectDB() {
