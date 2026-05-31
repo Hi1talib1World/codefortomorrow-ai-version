@@ -1,4 +1,3 @@
-
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -70,20 +69,20 @@ async function startServer() {
   // - Cross-Origin-Embedder-Policy (COEP): Yes (credentialless)
   app.use((req, res, next) => {
     res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
-    
-const cspDirectives = [
-  "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://*.posthog.com https://pagead2.googlesyndication.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com",
-  "script-src-elem 'self' https://pagead2.googlesyndication.com https://www.googletagmanager.com",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src 'self' data: https://fonts.gstatic.com",
-  "img-src 'self' data: blob: https://*.googleusercontent.com https://*.posthog.com https://*.cloudinary.com",
-  "connect-src 'self' ws: wss: https://*.googleapis.com https://*.firebaseio.com https://*.posthog.com https://*.heygen.com wss://*.heygen.com",
-  "frame-src 'self' https://accounts.google.com https://*.firebaseapp.com https://*.heygen.com",
-  "media-src 'self' blob: data: https://*.heygen.com https://*.cloudinary.com",
-  "object-src 'none'"
-].join('; ');
-    
+
+    const cspDirectives = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://*.posthog.com https://pagead2.googlesyndication.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com",
+      "script-src-elem 'self' https://pagead2.googlesyndication.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "img-src 'self' data: blob: https://*.googleusercontent.com https://*.posthog.com https://*.cloudinary.com",
+      "connect-src 'self' ws: wss: https://*.googleapis.com https://*.firebaseio.com https://*.posthog.com https://*.heygen.com wss://*.heygen.com",
+      "frame-src 'self' https://accounts.google.com https://*.firebaseapp.com https://*.heygen.com",
+      "media-src 'self' blob: data: https://*.heygen.com https://*.cloudinary.com",
+      "object-src 'none'"
+    ].join('; ');
+
     res.setHeader('Content-Security-Policy', cspDirectives);
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
@@ -92,10 +91,9 @@ const cspDirectives = [
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
     res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
     res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
-    
+
     next();
   });
-
 
   // Apply rate limiters
   app.use('/api', globalLimiter);
