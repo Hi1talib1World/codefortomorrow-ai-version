@@ -6,7 +6,7 @@ interface CodeBlockProps {
   language?: string;
 }
 
-export const highlightCode = (rawCode: string, language?: string) => {
+const highlightCode = (rawCode: string, language?: string) => {
   let html = rawCode
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
