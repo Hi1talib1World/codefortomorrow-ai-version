@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search, CheckCircle2, Star, GitFork, ExternalLink, Sparkles } from 'lucide-react';
 import { AI_REPOS_DATA } from './aiReposData';
+import { useI18n } from './i18n';
 
 const CATEGORIES = ['All', 'NLP & Models', 'LLM Framework', 'Local LLMs', 'Image Generation', 'AI Agents', 'Speech & Audio'];
 const containerVariants = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.08 } } };
@@ -10,6 +11,7 @@ const itemVariants = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0, 
 const formatNumber = (num: number) => num >= 1000 ? (num / 1000).toFixed(1) + 'k' : num.toString();
 
 export const AIRepos: React.FC = () => {
+  const { t } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [repos, setRepos] = useState<any[]>([]);
@@ -56,14 +58,14 @@ export const AIRepos: React.FC = () => {
       <div>
         <div className="flex items-center gap-3 mb-2">
           <Sparkles className="w-8 h-8 text-purple-400" />
-          <h1 className="text-3xl font-black text-white tracking-tight">AI Repos</h1>
+          <h1 className="text-3xl font-black text-white tracking-tight">{t('aiRepos.title')}</h1>
         </div>
-        <p className="text-slate-400 text-sm font-medium mb-8">Curated open-source AI & ML projects. Click to read the full article.</p>
+        <p className="text-slate-400 text-sm font-medium mb-8">{t('aiRepos.subtitle')}</p>
 
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
           <div className="relative w-full md:max-w-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><Search className="h-5 w-5 text-slate-600" /></div>
-            <input type="text" placeholder="Search AI projects..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+            <input type="text" placeholder={t('aiRepos.searchPlaceholder')} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
               className="block w-full pl-10 pr-3 py-2.5 border border-slate-800 rounded-lg bg-[#0e0e11] text-slate-300 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-purple-500/50 sm:text-sm transition-colors" />
           </div>
           <div className="flex items-center gap-2 flex-wrap">
