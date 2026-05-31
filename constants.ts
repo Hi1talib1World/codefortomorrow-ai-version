@@ -176,14 +176,6 @@ export const PATHS: ProgrammingPath[] = [
     color: 'bg-indigo-500',
     isAvailable: true
   },
-  {
-    id: 'morocco',
-    titleKey: 'morocco_coding',
-    descriptionKey: 'morocco_coding_desc',
-    icon: '🇲🇦',
-    color: 'bg-emerald-600',
-    isAvailable: true
-  },
 ];
 
 export const MODULES_BY_PATH: { [key: string]: Module[] } = {
@@ -1984,71 +1976,6 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       ],
     },
   ],
-  morocco: [
-    {
-      id: 'morocco_basics',
-      titleKey: 'morocco_coding',
-      lessons: [
-        {
-          id: 1,
-          level: 1,
-          titleKey: 'sahara_camel_loops',
-          icon: 'camel',
-          xp: 20,
-          color: '#059669',
-          type: 'lesson',
-          nodeType: 'standard',
-          challengeDescriptionKey: 'sahara_loops_challenge',
-          explanationKey: 'sahara_loops_explanation',
-          hintKey: 'sahara_loops_hint',
-          estimatedMinutes: 10,
-          difficulty: 'Beginner',
-          tags: ['Loops', 'Sahara'],
-          starterCode: '// Help the camel reach the oasis!\n// Write a loop that logs "walk" exactly 5 times.\n\n',
-          solutionCode: 'for (let i = 0; i < 5; i++) {\n  console.log("walk");\n}',
-          expectedOutput: 'walk\nwalk\nwalk\nwalk\nwalk'
-        },
-        {
-          id: 2,
-          level: 2,
-          titleKey: 'mint_tea_recipes',
-          icon: 'tea',
-          xp: 20,
-          color: '#059669',
-          type: 'lesson',
-          nodeType: 'standard',
-          challengeDescriptionKey: 'mint_tea_challenge',
-          explanationKey: 'mint_tea_explanation',
-          hintKey: 'mint_tea_hint',
-          estimatedMinutes: 12,
-          difficulty: 'Beginner',
-          tags: ['Variables', 'Math'],
-          starterCode: '// Calculate ingredients for the mint tea ceremony!\n// Set the variable guests to 6.\nlet guests = 6;\n\n// Calculate totals using variables:\n// let teaLeaves = ...\n// let mintSprigs = ...\n// let sugarCubes = ...\n\n// Log each total to the console using console.log()\n',
-          solutionCode: 'let guests = 6;\nlet teaLeaves = guests * 2;\nlet mintSprigs = guests * 3;\nlet sugarCubes = guests * 4;\nconsole.log(teaLeaves);\nconsole.log(mintSprigs);\nconsole.log(sugarCubes);',
-          expectedOutput: '12\n18\n24'
-        },
-        {
-          id: 3,
-          level: 3,
-          titleKey: 'zellige_stars',
-          icon: 'zellige',
-          xp: 30,
-          color: '#047857',
-          type: 'project',
-          nodeType: 'trophy',
-          challengeDescriptionKey: 'zellige_stars_challenge',
-          explanationKey: 'zellige_stars_explanation',
-          hintKey: 'zellige_stars_hint',
-          estimatedMinutes: 15,
-          difficulty: 'Intermediate',
-          tags: ['Nested Loops', 'Zellige'],
-          starterCode: '// Draw a 3x3 Zellige star pattern grid!\n// Write a nested loop to log the coordinates from Row 1 to 3 and Col 1 to 3.\n// Format: "Row X, Col Y"\n',
-          solutionCode: 'for (let r = 1; r <= 3; r++) {\n  for (let c = 1; c <= 3; c++) {\n    console.log("Row " + r + ", Col " + c);\n  }\n}',
-          expectedOutput: 'Row 1, Col 1\nRow 1, Col 2\nRow 1, Col 3\nRow 2, Col 1\nRow 2, Col 2\nRow 2, Col 3\nRow 3, Col 1\nRow 3, Col 2\nRow 3, Col 3'
-        }
-      ]
-    }
-  ]
 };
 
 export const BADGES_BY_PATH: { [key: string]: Badge[] } = {
@@ -2171,12 +2098,6 @@ export const BADGES_BY_PATH: { [key: string]: Badge[] } = {
     { id: 'math_badge2', lessonId: 2, icon: '➖', titleKey: 'math_badge_sub' },
     { id: 'math_badge3', lessonId: 3, icon: '🧩', titleKey: 'math_badge_puzzle' },
     { id: 'math_badge4', lessonId: 4, icon: '🏆', titleKey: 'math_badge_calc' },
-  ],
-  morocco: [
-    { id: 'morocco_badge1', lessonId: 1, icon: '🐫', titleKey: 'morocco_badge_camel' },
-    { id: 'morocco_badge2', lessonId: 2, icon: '🍵', titleKey: 'morocco_badge_tea' },
-    { id: 'morocco_badge3', lessonId: 3, icon: '🎨', titleKey: 'morocco_badge_zellige' },
-    { id: 'morocco_badge4', lessonId: 3, icon: '🏆', titleKey: 'morocco_badge_master' },
   ],
 };
 
