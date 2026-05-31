@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { User as UserType } from '../../types';
 import api from '../../services/api';
 import { useToast } from '../ToastNotification';
+import { PATHS, LESSONS_BY_PATH } from '../../constants';
 
 interface HomeHubScreenProps {
     onNavigate: (view: DashboardView) => void;
@@ -246,6 +247,67 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
         );
     };
 
+    const renderLastCourseVisited = () => {
+        if (!currentPath) return null;
+        
+        const pathInfo = PATHS.find(p => p.id === currentPath);
+        if (!pathInfo) return null;
+
+        const pathSections = LESSONS_BY_PATH[currentPath] || [];
+        const totalLessons = pathSections.reduce((sum, sec) => sum + sec.lessons.length, 0);
+        const completedLessonIds = progress.completedLessons?.[currentPath] || [];
+        const completedLessonsCount = completedLessonIds.length;
+        const completionPercent = totalLessons > 0 ? Math.round((completedLessonsCount / totalLessons) * 100) : 0;
+        
+        const isEmoji = !pathInfo.icon.startsWith('/');
+
+        return (
+            <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md rounded-[2rem] p-6 border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-lg transition-all relative overflow-hidden group">
+                <div className="absolute right-0 top-0 w-48 h-48 bg-gradient-to-br from-cyan-500/10 to-brand-500/10 dark:from-cyan-500/5 dark:to-brand-500/5 rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-700"></div>
+                
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
+                    <div className="flex items-center space-x-5 flex-1 min-w-0">
+                        <div className="w-16 h-16 shrink-0 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-500">
+                            {isEmoji ? (
+                                <span className="text-3xl select-none">{pathInfo.icon}</span>
+                            ) : (
+                                <img src={pathInfo.icon} alt={t(pathInfo.titleKey)} className="w-10 h-10 object-contain select-none" />
+                            )}
+                        </div>
+                        
+                        <div className="text-left flex-1 min-w-0">
+                            <p className="text-[10px] font-black text-cyan-600 dark:text-cyan-400 uppercase tracking-widest leading-none">
+                                {t('last_visited_course') || 'Last Visited Course'}
+                            </p>
+                            <h3 className="text-xl font-bold text-slate-800 dark:text-white mt-2 truncate">
+                                {t(pathInfo.titleKey) || pathInfo.titleKey}
+                            </h3>
+                            <div className="flex items-center gap-3 mt-2">
+                                <div className="flex-1 max-w-[240px] bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                                    <div 
+                                        className="h-full bg-gradient-to-r from-cyan-500 to-brand-500 rounded-full transition-all duration-500"
+                                        style={{ width: `${completionPercent}%` }}
+                                    ></div>
+                                </div>
+                                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold shrink-0">
+                                    {completionPercent}% ({completedLessonsCount}/{totalLessons})
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button 
+                        onClick={goToLearn}
+                        className="bg-cyan-500 hover:bg-cyan-600 text-white font-black py-3 px-6 rounded-xl text-xs uppercase tracking-wider flex items-center gap-2 border-b-4 border-cyan-700 active:border-b-2 active:translate-y-0.5 transition-all shadow-md group/btn cursor-pointer shrink-0"
+                    >
+                        <span>{t('resume_study') || 'Resume Study'}</span>
+                        <span className="group-hover/btn:translate-x-1 transition-transform">→</span>
+                    </button>
+                </div>
+            </div>
+        );
+    };
+
     if (role === 'student') {
         return (
             <div className="min-h-full w-full bg-transparent overflow-x-hidden relative p-4 md:p-8">
@@ -264,6 +326,8 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             </div>
                         )}
                     </div>
+
+                    {renderLastCourseVisited()}
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Brain Training Section */}
@@ -491,6 +555,8 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         </div>
                     </div>
                 </div>
+
+                {renderLastCourseVisited()}
 
                 {/* Adventure Path Selection */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
