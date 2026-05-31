@@ -2,17 +2,19 @@ import { Router } from 'express';
 import {
   handleLearningProfile,
   handleAnalyticsRequest,
-  handleAnalyticsStatus,
   handleGenerateQuiz,
+  handleProcessJob,
+  handleJobStatus,
   handleLogUsage,
 } from '../controllers/ai.controller.js';
 
 const router = Router();
 
-router.get('/profile', handleLearningProfile);
+router.post('/profile', handleLearningProfile);
 router.post('/analytics', handleAnalyticsRequest);
-router.get('/analytics/status/:requestId', handleAnalyticsStatus);
 router.post('/generate-quiz', handleGenerateQuiz);
+router.post('/process-job', handleProcessJob);
+router.get('/job-status/:jobId', handleJobStatus);
 router.post('/log-usage', handleLogUsage);
 
 export default router;
