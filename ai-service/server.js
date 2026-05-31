@@ -19,7 +19,17 @@ app.get('/health', (_req, res) => {
   res.json({ service: 'ai-service', status: 'ok' });
 });
 
-app.listen(PORT, () => {
-  console.log(`AI microservice listening on http://localhost:${PORT}`);
-  startAiWorkers();
+async function startServer() {
+  await connectDB();
+
+  app.listen(PORT, () => {
+    console.log(`AI microservice listening on http://localhost:${PORT}`);
+    startAiWorkers();
     startAiJobSubscriber();
+  });
+}
+
+startServer().catch((err) => {
+  console.error('Failed to start AI service:', err);
+  process.exit(1);
+});
