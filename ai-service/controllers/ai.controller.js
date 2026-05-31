@@ -1,7 +1,5 @@
 import { createAiJob, AIJobType, normalizePriority } from '../services/aiJobContract.js';
-import { enqueueAiJob } from '../services/taskQueue.js';
-import { publishAiJob, getJobStatus } from '../services/pubsubClient.js';
-import { AIEngine } from '../services/aiEngine.js';
+import { createAIJob } from '../services/aiOrchestrator.js';
 
 export const handleLearningProfile = async (req, res) => {
   try {
@@ -18,10 +16,8 @@ export const handleLearningProfile = async (req, res) => {
       normalizePriority(AIJobType.STUDENT_ANALYSIS)
     );
 
-    await publishAiJob(process.env.PUBSUB_AI_JOB_TOPIC || 'ai-jobs-topic', job);
-    await enqueueAiJob(job);
-
-    return res.status(202).json({ job_id: job.job_id, status: job.status, message: 'Learning profile job created.' });
+    const createdJob = await createAIJob(job);
+    return res.status(202).json({ job_id: createdJob.job_id, status: createdJob.status });
   } catch (error) {
     console.error('Learning profile error:', error);
     return res.status(500).json({ message: 'Unable to create learning profile job.' });
@@ -43,10 +39,8 @@ export const handleAnalyticsRequest = async (req, res) => {
       normalizePriority(AIJobType.STUDENT_ANALYSIS)
     );
 
-    await publishAiJob(process.env.PUBSUB_AI_JOB_TOPIC || 'ai-jobs-topic', job);
-    await enqueueAiJob(job);
-
-    return res.status(202).json({ job_id: job.job_id, status: job.status, message: 'Analytics job created and queued.' });
+    const createdJob = await createAIJob(job);
+    return res.status(202).json({ job_id: createdJob.job_id, status: createdJob.status });
   } catch (error) {
     console.error('Analytics request error:', error);
     return res.status(500).json({ message: 'Failed to create analytics job.' });
@@ -68,13 +62,11 @@ export const handleGenerateQuiz = async (req, res) => {
       normalizePriority(AIJobType.CURRICULUM_GENERATION)
     );
 
-    await publishAiJob(process.env.PUBSUB_AI_JOB_TOPIC || 'ai-jobs-topic', job);
-    await enqueueAiJob(job);
-
-    return res.status(202).json({ job_id: job.job_id, status: job.status, message: 'Curriculum generation job queued.' });
+    const createdJob = await createAIJob(job);
+    return res.status(202).json({ job_id: createdJob.job_id, status: createdJob.status });
   } catch (error) {
     console.error('Quiz queue error:', error);
-    return res.status(500).json({ message: 'Failed to queue curriculum generation job.' });
+    return res.status(500).json({ message: 'Failed to create curriculum generation job.' });
   }
 };
 
@@ -85,11 +77,11 @@ export const handleProcessJob = async (req, res) => {
       return res.status(400).json({ message: 'Invalid AI job payload.' });
     }
 
-    await enqueueAiJob({ ...job, source: 'cloud-tasks' });
-    return res.status(202).json({ job_id: job.job_id, status: 'accepted' });
+    const createdJob = await createAIJob({ ...job, source: 'cloud-tasks' });
+    return res.status(202).json({ job_id: createdJob.job_id, status: createdJob.status });
   } catch (error) {
     console.error('Process job error:', error);
-    return res.status(500).json({ message: 'Failed to enqueue AI job from Cloud Tasks.' });
+    return res.status(500).json({ message: 'Failed to create AI job from Cloud Tasks.' });
   }
 };
 
