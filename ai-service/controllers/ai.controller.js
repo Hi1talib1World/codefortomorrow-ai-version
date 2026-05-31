@@ -1,5 +1,6 @@
 import { createAiJob, AIJobType, normalizePriority } from '../services/aiJobContract.js';
 import { createAIJob } from '../services/aiOrchestrator.js';
+import { getJobStatus } from '../services/pubsubClient.js';
 
 export const handleLearningProfile = async (req, res) => {
   try {
@@ -88,7 +89,7 @@ export const handleProcessJob = async (req, res) => {
 export const handleJobStatus = async (req, res) => {
   try {
     const jobId = req.params.jobId;
-    const job = getJobStatus(jobId);
+    const job = await getJobStatus(jobId);
     if (!job) {
       return res.status(404).json({ message: 'AI job not found.' });
     }
