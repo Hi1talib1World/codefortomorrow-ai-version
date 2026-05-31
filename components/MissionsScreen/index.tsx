@@ -67,44 +67,44 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
               mission_id: 'variables',
               title: t('variables') || 'Variables',
               skill: 'variables',
-              progress: 90,
-              status: 'completed',
+              progress: 0,
+              status: 'in-progress',
               difficulty: 'easy',
-              telemetry: { attempts: 10, successes: 8, failures: 2, trend: 'improving', confidence: 90, prerequisiteText: null }
+              telemetry: { attempts: 0, successes: 0, failures: 0, trend: 'stable', confidence: 0, prerequisiteText: null }
             },
             {
               mission_id: 'conditionals',
               title: t('conditionals') || 'Conditionals',
               skill: 'conditionals',
-              progress: 79,
+              progress: 0,
               status: 'in-progress',
               difficulty: 'easy',
-              telemetry: { attempts: 8, successes: 5, failures: 3, trend: 'stable', confidence: 80, prerequisiteText: null }
+              telemetry: { attempts: 0, successes: 0, failures: 0, trend: 'stable', confidence: 0, prerequisiteText: null }
             },
             {
               mission_id: 'loops',
               title: t('loops') || 'Loops',
               skill: 'loops',
-              progress: 50,
-              status: 'in-progress',
+              progress: 0,
+              status: 'locked',
               difficulty: 'medium',
-              telemetry: { attempts: 7, successes: 3, failures: 4, trend: 'improving', confidence: 60, prerequisiteText: 'Requires Variables progress >= 40%' }
+              telemetry: { attempts: 0, successes: 0, failures: 0, trend: 'stable', confidence: 0, prerequisiteText: 'Requires Variables progress >= 40%' }
             },
             {
               mission_id: 'arrays',
               title: t('arrays') || 'Arrays',
               skill: 'arrays',
-              progress: 17,
-              status: 'in-progress',
+              progress: 0,
+              status: 'locked',
               difficulty: 'medium',
-              telemetry: { attempts: 4, successes: 1, failures: 3, trend: 'stable', confidence: 40, prerequisiteText: 'Requires Variables progress >= 40%' }
+              telemetry: { attempts: 0, successes: 0, failures: 0, trend: 'stable', confidence: 0, prerequisiteText: 'Requires Variables progress >= 40%' }
             },
             {
               mission_id: 'functions',
               title: t('functions') || 'Functions',
               skill: 'functions',
               progress: 0,
-              status: 'in-progress',
+              status: 'locked',
               difficulty: 'hard',
               telemetry: { attempts: 0, successes: 0, failures: 0, trend: 'stable', confidence: 0, prerequisiteText: 'Requires Loops progress >= 50%' }
             },
