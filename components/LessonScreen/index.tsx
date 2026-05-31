@@ -121,7 +121,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
 
 const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit, path, onSwitchPath, currentUser, onStartLesson }) => {
     const { t } = useLanguage();
-    const [code, setCode] = useState(lesson.starterCode);
+    const [code, setCode] = useState("");
     const [output, setOutput] = useState('');
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [isRunning, setIsRunning] = useState(false);
@@ -204,13 +204,13 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
         else if (path === 'web_dev') mainFile = 'index.html';
 
         const initialFiles = {
-            [mainFile]: lesson.starterCode,
+            [mainFile]: "",
             'types.ts': '// Define custom interfaces and types here\n',
             'tests.ts': '// Unit tests to validate your code\n'
         };
         setFiles(initialFiles);
         setActiveFile(mainFile);
-        setCode(lesson.starterCode);
+        setCode("");
         setIsCorrect(null);
         setOutput('');
         setOutputHistory([]);
