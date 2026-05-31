@@ -20,7 +20,7 @@ export default function RepoArticlePage() {
       <div className="min-h-screen bg-[#09090b] flex flex-col items-center justify-center text-white">
         <h1 className="text-4xl font-black mb-4">Article Not Found</h1>
         <p className="text-slate-500 mb-8">The article you're looking for doesn't exist.</p>
-        <button onClick={() => navigate('/open-source')} className="bg-brand-600 text-white px-6 py-3 rounded-full font-bold hover:bg-brand-500 transition-colors">
+        <button onClick={() => navigate('/cftos')} className="bg-brand-600 text-white px-6 py-3 rounded-full font-bold hover:bg-brand-500 transition-colors">
           Back to Open Source
         </button>
       </div>
@@ -52,7 +52,7 @@ export default function RepoArticlePage() {
           <img src="/assets/images/cofoto.png" alt="Logo" className="w-8 h-8 object-contain rounded-lg" />
           <span className="font-black text-lg tracking-tight uppercase hidden sm:block">Code for Tomorrow</span>
         </div>
-        <button onClick={() => navigate('/open-source')} className="text-slate-400 hover:text-white font-bold text-sm transition-colors">
+        <button onClick={() => navigate('/cftos')} className="text-slate-400 hover:text-white font-bold text-sm transition-colors">
           ← Back to Open Source
         </button>
       </header>
@@ -61,7 +61,7 @@ export default function RepoArticlePage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
           {/* Back + Actions */}
           <div className="flex items-center justify-between">
-            <button onClick={() => navigate('/open-source')} className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
+            <button onClick={() => navigate('/cftos')} className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
               <ArrowLeft className="w-5 h-5" /><span className="font-semibold">Back</span>
             </button>
             <div className="flex items-center gap-3">
