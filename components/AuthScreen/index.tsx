@@ -29,9 +29,10 @@ const generateMockFirebaseToken = (emailAddress: string, displayName: string): s
 interface AuthScreenProps {
   onAuthSuccess: (user: User) => void;
   skipAuth: () => void;
+  role?: 'teacher' | 'student';
 }
 
-const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
+const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }) => {
   const [isLoginView, setIsLoginView] = useState(true);
   const { t, language, setLanguage } = useLanguage();
 
@@ -219,15 +220,45 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
     setIsLoading(true);
 
     try {
+      const isDummyConfig = !auth.app.options.apiKey || auth.app.options.apiKey === 'dummy-api-key';
       let user: User;
-      if (isLoginView) {
-        user = await api.login(email, password);
+
+      if (isDummyConfig) {
+        console.warn('⚠️ Firebase has a dummy configuration. Simulating backend login/registration.');
+        if (isLoginView) {
+          user = await api.login(email, password);
+        } else {
+          user = await api.register(name, email, password, role || 'student');
+        }
       } else {
-        user = await api.register(name, email, password);
+        let token: string;
+        if (isLoginView) {
+          console.log('Logging in via Firebase Auth...');
+          token = await firebaseService.loginWithEmail(email, password);
+        } else {
+          console.log('Registering via Firebase Auth...');
+          token = await firebaseService.registerWithEmail(email, password);
+          if (auth.currentUser) {
+            try {
+              const { updateProfile } = await import('firebase/auth');
+              await updateProfile(auth.currentUser, { displayName: name });
+            } catch (profileErr) {
+              console.error('Failed to update display name in Firebase:', profileErr);
+            }
+          }
+        }
+        console.log('Firebase token acquired, syncing session with backend database...');
+        user = await api.loginWithFirebase(token);
       }
       onAuthSuccess(user);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
+      console.error('Auth Submit Error:', err);
+      const errMsg = err instanceof Error ? err.message : 'An unknown error occurred.';
+      if (errMsg.includes('auth/operation-not-allowed')) {
+        setError('Error: Email/Password provider is disabled in Firebase Console. Please enable it under Authentication > Sign-in method.');
+      } else {
+        setError(errMsg);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -244,9 +275,11 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
         const user = await api.loginWithFirebase(mockToken);
         onAuthSuccess(user);
       } else {
-        // Initiate real Google redirect flow
-        await firebaseService.loginWithGoogleRedirect();
-        setError('Redirecting to Google for sign‑in...');
+        console.log('Initiating Firebase Google Sign-In Popup...');
+        const token = await firebaseService.loginWithGooglePopup();
+        console.log('Google login token retrieved, verifying with backend...');
+        const user = await api.loginWithFirebase(token);
+        onAuthSuccess(user);
       }
     } catch (err) {
       console.error('Google Sign In Error:', err);
@@ -513,36 +546,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth }) => {
               {isLoading ? '...' : (isLoginView ? t('login') : t('create_account'))}
             </button>
           </form>
-
-          <div className="flex items-center my-8">
-            <div className="flex-grow border-t border-slate-800"></div>
-            <span className="flex-shrink mx-4 text-slate-500 font-semibold text-xs uppercase tracking-wider select-none">{t('or_continue_with')}</span>
-            <div className="flex-grow border-t border-slate-800"></div>
-          </div>
-
-          <div className="flex justify-center w-full">
-            <button
-              type="button"
-              onClick={handleGoogleSignIn}
-              disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 px-5 py-3.5 rounded-full border border-slate-800/80 bg-slate-900/40 hover:bg-slate-800/60 text-slate-200 font-bold text-[15px] shadow-[0_4px_15px_rgba(0,0,0,0.15)] hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 disabled:scale-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
-            >
-              {isLoading ? (
-                <svg className="animate-spin h-5 w-5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              ) : (
-                <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                </svg>
-              )}
-              <span>{t('continue_with_google')}</span>
-            </button>
-          </div>
 
           {/* High-Tech Terminal Diagnostics Logger */}
           <div className="mt-8 p-3 bg-black/40 border border-slate-900/60 rounded-2xl font-mono text-[10px] text-cyan-400/80 shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)] select-none pointer-events-none">
