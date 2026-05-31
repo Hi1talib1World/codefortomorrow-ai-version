@@ -488,8 +488,8 @@ export default function App() {
           <Route path="/brain-training/:challengeId" element={<BrainChallengeGameScreen />} />
           <Route path="/blog" element={<BlogScreen currentUser={currentUser} updateUser={updateUser} />} />
           <Route path="/blog/:postId" element={<BlogPostScreen currentUser={currentUser} updateUser={updateUser} />} />
-          <Route path="/open-source" element={<OpenSourceScreen currentUser={currentUser} updateUser={updateUser} onLogout={handleLogout} />} />
-          <Route path="/open-source/:category/:slug" element={<RepoArticlePage />} />
+          <Route path="/cftos" element={<OpenSourceScreen currentUser={currentUser} updateUser={updateUser} onLogout={handleLogout} />} />
+          <Route path="/cftos/:category/:slug" element={<RepoArticlePage />} />
 
           {/* ─── Owner Admin Dashboard ────────────────────────────────────── */}
           <Route
