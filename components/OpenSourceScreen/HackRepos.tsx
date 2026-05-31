@@ -83,7 +83,7 @@ export const HackRepos: React.FC = () => {
           {filtered.map(repo => {
             const IconComp = repo.icon;
             return (
-              <motion.div onClick={() => navigate(`/open-source/hack/${repo.slug}`)} key={repo.id} variants={itemVariants}
+              <motion.div onClick={() => navigate(`/cftos/hack/${repo.slug}`)} key={repo.id} variants={itemVariants}
                 className="bg-[#121212] rounded-2xl border border-slate-800/60 hover:border-emerald-500/30 p-6 flex flex-col transition-all group cursor-pointer hover:shadow-lg hover:shadow-emerald-500/5">
                 <div className="flex items-start gap-4 mb-4">
                   <img src={repo.owner.avatar_url} alt={repo.name} className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800"
