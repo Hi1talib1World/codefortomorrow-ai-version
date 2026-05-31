@@ -7,8 +7,12 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
+import { User } from '../../types';
+
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  currentUser?: User | null;
+  onLogout?: () => void;
 }
 
 const GENERAL_ITEMS = [
@@ -29,7 +33,7 @@ const MY_DASHBOARD_ITEMS = [
   { id: 'admin', icon: Search, label: 'My Saved' },
 ];
 
-export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, currentUser, onLogout }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -96,6 +100,41 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           <button className="text-[10px] font-bold text-slate-300 border border-dashed border-slate-600 px-4 py-2 rounded uppercase tracking-widest hover:border-slate-400 hover:text-white transition-colors">
             Follow on X
           </button>
+
+          <div className="h-6 w-px bg-slate-800 mx-2"></div>
+
+          {currentUser && !currentUser._id.startsWith('guest_') ? (
+            <div className="flex items-center gap-3">
+              <img 
+                src={currentUser.profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=random`} 
+                alt={currentUser.name} 
+                className="w-8 h-8 rounded-full border border-slate-700 object-cover"
+              />
+              <div className="hidden lg:flex flex-col text-left">
+                <span className="text-xs font-bold text-white leading-tight font-mono">{currentUser.name}</span>
+                <span className="text-[10px] text-slate-500 font-mono">⭐ {currentUser.progress?.xp || 0} XP</span>
+              </div>
+              <button 
+                onClick={() => {
+                  if (onLogout) onLogout();
+                  navigate('/auth');
+                }}
+                className="text-[10px] font-bold text-red-400 hover:text-red-300 border border-dashed border-red-500/30 hover:border-red-500/50 px-3 py-1.5 rounded uppercase tracking-widest transition-colors ml-2"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button 
+              onClick={() => {
+                localStorage.setItem('lastVisitedRoute', window.location.pathname + window.location.search);
+                navigate('/auth');
+              }}
+              className="bg-[#facc15] hover:bg-[#facc15]/90 text-black px-4 py-2 rounded-lg font-mono text-xs font-bold transition-all shadow-md shadow-[#facc15]/10 hover:shadow-[#facc15]/20"
+            >
+              Sign In
+            </button>
+          )}
         </div>
 
         <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-white p-2">
@@ -130,7 +169,42 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
             {renderNavSection('My Dashboard', MY_DASHBOARD_ITEMS)}
             
             <div className="pt-4 mt-4 border-t border-slate-800 flex flex-col gap-4">
-               <button className="flex items-center justify-center gap-1.5 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 hover:bg-yellow-500/20 px-3 py-2 rounded-md text-xs font-bold transition-colors w-full">
+              {currentUser && !currentUser._id.startsWith('guest_') ? (
+                <div className="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg border border-slate-850">
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src={currentUser.profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=random`} 
+                      alt={currentUser.name} 
+                      className="w-10 h-10 rounded-full border border-slate-700 object-cover"
+                    />
+                    <div className="flex flex-col text-left">
+                      <span className="text-sm font-bold text-white leading-tight font-mono">{currentUser.name}</span>
+                      <span className="text-xs text-slate-500 font-mono">⭐ {currentUser.progress?.xp || 0} XP</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      if (onLogout) onLogout();
+                      navigate('/auth');
+                    }}
+                    className="text-xs font-bold text-red-400 hover:text-red-300 font-mono px-3 py-2 border border-dashed border-red-500/20 rounded uppercase"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => {
+                    localStorage.setItem('lastVisitedRoute', window.location.pathname + window.location.search);
+                    navigate('/auth');
+                  }}
+                  className="bg-[#facc15] hover:bg-[#facc15]/90 text-black px-4 py-2.5 rounded-lg font-mono text-sm font-bold transition-all w-full text-center"
+                >
+                  Sign In
+                </button>
+              )}
+
+              <button className="flex items-center justify-center gap-1.5 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 hover:bg-yellow-500/20 px-3 py-2 rounded-md text-xs font-bold transition-colors w-full">
                 <Star className="w-3.5 h-3.5 fill-current" /> Premium
               </button>
               <Link to="/" className="text-xs font-bold text-slate-500 hover:text-white transition-colors flex items-center justify-center gap-2 py-2">
