@@ -346,7 +346,6 @@ Do not give them the complete solution code directly. Focus on guidance and debu
         const concept = lesson.titleKey.split('_')[0];
         try {
             await api.updateUserProgress({
-                xp: lesson.xp,
                 skillMastery: { [concept]: 85 }
             });
         } catch (e) {
