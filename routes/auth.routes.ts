@@ -1,7 +1,17 @@
 
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import { register, login, getMe, googleLogin, firebaseLogin, logout } from '../controllers/auth.controller';
 import { protect } from '../middleware/auth.middleware';
+
+// Stricter rate limiter for authentication routes (15 attempts per 15 minutes per IP)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 15,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Too many login or registration attempts, please try again after 15 minutes' },
+});
 
 const router = express.Router();
 
@@ -10,28 +20,28 @@ const router = express.Router();
  * @desc    Register a new user
  * @access  Public
  */
-router.post('/register', register);
+router.post('/register', authLimiter, register);
 
 /**
  * @route   POST /api/auth/login
  * @desc    Log in a user
  * @access  Public
  */
-router.post('/login', login);
+router.post('/login', authLimiter, login);
 
 /**
  * @route   POST /api/auth/google
  * @desc    Verify Google Token and login/register
  * @access  Public
  */
-router.post('/google', googleLogin);
+router.post('/google', authLimiter, googleLogin);
 
 /**
  * @route   POST /api/auth/firebase
  * @desc    Verify Firebase Token and login/register
  * @access  Public
  */
-router.post('/firebase', firebaseLogin);
+router.post('/firebase', authLimiter, firebaseLogin);
 
 /**
  * @route   GET /api/auth/me
