@@ -45,6 +45,7 @@ export const auth = getAuth(app);
 
 // Google Auth Provider instance
 const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 export const firebaseService = {
   /**
