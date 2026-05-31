@@ -381,6 +381,39 @@ const api = {
       throw new Error(data.message || 'Failed to generate quiz with AI.');
     }
     return data;
+  },
+
+  getStudentProgress: async (userId: string): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/progress/${userId}`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch student progress.');
+    }
+    return data;
+  },
+
+  getSkillStates: async (userId: string): Promise<any[]> => {
+    const response = await customFetch(`${API_BASE_URL}/skills/${userId}`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch skill states.');
+    }
+    return data;
+  },
+
+  getMissions: async (userId: string): Promise<any[]> => {
+    const response = await customFetch(`${API_BASE_URL}/missions/${userId}`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch missions.');
+    }
+    return data;
   }
 };
 
