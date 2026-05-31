@@ -139,6 +139,21 @@ const SelectCurriculumStep = ({ formData, setFormData }: { formData: any, setFor
         { id: 'ALGERIAN', titleKey: 'curriculum_algerian' },
         { id: 'EGYPTIAN', titleKey: 'curriculum_egyptian' },
         { id: 'LEBANESE', titleKey: 'curriculum_lebanese' },
+        { id: 'JORDANIAN', titleKey: 'curriculum_jordanian' },
+        { id: 'SYRIAN', titleKey: 'curriculum_syrian' },
+        { id: 'SAUDI', titleKey: 'curriculum_saudi' },
+        { id: 'EMIRATI', titleKey: 'curriculum_emirati' },
+        { id: 'IRAQI', titleKey: 'curriculum_iraqi' },
+        { id: 'QATARI', titleKey: 'curriculum_qatari' },
+        { id: 'KUWAITI', titleKey: 'curriculum_kuwaiti' },
+        { id: 'BAHRAINI', titleKey: 'curriculum_bahraini' },
+        { id: 'OMANI', titleKey: 'curriculum_omani' },
+        { id: 'YEMENI', titleKey: 'curriculum_yemeni' },
+        { id: 'SUDANESE', titleKey: 'curriculum_sudanese' },
+        { id: 'IRANIAN', titleKey: 'curriculum_iranian' },
+        { id: 'FRENCH', titleKey: 'curriculum_french' },
+        { id: 'CANADIAN', titleKey: 'curriculum_canadian' },
+        { id: 'US', titleKey: 'curriculum_us' },
         { id: 'IB', titleKey: 'curriculum_ib' },
         { id: 'US_CORE', titleKey: 'curriculum_us_core' },
     ];
@@ -167,7 +182,7 @@ const SelectStageStep = ({ formData, setFormData }: { formData: any, setFormData
 
     let stageOptions: { id: string; titleKey: string }[] = [];
 
-    const isNationalCurriculum = ['MOROCCAN', 'TUNISIAN', 'ALGERIAN', 'EGYPTIAN', 'LEBANESE'].includes(formData.curriculum);
+    const isNationalCurriculum = ['MOROCCAN', 'TUNISIAN', 'ALGERIAN', 'EGYPTIAN', 'LEBANESE', 'JORDANIAN', 'SYRIAN', 'SAUDI', 'EMIRATI', 'IRAQI', 'QATARI', 'KUWAITI', 'BAHRAINI', 'OMANI', 'YEMENI', 'SUDANESE', 'IRANIAN', 'FRENCH', 'CANADIAN', 'US'].includes(formData.curriculum);
 
     if (isNationalCurriculum) {
         stageOptions = [
