@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+import { getAnalytics } from 'firebase/analytics';
 import {
   getAuth,
   signInWithEmailAndPassword as fbSignInWithEmailAndPassword,
@@ -22,16 +23,20 @@ const getEnv = (name: string): string => {
 // Firebase configuration settings.
 // These fall back to safe placeholder values if env variables are not set in .env.
 const firebaseConfig = {
-  apiKey: getEnv('VITE_FIREBASE_API_KEY') || "dummy-api-key",
-  authDomain: getEnv('VITE_FIREBASE_AUTH_DOMAIN') || "dummy-project.firebaseapp.com",
-  projectId: getEnv('VITE_FIREBASE_PROJECT_ID') || "dummy-project",
-  storageBucket: getEnv('VITE_FIREBASE_STORAGE_BUCKET') || "dummy-project.appspot.com",
-  messagingSenderId: getEnv('VITE_FIREBASE_MESSAGING_SENDER_ID') || "123456789",
-  appId: getEnv('VITE_FIREBASE_APP_ID') || "1:1234:web:1234"
+  apiKey: getEnv('VITE_FIREBASE_API_KEY') || "AIzaSyBITCGLQUZXAaa3lhCqieUsNaR1fIanBV4",
+  authDomain: getEnv('VITE_FIREBASE_AUTH_DOMAIN') || "cofoto-13310.firebaseapp.com",
+  projectId: getEnv('VITE_FIREBASE_PROJECT_ID') || "cofoto-13310",
+  storageBucket: getEnv('VITE_FIREBASE_STORAGE_BUCKET') || "cofoto-13310.firebasestorage.app",
+  messagingSenderId: getEnv('VITE_FIREBASE_MESSAGING_SENDER_ID') || "141729201523",
+  appId: getEnv('VITE_FIREBASE_APP_ID') || "1:141729201523:web:cedf520729cb9afb351906",
+  measurementId: getEnv('VITE_FIREBASE_MEASUREMENT_ID') || "G-0B3EPSV742"
 };
 
 // Initialize Firebase App
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase Analytics (guarded for non-browser environments)
+export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
 
 // Initialize Firebase Auth
 export const auth = getAuth(app);
