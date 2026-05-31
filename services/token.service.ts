@@ -13,9 +13,11 @@ export const generateToken = (userId: mongoose.Types.ObjectId | string): string 
   };
 
   // In a real app, JWT_EXPIRES_IN would also be in the .env file for configuration.
-  return jwt.sign(payload, process.env.JWT_SECRET as string, {
+  const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
     expiresIn: '30d',
   });
+  console.log('Generated backend JWT:', token);
+  return token;
 };
 
 const tokenService = {
