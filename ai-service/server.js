@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import aiRouter from './routes/ai.routes.js';
 import { startAiWorkers } from './workers/aiWorker.js';
 import { startAiJobSubscriber } from './services/pubsubClient.js';
+import { connectDB } from './config/db.js';
 
 dotenv.config();
 
