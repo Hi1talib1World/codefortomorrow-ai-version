@@ -20,13 +20,16 @@ export const AIJobPriority = {
 };
 
 export function createAiJob(type, payload, source = 'api', priority = AIJobPriority.MEDIUM) {
+  const now = new Date().toISOString();
+
   return {
     job_id: uuidv4(),
     type,
     status: AIJobStatus.PENDING,
     priority,
     payload,
-    created_at: new Date().toISOString(),
+    created_at: now,
+    updated_at: now,
     source,
   };
 }
