@@ -33,11 +33,11 @@ const api = {
   /**
    * Registers a new user by sending their details to the backend.
    */
-  register: async (name: string, email: string, password: string): Promise<User> => {
+  register: async (name: string, email: string, password: string, role: 'teacher' | 'student', classroomCode?: string): Promise<User> => {
     const response = await customFetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email, password, role, classroomCode }),
     });
 
     const data = await response.json();
