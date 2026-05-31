@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import api from '../../services/api';
 import { User } from '../../types';
+import { PATHS, LESSONS_BY_PATH } from '../../constants';
 import { 
   Lock, 
   Target, 
@@ -62,63 +63,101 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
         console.error('Failed to load missions:', err);
         // Fallback mock data in case backend is offline
         if (isMounted) {
-          const mockMissions: Mission[] = [
-            {
-              mission_id: 'variables',
-              title: t('variables') || 'Variables',
-              skill: 'variables',
-              progress: 0,
-              status: 'in-progress',
-              difficulty: 'easy',
-              telemetry: { attempts: 0, successes: 0, failures: 0, trend: 'stable', confidence: 0, prerequisiteText: null }
-            },
-            {
-              mission_id: 'conditionals',
-              title: t('conditionals') || 'Conditionals',
-              skill: 'conditionals',
-              progress: 0,
-              status: 'in-progress',
-              difficulty: 'easy',
-              telemetry: { attempts: 0, successes: 0, failures: 0, trend: 'stable', confidence: 0, prerequisiteText: null }
-            },
-            {
-              mission_id: 'loops',
-              title: t('loops') || 'Loops',
-              skill: 'loops',
-              progress: 0,
-              status: 'locked',
-              difficulty: 'medium',
-              telemetry: { attempts: 0, successes: 0, failures: 0, trend: 'stable', confidence: 0, prerequisiteText: 'Requires Variables progress >= 40%' }
-            },
-            {
-              mission_id: 'arrays',
-              title: t('arrays') || 'Arrays',
-              skill: 'arrays',
-              progress: 0,
-              status: 'locked',
-              difficulty: 'medium',
-              telemetry: { attempts: 0, successes: 0, failures: 0, trend: 'stable', confidence: 0, prerequisiteText: 'Requires Variables progress >= 40%' }
-            },
-            {
-              mission_id: 'functions',
-              title: t('functions') || 'Functions',
-              skill: 'functions',
-              progress: 0,
-              status: 'locked',
-              difficulty: 'hard',
-              telemetry: { attempts: 0, successes: 0, failures: 0, trend: 'stable', confidence: 0, prerequisiteText: 'Requires Loops progress >= 50%' }
-            },
-            {
-              mission_id: 'objects',
-              title: t('objects') || 'Objects',
-              skill: 'objects',
-              progress: 0,
-              status: 'locked',
-              difficulty: 'hard',
-              telemetry: { attempts: 0, successes: 0, failures: 0, trend: 'stable', confidence: 0, prerequisiteText: 'Requires Loops progress >= 50%' }
+          // First pass: calculate progress for all paths using constants
+          const calculatedMissions = PATHS.map((path) => {
+            const pathId = path.id;
+
+            // Count total lessons in LESSONS_BY_PATH for this path
+            const sections = LESSONS_BY_PATH[pathId] || [];
+            let totalLessons = 0;
+            sections.forEach((section: any) => {
+              totalLessons += section.lessons ? section.lessons.length : 0;
+            });
+
+            // Completed lessons count from currentUser
+            const completedList = currentUser.progress?.completedLessons?.[pathId];
+            const completedCount = Array.isArray(completedList) ? completedList.length : 0;
+
+            // completion ratio
+            const completionRatio = totalLessons > 0 ? completedCount / totalLessons : 0.0;
+
+            // proficiency fallback to skillMastery
+            const masteryVal = currentUser.progress?.skillMastery?.[pathId];
+            const proficiency = masteryVal ? (masteryVal / 100) : 0.0;
+
+            // Formula: progress = (proficiency * 70) + (completion_ratio * 30)
+            const calculatedProgress = (proficiency * 70) + (completionRatio * 30);
+            const progress = Math.round(Math.max(0, Math.min(100, calculatedProgress)));
+
+            // Prerequisite
+            let prerequisiteText: string | null = null;
+            if (pathId === 'block_coding' || pathId === 'math') {
+              prerequisiteText = null;
+            } else if (pathId === 'python' || pathId === 'javascript') {
+              prerequisiteText = 'Requires Block Coding progress >= 30%';
+            } else if (['web_dev', 'typescript', 'lua'].includes(pathId)) {
+              prerequisiteText = 'Requires Javascript progress >= 30%';
+            } else {
+              prerequisiteText = 'Requires Javascript progress >= 40%';
             }
-          ];
-          setMissions(mockMissions);
+
+            return {
+              mission_id: pathId,
+              title: t(path.titleKey) || path.id,
+              skill: pathId,
+              progress,
+              status: 'in-progress' as 'locked' | 'in-progress' | 'completed',
+              difficulty: (pathId === 'block_coding' || pathId === 'math') 
+                ? 'easy' 
+                : (['python', 'javascript', 'web_dev', 'typescript', 'lua', 'sql'].includes(pathId) ? 'medium' : 'hard') as 'easy' | 'medium' | 'hard',
+              telemetry: {
+                attempts: 0,
+                successes: completedCount,
+                failures: 0,
+                trend: 'stable' as 'improving' | 'stable' | 'declining',
+                confidence: Math.round(proficiency * 100),
+                prerequisiteText
+              }
+            };
+          });
+
+          // Second pass: apply lock overrides based on prerequisite progress
+          const finalMockMissions = calculatedMissions.map((mission) => {
+            let status = mission.progress >= 90 ? 'completed' : 'in-progress';
+            
+            if (mission.mission_id !== 'block_coding' && mission.mission_id !== 'math') {
+              let isLocked = false;
+              if (mission.mission_id === 'python' || mission.mission_id === 'javascript') {
+                const blockCodingMission = calculatedMissions.find(m => m.mission_id === 'block_coding');
+                if (!blockCodingMission || blockCodingMission.progress < 30) {
+                  isLocked = true;
+                }
+              } else if (['web_dev', 'typescript', 'lua'].includes(mission.mission_id)) {
+                const jsMission = calculatedMissions.find(m => m.mission_id === 'javascript');
+                if (!jsMission || jsMission.progress < 30) {
+                  isLocked = true;
+                }
+              } else {
+                // Hard difficulty: requires javascript >= 40%
+                const jsMission = calculatedMissions.find(m => m.mission_id === 'javascript');
+                if (!jsMission || jsMission.progress < 40) {
+                  isLocked = true;
+                }
+              }
+
+              if (isLocked) {
+                status = 'locked';
+              }
+            }
+
+            return {
+              ...mission,
+              progress: status === 'locked' ? 0 : mission.progress,
+              status
+            };
+          });
+
+          setMissions(finalMockMissions as Mission[]);
           if (loading) setLoading(false);
         }
       }
@@ -144,65 +183,128 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
     const strokeColor = isLocked ? '#64748b' : '#38bdf8'; // slate vs cyan
 
     switch (skillId) {
-      case 'variables':
+      case 'block_coding':
         return (
           <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <rect x="16" y="20" width="32" height="24" rx="4" stroke={strokeColor} strokeWidth="2.5" className="animate-pulse" />
-            <line x1="24" y1="32" x2="40" y2="32" stroke={strokeColor} strokeWidth="3" />
-            <circle cx="20" cy="32" r="3" fill="#10b981" />
-            <circle cx="44" cy="32" r="3" fill="#f59e0b" />
+            <path d="M12 28 C12 24, 16 20, 20 20 H28 C30 20, 32 16, 32 14 C32 12, 34 10, 36 10 C38 10, 40 12, 40 14 C40 16, 42 20, 44 20 H52 C56 20, 60 24, 60 28 V44 C60 48, 56 52, 52 52 H44 C42 52, 40 56, 40 58 C40 60, 38 62, 36 62 C34 62, 32 60, 32 58 C32 56, 30 52, 28 52 H20 C16 52, 12 48, 12 44 Z" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="36" cy="31" r="3" fill="#10b981" />
+            <path d="M24 38 H48" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
           </svg>
         );
-      case 'conditionals':
+      case 'python':
         return (
           <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M32 12 L50 30 L32 48 L14 30 Z" stroke={strokeColor} strokeWidth="2.5" />
-            <circle cx="32" cy="30" r="4" fill="#38bdf8" />
-            <path d="M32 34 L32 44" stroke="#e11d48" strokeWidth="2" strokeDasharray="2,2" />
-            <path d="M36 30 L46 30" stroke="#10b981" strokeWidth="2" strokeDasharray="2,2" />
+            <path d="M30 14 C30 10, 36 10, 40 10 H48 C52 10, 54 12, 54 16 V24 C54 28, 50 30, 46 30 H32 C26 30, 24 32, 24 38 V42 C24 46, 28 50, 32 50 H38" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M34 50 C34 54, 28 54, 24 54 H16 C12 54, 10 52, 10 48 V40 C10 36, 14 34, 18 34 H32 C38 34, 40 32, 40 26 V22 C40 18, 36 14, 32 14 H26" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="48" cy="16" r="2.5" fill="#f59e0b" />
+            <circle cx="16" cy="48" r="2.5" fill="#3b82f6" />
           </svg>
         );
-      case 'loops':
+      case 'javascript':
         return (
           <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <circle cx="32" cy="32" r="18" stroke={strokeColor} strokeWidth="2.5" strokeDasharray="80" strokeDashoffset="10" className="animate-spin-slow" />
-            <path d="M46 26 L48 32 L42 34" stroke={strokeColor} strokeWidth="2" fill="none" />
-            <circle cx="32" cy="32" r="6" fill="#f59e0b" />
+            <path d="M12 12 H52 V44 L32 54 L12 44 Z" stroke={strokeColor} strokeWidth="2.5" strokeLinejoin="round" />
+            <path d="M22 24 C22 20, 26 20, 26 20 M26 28 H22 M22 36 C22 40, 26 40, 26 40" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M42 24 C42 20, 38 20, 38 20 M38 28 H42 M42 36 C42 40, 38 40, 38 40" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
           </svg>
         );
-      case 'arrays':
+      case 'math':
         return (
           <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <rect x="10" y="24" width="12" height="16" rx="2" stroke={strokeColor} strokeWidth="2" />
-            <rect x="26" y="24" width="12" height="16" rx="2" stroke={strokeColor} strokeWidth="2" />
-            <rect x="42" y="24" width="12" height="16" rx="2" stroke={strokeColor} strokeWidth="2" />
-            <line x1="22" y1="32" x2="26" y2="32" stroke={strokeColor} strokeWidth="2" />
-            <line x1="38" y1="32" x2="42" y2="32" stroke={strokeColor} strokeWidth="2" />
+            <path d="M16 22 H32 M24 14 V30" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M40 22 H52" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M16 46 H28 M16 50 H28" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="46" cy="42" r="2.5" fill={strokeColor} />
+            <path d="M40 50 L52 38" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="46" cy="46" r="2.5" fill={strokeColor} />
           </svg>
         );
-      case 'functions':
+      case 'web_dev':
         return (
           <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <rect x="20" y="16" width="24" height="32" rx="4" stroke={strokeColor} strokeWidth="2" />
-            <circle cx="32" cy="32" r="5" stroke={strokeColor} strokeWidth="2.5" className="animate-spin-slow" />
-            <line x1="12" y1="24" x2="20" y2="24" stroke={strokeColor} strokeWidth="2" />
-            <line x1="44" y1="40" x2="52" y2="40" stroke={strokeColor} strokeWidth="2" />
+            <rect x="10" y="14" width="44" height="36" rx="4" stroke={strokeColor} strokeWidth="2.5" />
+            <line x1="10" y1="24" x2="54" y2="24" stroke={strokeColor} strokeWidth="2" />
+            <circle cx="16" cy="19" r="1.5" fill="#ef4444" />
+            <circle cx="22" cy="19" r="1.5" fill="#f59e0b" />
+            <circle cx="28" cy="19" r="1.5" fill="#10b981" />
+            <path d="M20 32 L15 37 L20 42" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M44 32 L49 37 L44 42" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <line x1="35" y1="31" x2="29" y2="43" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
           </svg>
         );
-      case 'objects':
+      case 'typescript':
         return (
           <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M32 12 L50 22 L50 42 L32 52 L14 42 L14 22 Z" stroke={strokeColor} strokeWidth="2" />
-            <line x1="32" y1="12" x2="32" y2="32" stroke={strokeColor} strokeWidth="1.5" />
-            <line x1="14" y1="22" x2="32" y2="32" stroke={strokeColor} strokeWidth="1.5" />
-            <line x1="50" y1="22" x2="32" y2="32" stroke={strokeColor} strokeWidth="1.5" />
-            <circle cx="32" cy="32" r="4" fill="#a855f7" />
+            <path d="M12 12 H52 V44 L32 54 L12 44 Z" stroke={strokeColor} strokeWidth="2.5" strokeLinejoin="round" />
+            <path d="M22 20 H34 M28 20 V40" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M38 38 C38 42, 44 42, 44 38 C44 34, 38 35, 38 31 C38 27, 44 27, 44 31" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+        );
+      case 'lua':
+        return (
+          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="20" stroke={strokeColor} strokeWidth="2.5" />
+            <path d="M32 12 A 10 10 0 0 1 32 52 A 15 15 0 0 0 32 12" fill={strokeColor} opacity="0.3" />
+            <circle cx="32" cy="12" r="4.5" fill="#38bdf8" />
+            <circle cx="48" cy="32" r="2.5" fill="#f59e0b" />
+          </svg>
+        );
+      case 'c++':
+        return (
+          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
+            <path d="M28 20 C22 20, 16 24, 16 32 C16 40, 22 44, 28 44" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M36 32 H44 M40 28 V36" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
+            <path d="M48 32 H56 M52 28 V36" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        );
+      case 'c_sharp':
+        return (
+          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
+            <path d="M28 20 C22 20, 16 24, 16 32 C16 40, 22 44, 28 44" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M38 26 V42 M44 22 V38 M34 30 H48 M34 36 H48" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        );
+      case 'java':
+        return (
+          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
+            <path d="M16 30 C16 42, 20 46, 36 46 C46 46, 48 42, 48 30 H16 Z" stroke={strokeColor} strokeWidth="2.5" strokeLinejoin="round" />
+            <path d="M48 34 C54 34, 54 40, 48 40" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M24 14 C24 14, 28 10, 26 22" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" />
+            <path d="M32 14 C32 14, 36 10, 34 22" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" />
+            <path d="M40 14 C40 14, 44 10, 42 22" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        );
+      case 'go':
+        return (
+          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
+            <path d="M10 26 H44 M10 32 H50 M10 38 H42" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="44" cy="24" r="3" fill={strokeColor} />
+            <circle cx="50" cy="30" r="3" fill={strokeColor} />
+          </svg>
+        );
+      case 'rust':
+        return (
+          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="14" stroke={strokeColor} strokeWidth="2.5" />
+            <circle cx="32" cy="32" r="6" stroke={strokeColor} strokeWidth="2" />
+            <path d="M32 10 V14 M32 50 V54 M10 32 H14 M50 32 H54 M16 16 L20 20 M44 44 L48 48 M16 48 L20 44 M44 16 L48 20" stroke={strokeColor} strokeWidth="3" strokeLinecap="round" />
+          </svg>
+        );
+      case 'sql':
+        return (
+          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
+            <ellipse cx="32" cy="18" rx="18" ry="6" stroke={strokeColor} strokeWidth="2.5" />
+            <path d="M14 18 V30 C14 34, 20 36, 32 36 C44 36, 50 34, 50 30 V18" stroke={strokeColor} strokeWidth="2.5" />
+            <path d="M14 30 V42 C14 46, 20 48, 32 48 C44 48, 50 46, 50 42 V30" stroke={strokeColor} strokeWidth="2.5" />
           </svg>
         );
       default:
+        // Generic code tag </> fallback
         return (
           <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <circle cx="32" cy="32" r="20" stroke={strokeColor} strokeWidth="2" />
+            <path d="M22 22 L12 32 L22 42" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M42 22 L52 32 L42 42" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <line x1="36" y1="18" x2="28" y2="46" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
           </svg>
         );
     }
