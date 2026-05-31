@@ -1,19 +1,22 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { User, Language, ProgrammingPath } from '../../types';
+import { useNavigate } from 'react-router-dom';
+import { User, Language, ProgrammingPath, Lesson } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
-import { PATHS } from '../../constants';
+import { PATHS, MODULES_BY_PATH, LESSONS_BY_PATH } from '../../constants';
 import DbSetupGuide from '../DbSetupGuide';
 import { useSync } from '../../contexts/SyncContext';
+import { Bell, BookOpen, Compass, Trophy, Play } from 'lucide-react';
 
 interface HeaderProps {
   currentUser: User;
   onLogout: () => void;
   onSwitchPath: (pathId: ProgrammingPath['id']) => void;
+  onStartLesson?: (lesson: Lesson) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) => {
+const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, onStartLesson }) => {
   const { language, setLanguage, t } = useLanguage();
   const { isOnline, syncPending, triggerSync } = useSync();
   const { theme, toggleTheme } = useTheme();
@@ -21,6 +24,98 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
   const [isDbGuideOpen, setIsDbGuideOpen] = useState(false);
   const [dbStatus, setDbStatus] = useState<'connected' | 'disconnected' | 'loading'>('loading');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const notificationRef = useRef<HTMLDivElement>(null);
+
+  const currentPath = currentUser.currentPath;
+  const currentPathData = PATHS.find(p => p.id === currentPath);
+
+  const { nextLesson, isPathCompleted, hasSelectedPath } = React.useMemo(() => {
+    if (!currentPath) {
+      return { nextLesson: null, isPathCompleted: false, hasSelectedPath: false };
+    }
+    const modules = MODULES_BY_PATH[currentPath] || [];
+    const sections = LESSONS_BY_PATH[currentPath] || [];
+    const allLessons = modules.length > 0 
+      ? modules.flatMap(m => m.levels.flatMap(l => l.lessons)) 
+      : sections.flatMap(s => s.lessons);
+    
+    if (allLessons.length === 0) {
+      return { nextLesson: null, isPathCompleted: false, hasSelectedPath: true };
+    }
+    
+    const completedLessons = currentUser.progress?.completedLessons?.[currentPath] || [];
+    const firstUncompleted = allLessons.find(l => !completedLessons.includes(l.id));
+    
+    return {
+      nextLesson: firstUncompleted || null,
+      isPathCompleted: allLessons.length > 0 && !firstUncompleted,
+      hasSelectedPath: true
+    };
+  }, [currentPath, currentUser.progress?.completedLessons]);
+
+  const localizedTexts = {
+    en: {
+      notifications: "Notifications",
+      nextSteps: "Next Steps",
+      choosePathTitle: "Choose a Learning Path",
+      choosePathDesc: "Select a coding path (Python, JavaScript, etc.) to start your learning journey!",
+      choosePathBtn: "Choose Path",
+      congratsTitle: "Path Completed! 🎉",
+      congratsDesc: `Congratulations! You have completed all lessons in ${currentPathData ? t(currentPathData.titleKey as any) : 'this path'}. Explore other paths to continue.`,
+      explorePathsBtn: "Explore Paths",
+      nextUpTitle: "Next Lesson",
+      resumeBtn: "Resume Learning",
+      noNotifications: "No new notifications",
+      xpReward: "XP Reward",
+      minutes: "mins",
+      beginner: "Beginner",
+      intermediate: "Intermediate",
+      advanced: "Advanced",
+      expert: "Expert",
+    },
+    fr: {
+      notifications: "Notifications",
+      nextSteps: "Étapes Suivantes",
+      choosePathTitle: "Choisir un Parcours",
+      choosePathDesc: "Sélectionnez un parcours de code (Python, JavaScript, etc.) pour commencer votre apprentissage !",
+      choosePathBtn: "Choisir un parcours",
+      congratsTitle: "Parcours Terminé ! 🎉",
+      congratsDesc: `Félicitations ! Vous avez terminé toutes les leçons de ${currentPathData ? t(currentPathData.titleKey as any) : 'ce parcours'}. Explorez d'autres parcours.`,
+      explorePathsBtn: "Explorer les parcours",
+      nextUpTitle: "Prochaine Leçon",
+      resumeBtn: "Reprendre l'apprentissage",
+      noNotifications: "Aucune nouvelle notification",
+      xpReward: "Récompense XP",
+      minutes: "min",
+      beginner: "Débutant",
+      intermediate: "Intermédiaire",
+      advanced: "Avancé",
+      expert: "Expert",
+    },
+    ar: {
+      notifications: "الإشعارات",
+      nextSteps: "الخطوات التالية",
+      choosePathTitle: "اختر مسارًا تعليميًا",
+      choosePathDesc: "اختر مسارًا للبرمجة (بايثون، جافا سكريبت، إلخ) لبدء رحلة التعلم الخاصة بك!",
+      choosePathBtn: "اختر المسار",
+      congratsTitle: "تم إكمال المسار! 🎉",
+      congratsDesc: `تهانينا! لقد أكملت جميع الدروس في مسار ${currentPathData ? t(currentPathData.titleKey as any) : 'هذا المسار'}. استكشف مسارات أخرى للمتابعة.`,
+      explorePathsBtn: "استكشف المسارات",
+      nextUpTitle: "الدرس التالي",
+      resumeBtn: "مواصلة التعلم",
+      noNotifications: "لا توجد إشعارات جديدة",
+      xpReward: "نقاط خبرة",
+      minutes: "دقائق",
+      beginner: "مبتدئ",
+      intermediate: "متوسط",
+      advanced: "متقدم",
+      expert: "خبير",
+    }
+  };
+
+  const texts = localizedTexts[language as 'en' | 'fr' | 'ar'] || localizedTexts.en;
 
   useEffect(() => {
     const checkDbStatus = async () => {
@@ -48,9 +143,6 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
     }
   };
 
-  const currentPath = currentUser.currentPath;
-  const currentPathData = PATHS.find(p => p.id === currentPath);
-
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value as Language);
   };
@@ -59,6 +151,9 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsPathDropdownOpen(false);
+      }
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setIsNotificationOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -139,6 +234,135 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath }) 
               </svg>
             )}
           </button>
+
+          {/* Notification Bell */}
+          <div ref={notificationRef} className="relative">
+            <button
+              onClick={() => setIsNotificationOpen(prev => !prev)}
+              className="relative w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 transition-all flex items-center justify-center border border-slate-200 dark:border-slate-600 cursor-pointer"
+              aria-label="Notifications"
+              title={texts.notifications}
+            >
+              <Bell className="h-5 w-5" />
+              {(!hasSelectedPath || !!nextLesson) && (
+                <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border border-white dark:border-slate-800 animate-pulse" />
+              )}
+            </button>
+
+            {isNotificationOpen && (
+              <div className={`absolute top-full mt-2 w-80 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-700/80 z-30 overflow-hidden origin-top-right transition-all duration-200 ${language === Language.AR ? 'left-0 right-auto origin-top-left' : ''}`}>
+                <div className="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+                  <h3 className="font-extrabold text-slate-800 dark:text-white tracking-wide text-sm flex items-center gap-2">
+                    <Bell className="w-4 h-4 text-[#4285F4]" />
+                    <span>{texts.nextSteps}</span>
+                  </h3>
+                  {(!hasSelectedPath || !!nextLesson) && (
+                    <span className="bg-[#4285F4]/10 text-[#4285F4] text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full">
+                      1 New
+                    </span>
+                  )}
+                </div>
+
+                <div className="p-4">
+                  {/* Scenario 1: No Path Selected */}
+                  {!hasSelectedPath && (
+                    <div className="text-center py-2">
+                      <div className="w-12 h-12 bg-[#4285F4]/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Compass className="w-6 h-6 text-[#4285F4]" />
+                      </div>
+                      <h4 className="font-bold text-slate-800 dark:text-white text-sm mb-1">{texts.choosePathTitle}</h4>
+                      <p className="text-slate-500 dark:text-slate-400 text-xs mb-4 leading-relaxed">{texts.choosePathDesc}</p>
+                      <button
+                        onClick={() => {
+                          setIsNotificationOpen(false);
+                          navigate('/dashboard/learn');
+                        }}
+                        className="w-full bg-[#4285F4] hover:bg-[#3367d6] text-white text-xs font-black uppercase tracking-widest py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 cursor-pointer animate-[pulse_2s_infinite]"
+                      >
+                        <Compass className="w-3.5 h-3.5" />
+                        <span>{texts.choosePathBtn}</span>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Scenario 2: Path Completed */}
+                  {hasSelectedPath && isPathCompleted && (
+                    <div className="text-center py-2">
+                      <div className="w-12 h-12 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Trophy className="w-6 h-6 text-amber-500" />
+                      </div>
+                      <h4 className="font-bold text-slate-800 dark:text-white text-sm mb-1">{texts.congratsTitle}</h4>
+                      <p className="text-slate-500 dark:text-slate-400 text-xs mb-4 leading-relaxed">{texts.congratsDesc}</p>
+                      <button
+                        onClick={() => {
+                          setIsNotificationOpen(false);
+                          navigate('/dashboard/learn');
+                        }}
+                        className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-black uppercase tracking-widest py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <Compass className="w-3.5 h-3.5" />
+                        <span>{texts.explorePathsBtn}</span>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Scenario 3: Next Lesson Available */}
+                  {hasSelectedPath && nextLesson && (
+                    <div className="space-y-3">
+                      <div className="p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl border border-slate-100 dark:border-slate-700/60 relative overflow-hidden group">
+                        <div className="absolute right-0 top-0 w-24 h-24 bg-[#4285F4]/5 rounded-full blur-xl pointer-events-none" />
+                        
+                        <div className="flex items-start gap-3">
+                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-gradient-to-br from-[#4285F4] to-[#1a73e8] shadow-md shadow-blue-500/20 mt-0.5">
+                            <BookOpen className="w-4 h-4" />
+                          </div>
+                          
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[10px] font-black uppercase tracking-wider text-[#4285F4] mb-0.5">{texts.nextUpTitle}</p>
+                            <h4 className="font-bold text-slate-800 dark:text-white text-sm truncate">
+                              {t(nextLesson.titleKey as any)}
+                            </h4>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 bg-slate-200/50 dark:bg-slate-700 px-1.5 py-0.5 rounded">
+                                ⭐ +{nextLesson.xp} XP
+                              </span>
+                              <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 bg-slate-200/50 dark:bg-slate-700 px-1.5 py-0.5 rounded">
+                                ⏱️ {nextLesson.estimatedMinutes || 10} {texts.minutes}
+                              </span>
+                              {nextLesson.difficulty && (
+                                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                                  nextLesson.difficulty === 'Beginner' ? 'text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/30' :
+                                  nextLesson.difficulty === 'Intermediate' ? 'text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30' :
+                                  'text-rose-600 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/30'
+                                }`}>
+                                  {nextLesson.difficulty === 'Beginner' ? texts.beginner :
+                                   nextLesson.difficulty === 'Intermediate' ? texts.intermediate :
+                                   nextLesson.difficulty === 'Advanced' ? texts.advanced : texts.expert}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setIsNotificationOpen(false);
+                          if (onStartLesson) {
+                            onStartLesson(nextLesson);
+                          }
+                        }}
+                        className="w-full bg-[#4285F4] hover:bg-[#3367d6] text-white text-xs font-black uppercase tracking-widest py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <Play className="w-3 h-3 fill-current" />
+                        <span>{texts.resumeBtn}</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
 
           <div ref={dropdownRef} className="relative">
             <button
