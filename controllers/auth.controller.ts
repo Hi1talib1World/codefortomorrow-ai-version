@@ -120,11 +120,11 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         _id: new mongoose.Types.ObjectId().toString(),
         xp: 150,
         streak: 3,
-        completedLessons: new Map([["sahara-loops", true]]),
-        scores: new Map([["sahara-loops", 100]]),
-        badgesEarned: new Map([["sahara-rider", true]]),
-        skillMastery: new Map([["loops", 80]]),
-        learningProfile: { strengths: ["loops"], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
+        completedLessons: new Map(),
+        scores: new Map(),
+        badgesEarned: new Map(),
+        skillMastery: new Map(),
+        learningProfile: { strengths: [], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
         skillGraph: {},
         lastLessonCompletedDate: new Date()
       };
@@ -134,7 +134,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         email,
         profilePictureUrl: `https://ui-avatars.com/api/?name=${email.charAt(0).toUpperCase()}&background=random&color=fff`,
         progress: mockProgress,
-        currentPath: "morocco",
+        currentPath: "block_coding",
       };
       const token = generateToken(mockUserId);
       setAuthCookie(res, token);
@@ -187,11 +187,11 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
         _id: new mongoose.Types.ObjectId().toString(),
         xp: 150,
         streak: 3,
-        completedLessons: new Map([["sahara-loops", true]]),
-        scores: new Map([["sahara-loops", 100]]),
-        badgesEarned: new Map([["sahara-rider", true]]),
-        skillMastery: new Map([["loops", 80]]),
-        learningProfile: { strengths: ["loops"], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
+        completedLessons: new Map(),
+        scores: new Map(),
+        badgesEarned: new Map(),
+        skillMastery: new Map(),
+        learningProfile: { strengths: [], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
         skillGraph: {},
         lastLessonCompletedDate: new Date()
       };
@@ -201,7 +201,7 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
         email: req.user?.email || "wizard@codefortomorrow.org",
         profilePictureUrl: req.user?.profilePictureUrl || "https://ui-avatars.com/api/?name=W&background=random&color=fff",
         progress: mockProgress,
-        currentPath: "morocco",
+        currentPath: "block_coding",
         role: req.user?.role || "student",
       });
       return;
@@ -270,7 +270,7 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
                 email,
                 profilePictureUrl: picture || `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`,
                 progress: mockProgress,
-                currentPath: "morocco",
+                currentPath: "block_coding",
                 role: "student",
             };
             const appToken = generateToken(mockUserId);
@@ -377,7 +377,7 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
                 email,
                 profilePictureUrl: picture,
                 progress: mockProgress,
-                currentPath: "morocco",
+                currentPath: "block_coding",
                 role: "student",
             };
             const appToken = generateToken(mockUserId);
