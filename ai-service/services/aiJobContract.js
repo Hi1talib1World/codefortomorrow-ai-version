@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 
 export const AIJobType = {
   STUDENT_ANALYSIS: 'student_analysis',
@@ -23,7 +23,7 @@ export function createAiJob(type, payload, source = 'api', priority = AIJobPrior
   const now = new Date().toISOString();
 
   return {
-    job_id: uuidv4(),
+    job_id: crypto.randomUUID(),
     type,
     status: AIJobStatus.PENDING,
     priority,
