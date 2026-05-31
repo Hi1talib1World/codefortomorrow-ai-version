@@ -491,27 +491,49 @@ Do not give them the complete solution code directly. Focus on guidance and debu
         });
 
         // 3. Highlight Annotations
-        html = html.replace(/(@\w+)/g, '<span class="text-indigo-400 font-bold">$1</span>');
+        html = html.replace(/(@\w+)/g, (match) => {
+            placeholders.push(`<span class="text-indigo-400 font-bold">${match}</span>`);
+            return `___PH_${placeholders.length - 1}___`;
+        });
 
         // 4. Highlight Java / standard keywords
         const keywords = /\b(class|public|private|protected|static|final|void|int|double|float|long|short|byte|boolean|char|if|else|for|while|do|switch|case|default|break|continue|return|new|this|super|extends|implements|try|catch|finally|throw|throws|import|package|const|let|var|function|def|elif|from|as)\b/g;
-        html = html.replace(keywords, '<span class="text-sky-400 font-bold">$1</span>');
+        html = html.replace(keywords, (match) => {
+            placeholders.push(`<span class="text-sky-400 font-bold">${match}</span>`);
+            return `___PH_${placeholders.length - 1}___`;
+        });
 
         // 5. Highlight Common Types & Predefined Classes (capitalized words like System, String, Math, etc.)
         const types = /\b(System|String|Math|Object|Scanner|List|ArrayList|Map|HashMap|Integer|Double|Float|Boolean|Character|Byte|Short|Long|Void|Exception|Thread)\b/g;
-        html = html.replace(types, '<span class="text-rose-400 font-bold">$1</span>');
+        html = html.replace(types, (match) => {
+            placeholders.push(`<span class="text-rose-400 font-bold">${match}</span>`);
+            return `___PH_${placeholders.length - 1}___`;
+        });
 
         // 6. Highlight Method Calls (word followed by open parenthesis)
-        html = html.replace(/\b(\w+)(?=\()/g, '<span class="text-cyan-400 font-semibold">$1</span>');
+        html = html.replace(/\b(\w+)(?=\()/g, (match) => {
+            placeholders.push(`<span class="text-cyan-400 font-semibold">${match}</span>`);
+            return `___PH_${placeholders.length - 1}___`;
+        });
 
         // 7. Highlight Numbers
-        html = html.replace(/\b(\d+(\.\d+)?)\b/g, '<span class="text-amber-400 font-medium">$1</span>');
+        html = html.replace(/\b(\d+(\.\d+)?)\b/g, (match) => {
+            placeholders.push(`<span class="text-amber-400 font-medium">${match}</span>`);
+            return `___PH_${placeholders.length - 1}___`;
+        });
 
         // 8. Highlight Operators
-        html = html.replace(/([+\-*/%=!&|<>:?^~]+)/g, '<span class="text-slate-400">$1</span>');
+        html = html.replace(/([+\-*/%=!&|<>:?^~]+)/g, (match) => {
+            placeholders.push(`<span class="text-slate-400">${match}</span>`);
+            return `___PH_${placeholders.length - 1}___`;
+        });
 
-        // 9. Re-insert strings and comments in reverse order
-        html = html.replace(/___PH_(\d+)___/g, (_, index) => placeholders[parseInt(index)]);
+        // 9. Re-insert strings, comments, and highlighted elements recursively
+        let lastHtml = '';
+        while (html !== lastHtml) {
+            lastHtml = html;
+            html = html.replace(/___PH_(\d+)___/g, (_, index) => placeholders[parseInt(index)]);
+        }
         
         return { __html: html };
     };
