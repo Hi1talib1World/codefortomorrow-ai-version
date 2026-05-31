@@ -37,40 +37,9 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
     return res.status(401).json({ message: 'Not authorized, no token' });
   }
 
-  console.log('SECRET:', process.env.JWT_SECRET);
-  console.log('TOKEN:', token);
-
-  let decoded;
   try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('DECODED:', decoded);
-  } catch (e) {
-    console.log('JWT VERIFY FAILED:', e.message);
-  }
-
-  const user = await User.findById(decoded?.id);
-  console.log('USER FOUND:', user);
-    const isDbConnected = require('mongoose').connection.readyState === 1;
-    let user;
-
-    if (isDbConnected) {
-      user = await User.findById(decoded.id).select('-password');
-    } else {
-      // Mock user for offline dev
-      user = {
-        _id: decoded.id,
-        name: 'Developer Wizard 🪄',
-        email: 'wizard@codefortomorrow.org',
-        profilePictureUrl: 'https://ui-avatars.com/api/?name=W&background=random&color=fff',
-        role: 'student',
-      };
-    }
-
-    if (!user) {
-      return res.status(401).json({ message: 'Not authorized, user not found' });
-    }
-
-    req.user = user;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    req.user = await User.findById((decoded as any).id).select('-password');
     next();
   } catch (jwtError) {
     console.warn('Backend JWT verification failed, trying Firebase ID token', jwtError);
