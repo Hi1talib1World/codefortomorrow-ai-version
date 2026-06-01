@@ -35,6 +35,26 @@ async function startServer() {
   // Initialize the Express application
   const app: express.Application = express();
 
+  // --- Subdomain Routing Middleware ---
+  app.use((req, res, next) => {
+    const host = req.headers.host || '';
+    const hostname = host.split(':')[0];
+    
+    // Identify subdomain under our local target palycofoto.club
+    let subdomain = '';
+    if (hostname.endsWith('.palycofoto.club')) {
+      subdomain = hostname.replace('.palycofoto.club', '');
+    }
+    
+    // Log host and path routing information
+    console.log(`[Host Routing] Host: ${host} | Subdomain: ${subdomain || 'none'} | Path: ${req.path}`);
+    
+    // Attach subdomain to the request object for downstream routes/controllers if needed
+    (req as any).subdomain = subdomain;
+    
+    next();
+  });
+
   // Enable trust proxy for correct IP tracking behind reverse proxies (like Cloudflare or Nginx)
   app.set('trust proxy', 1);
 
