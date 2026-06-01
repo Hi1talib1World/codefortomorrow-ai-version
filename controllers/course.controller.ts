@@ -92,7 +92,7 @@ export const deleteCourse = async (req: Request, res: Response, next: NextFuncti
     if (course.owner.toString() !== user._id.toString()) {
       throw new ApiError(403, 'Not authorized to delete this course');
     }
-    await course.remove();
+    await course.deleteOne();
     res.json({ message: 'Course deleted' });
   } catch (error) {
     next(error);
