@@ -52,7 +52,7 @@ export const RepoArticle: React.FC<RepoArticleProps> = ({ repo, onBack, accentCo
 
   const accent = accentColor === 'purple'
     ? { bg: 'bg-purple-500', bgLight: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400', textBright: 'text-purple-300' }
-    : { bg: 'bg-emerald-500', bgLight: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400', textBright: 'text-emerald-300' };
+    : { bg: 'bg-[#111827]', bgLight: 'bg-[#111827]/10', border: 'border-[#111827]/20', text: 'text-emerald-400', textBright: 'text-emerald-300' };
 
   return (
     <motion.div
@@ -113,7 +113,7 @@ export const RepoArticle: React.FC<RepoArticleProps> = ({ repo, onBack, accentCo
             {repo.language}
           </span>
           <div className="flex items-center gap-1.5 text-sm font-semibold">
-            <Star className="w-4 h-4 text-yellow-500 fill-current" />
+            <Star className="w-4 h-4 text-[#FBBF24] fill-current" />
             <span className="text-white">{formatNumber(repo.stargazers_count)}</span>
           </div>
           <div className="flex items-center gap-1.5 text-sm font-semibold">
