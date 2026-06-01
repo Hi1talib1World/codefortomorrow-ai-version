@@ -48,9 +48,8 @@ export default function RepoArticlePage() {
     <div className="min-h-screen bg-[#09090b] font-sans text-white">
       {/* Header */}
       <header className="h-16 border-b border-slate-800 flex items-center justify-between px-6 bg-[#09090b] z-50 sticky top-0">
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/welcome')}>
-          <img src="/assets/images/cofoto.png" alt="Logo" className="w-8 h-8 object-contain rounded-lg" />
-          <span className="font-black text-lg tracking-tight uppercase hidden sm:block">Code for Tomorrow</span>
+        <div className="flex items-center cursor-pointer" onClick={() => navigate('/welcome')}>
+          <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-8 w-auto object-contain" />
         </div>
         <button onClick={() => navigate('/cftos')} className="text-slate-400 hover:text-white font-bold text-sm transition-colors">
           ← Back to Open Source
