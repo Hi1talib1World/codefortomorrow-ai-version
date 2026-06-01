@@ -37,7 +37,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
     <div className="bg-white dark:bg-slate-900 h-screen flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[10%] left-[10%] w-64 h-64 bg-[#4285F4]/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-[10%] left-[10%] w-64 h-64 bg-[#2E2FCE]/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-[15%] right-[10%] w-80 h-80 bg-[#34A853]/5 rounded-full blur-3xl"></div>
         <div className="absolute top-[40%] right-[20%] w-48 h-48 bg-[#FBBC05]/5 rounded-full blur-3xl"></div>
       </div>
@@ -49,7 +49,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
         style={{ opacity: Math.min(progress / 40, 1) }}
       >
         <h1 className="text-4xl md:text-5xl font-black text-slate-800 dark:text-white tracking-tight mb-2">
-          Code for <span className="text-[#4285F4]">Tomorrow</span>
+          Code for <span className="text-[#2E2FCE]">Tomorrow</span>
         </h1>
         <p className="text-sm font-medium text-slate-400 tracking-widest uppercase">
           Learn · Create · Inspire
@@ -63,7 +63,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
             className="h-full rounded-full transition-all duration-75 ease-linear"
             style={{
               width: `${progress}%`,
-              background: 'linear-gradient(90deg, #4285F4, #34A853, #FBBC05, #EA4335)'
+              background: 'linear-gradient(90deg, #2E2FCE, #34A853, #FBBC05, #EA4335)'
             }}
           />
         </div>
