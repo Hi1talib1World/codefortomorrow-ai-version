@@ -142,11 +142,10 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
             <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <div 
-                        className="flex items-center space-x-3 cursor-pointer group"
+                        className="flex items-center cursor-pointer group"
                         onClick={() => navigate('/welcome')}
                     >
-                        <img src="/assets/images/cofoto.png" alt="Logo" className="w-10 h-10 object-contain rounded-xl shadow-md group-hover:scale-105 transition-transform" />
-                        <span className="text-lg font-black tracking-tight uppercase">Code for Tomorrow</span>
+                        <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
                     </div>
                 </div>
             </header>
