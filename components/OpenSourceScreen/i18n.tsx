@@ -125,6 +125,20 @@ const translations: Record<string, Record<Lang, string>> = {
   'details.readme': { en: 'README', ar: 'اقرأني' },
   'details.readArticle': { en: 'Read Article', ar: 'اقرأ المقال' },
   'details.viewOnGithub': { en: 'View on GitHub', ar: 'عرض على GitHub' },
+  'details.aiBeginnerGuide': { en: 'AI Beginner Guide', ar: 'دليل الذكاء الاصطناعي للمبتدئين' },
+  'details.fullReadme': { en: 'Full README', ar: 'ملف README الكامل' },
+  'details.share': { en: 'Share', ar: 'مشاركة' },
+  'details.save': { en: 'Save', ar: 'حفظ' },
+  'details.saved': { en: 'Saved', ar: 'تم الحفظ' },
+  'details.generatingGuide': { en: 'AI is generating a beginner-friendly setup guide...', ar: 'يقوم الذكاء الاصطناعي بإنشاء دليل إعداد مبسط للمبتدئين...' },
+  'details.noReadme': { en: 'No README found for this repository.', ar: 'لم يتم العثور على ملف README لهذا المستودع.' },
+  'details.failedFetchGuide': { en: 'Failed to fetch AI Setup Guide', ar: 'فشل في جلب دليل إعداد الذكاء الاصطناعي' },
+  'details.failedFetchReadme': { en: 'Failed to fetch README', ar: 'فشل في جلب ملف README' },
+  'details.errorGuide': { en: 'An error occurred while fetching the setup guide.', ar: 'حدث خطأ أثناء جلب دليل الإعداد.' },
+  'details.errorReadme': { en: 'An error occurred while fetching the documentation.', ar: 'حدث خطأ أثناء جلب الوثائق.' },
+  'details.shareTitle': { en: 'Share Repository', ar: 'مشاركة المستودع' },
+  'details.copyLink': { en: 'Copy Link', ar: 'نسخ الرابط' },
+  'details.copy': { en: 'Copy', ar: 'نسخ' },
 };
 
 export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
