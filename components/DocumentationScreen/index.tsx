@@ -49,7 +49,7 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
     <div className="max-w-4xl mx-auto pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <header className="mb-8">
         <h1 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-3">
-          <BookOpen className="w-8 h-8 text-[#4285F4]" />
+          <BookOpen className="w-8 h-8 text-[#2E2FCE]" />
           {ui.title}
         </h1>
         <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">
@@ -69,7 +69,7 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
                   onClick={() => setSelectedPath(path.id)}
                   className={`w-full text-left px-3 py-2.5 rounded-xl font-bold text-sm transition-colors ${
                     selectedPath === path.id
-                      ? 'bg-[#4285F4]/10 text-[#4285F4]'
+                      ? 'bg-[#2E2FCE]/10 text-[#2E2FCE]'
                       : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
                   }`}
                 >
