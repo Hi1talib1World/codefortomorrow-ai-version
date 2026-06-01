@@ -39,7 +39,7 @@ const WizardStepper = ({ currentStep }: { currentStep: number }) => {
                             <p className={`text-xs mb-2 font-bold uppercase tracking-wide ${isActive || isCompleted ? 'text-slate-800 dark:text-white' : 'text-gray-400 dark:text-slate-600'}`}>
                                 {t(step.key as any)}
                             </p>
-                            <div className={`w-4 h-4 rounded-full mx-auto border-2 ${isCompleted ? 'bg-[#4285F4] border-[#4285F4]' : isActive ? 'bg-white dark:bg-slate-800 border-[#4285F4] ring-4 ring-[#4285F4]/20' : 'bg-gray-200 dark:bg-slate-700 border-gray-200 dark:border-slate-700'}`}></div>
+                            <div className={`w-4 h-4 rounded-full mx-auto border-2 ${isCompleted ? 'bg-[#2E2FCE] border-[#2E2FCE]' : isActive ? 'bg-white dark:bg-slate-800 border-[#2E2FCE] ring-4 ring-[#2E2FCE]/20' : 'bg-gray-200 dark:bg-slate-700 border-gray-200 dark:border-slate-700'}`}></div>
                         </div>
                     );
                 })}
@@ -82,10 +82,10 @@ const SelectCurriculumStep = ({ formData, setFormData }: { formData: any, setFor
                 <button
                     key={option.id}
                     onClick={() => handleSelect(option.id)}
-                    className={`w-full text-left p-5 border rounded-2xl flex items-center space-x-4 transition-all ${formData.curriculum === option.id ? 'border-[#4285F4] bg-[#4285F4]/5 shadow-sm' : 'border-slate-200 dark:border-slate-700 hover:border-[#4285F4]/30 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+                    className={`w-full text-left p-5 border rounded-2xl flex items-center space-x-4 transition-all ${formData.curriculum === option.id ? 'border-[#2E2FCE] bg-[#2E2FCE]/5 shadow-sm' : 'border-slate-200 dark:border-slate-700 hover:border-[#2E2FCE]/30 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
                 >
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.curriculum === option.id ? 'border-[#4285F4]' : 'border-gray-300'}`}>
-                        {formData.curriculum === option.id && <div className="w-3 h-3 bg-[#4285F4] rounded-full"></div>}
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.curriculum === option.id ? 'border-[#2E2FCE]' : 'border-gray-300'}`}>
+                        {formData.curriculum === option.id && <div className="w-3 h-3 bg-[#2E2FCE] rounded-full"></div>}
                     </div>
                     <span className="font-bold text-slate-700 dark:text-slate-200">{t(option.titleKey as any)}</span>
                 </button>
@@ -107,7 +107,7 @@ const SelectStageStep = ({ formData, setFormData }: { formData: any, setFormData
                 <button
                     key={option.id}
                     onClick={() => setFormData({ ...formData, stage: option.id, outcomes: [] })}
-                    className={`p-6 border rounded-2xl text-center transition-all font-bold tracking-wide ${formData.stage === option.id ? 'border-[#4285F4] bg-[#4285F4]/5 text-[#1a73e8] dark:text-[#8ab4f8] shadow-sm' : 'border-slate-200 dark:border-slate-700 text-slate-500 hover:border-[#4285F4]/30 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+                    className={`p-6 border rounded-2xl text-center transition-all font-bold tracking-wide ${formData.stage === option.id ? 'border-[#2E2FCE] bg-[#2E2FCE]/5 text-[#2E2FCE] dark:text-[#a3aaeb] shadow-sm' : 'border-slate-200 dark:border-slate-700 text-slate-500 hover:border-[#2E2FCE]/30 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
                 >
                     {t(option.key as any)}
                 </button>
@@ -178,10 +178,10 @@ const GeneratingStep = ({ subject, formData, onComplete }: { subject: string, fo
 
     return (
         <div className="text-center py-12">
-            <div className="w-24 h-24 border-4 border-[#e8f0fe] border-t-[#4285F4] rounded-full animate-spin mx-auto mb-6"></div>
+            <div className="w-24 h-24 border-4 border-[#e8f0fe] border-t-[#2E2FCE] rounded-full animate-spin mx-auto mb-6"></div>
             <h2 className="text-2xl font-bold text-slate-800 dark:text-white uppercase tracking-tight">{t('consulting_ai')}</h2>
             <div className="w-full max-w-xs bg-slate-200 dark:bg-slate-700 h-2 rounded-full mx-auto mt-6 overflow-hidden">
-                <div className="bg-[#4285F4] h-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
+                <div className="bg-[#2E2FCE] h-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
             </div>
         </div>
     );
@@ -281,7 +281,7 @@ const CurriculumWizard: React.FC<CurriculumWizardProps> = ({ subjectTitleKey, on
                         <button
                             onClick={nextStep}
                             disabled={(currentStep === 1 && !formData.curriculum) || (currentStep === 2 && !formData.stage) || (currentStep === 3 && formData.outcomes.length === 0)}
-                            className="flex-[2] py-4 bg-[#4285F4] text-white font-bold rounded-full shadow-sm hover:bg-[#1a73e8] active:scale-95 disabled:opacity-50 disabled:active:scale-100 disabled:hover:bg-[#4285F4] transition text-sm"
+                            className="flex-[2] py-4 bg-[#2E2FCE] text-white font-bold rounded-full shadow-sm hover:bg-[#2E2FCE] active:scale-95 disabled:opacity-50 disabled:active:scale-100 disabled:hover:bg-[#2E2FCE] transition text-sm"
                         >
                             {currentStep === 4 ? t('generate_magic') : t('continue_button')}
                         </button>
