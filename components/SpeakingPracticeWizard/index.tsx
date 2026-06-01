@@ -36,7 +36,7 @@ const SpeakingPracticeWizard: React.FC<SpeakingPracticeWizardProps> = ({ languag
     return (
         <div className="p-4 md:p-8 bg-slate-50 dark:bg-slate-900 min-h-full">
             <header className="mb-8 flex items-center space-x-4 text-sm font-bold text-slate-500 dark:text-slate-400">
-                <button onClick={onBack} className="hover:text-[#4285F4] transition-colors">{t('speaking_hub')}</button>
+                <button onClick={onBack} className="hover:text-[#2E2FCE] transition-colors">{t('speaking_hub')}</button>
                 <span className="text-slate-300 dark:text-slate-600">&gt;</span>
                 <span className="text-slate-800 dark:text-slate-200">{t(languageTitleKey as any)}</span>
             </header>
@@ -110,7 +110,7 @@ const SpeakingPracticeWizard: React.FC<SpeakingPracticeWizardProps> = ({ languag
                             <select
                                 value={formData.duration}
                                 onChange={(e) => setFormData({ ...formData, duration: Number(e.target.value) })}
-                                className="w-full appearance-none bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-white rounded-xl py-4 pl-4 pr-10 font-bold focus:outline-none focus:ring-2 focus:ring-[#4285F4] focus:border-transparent transition-shadow"
+                                className="w-full appearance-none bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-white rounded-xl py-4 pl-4 pr-10 font-bold focus:outline-none focus:ring-2 focus:ring-[#2E2FCE] focus:border-transparent transition-shadow"
                             >
                                 <option value={1}>1 min</option>
                                 <option value={2}>2 min</option>
@@ -128,7 +128,7 @@ const SpeakingPracticeWizard: React.FC<SpeakingPracticeWizardProps> = ({ languag
                     <button
                         onClick={handleStart}
                         disabled={isNextDisabled()}
-                        className="py-4 px-12 bg-[#4285F4] text-white text-base font-bold tracking-wide rounded-full hover:bg-[#1a73e8] transition-all disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed shadow-sm hover:shadow active:scale-95 transform"
+                        className="py-4 px-12 bg-[#2E2FCE] text-white text-base font-bold tracking-wide rounded-full hover:bg-[#2E2FCE] transition-all disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed shadow-sm hover:shadow active:scale-95 transform"
                     >
                         {t('start_speaking')}
                     </button>
