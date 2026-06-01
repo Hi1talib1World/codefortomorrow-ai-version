@@ -29,7 +29,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeView, setActiveView }) => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-20 md:hidden transition-colors">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 z-20 md:hidden transition-colors">
       <div className="container mx-auto flex justify-around max-w-lg px-2">
         {navItems.map((item) => (
           <button
