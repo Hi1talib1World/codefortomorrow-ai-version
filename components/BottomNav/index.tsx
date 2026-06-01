@@ -35,13 +35,13 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeView, setActiveView }) => {
           <button
             key={item.id}
             onClick={() => setActiveView(item.id as DashboardView)}
-            className={`flex-1 flex flex-col items-center justify-center pt-4 pb-4 transition-all transform active:scale-95 ${activeView === item.id ? 'text-[#2E2FCE] dark:text-[#a3aaeb]' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
+            className={`flex-1 flex flex-col items-center justify-center pt-4 pb-4 transition-all transform active:scale-95 ${activeView === item.id ? 'text-[#111827] dark:text-[#FBBF24]' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
               }`}
           >
             <div className={`mb-1 transition-all ${activeView === item.id ? 'scale-110' : 'opacity-70 hover:opacity-100'}`}>{item.icon}</div>
             <span className="text-[10px] font-bold uppercase tracking-wide">{item.label}</span>
             {activeView === item.id && (
-              <div className="w-8 h-1 bg-[#2E2FCE] dark:bg-[#a3aaeb] rounded-full mt-1.5"></div>
+              <div className="w-8 h-1 bg-[#FBBF24] rounded-full mt-1.5"></div>
             )}
           </button>
         ))}
