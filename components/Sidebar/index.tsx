@@ -47,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, currentUse
   ];
 
   return (
-    <nav className="hidden md:flex flex-col bg-white dark:bg-slate-800 w-60 px-6 py-10 border-r border-slate-200 dark:border-slate-700 shadow-sm transition-colors">
+    <nav className="hidden md:flex flex-col bg-white dark:bg-slate-800 w-60 px-6 py-10 border-r border-slate-200 dark:border-slate-700 transition-colors">
       <div className="mb-12 px-2">
         <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-10 w-auto object-contain dark:brightness-110" />
       </div>
