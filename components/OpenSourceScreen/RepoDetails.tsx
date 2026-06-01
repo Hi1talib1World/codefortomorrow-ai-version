@@ -166,13 +166,13 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <h1 className="text-3xl font-black text-white">{repo.name}</h1>
-            <CheckCircle2 className="w-6 h-6 text-emerald-500 shrink-0" />
+            <CheckCircle2 className="w-6 h-6 text-[#111827] shrink-0" />
           </div>
           <p className="text-slate-400 text-lg">{repo.description}</p>
         </div>
         <div className="flex gap-6 text-sm font-semibold">
           <div className="flex items-center gap-2">
-            <Star className="w-5 h-5 text-yellow-500 fill-current" />
+            <Star className="w-5 h-5 text-[#FBBF24] fill-current" />
             <div className="flex flex-col">
               <span className="text-white">{formatNumber(repo.stargazers_count)}</span>
               <span className="text-slate-500 text-xs uppercase tracking-wider">{t('feed.stars')}</span>
