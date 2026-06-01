@@ -163,7 +163,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
   }, []);
 
   return (
-    <header className="sticky top-0 bg-white dark:bg-slate-800 shadow-sm px-6 py-3 z-20 border-b border-slate-200 dark:border-slate-700 transition-colors">
+    <header className="sticky top-0 bg-white dark:bg-slate-800 px-6 py-3 z-20 border-b border-slate-200 dark:border-slate-700 transition-colors">
       <DbSetupGuide
         isOpen={isDbGuideOpen}
         onClose={() => setIsDbGuideOpen(false)}
