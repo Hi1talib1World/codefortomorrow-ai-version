@@ -776,7 +776,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             {/* Column 1: Logo & Social Links */}
             <div className="flex flex-col items-center md:items-start space-y-6">
               <div className="flex items-center">
-                <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-12 w-auto object-contain transition-transform hover:scale-105 brightness-0 invert" />
+                <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-12 w-auto object-contain transition-transform hover:scale-105" />
               </div>
               
               {/* Social media icons - White on Dark */}
