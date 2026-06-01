@@ -775,11 +775,8 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
             {/* Column 1: Logo & Social Links */}
             <div className="flex flex-col items-center md:items-start space-y-6">
-              <div className="flex items-center space-x-3">
-                <img src="/assets/images/cofoto.png" alt="Code for Tomorrow Logo" className="w-12 h-12 object-contain rounded-xl bg-white/10 p-1 shadow-lg ring-2 ring-[#FDD501]/50" />
-                <span className="text-xl font-black text-[#FDD501] tracking-tight uppercase">
-                  Code for Tomorrow<span className="text-xs align-super ml-0.5">®</span>
-                </span>
+              <div className="flex items-center">
+                <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-12 w-auto object-contain transition-transform hover:scale-105" />
               </div>
               
               {/* Social media icons - White on Blue */}
