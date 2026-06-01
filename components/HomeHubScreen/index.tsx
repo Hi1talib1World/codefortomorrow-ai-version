@@ -221,7 +221,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         {/* Golden/emerald aura behind chest */}
                         {allQuestsCompleted && !chestOpenedToday && chestState !== 'opened' && (
                             <div className="absolute inset-0 bg-[#FBBF24]/25 rounded-2xl blur-lg animate-pulse z-0"></div>
-                        )}                   )}
+                        )}
                         
                         {/* Chest Emoji */}
                         <div className="text-5xl drop-shadow-md select-none transition-transform z-10">
@@ -422,7 +422,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         {/* Brain Training Section */}
                         <div className="lg:col-span-2 space-y-8">
                             <div className="space-y-4">
-                                <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">{t('brain_training')}</h2>
+                                <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">{t('brain_training')}</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <button onClick={() => navigate('/brain-training')} className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer">
                                         <div className="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-700">
@@ -433,7 +433,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                                 <p className="text-[10px] font-bold text-[#EA4335] uppercase">{t('brain_training')}</p>
                                                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{t('brain_training_challenges')}</p>
                                             </div>
-                                            <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#2E2FCE] group-hover:text-white group-hover:border-[#2E2FCE] transition-all shadow-sm">
+                                            <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
                                                 <span className="text-lg">→</span>
                                             </div>
                                         </div>
@@ -447,7 +447,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                                 <p className="text-[10px] font-bold text-[#EA4335] uppercase">{t('brain_training')}</p>
                                                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{t('brain_training_workouts')}</p>
                                             </div>
-                                            <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#2E2FCE] group-hover:text-white group-hover:border-[#2E2FCE] transition-all shadow-sm">
+                                            <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
                                                 <span className="text-lg">→</span>
                                             </div>
                                         </div>
@@ -457,7 +457,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                             {/* Suggested Courses */}
                             <div className="space-y-4">
-                                <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">
+                                <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">
                                     {t('suggested_courses') || 'Suggested Courses'}
                                 </h2>
                                 {renderSuggestedCourses()}
@@ -467,7 +467,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         {/* MentalUP & Daily Quests Right Sidebar Section */}
                         <div className="space-y-8">
                             <div className="space-y-4">
-                                <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">Daily Missions</h2>
+                                <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">Daily Missions</h2>
                                 {renderDailyQuestsHUD()}
                             </div>
 
@@ -499,7 +499,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                     {/* Math Games Section */}
                     <div className="space-y-4">
-                        <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">Math Games</h2>
+                        <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">Math Games</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <button 
                                 id="btn-math-pick"
@@ -510,7 +510,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             >
                                 <div className="aspect-[16/10] bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center p-8">
                                     <div className="grid grid-cols-2 gap-2 transform group-hover:scale-105 transition-transform">
-                                        <div className="w-10 h-10 bg-[#2E2FCE] rounded-lg flex items-center justify-center text-white font-bold text-lg">＋</div>
+                                        <div className="w-10 h-10 bg-[#111827] rounded-lg flex items-center justify-center text-white font-bold text-lg">＋</div>
                                         <div className="w-10 h-10 bg-[#EA4335] rounded-lg flex items-center justify-center text-white font-bold text-lg">－</div>
                                         <div className="w-10 h-10 bg-[#FBBC05] rounded-lg flex items-center justify-center text-white font-bold text-lg">×</div>
                                         <div className="w-10 h-10 bg-[#34A853] rounded-lg flex items-center justify-center text-white font-bold text-lg">＝</div>
@@ -518,7 +518,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
                                     <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Pick & Play</p>
-                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#2E2FCE] group-hover:text-white group-hover:border-[#2E2FCE] transition-all shadow-sm">
+                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
                                         <span className="text-lg">→</span>
                                     </div>
                                 </div>
@@ -535,7 +535,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
                                     <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Quick Play</p>
-                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#2E2FCE] group-hover:text-white group-hover:border-[#2E2FCE] transition-all shadow-sm">
+                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
                                         <span className="text-lg">→</span>
                                     </div>
                                 </div>
@@ -552,7 +552,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
                                     <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Math Arena</p>
-                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#2E2FCE] group-hover:text-white group-hover:border-[#2E2FCE] transition-all shadow-sm">
+                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
                                         <span className="text-lg">→</span>
                                     </div>
                                 </div>
@@ -561,7 +561,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     </div>
 
                     <div className="space-y-4">
-                        <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">Smart Books</h2>
+                        <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">Smart Books</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <button 
                                 id="btn-smart-books"
@@ -574,8 +574,8 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     <img src="/esl_books.png" alt="ESL Books" className="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-500" />
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
-                                    <p className="text-sm font-bold text-[#2E2FCE]">ESL Books</p>
-                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-[#2E2FCE] group-hover:bg-[#2E2FCE] group-hover:text-white group-hover:border-[#2E2FCE] transition-all shadow-sm">
+                                    <p className="text-sm font-bold text-[#111827] dark:text-indigo-300">ESL Books</p>
+                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-[#111827] dark:text-indigo-300 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
                                         <span className="text-lg">→</span>
                                     </div>
                                 </div>
@@ -585,7 +585,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                     {/* Speaking Hub Section */}
                     <div className="space-y-4">
-                        <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">Speaking Hub</h2>
+                        <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">Speaking Hub</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <button 
                                 id="btn-speaking-hub"
@@ -598,8 +598,8 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     <img src="/speaking_practice.png" alt="Practice a Language" className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500" />
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
-                                    <p className="text-sm font-bold text-[#2E2FCE]">Practice a Language</p>
-                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-[#2E2FCE] group-hover:bg-[#2E2FCE] group-hover:text-white group-hover:border-[#2E2FCE] transition-all shadow-sm">
+                                    <p className="text-sm font-bold text-[#111827] dark:text-indigo-300">Practice a Language</p>
+                                    <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-[#111827] dark:text-indigo-300 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
                                         <span className="text-lg">→</span>
                                     </div>
                                 </div>
@@ -671,7 +671,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 {/* Hero Greeting Section */}
                 <div className="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-10">
                     <div className="relative group shrink-0">
-                        <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-[#34A853]/10 dark:bg-[#2E2FCE]/10 blur-xl rounded-full"></div>
+                        <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-[#34A853]/10 dark:bg-indigo-500/10 blur-xl rounded-full"></div>
                         <div className="transform transition-all group-hover:scale-105 duration-500 cursor-pointer drop-shadow-md">
                             <Mascot />
                         </div>
@@ -680,7 +680,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     <div className="text-center md:text-left space-y-4 max-w-lg">
                         <div className="relative bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700">
                             <h1 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white leading-tight tracking-tight">
-                                {t('welcome_back').replace('!', '')}, <span className="text-[#2E2FCE]">{userName}!</span>
+                                {t('welcome_back').replace('!', '')}, <span className="text-[#111827] dark:text-[#FBBF24] font-black">{userName}!</span>
                             </h1>
                             <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
                                 {t('welcome_message')} {t('magic_found')}
@@ -713,7 +713,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         data-agent-track="guest_learn_select"
                         data-sync-metric="curriculum_onboarding"
                         onClick={goToLearn}
-                        className="group relative bg-[#2E2FCE] rounded-3xl p-8 text-center transition-all transform hover:-translate-y-2 hover:shadow-xl overflow-hidden cursor-pointer"
+                        className="group relative bg-[#111827] rounded-3xl p-8 text-center transition-all transform hover:-translate-y-2 hover:shadow-xl overflow-hidden cursor-pointer"
                     >
                         <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
                         <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop-blur-sm border border-white/20 transition-transform group-hover:scale-110 shadow-sm relative z-10">
@@ -722,10 +722,10 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         <h2 className="text-xl md:text-2xl font-bold text-white mb-3 relative z-10">
                             {t('learn')}
                         </h2>
-                        <p className="text-sm text-blue-100 font-medium mb-8 leading-snug relative z-10">
+                        <p className="text-sm text-indigo-100 font-medium mb-8 leading-snug relative z-10">
                             {t('learn_adventure_desc')}
                         </p>
-                        <div className="w-full py-4 bg-white text-[#2E2FCE] rounded-full font-bold text-sm shadow-md group-hover:bg-slate-50 transition-colors uppercase tracking-wide relative z-10">
+                        <div className="w-full py-4 bg-white text-[#111827] rounded-full font-bold text-sm shadow-md group-hover:bg-slate-50 transition-colors uppercase tracking-wide relative z-10">
                             {t('start')}
                         </div>
                     </button>
@@ -777,7 +777,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                 {/* Suggested Courses */}
                 <div className="space-y-4">
-                    <h2 className="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wide">
+                    <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">
                         {t('suggested_courses') || 'Suggested Courses'}
                     </h2>
                     {renderSuggestedCourses()}
