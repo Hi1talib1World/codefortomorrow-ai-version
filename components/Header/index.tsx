@@ -171,7 +171,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
         isRetrying={dbStatus === 'loading'}
       />
       <div className="container mx-auto flex justify-between items-center max-w-7xl">
-        <h1 className="text-2xl md:hidden font-bold text-[#2E2FCE] dark:text-[#a3aaeb] leading-none tracking-tight">C4T</h1>
+        <h1 className="text-2xl md:hidden font-bold text-[#111827] dark:text-[#c7d0fb] leading-none tracking-tight">C4T</h1>
         <div className="flex-grow md:hidden"></div>
         <div className="flex items-center space-x-3 sm:space-x-6 rtl:space-x-reverse">
 
@@ -253,11 +253,11 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
               <div className={`absolute top-full mt-2 w-80 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-700/80 z-30 overflow-hidden origin-top-right transition-all duration-200 ${language === Language.AR ? 'left-0 right-auto origin-top-left' : ''}`}>
                 <div className="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
                   <h3 className="font-extrabold text-slate-800 dark:text-white tracking-wide text-sm flex items-center gap-2">
-                    <Bell className="w-4 h-4 text-[#2E2FCE]" />
+                    <Bell className="w-4 h-4 text-[#111827] dark:text-indigo-300" />
                     <span>{texts.nextSteps}</span>
                   </h3>
                   {(!hasSelectedPath || !!nextLesson) && (
-                    <span className="bg-[#2E2FCE]/10 text-[#2E2FCE] text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full">
+                    <span className="bg-[#FBBF24]/20 text-[#111827] dark:text-[#FBBF24] text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full">
                       1 New
                     </span>
                   )}
@@ -267,8 +267,8 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                   {/* Scenario 1: No Path Selected */}
                   {!hasSelectedPath && (
                     <div className="text-center py-2">
-                      <div className="w-12 h-12 bg-[#2E2FCE]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <Compass className="w-6 h-6 text-[#2E2FCE]" />
+                      <div className="w-12 h-12 bg-[#111827]/10 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Compass className="w-6 h-6 text-[#111827] dark:text-indigo-300" />
                       </div>
                       <h4 className="font-bold text-slate-800 dark:text-white text-sm mb-1">{texts.choosePathTitle}</h4>
                       <p className="text-slate-500 dark:text-slate-400 text-xs mb-4 leading-relaxed">{texts.choosePathDesc}</p>
@@ -277,7 +277,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                           setIsNotificationOpen(false);
                           navigate('/dashboard/learn');
                         }}
-                        className="w-full bg-[#2E2FCE] hover:bg-[#3367d6] text-white text-xs font-black uppercase tracking-widest py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 cursor-pointer animate-[pulse_2s_infinite]"
+                        className="w-full bg-[#111827] hover:bg-[#1f2937] text-white text-xs font-black uppercase tracking-widest py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 cursor-pointer animate-[pulse_2s_infinite]"
                       >
                         <Compass className="w-3.5 h-3.5" />
                         <span>{texts.choosePathBtn}</span>
@@ -310,15 +310,15 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                   {hasSelectedPath && nextLesson && (
                     <div className="space-y-3">
                       <div className="p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl border border-slate-100 dark:border-slate-700/60 relative overflow-hidden group">
-                        <div className="absolute right-0 top-0 w-24 h-24 bg-[#2E2FCE]/5 rounded-full blur-xl pointer-events-none" />
+                        <div className="absolute right-0 top-0 w-24 h-24 bg-[#111827]/5 rounded-full blur-xl pointer-events-none" />
                         
                         <div className="flex items-start gap-3">
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-gradient-to-br from-[#2E2FCE] to-[#2E2FCE] shadow-md shadow-blue-500/20 mt-0.5">
+                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-gradient-to-br from-[#111827] to-[#111827] dark:from-slate-900 dark:to-slate-900 shadow-md shadow-slate-900/20 mt-0.5">
                             <BookOpen className="w-4 h-4" />
                           </div>
                           
                           <div className="flex-1 min-w-0">
-                            <p className="text-[10px] font-black uppercase tracking-wider text-[#2E2FCE] mb-0.5">{texts.nextUpTitle}</p>
+                            <p className="text-[10px] font-black uppercase tracking-wider text-[#111827] dark:text-[#FBBF24] mb-0.5">{texts.nextUpTitle}</p>
                             <h4 className="font-bold text-slate-800 dark:text-white text-sm truncate">
                               {t(nextLesson.titleKey as any)}
                             </h4>
@@ -352,7 +352,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                             onStartLesson(nextLesson);
                           }
                         }}
-                        className="w-full bg-[#2E2FCE] hover:bg-[#3367d6] text-white text-xs font-black uppercase tracking-widest py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="w-full bg-[#111827] hover:bg-[#1f2937] text-white text-xs font-black uppercase tracking-widest py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <Play className="w-3 h-3 fill-current" />
                         <span>{texts.resumeBtn}</span>
@@ -409,11 +409,11 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
           </div>
 
           <div className="hidden sm:flex items-center space-x-3">
-            <div className="flex items-center space-x-2 text-[#EA4335] font-bold text-sm bg-[#EA4335]/10 px-3 py-1.5 rounded-full border border-[#EA4335]/20">
+            <div className="flex items-center space-x-2 text-[#FBBF24] font-black text-sm bg-[#FBBF24]/10 px-3.5 py-1.5 rounded-full border border-[#FBBF24]/20 shadow-sm">
               <span>🔥</span>
               <span>{currentUser.progress?.streak ?? 0}</span>
             </div>
-            <div className="flex items-center space-x-2 text-[#F29900] dark:text-[#fde293] font-bold text-sm bg-[#FBBC05]/10 px-3 py-1.5 rounded-full border border-[#FBBC05]/20">
+            <div className="flex items-center space-x-2 text-[#FBBF24] font-black text-sm bg-[#FBBF24]/10 px-3.5 py-1.5 rounded-full border border-[#FBBF24]/20 shadow-sm">
               <span>⭐</span>
               <span>{currentUser.progress?.xp ?? 0}</span>
             </div>
@@ -423,7 +423,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
             <select
               value={language}
               onChange={handleLanguageChange}
-              className="appearance-none bg-slate-50 dark:bg-slate-700 dark:text-slate-200 rounded-full pl-4 pr-10 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-[#2E2FCE]/50 transition-all border border-slate-200 dark:border-slate-600 text-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600"
+              className="appearance-none bg-slate-50 dark:bg-slate-700 dark:text-slate-200 rounded-full pl-4 pr-10 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-[#111827]/50 transition-all border border-slate-200 dark:border-slate-600 text-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600"
               aria-label="Select language"
             >
               <option value={Language.EN}>EN</option>
