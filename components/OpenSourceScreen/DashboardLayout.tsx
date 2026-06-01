@@ -57,15 +57,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
                   }}
                   className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg transition-colors text-sm font-semibold
                     ${isActive 
-                      ? 'bg-slate-800/50 text-[#facc15]' 
+                      ? 'bg-slate-800/50 text-[#FBBF24]' 
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
                     }`}
                 >
                   <div className="flex items-center gap-3">
-                    <item.icon className={`w-4 h-4 ${isActive ? 'text-[#facc15]' : ''}`} />
+                    <item.icon className={`w-4 h-4 ${isActive ? 'text-[#FBBF24]' : ''}`} />
                     {item.label}
                   </div>
-                  {isActive && <ChevronRight className="w-4 h-4 text-[#facc15]" />}
+                  {isActive && <ChevronRight className="w-4 h-4 text-[#FBBF24]" />}
                 </button>
               );
         })}
@@ -76,7 +76,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
   const toggleLang = () => setLang(lang === 'en' ? 'ar' : 'en');
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-slate-100 flex flex-col font-sans selection:bg-[#facc15]/30 selection:text-white">
+    <div className="min-h-screen bg-[#09090b] text-slate-100 flex flex-col font-sans selection:bg-[#FBBF24]/30 selection:text-white">
       {/* Top Navigation Bar */}
       <header className="h-16 border-b border-slate-800 flex items-center justify-between px-6 bg-[#09090b] z-50 sticky top-0">
         <div className="flex items-center gap-3 w-64 shrink-0">
@@ -88,15 +88,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
           {/* Language Toggle */}
           <button
             onClick={toggleLang}
-            className="group relative flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700 hover:border-[#facc15]/50 bg-slate-900/50 hover:bg-[#facc15]/5 transition-all duration-300"
+            className="group relative flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700 hover:border-[#FBBF24]/50 bg-slate-900/50 hover:bg-[#FBBF24]/5 transition-all duration-300"
             title={lang === 'en' ? 'التبديل إلى العربية' : 'Switch to English'}
           >
-            <Globe className="w-4 h-4 text-slate-400 group-hover:text-[#facc15] transition-colors" />
+            <Globe className="w-4 h-4 text-slate-400 group-hover:text-[#FBBF24] transition-colors" />
             <div className="relative flex items-center bg-slate-800 rounded-md overflow-hidden">
               <span 
                 className={`px-2 py-0.5 text-[11px] font-bold tracking-wide transition-all duration-300 ${
                   lang === 'en' 
-                    ? 'bg-[#facc15] text-black' 
+                    ? 'bg-[#FBBF24] text-black' 
                     : 'text-slate-500 hover:text-slate-300'
                 }`}
               >
@@ -105,7 +105,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
               <span 
                 className={`px-2 py-0.5 text-[11px] font-bold tracking-wide transition-all duration-300 ${
                   lang === 'ar' 
-                    ? 'bg-[#facc15] text-black' 
+                    ? 'bg-[#FBBF24] text-black' 
                     : 'text-slate-500 hover:text-slate-300'
                 }`}
                 style={{ fontFamily: "'Noto Kufi Arabic', sans-serif" }}
@@ -120,7 +120,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
           <button className="text-slate-400 hover:text-white transition-colors">
             <Bell className="w-5 h-5" />
           </button>
-          <button className="flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 hover:bg-yellow-500/20 px-3 py-1.5 rounded-md text-xs font-bold transition-colors">
+          <button className="flex items-center gap-1.5 bg-[#FBBF24]/10 border border-[#FBBF24]/30 text-[#FBBF24] hover:bg-[#FBBF24]/20 px-3 py-1.5 rounded-md text-xs font-bold transition-colors">
             <Star className="w-3.5 h-3.5 fill-current" /> {t('header.premium')}
           </button>
           
@@ -167,7 +167,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
                 localStorage.setItem('lastVisitedRoute', window.location.pathname + window.location.search);
                 navigate('/auth');
               }}
-              className="bg-[#facc15] hover:bg-[#facc15]/90 text-black px-4 py-2 rounded-lg font-mono text-xs font-bold transition-all shadow-md shadow-[#facc15]/10 hover:shadow-[#facc15]/20"
+              className="bg-[#FBBF24] hover:bg-[#FBBF24]/90 text-black px-4 py-2 rounded-lg font-mono text-xs font-bold transition-all shadow-md shadow-[#FBBF24]/10 hover:shadow-[#FBBF24]/20"
             >
               {t('header.signIn')}
             </button>
@@ -181,10 +181,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900/50 transition-all"
           >
             <Globe className="w-3.5 h-3.5 text-slate-400" />
-            <span className={`text-[10px] font-bold ${lang === 'en' ? 'text-[#facc15]' : 'text-slate-500'}`}>EN</span>
+            <span className={`text-[10px] font-bold ${lang === 'en' ? 'text-[#FBBF24]' : 'text-slate-500'}`}>EN</span>
             <span className="text-[10px] text-slate-600">/</span>
             <span 
-              className={`text-[10px] font-bold ${lang === 'ar' ? 'text-[#facc15]' : 'text-slate-500'}`}
+              className={`text-[10px] font-bold ${lang === 'ar' ? 'text-[#FBBF24]' : 'text-slate-500'}`}
               style={{ fontFamily: "'Noto Kufi Arabic', sans-serif" }}
             >
               عر
@@ -204,7 +204,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
           {renderNavSection(t('nav.myDashboard'), MY_DASHBOARD_ITEMS)}
           
           <div className="mt-auto px-4 pt-6">
-            <Link to="/" className="text-xs font-bold text-slate-600 hover:text-[#facc15] transition-colors flex items-center gap-2">
+            <Link to="/" className="text-xs font-bold text-slate-600 hover:text-[#FBBF24] transition-colors flex items-center gap-2">
               {t('nav.backToMainApp')}
             </Link>
           </div>
@@ -252,13 +252,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
                     localStorage.setItem('lastVisitedRoute', window.location.pathname + window.location.search);
                     navigate('/auth');
                   }}
-                  className="bg-[#facc15] hover:bg-[#facc15]/90 text-black px-4 py-2.5 rounded-lg font-mono text-sm font-bold transition-all w-full text-center"
+                  className="bg-[#FBBF24] hover:bg-[#FBBF24]/90 text-black px-4 py-2.5 rounded-lg font-mono text-sm font-bold transition-all w-full text-center"
                 >
                   {t('header.signIn')}
                 </button>
               )}
 
-              <button className="flex items-center justify-center gap-1.5 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 hover:bg-yellow-500/20 px-3 py-2 rounded-md text-xs font-bold transition-colors w-full">
+              <button className="flex items-center justify-center gap-1.5 bg-[#FBBF24]/10 border border-[#FBBF24]/30 text-[#FBBF24] hover:bg-[#FBBF24]/20 px-3 py-2 rounded-md text-xs font-bold transition-colors w-full">
                 <Star className="w-3.5 h-3.5 fill-current" /> {t('header.premium')}
               </button>
               <Link to="/" className="text-xs font-bold text-slate-500 hover:text-white transition-colors flex items-center justify-center gap-2 py-2">
