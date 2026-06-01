@@ -285,7 +285,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <div className="flex flex-col gap-4 mt-6">
               <div className="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-full border border-emerald-500/20 text-[10px] font-black uppercase tracking-wider w-fit">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                17 Students Online
+                150 Students Online
               </div>
               <button
                 onClick={onGetStarted}
