@@ -127,9 +127,9 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
   };
 
   const getTierBadge = (stars: number) => {
-    if (stars > 5000) return { label: t('feed.legendary'), class: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500' };
+    if (stars > 5000) return { label: t('feed.legendary'), class: 'bg-[#FBBF24]/10 border-[#FBBF24]/20 text-[#FBBF24]' };
     if (stars > 1000) return { label: t('feed.popular'), class: 'bg-blue-500/10 border-blue-500/20 text-blue-400' };
-    return { label: t('feed.rising'), class: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' };
+    return { label: t('feed.rising'), class: 'bg-[#111827]/10 border-[#111827]/20 text-emerald-400' };
   };
 
   const handleShareInFeed = (e: React.MouseEvent, repo: Repo) => {
@@ -242,7 +242,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-1">
                       <h3 className="font-bold text-lg text-white truncate">{repo.name}</h3>
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#111827] shrink-0" />
                     </div>
                     <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
                       {repo.description || t('feed.noDescription')}
@@ -278,7 +278,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
                 {/* Footer */}
                 <div className="flex items-center gap-6 pt-5 border-t border-slate-800/60 text-sm font-semibold">
                   <div className="flex items-center gap-1.5">
-                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                    <Star className="w-4 h-4 text-[#FBBF24] fill-current" />
                     <span className="text-white">{t('feed.stars')}</span>
                     <span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span>
                   </div>
