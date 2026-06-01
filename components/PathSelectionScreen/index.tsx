@@ -10,84 +10,34 @@ interface PathSelectionScreenProps {
 }
 
 const getPathStyle = (pathId: string) => {
+  const blueStyle = {
+    cardBg: 'bg-[#2E2FCE] hover:bg-[#2324ba] shadow-[#2E2FCE]/10 border-blue-400/20',
+    textColor: 'text-white',
+    descColor: 'text-blue-100/80',
+    iconBg: 'bg-white/15 border-white/10',
+  };
+  const yellowStyle = {
+    cardBg: 'bg-[#FDD501] hover:bg-[#e0be00] shadow-yellow-500/10 border-yellow-600/20',
+    textColor: 'text-slate-900',
+    descColor: 'text-slate-700/95',
+    iconBg: 'bg-black/5 border-black/5',
+  };
+
   switch (pathId) {
     case 'block_coding':
-      return {
-        cardBg: 'bg-[#2E2FCE] hover:bg-[#2324ba] shadow-[#2E2FCE]/10 border-blue-400/20',
-        textColor: 'text-white',
-        descColor: 'text-blue-100/80',
-        iconBg: 'bg-white/15 border-white/10',
-      };
-    case 'python':
-      return {
-        cardBg: 'bg-[#FDD501] hover:bg-[#e0be00] shadow-yellow-500/10 border-yellow-600/20',
-        textColor: 'text-slate-900',
-        descColor: 'text-slate-700/95',
-        iconBg: 'bg-black/5 border-black/5',
-      };
     case 'javascript':
-      return {
-        cardBg: 'bg-[#dc2626] hover:bg-[#b91c1c] shadow-red-500/10 border-red-400/20',
-        textColor: 'text-white',
-        descColor: 'text-red-100/80',
-        iconBg: 'bg-white/15 border-white/10',
-      };
-    case 'lua':
-      return {
-        cardBg: 'bg-[#4f46e5] hover:bg-[#4338ca] shadow-indigo-500/10 border-indigo-400/20',
-        textColor: 'text-white',
-        descColor: 'text-indigo-100/80',
-        iconBg: 'bg-white/15 border-white/10',
-      };
     case 'web_dev':
-      return {
-        cardBg: 'bg-[#db2777] hover:bg-[#be185d] shadow-pink-500/10 border-pink-400/20',
-        textColor: 'text-white',
-        descColor: 'text-pink-100/80',
-        iconBg: 'bg-white/15 border-white/10',
-      };
-    case 'sql':
-      return {
-        cardBg: 'bg-[#0d9488] hover:bg-[#0f766e] shadow-teal-500/10 border-teal-400/20',
-        textColor: 'text-white',
-        descColor: 'text-teal-100/80',
-        iconBg: 'bg-white/15 border-white/10',
-      };
     case 'java':
-      return {
-        cardBg: 'bg-[#ea580c] hover:bg-[#c2410c] shadow-orange-500/10 border-orange-400/20',
-        textColor: 'text-white',
-        descColor: 'text-orange-100/80',
-        iconBg: 'bg-white/15 border-white/10',
-      };
-    case 'rust':
-      return {
-        cardBg: 'bg-[#78350f] hover:bg-[#451a03] shadow-amber-900/10 border-amber-800/20',
-        textColor: 'text-white',
-        descColor: 'text-amber-100/80',
-        iconBg: 'bg-white/15 border-white/10',
-      };
     case 'swift':
-      return {
-        cardBg: 'bg-[#e11d48] hover:bg-[#be123c] shadow-rose-500/10 border-rose-400/20',
-        textColor: 'text-white',
-        descColor: 'text-rose-100/80',
-        iconBg: 'bg-white/15 border-white/10',
-      };
+      return blueStyle;
+    case 'python':
+    case 'lua':
+    case 'sql':
+    case 'rust':
     case 'go':
-      return {
-        cardBg: 'bg-[#0891b2] hover:bg-[#0e7490] shadow-cyan-500/10 border-cyan-400/20',
-        textColor: 'text-white',
-        descColor: 'text-cyan-100/80',
-        iconBg: 'bg-white/15 border-white/10',
-      };
+      return yellowStyle;
     default:
-      return {
-        cardBg: 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 shadow-slate-900/10 border-slate-200 dark:border-slate-700',
-        textColor: 'text-slate-800 dark:text-white',
-        descColor: 'text-slate-500 dark:text-slate-400',
-        iconBg: 'bg-white/15 border-white/10',
-      };
+      return blueStyle;
   }
 };
 
