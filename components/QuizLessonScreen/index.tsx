@@ -36,7 +36,7 @@ const SuccessOverlay: React.FC<{ lesson: Lesson; onContinue: () => void }> = ({ 
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={onContinue}
-                className="w-full py-3 rounded-full bg-[#4285F4] hover:bg-[#1a73e8] text-white font-bold text-base tracking-wide transition-colors shadow-sm"
+                className="w-full py-3 rounded-full bg-[#2E2FCE] hover:bg-[#2E2FCE] text-white font-bold text-base tracking-wide transition-colors shadow-sm"
             >
                 Continue →
             </motion.button>
@@ -145,7 +145,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                 ⭐ {lesson.xp} XP
             </span>
             {lesson.tags?.map(tag => (
-                <span key={tag} className="px-2 py-1 rounded-md bg-[#4285F4]/10 dark:bg-[#4285F4]/20 text-[#1a73e8] dark:text-[#8ab4f8] text-[10px] font-bold tracking-wide border border-[#4285F4]/30">
+                <span key={tag} className="px-2 py-1 rounded-md bg-[#2E2FCE]/10 dark:bg-[#2E2FCE]/20 text-[#2E2FCE] dark:text-[#a3aaeb] text-[10px] font-bold tracking-wide border border-[#2E2FCE]/30">
                     #{tag}
                 </span>
             ))}
@@ -163,10 +163,10 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
         >
             {/* Concept */}
             {lesson.explanationKey && (
-                <div className="bg-[#4285F4]/5 dark:bg-[#4285F4]/10 p-6 rounded-3xl border border-[#4285F4]/20 dark:border-[#4285F4]/30 shadow-sm relative overflow-hidden group">
-                    <div className="absolute -right-4 -top-4 text-[#4285F4]/10 dark:text-[#4285F4]/20 text-7xl transform rotate-12 group-hover:scale-110 transition-transform">💡</div>
+                <div className="bg-[#2E2FCE]/5 dark:bg-[#2E2FCE]/10 p-6 rounded-3xl border border-[#2E2FCE]/20 dark:border-[#2E2FCE]/30 shadow-sm relative overflow-hidden group">
+                    <div className="absolute -right-4 -top-4 text-[#2E2FCE]/10 dark:text-[#2E2FCE]/20 text-7xl transform rotate-12 group-hover:scale-110 transition-transform">💡</div>
                     <div className="relative z-10">
-                        <h3 className="text-xs font-bold text-[#1a73e8] dark:text-[#8ab4f8] uppercase tracking-wide mb-3 flex items-center gap-2">
+                        <h3 className="text-xs font-bold text-[#2E2FCE] dark:text-[#a3aaeb] uppercase tracking-wide mb-3 flex items-center gap-2">
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             Concept
                         </h3>
@@ -213,7 +213,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleStartQuiz}
-                    className="w-full py-4 rounded-full bg-[#4285F4] hover:bg-[#1a73e8] text-white font-bold text-sm tracking-wide shadow-sm transition-colors flex items-center justify-center gap-3 mt-4"
+                    className="w-full py-4 rounded-full bg-[#2E2FCE] hover:bg-[#2E2FCE] text-white font-bold text-sm tracking-wide shadow-sm transition-colors flex items-center justify-center gap-3 mt-4"
                 >
                     <span>🎓</span> Take the Quiz!
                 </motion.button>
@@ -244,7 +244,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
             <div className="flex items-center gap-4">
                 <div className="flex-grow h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                     <motion.div
-                        className="h-full bg-[#4285F4] rounded-full"
+                        className="h-full bg-[#2E2FCE] rounded-full"
                         initial={{ width: `${(questionIndex / totalQuestions) * 100}%` }}
                         animate={{ width: `${((questionIndex + 1) / totalQuestions) * 100}%` }}
                         transition={{ duration: 0.5 }}
@@ -257,7 +257,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
 
             {/* Question Card */}
             <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
-                <div className="w-8 h-8 rounded-full bg-[#4285F4]/10 dark:bg-slate-700 flex items-center justify-center text-[#4285F4] dark:text-[#8ab4f8] font-bold text-sm mb-4 border border-[#4285F4]/20">Q</div>
+                <div className="w-8 h-8 rounded-full bg-[#2E2FCE]/10 dark:bg-slate-700 flex items-center justify-center text-[#2E2FCE] dark:text-[#a3aaeb] font-bold text-sm mb-4 border border-[#2E2FCE]/20">Q</div>
                 <p className="text-lg font-bold text-slate-800 dark:text-white leading-relaxed">
                     {t(currentQuestion.questionKey as any)}
                 </p>
@@ -270,7 +270,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                     const isCorrect = idx === currentQuestion.correctIndex;
                     const revealed = answerState !== 'idle';
 
-                    let bg = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-[#4285F4]/40 hover:bg-[#4285F4]/5 dark:hover:border-[#4285F4]/40 dark:hover:bg-slate-700';
+                    let bg = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-[#2E2FCE]/40 hover:bg-[#2E2FCE]/5 dark:hover:border-[#2E2FCE]/40 dark:hover:bg-slate-700';
                     if (revealed && isCorrect) bg = 'bg-[#34A853]/10 dark:bg-[#34A853]/20 border-[#34A853]/40 dark:border-[#34A853]/40';
                     else if (revealed && isSelected && !isCorrect) bg = 'bg-[#EA4335]/10 dark:bg-[#EA4335]/20 border-[#EA4335]/40 dark:border-[#EA4335]/40';
 
@@ -332,7 +332,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleNext}
-                    className="w-full py-4 rounded-full bg-[#4285F4] hover:bg-[#1a73e8] text-white font-bold text-sm tracking-wide shadow-sm transition-colors mt-4"
+                    className="w-full py-4 rounded-full bg-[#2E2FCE] hover:bg-[#2E2FCE] text-white font-bold text-sm tracking-wide shadow-sm transition-colors mt-4"
                 >
                     {questionIndex < totalQuestions - 1 ? 'Next Question →' : '🎓 Finish Quiz!'}
                 </motion.button>
@@ -377,7 +377,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                     {/* Title + badges */}
                     <div className="mb-6">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="bg-[#4285F4] text-white w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
+                            <div className="bg-[#2E2FCE] text-white w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
                                 {lesson.level}
                             </div>
                             <h2 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">
