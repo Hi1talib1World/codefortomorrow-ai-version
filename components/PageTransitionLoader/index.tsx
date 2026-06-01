@@ -61,7 +61,7 @@ const PageTransitionLoader: React.FC = () => {
                 className="h-full transition-all duration-100 ease-out"
                 style={{
                     width: `${progress}%`,
-                    background: 'linear-gradient(90deg, #4285F4, #34A853, #FBBC05, #EA4335)',
+                    background: 'linear-gradient(90deg, #2E2FCE, #34A853, #FBBC05, #EA4335)',
                     boxShadow: '0 0 10px rgba(66, 133, 244, 0.5), 0 0 5px rgba(66, 133, 244, 0.3)',
                 }}
             />
