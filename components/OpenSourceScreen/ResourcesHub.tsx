@@ -53,7 +53,7 @@ export const ResourcesHub: React.FC = () => {
     <div className="pb-24 md:pb-0">
       <div className="mb-12">
         <div className="flex items-center gap-3 mb-2">
-          <BookOpen className="w-8 h-8 text-[#facc15]" />
+          <BookOpen className="w-8 h-8 text-[#FBBF24]" />
           <h1 className="text-3xl font-bold font-mono uppercase tracking-widest text-white">{t('resources.title')}</h1>
         </div>
         <p className="text-slate-400 font-mono text-sm max-w-xl">
@@ -71,8 +71,8 @@ export const ResourcesHub: React.FC = () => {
             className="bg-[#121212]/50 backdrop-blur-sm border border-dashed border-slate-800 rounded-xl p-6 md:p-8"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded bg-[#facc15]/10 border border-[#facc15]/30 flex items-center justify-center">
-                <category.icon className="w-5 h-5 text-[#facc15]" />
+              <div className="w-10 h-10 rounded bg-[#FBBF24]/10 border border-[#FBBF24]/30 flex items-center justify-center">
+                <category.icon className="w-5 h-5 text-[#FBBF24]" />
               </div>
               <h2 className="text-xl font-bold text-white font-mono">{category.name}</h2>
             </div>
@@ -84,11 +84,11 @@ export const ResourcesHub: React.FC = () => {
                   href={res.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block group p-4 bg-[#09090b] rounded-lg border border-slate-800 hover:border-[#facc15]/50 transition-all hover:translate-x-1"
+                  className="block group p-4 bg-[#09090b] rounded-lg border border-slate-800 hover:border-[#FBBF24]/50 transition-all hover:translate-x-1"
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-bold text-white font-mono text-sm group-hover:text-[#facc15] transition-colors">{res.name}</h3>
-                    <Terminal className="w-3 h-3 text-slate-600 group-hover:text-[#facc15] transition-colors" />
+                    <h3 className="font-bold text-white font-mono text-sm group-hover:text-[#FBBF24] transition-colors">{res.name}</h3>
+                    <Terminal className="w-3 h-3 text-slate-600 group-hover:text-[#FBBF24] transition-colors" />
                   </div>
                   <p className="text-xs text-slate-500 font-mono line-clamp-2">{res.desc}</p>
                 </a>
