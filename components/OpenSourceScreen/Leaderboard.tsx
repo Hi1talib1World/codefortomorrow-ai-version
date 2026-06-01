@@ -84,7 +84,7 @@ export const Leaderboard: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Trophy className="w-8 h-8 text-[#facc15]" />
+            <Trophy className="w-8 h-8 text-[#FBBF24]" />
             <h1 className="text-3xl font-bold font-mono uppercase tracking-widest text-white">{t('leaderboard.title')}</h1>
           </div>
           <p className="text-slate-400 font-mono text-sm max-w-xl">
@@ -95,7 +95,7 @@ export const Leaderboard: React.FC = () => {
         <div ref={dropdownRef} className="relative z-20">
           <button 
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center justify-between w-48 bg-[#121212]/80 backdrop-blur-sm border border-dashed border-[#facc15]/50 px-4 py-2 rounded-lg font-mono text-sm text-[#facc15] hover:bg-[#facc15]/10 transition-colors"
+            className="flex items-center justify-between w-48 bg-[#121212]/80 backdrop-blur-sm border border-dashed border-[#FBBF24]/50 px-4 py-2 rounded-lg font-mono text-sm text-[#FBBF24] hover:bg-[#FBBF24]/10 transition-colors"
           >
             <span className="flex items-center gap-2 truncate"><MapPin className="w-4 h-4 shrink-0" /> {country}</span>
           </button>
@@ -122,7 +122,7 @@ export const Leaderboard: React.FC = () => {
                       setSearchQuery('');
                     }}
                     className={`w-full text-left px-3 py-1.5 rounded font-mono text-xs transition-colors
-                      ${country === 'Global' ? 'bg-[#facc15]/20 text-[#facc15] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
+                      ${country === 'Global' ? 'bg-[#FBBF24]/20 text-[#FBBF24] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
                   >
                     🌍 Global
                   </button>
@@ -140,7 +140,7 @@ export const Leaderboard: React.FC = () => {
                           setSearchQuery('');
                         }}
                         className={`w-full text-left px-3 py-1.5 rounded font-mono text-xs transition-colors pl-5
-                          ${country === c ? 'bg-[#facc15]/20 text-[#facc15] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
+                          ${country === c ? 'bg-[#FBBF24]/20 text-[#FBBF24] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
                       >
                         {c}
                       </button>
@@ -160,7 +160,7 @@ export const Leaderboard: React.FC = () => {
                           setSearchQuery('');
                         }}
                         className={`w-full text-left px-3 py-1.5 rounded font-mono text-xs transition-colors pl-5
-                          ${country === c ? 'bg-[#facc15]/20 text-[#facc15] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
+                          ${country === c ? 'bg-[#FBBF24]/20 text-[#FBBF24] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
                       >
                         {c}
                       </button>
@@ -180,7 +180,7 @@ export const Leaderboard: React.FC = () => {
                           setSearchQuery('');
                         }}
                         className={`w-full text-left px-3 py-1.5 rounded font-mono text-xs transition-colors pl-5
-                          ${country === c ? 'bg-[#facc15]/20 text-[#facc15] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
+                          ${country === c ? 'bg-[#FBBF24]/20 text-[#FBBF24] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
                       >
                         {c}
                       </button>
@@ -221,9 +221,9 @@ export const Leaderboard: React.FC = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="flex items-center gap-6 p-4 md:p-6 hover:bg-[#facc15]/5 transition-colors group relative"
+                className="flex items-center gap-6 p-4 md:p-6 hover:bg-[#FBBF24]/5 transition-colors group relative"
               >
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#facc15] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#FBBF24] opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 
                 <div className="flex items-center justify-center w-12 shrink-0">
                   {getRankBadge(index)}
@@ -232,11 +232,11 @@ export const Leaderboard: React.FC = () => {
                 <img 
                   src={user.avatar_url} 
                   alt={user.login} 
-                  className="w-12 h-12 rounded-full border border-slate-700 group-hover:border-[#facc15] transition-colors"
+                  className="w-12 h-12 rounded-full border border-slate-700 group-hover:border-[#FBBF24] transition-colors"
                 />
                 
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-lg text-white font-mono truncate group-hover:text-[#facc15] transition-colors">
+                  <h3 className="font-bold text-lg text-white font-mono truncate group-hover:text-[#FBBF24] transition-colors">
                     @{user.login}
                   </h3>
                   <div className="flex items-center gap-3 mt-1">
@@ -247,7 +247,7 @@ export const Leaderboard: React.FC = () => {
                 </div>
                 
                 <div className="hidden sm:flex shrink-0">
-                  <span className="bg-[#09090b] text-slate-400 border border-slate-800 rounded px-3 py-1 font-mono text-xs group-hover:bg-[#facc15]/10 group-hover:border-[#facc15]/30 group-hover:text-[#facc15] transition-all">
+                  <span className="bg-[#09090b] text-slate-400 border border-slate-800 rounded px-3 py-1 font-mono text-xs group-hover:bg-[#FBBF24]/10 group-hover:border-[#FBBF24]/30 group-hover:text-[#FBBF24] transition-all">
                     {t('leaderboard.viewProfile')}
                   </span>
                 </div>
