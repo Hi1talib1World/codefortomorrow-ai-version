@@ -22,7 +22,7 @@ const CreationToolCard: React.FC<CreationToolCardProps> = ({ tool, onClick }) =>
         green: 'bg-[#34A853]',  // Green
         pink: 'bg-[#FBBC05]',   // Yellow
         orange: 'bg-[#EA4335]', // Red
-        blue: 'bg-[#4285F4]',   // Blue
+        blue: 'bg-[#2E2FCE]',   // Blue
     };
 
     const buttonColorClasses: { [key: string]: string } = {
@@ -30,7 +30,7 @@ const CreationToolCard: React.FC<CreationToolCardProps> = ({ tool, onClick }) =>
         green: 'bg-white text-[#34A853] hover:bg-slate-50',
         pink: 'bg-white text-[#F29900] hover:bg-slate-50',
         orange: 'bg-white text-[#EA4335] hover:bg-slate-50',
-        blue: 'bg-white text-[#4285F4] hover:bg-slate-50',
+        blue: 'bg-white text-[#2E2FCE] hover:bg-slate-50',
     }
 
     return (
@@ -71,9 +71,9 @@ const RecentContentDetails = ({ item, onOpen }: { item: Creation, onOpen: () => 
         <div className="bg-white dark:bg-slate-800 transition-colors rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 flex flex-col h-full">
             <div className="flex items-center space-x-5 mb-8">
                 <div className="relative shrink-0">
-                    <div className="w-16 h-16 bg-[#4285F4]/10 dark:bg-slate-900 rounded-2xl flex items-center justify-center border border-[#4285F4]/20 shadow-sm relative overflow-hidden">
-                        <div className="absolute inset-0 bg-[#4285F4]/5 pointer-events-none"></div>
-                        <span className="text-2xl font-bold text-[#4285F4] dark:text-[#8ab4f8] relative z-10">{item.questionCount}</span>
+                    <div className="w-16 h-16 bg-[#2E2FCE]/10 dark:bg-slate-900 rounded-2xl flex items-center justify-center border border-[#2E2FCE]/20 shadow-sm relative overflow-hidden">
+                        <div className="absolute inset-0 bg-[#2E2FCE]/5 pointer-events-none"></div>
+                        <span className="text-2xl font-bold text-[#2E2FCE] dark:text-[#a3aaeb] relative z-10">{item.questionCount}</span>
                     </div>
                 </div>
                 <div className="min-w-0 flex-1">
@@ -100,7 +100,7 @@ const RecentContentDetails = ({ item, onOpen }: { item: Creation, onOpen: () => 
                 ))}
             </div>
 
-            <button className="w-full text-center py-3 text-xs font-bold uppercase tracking-wide text-slate-500 hover:text-[#4285F4] bg-slate-50 dark:bg-slate-700/30 hover:bg-[#4285F4]/5 rounded-xl transition-all shadow-sm">
+            <button className="w-full text-center py-3 text-xs font-bold uppercase tracking-wide text-slate-500 hover:text-[#2E2FCE] bg-slate-50 dark:bg-slate-700/30 hover:bg-[#2E2FCE]/5 rounded-xl transition-all shadow-sm">
                 {t('view_learning_outcomes')}
             </button>
 
@@ -112,7 +112,7 @@ const RecentContentDetails = ({ item, onOpen }: { item: Creation, onOpen: () => 
                 </button>
                 <button
                     onClick={onOpen}
-                    className="py-3 bg-[#4285F4] text-white font-bold rounded-full hover:bg-[#1a73e8] active:scale-95 transition text-sm shadow-md"
+                    className="py-3 bg-[#2E2FCE] text-white font-bold rounded-full hover:bg-[#2E2FCE] active:scale-95 transition text-sm shadow-md"
                 >
                     {t('open_content')}
                 </button>
@@ -224,7 +224,7 @@ const CreationsScreen: React.FC = () => {
                                 {creations.map(c => (
                                     <div
                                         key={c.id}
-                                        className={`group relative w-full flex items-center p-5 rounded-2xl border transition-all cursor-pointer ${selectedCreationId === c.id ? 'border-[#4285F4]/30 bg-[#4285F4]/5 shadow-sm' : 'border-slate-200 dark:border-slate-700 hover:border-[#4285F4]/20 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+                                        className={`group relative w-full flex items-center p-5 rounded-2xl border transition-all cursor-pointer ${selectedCreationId === c.id ? 'border-[#2E2FCE]/30 bg-[#2E2FCE]/5 shadow-sm' : 'border-slate-200 dark:border-slate-700 hover:border-[#2E2FCE]/20 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
                                     >
                                         <button
                                             onClick={() => setSelectedCreationId(c.id)}
@@ -241,7 +241,7 @@ const CreationsScreen: React.FC = () => {
 
                                         <button
                                             onClick={(e) => { e.stopPropagation(); setViewingCreation(c); }}
-                                            className="ml-4 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600 text-[#4285F4] dark:text-[#8ab4f8] w-10 h-10 rounded-full shadow-sm active:scale-95 transition-all flex items-center justify-center group/btn shrink-0"
+                                            className="ml-4 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600 text-[#2E2FCE] dark:text-[#a3aaeb] w-10 h-10 rounded-full shadow-sm active:scale-95 transition-all flex items-center justify-center group/btn shrink-0"
                                             title={t('open_content')}
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover/btn:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
