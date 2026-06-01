@@ -9,13 +9,23 @@ import { generateToken } from '../services/token.service';
 import ApiError from '../utils/ApiError';
 
 
-const setAuthCookie = (res: Response, token: string) => {
-  res.cookie('token', token, {
+const setAuthCookie = (res: Response, token: string, req?: Request) => {
+  const cookieOptions: any = {
     httpOnly: true,
     secure: false,
     sameSite: 'lax',
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-  });
+  };
+
+  if (req) {
+    const host = req.headers.host || '';
+    const hostname = host.split(':')[0];
+    if (hostname.endsWith('palycofoto.club')) {
+      cookieOptions.domain = '.palycofoto.club';
+    }
+  }
+
+  res.cookie('token', token, cookieOptions);
 };
 
 /**
@@ -54,7 +64,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         currentPath: null,
       };
       const token = generateToken(mockUserId);
-      setAuthCookie(res, token);
+      setAuthCookie(res, token, req);
       res.status(201).json({ ...userResponse, token });
       return;
     }
@@ -87,7 +97,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       };
 
       const token = generateToken(user._id);
-      setAuthCookie(res, token);
+      setAuthCookie(res, token, req);
 
       res.status(201).json({
         ...userResponse,
@@ -137,7 +147,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         currentPath: "block_coding",
       };
       const token = generateToken(mockUserId);
-      setAuthCookie(res, token);
+      setAuthCookie(res, token, req);
       res.json({ ...userResponse, token });
       return;
     }
@@ -156,7 +166,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       };
       
       const token = generateToken(user._id);
-      setAuthCookie(res, token);
+      setAuthCookie(res, token, req);
 
       res.json({
         ...userResponse,
@@ -274,7 +284,7 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
                 role: "student",
             };
             const appToken = generateToken(mockUserId);
-            setAuthCookie(res, appToken);
+            setAuthCookie(res, appToken, req);
             res.status(200).json({ ...userResponse, token: appToken });
             return;
         }
@@ -318,7 +328,7 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
             role: (user as any).role,
         };
 
-        setAuthCookie(res, appToken);
+        setAuthCookie(res, appToken, req);
 
         res.status(200).json({
             ...userResponse,
@@ -381,7 +391,7 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
                 role: "student",
             };
             const appToken = generateToken(mockUserId);
-            setAuthCookie(res, appToken);
+            setAuthCookie(res, appToken, req);
             res.status(200).json({ ...userResponse, token: appToken });
             return;
         }
@@ -434,7 +444,7 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
             role: (user as any).role,
         };
 
-        setAuthCookie(res, appToken);
+        setAuthCookie(res, appToken, req);
 
         res.status(200).json({
             ...userResponse,
@@ -454,11 +464,19 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
  */
 export const logout = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    res.clearCookie('token', {
+    const clearOptions: any = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-    });
+    };
+
+    const host = req.headers.host || '';
+    const hostname = host.split(':')[0];
+    if (hostname.endsWith('palycofoto.club')) {
+      clearOptions.domain = '.palycofoto.club';
+    }
+
+    res.clearCookie('token', clearOptions);
     res.status(200).json({ message: 'Logged out successfully' });
   } catch (error) {
     next(error);
