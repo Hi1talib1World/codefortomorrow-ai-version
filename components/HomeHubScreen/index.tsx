@@ -280,7 +280,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             {isEmoji ? (
                                 <span className="text-3xl select-none">{pathInfo.icon}</span>
                             ) : (
-                                <img src={pathInfo.icon} alt={t(pathInfo.titleKey)} className="w-10 h-10 object-contain select-none" />
+                                <img src={pathInfo.icon} alt={t(pathInfo.titleKey as any)} className="w-10 h-10 object-contain select-none" />
                             )}
                         </div>
                         
@@ -289,7 +289,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 {t('last_visited_course') || 'Last Visited Course'}
                             </p>
                             <h3 className="text-xl font-bold text-slate-800 dark:text-white mt-2 truncate">
-                                {t(pathInfo.titleKey) || pathInfo.titleKey}
+                                {t(pathInfo.titleKey as any) || pathInfo.titleKey}
                             </h3>
                             <div className="flex items-center gap-3 mt-2">
                                 <div className="flex-1 max-w-[240px] bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
@@ -351,7 +351,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     {isEmoji ? (
                                         <span className="text-3xl select-none">{path.icon}</span>
                                     ) : (
-                                        <img src={path.icon} alt={t(path.titleKey)} className="w-10 h-10 object-contain select-none" />
+                                        <img src={path.icon} alt={t(path.titleKey as any)} className="w-10 h-10 object-contain select-none" />
                                     )}
                                 </div>
                             </div>
@@ -359,10 +359,10 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             <div className="p-4 flex flex-col justify-between flex-1">
                                 <div>
                                     <h4 className="text-sm font-bold text-slate-800 dark:text-white group-hover:text-cyan-500 transition-colors">
-                                        {t(path.titleKey) || path.titleKey}
+                                        {t(path.titleKey as any) || path.titleKey}
                                     </h4>
                                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 min-h-[2rem]">
-                                        {t(path.descriptionKey) || path.descriptionKey}
+                                        {t(path.descriptionKey as any) || path.descriptionKey}
                                     </p>
                                 </div>
 
@@ -383,7 +383,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     ) : (
                                         <>
                                             <span className="text-[10px] bg-cyan-500/10 text-cyan-500 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                                                {t('new') || 'New'}
+                                                {t('new' as any)}
                                             </span>
                                             <div className="w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-500 transition-all">
                                                 <span className="text-xs">→</span>
