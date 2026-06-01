@@ -21,8 +21,8 @@ const LeagueIcon = ({ className }: { className?: string }) => (
 const HexagonBadgeIcon = ({ icon, earned }: { icon: React.ReactNode; earned: boolean }) => (
   <div className={`relative w-20 h-20 flex items-center justify-center flex-shrink-0 transition-all ${!earned ? 'grayscale opacity-30 scale-90' : 'drop-shadow-xl'}`}>
     <svg viewBox="0 0 100 115.47" className="absolute inset-0 w-full h-full transform transition-colors">
-      <path d="M50 0 L100 28.87 L100 86.6 L50 115.47 L0 86.6 L0 28.87 Z" fill={earned ? "#4285F4" : "#cbd5e1"} className="dark:fill-slate-700" />
-      <path d="M50 5 L95 31.7 L95 83.77 L50 110.47 L5 83.77 L5 31.7 Z" fill={earned ? "#1a73e8" : "#94a3b8"} className="dark:fill-slate-600" />
+      <path d="M50 0 L100 28.87 L100 86.6 L50 115.47 L0 86.6 L0 28.87 Z" fill={earned ? "#2E2FCE" : "#cbd5e1"} className="dark:fill-slate-700" />
+      <path d="M50 5 L95 31.7 L95 83.77 L50 110.47 L5 83.77 L5 31.7 Z" fill={earned ? "#2E2FCE" : "#94a3b8"} className="dark:fill-slate-600" />
     </svg>
     <div className="relative z-10 text-white text-4xl">
       {icon}
@@ -86,7 +86,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
         <div className="max-w-4xl mx-auto">
 
           <div className="relative mb-20">
-            <div className="h-60 bg-[#4285F4] rounded-3xl relative shadow-md overflow-hidden group border border-[#1a73e8]">
+            <div className="h-60 bg-[#2E2FCE] rounded-3xl relative shadow-md overflow-hidden group border border-[#2E2FCE]">
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <button className="absolute top-6 left-6 w-12 h-12 bg-black/30 backdrop-blur-md rounded-xl flex items-center justify-center hover:bg-black/50 transition-all text-white border border-white/20">
                 <Plus className="w-8 h-8" />
@@ -194,7 +194,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
               <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">{t('xp')}</p>
             </div>
             <div className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-5 flex flex-col items-center justify-center shadow-sm transition-all hover:shadow-md hover:-translate-y-1">
-              <BookOpen className="w-10 h-10 text-[#4285F4] mb-2" />
+              <BookOpen className="w-10 h-10 text-[#2E2FCE] mb-2" />
               <p className="font-black text-3xl leading-none"><AnimatedCounter value={totalLessons} /></p>
               <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">Lessons</p>
             </div>
