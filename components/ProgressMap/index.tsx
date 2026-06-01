@@ -38,7 +38,7 @@ function getSnakeOffset(index: number): number {
 }
 
 const SECTION_COLORS = [
-  { bg: 'bg-[#4285F4]', text: 'text-white', border: 'border-[#1a73e8]' },
+  { bg: 'bg-[#2E2FCE]', text: 'text-white', border: 'border-[#2E2FCE]' },
   { bg: 'bg-[#9b59b6]', text: 'text-white', border: 'border-[#8e44ad]' },
   { bg: 'bg-[#EA4335]', text: 'text-white', border: 'border-[#c5221f]' },
   { bg: 'bg-[#FBBC05]', text: 'text-white', border: 'border-[#e0a800]' },
@@ -104,13 +104,13 @@ const ProgressHeader: React.FC<{
           onClick={onBackToSelection}
           className="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border border-slate-200/50 dark:border-slate-700/50 shadow-sm"
         >
-          <ArrowLeftRight className="w-3.5 h-3.5 text-[#4285F4]" />
+          <ArrowLeftRight className="w-3.5 h-3.5 text-[#2E2FCE]" />
           <span>Switch Path</span>
         </button>
       </div>
       <div className="h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden max-w-md mx-auto">
         <motion.div
-          className="h-full bg-gradient-to-r from-[#4285F4] to-[#34A853] rounded-full"
+          className="h-full bg-gradient-to-r from-[#2E2FCE] to-[#34A853] rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -237,7 +237,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ completedLessons, onStartLess
             placeholder="Search lessons…"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-9 py-2.5 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl text-slate-700 dark:text-white placeholder-slate-400 text-sm font-semibold focus:outline-none focus:border-[#4285F4] focus:ring-2 focus:ring-[#4285F4]/20 transition"
+            className="w-full pl-10 pr-9 py-2.5 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl text-slate-700 dark:text-white placeholder-slate-400 text-sm font-semibold focus:outline-none focus:border-[#2E2FCE] focus:ring-2 focus:ring-[#2E2FCE]/20 transition"
           />
           {searchQuery && (
             <button
@@ -304,7 +304,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ completedLessons, onStartLess
           </p>
           <button
             onClick={() => setSearchQuery('')}
-            className="mt-4 text-[#4285F4] font-black uppercase tracking-widest text-sm"
+            className="mt-4 text-[#2E2FCE] font-black uppercase tracking-widest text-sm"
           >
             Clear Search
           </button>
