@@ -107,7 +107,7 @@ export const AIRepos: React.FC = () => {
                   {(repo.topics || []).slice(0,3).map((t: string) => <div key={t} className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">{t}</div>)}
                 </div>
                 <div className="flex items-center gap-6 pt-5 border-t border-slate-800/60 text-sm font-semibold">
-                  <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-500 fill-current" /><span className="text-white">Stars</span><span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span></div>
+                  <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-[#FBBF24] fill-current" /><span className="text-white">Stars</span><span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span></div>
                   <div className="flex items-center gap-1.5"><GitFork className="w-4 h-4 text-slate-500" /><span className="text-white">Forks</span><span className="text-slate-400">{formatNumber(repo.forks_count)}</span></div>
                 </div>
               </motion.div>
