@@ -40,7 +40,7 @@ interface MissionsScreenProps {
 }
 
 const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
-  const { t, currentLanguage } = useLanguage();
+  const { t } = useLanguage();
   const [missions, setMissions] = useState<Mission[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -103,7 +103,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
 
             return {
               mission_id: pathId,
-              title: t(path.titleKey) || path.id,
+              title: t(path.titleKey as any) || path.id,
               skill: pathId,
               progress,
               status: 'in-progress' as 'locked' | 'in-progress' | 'completed',
