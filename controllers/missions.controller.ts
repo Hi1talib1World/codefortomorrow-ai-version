@@ -91,7 +91,7 @@ export const getSkillStates = async (req: Request, res: Response, next: NextFunc
       return res.json(emptyMockStates);
     }
 
-    const skillStates = await SkillState.find({ student_id: userId });
+    const skillStates = await SkillState.find({ student_id: userId } as any);
     res.json(skillStates);
   } catch (error) {
     next(error);
@@ -131,7 +131,7 @@ export const getMissions = async (req: Request, res: Response, next: NextFunctio
         userProgress = user.progress;
       }
 
-      skillStatesList = await SkillState.find({ student_id: userId }).lean();
+      skillStatesList = await SkillState.find({ student_id: userId } as any).lean();
 
       // Count successful LearningEvents for this student
       const learningEvents = await mongoose.connection.db.collection('learning_events').find({
