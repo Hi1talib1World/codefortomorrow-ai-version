@@ -541,7 +541,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       <section className="py-24 bg-brand-50/30 dark:bg-slate-900/10">
         <AnimatedSection className="container mx-auto px-6 text-center">
           <div className="mb-12">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Explore the Platform.</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-[#111827] dark:text-white tracking-tight">Explore the Platform.</h2>
             <p className="text-slate-500 dark:text-slate-400 mt-4 max-w-2xl mx-auto text-lg font-medium">A sneak peek into the amazing worlds your child will explore.</p>
           </div>
           <ImageCarousel />
@@ -552,18 +552,18 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       <section id="features" className="py-32 bg-slate-50/50 dark:bg-slate-900/50">
         <AnimatedSection className="container mx-auto px-6">
           <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">What's Inside?</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-[#111827] dark:text-white tracking-tight">What's Inside?</h2>
             <p className="text-slate-500 dark:text-slate-400 mt-4 max-w-2xl mx-auto text-lg">A comprehensive learning ecosystem designed for the next generation of creators.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: Gamepad2, title: "Fun Games", color: "bg-[#2E2FCE] text-white", text: "Learn coding logic through immersive puzzles and interactive challenges." },
-              { icon: Brush, title: "Creative Projects", color: "bg-[#FDD501] text-slate-900", text: "Design your own digital worlds, from simple animations to complex games." },
-              { icon: Bot, title: "Mentorship", color: "bg-[#2E2FCE] text-white", text: "Personalized guidance that adapts to your child's unique learning pace." },
-              { icon: Award, title: "Skill Certification", color: "bg-[#FDD501] text-slate-900", text: "Earn verifiable badges and certificates as you master new technologies." }
+              { icon: Gamepad2, title: "Fun Games", color: "bg-[#111827]/10 text-[#111827] dark:bg-[#111827]/25 dark:text-indigo-300", text: "Learn coding logic through immersive puzzles and interactive challenges." },
+              { icon: Brush, title: "Creative Projects", color: "bg-[#FBBF24]/20 text-[#111827] dark:text-[#FBBF24]", text: "Design your own digital worlds, from simple animations to complex games." },
+              { icon: Bot, title: "Mentorship", color: "bg-[#111827]/10 text-[#111827] dark:bg-[#111827]/25 dark:text-indigo-300", text: "Personalized guidance that adapts to your child's unique learning pace." },
+              { icon: Award, title: "Skill Certification", color: "bg-[#FBBF24]/20 text-[#111827] dark:text-[#FBBF24]", text: "Earn verifiable badges and certificates as you master new technologies." }
             ].map(feature => (
               <div key={feature.title} className="group bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200/60 dark:border-slate-700/60 hover:shadow-xl transition-all duration-500">
-                <div className={`w-14 h-14 ${feature.color} rounded-2xl flex items-center justify-center mb-6 shadow-md`}>
+                <div className={`w-14 h-14 ${feature.color} rounded-2xl flex items-center justify-center mb-6 shadow-sm`}>
                   <feature.icon className="w-7 h-7" strokeWidth={2} />
                 </div>
                 <h3 className="font-bold text-xl mb-3 text-slate-900 dark:text-white">{feature.title}</h3>
@@ -578,7 +578,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       <section id="how-it-works" className="py-32">
         <AnimatedSection className="container mx-auto px-6">
           <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">How It Works</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-[#111827] dark:text-white tracking-tight">How It Works</h2>
             <p className="text-slate-500 dark:text-slate-400 mt-4 max-w-2xl mx-auto text-lg">Three simple steps to unlock your child's potential.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-16 text-center relative">
@@ -589,7 +589,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               { icon: <Bot className="w-8 h-8" />, title: "3. Build & Share", text: "Create real projects and share them with a community of young innovators." }
             ].map(step => (
               <div key={step.title} className="flex flex-col items-center group">
-                <div className="w-20 h-20 mb-8 bg-white dark:bg-slate-900 rounded-3xl flex items-center justify-center shadow-xl border border-slate-100 dark:border-slate-800 text-brand-600 dark:text-brand-400">
+                <div className="w-20 h-20 mb-8 bg-white dark:bg-slate-900 rounded-3xl flex items-center justify-center shadow-xl border border-slate-100 dark:border-slate-800 text-[#111827] dark:text-[#FBBF24]">
                   {step.icon}
                 </div>
                 <h3 className="font-bold text-2xl mb-4 text-slate-900 dark:text-white">{step.title}</h3>
@@ -604,14 +604,14 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       <section className="py-32 bg-slate-50 dark:bg-slate-900/30">
         <AnimatedSection className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Choose Your Adventure</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-[#111827] dark:text-white tracking-tight mb-4">Choose Your Adventure</h2>
             <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-lg font-medium">Different paths for different goals. Start visually and graduate to real-world syntax.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
-              { id: "block", title: "Block Coding", logo: "/assets/images/scratch_logo.svg", desc: "Drag and drop blocks to learn logic. Perfect for beginners mapping out their first games.", iconBg: "bg-[#2E2FCE]/10 dark:bg-[#2E2FCE]/20", glow: "bg-[#2E2FCE]/10 group-hover:bg-[#2E2FCE]/20", border: 'border-[#2E2FCE]/20 dark:border-[#2E2FCE]/30', age: "Ages 7-9" },
-              { id: "js", title: "JavaScript", logo: "/assets/images/js_logo.svg", desc: "The language of the web. Build interactive websites and web-based games.", iconBg: "bg-[#FDD501]/10 dark:bg-[#FDD501]/20", glow: "bg-[#FDD501]/10 group-hover:bg-[#FDD501]/20", border: 'border-[#FDD501]/20 dark:border-[#FDD501]/30', age: "Ages 10-14" },
-              { id: "python", title: "Python", logo: "/assets/images/python_logo.svg", desc: "Powerful yet easy to read. Dive into data, back-end logic, and AI concepts.", iconBg: "bg-[#2E2FCE]/10 dark:bg-[#2E2FCE]/20", glow: "bg-[#2E2FCE]/10 group-hover:bg-[#2E2FCE]/20", border: 'border-[#2E2FCE]/20 dark:border-[#2E2FCE]/30', age: "Ages 12-16+" }
+              { id: "block", title: "Block Coding", logo: "/assets/images/scratch_logo.svg", desc: "Drag and drop blocks to learn logic. Perfect for beginners mapping out their first games.", iconBg: "bg-[#111827]/10 dark:bg-indigo-950/40", glow: "bg-[#111827]/5 group-hover:bg-[#111827]/10", border: 'border-[#111827]/15 dark:border-indigo-900/40', age: "Ages 7-9" },
+              { id: "js", title: "JavaScript", logo: "/assets/images/js_logo.svg", desc: "The language of the web. Build interactive websites and web-based games.", iconBg: "bg-[#FBBF24]/15 dark:bg-[#FBBF24]/20", glow: "bg-[#FBBF24]/5 group-hover:bg-[#FBBF24]/10", border: 'border-[#FBBF24]/20 dark:border-[#FBBF24]/30', age: "Ages 10-14" },
+              { id: "python", title: "Python", logo: "/assets/images/python_logo.svg", desc: "Powerful yet easy to read. Dive into data, back-end logic, and AI concepts.", iconBg: "bg-[#111827]/10 dark:bg-indigo-950/40", glow: "bg-[#111827]/5 group-hover:bg-[#111827]/10", border: 'border-[#111827]/15 dark:border-indigo-900/40', age: "Ages 12-16+" }
             ].map(path => (
               <div key={path.id} className={`bg-white dark:bg-slate-800 rounded-3xl p-8 border hover:border-transparent ${path.border} hover:shadow-xl transition-all duration-500 group cursor-pointer relative overflow-hidden`}>
                 <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-2xl transition-all ${path.glow}`}></div>
@@ -770,30 +770,30 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#2E2FCE] text-white border-t border-[#1a1f8c] font-sans relative overflow-hidden">
+      <footer className="bg-[#111827] text-white border-t border-slate-950 font-sans relative overflow-hidden">
         <div className="container mx-auto px-6 py-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
             {/* Column 1: Logo & Social Links */}
             <div className="flex flex-col items-center md:items-start space-y-6">
               <div className="flex items-center">
-                <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-12 w-auto object-contain transition-transform hover:scale-105" />
+                <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-12 w-auto object-contain transition-transform hover:scale-105 brightness-0 invert" />
               </div>
               
-              {/* Social media icons - White on Blue */}
+              {/* Social media icons - White on Dark */}
               <div className="flex items-center gap-5 justify-center md:justify-start">
-                <a href="#" className="text-white hover:text-[#FDD501] transition-all hover:scale-110" aria-label="YouTube">
+                <a href="#" className="text-white hover:text-[#FBBF24] transition-all hover:scale-110" aria-label="YouTube">
                   <Youtube className="w-6 h-6" />
                 </a>
-                <a href="#" className="text-white hover:text-[#FDD501] transition-all hover:scale-110" aria-label="Instagram">
+                <a href="#" className="text-white hover:text-[#FBBF24] transition-all hover:scale-110" aria-label="Instagram">
                   <Instagram className="w-6 h-6" />
                 </a>
-                <a href="https://www.linkedin.com/in/hicham-outaleb-04a49319a/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#FDD501] transition-all hover:scale-110" aria-label="LinkedIn">
+                <a href="https://www.linkedin.com/in/hicham-outaleb-04a49319a/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#FBBF24] transition-all hover:scale-110" aria-label="LinkedIn">
                   <Linkedin className="w-6 h-6" />
                 </a>
-                <a href="#" className="text-white hover:text-[#FDD501] transition-all hover:scale-110" aria-label="Facebook">
+                <a href="#" className="text-white hover:text-[#FBBF24] transition-all hover:scale-110" aria-label="Facebook">
                   <Facebook className="w-6 h-6" />
                 </a>
-                <a href="https://github.com/hichamoutaleb" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#FDD501] transition-all hover:scale-110" aria-label="GitHub">
+                <a href="https://github.com/hichamoutaleb" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#FBBF24] transition-all hover:scale-110" aria-label="GitHub">
                   <Github className="w-6 h-6" />
                 </a>
               </div>
@@ -801,7 +801,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
 
             {/* Column 2: Description */}
             <div className="flex flex-col items-center md:items-start space-y-4">
-              <h4 className="text-lg font-black text-[#FDD501] uppercase tracking-wider">Code for Tomorrow</h4>
+              <h4 className="text-lg font-black text-[#FBBF24] uppercase tracking-wider">Code for Tomorrow</h4>
               <p className="text-slate-100 text-sm leading-relaxed max-w-sm font-medium">
                 Empowering the next generation with the tools to build the future. We turn coding into a lifelong passion through play, interactive learning, open-source collaboration, and technical documentation.
               </p>
@@ -809,13 +809,13 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
 
             {/* Column 3: Important Links */}
             <div className="flex flex-col items-center md:items-start space-y-4">
-              <h4 className="text-lg font-black text-[#FDD501] uppercase tracking-wider">Important Links</h4>
+              <h4 className="text-lg font-black text-[#FBBF24] uppercase tracking-wider">Important Links</h4>
               <nav className="flex flex-col items-center md:items-start space-y-3 font-bold text-sm">
-                <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-slate-100 hover:text-[#FDD501] transition-colors">Academy</a>
-                <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-slate-100 hover:text-[#FDD501] transition-colors">CFTOS</a>
-                <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-slate-100 hover:text-[#FDD501] transition-colors">Docs & Blog</a>
-                <NavLink href="#features" className="text-slate-100 hover:text-[#FDD501] transition-colors">Features</NavLink>
-                <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-slate-100 hover:text-[#FDD501] transition-colors">
+                <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-slate-100 hover:text-[#FBBF24] transition-colors">Academy</a>
+                <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-slate-100 hover:text-[#FBBF24] transition-colors">CFTOS</a>
+                <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-slate-100 hover:text-[#FBBF24] transition-colors">Docs & Blog</a>
+                <NavLink href="#features" className="text-slate-100 hover:text-[#FBBF24] transition-colors">Features</NavLink>
+                <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-slate-100 hover:text-[#FBBF24] transition-colors">
                   Join Us
                   <span className="w-5 h-5 rounded-full bg-[#25d366] hover:bg-[#20ba5a] flex items-center justify-center text-white transition-all p-1">
                     <svg viewBox="0 0 24 24" className="w-full h-full fill-current text-white" xmlns="http://www.w3.org/2000/svg">
@@ -829,7 +829,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
 
           {/* Policy Links & Copyright */}
           <div className="mt-16 pt-8 border-t border-white/10 flex flex-col items-center space-y-4">
-            <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm font-bold text-[#FDD501]">
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm font-bold text-[#FBBF24]">
               <a href="#" className="hover:underline transition-all">Privacy Policy</a>
               <a href="#" className="hover:underline transition-all">Terms of Use</a>
               <a href="#" className="hover:underline transition-all">Delivery Policy</a>
@@ -857,7 +857,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
           </a>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="w-12 h-12 rounded-full bg-white hover:bg-slate-100 flex items-center justify-center text-[#2E2FCE] shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer border border-slate-200/50"
+            className="w-12 h-12 rounded-full bg-white hover:bg-slate-100 flex items-center justify-center text-[#111827] shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer border border-slate-200/50"
             aria-label="Scroll to top"
           >
             <ChevronUp className="w-6 h-6" />
@@ -868,7 +868,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
         <div className="fixed bottom-6 right-6 z-40">
           <button
             onClick={() => alert("Support chat is opening...")}
-            className="w-12 h-12 rounded-full bg-[#f04f63] hover:bg-[#e03f53] flex items-center justify-center text-white shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer"
+            className="w-12 h-12 rounded-full bg-[#111827] hover:bg-[#1f2937] flex items-center justify-center text-white shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer"
             aria-label="Open support chat"
           >
             <MessageSquare className="w-6 h-6" />
