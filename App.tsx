@@ -145,10 +145,47 @@ const DashboardRoute: React.FC<DashboardRouteProps> = ({
   );
 };
 
+// ─── PROTECTED ROUTE WRAPPER ──────────────────────────────────────────────────
+interface ProtectedRouteProps {
+  currentUser: User | null;
+  children: React.ReactNode;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ currentUser, children }) => {
+  if (!currentUser) {
+    const hostname = window.location.hostname;
+    const port = window.location.port ? `:${window.location.port}` : '';
+    
+    // Save target path
+    localStorage.setItem('lastVisitedRoute', window.location.href);
+    
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1' && hostname.endsWith('palycofoto.club') && hostname !== 'palycofoto.club') {
+      window.location.href = `http://palycofoto.club${port}/auth`;
+      return <div className="flex h-screen items-center justify-center"><div className="w-12 h-12 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div></div>;
+    }
+    
+    return <Navigate to="/auth" replace />;
+  }
+  return <>{children}</>;
+};
+
 // ─── APP ─────────────────────────────────────────────────────────────────────
 
 export default function App() {
   const navigate = useNavigate();
+  const navigateToSavedRoute = useCallback((defaultRoute: string) => {
+    const savedRoute = localStorage.getItem('lastVisitedRoute');
+    if (savedRoute) {
+      localStorage.removeItem('lastVisitedRoute');
+      if (savedRoute.startsWith('http://') || savedRoute.startsWith('https://')) {
+        window.location.href = savedRoute;
+      } else {
+        navigate(savedRoute);
+      }
+    } else {
+      navigate(defaultRoute);
+    }
+  }, [navigate]);
   const { hasSelectedLanguage } = useLanguage();
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -193,8 +230,7 @@ export default function App() {
     if (!userWithRole.progress.badgesEarned) userWithRole.progress.badgesEarned = {};
     setCurrentUser(userWithRole);
 
-    const savedRoute = localStorage.getItem('lastVisitedRoute');
-    navigate(savedRoute || '/dashboard');
+    navigateToSavedRoute('/dashboard');
 
     if (!user.role && selectedRole) {
       try {
@@ -221,8 +257,7 @@ export default function App() {
     };
     setCurrentUser(guestUser);
 
-    const savedRoute = localStorage.getItem('lastVisitedRoute');
-    navigate(savedRoute || '/dashboard');
+    navigateToSavedRoute('/dashboard');
   }, [selectedRole, navigate]);
 
   const handleLogout = useCallback(async () => {
@@ -243,8 +278,7 @@ export default function App() {
 
   const onSplashFinish = useCallback(() => {
     if (currentUser) {
-      const savedRoute = localStorage.getItem('lastVisitedRoute');
-      navigate(savedRoute || '/dashboard');
+      navigateToSavedRoute('/dashboard');
     } else if (!hasSelectedLanguage) {
       navigate('/language-selection');
     } else {
@@ -415,6 +449,47 @@ export default function App() {
     setActiveLesson(null);
   }, []);
 
+  const getRootElement = () => {
+    const hostname = window.location.hostname;
+    const port = window.location.port ? `:${window.location.port}` : '';
+    
+    if (hostname === 'academy.palycofoto.club') {
+      if (!currentUser) {
+        const mainAuthUrl = hostname.endsWith('palycofoto.club')
+          ? `http://palycofoto.club${port}/auth`
+          : '/auth';
+        localStorage.setItem('lastVisitedRoute', window.location.href);
+        window.location.href = mainAuthUrl;
+        return <div className="flex h-screen items-center justify-center"><div className="w-12 h-12 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div></div>;
+      }
+      return <SplashScreen onFinish={onSplashFinish} />;
+    }
+    if (hostname === 'docs.palycofoto.club') {
+      if (!currentUser) {
+        const mainAuthUrl = hostname.endsWith('palycofoto.club')
+          ? `http://palycofoto.club${port}/auth`
+          : '/auth';
+        localStorage.setItem('lastVisitedRoute', window.location.href);
+        window.location.href = mainAuthUrl;
+        return <div className="flex h-screen items-center justify-center"><div className="w-12 h-12 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div></div>;
+      }
+      return <BlogScreen currentUser={currentUser} updateUser={updateUser} />;
+    }
+    if (hostname === 'os.palycofoto.club') {
+      if (!currentUser) {
+        const mainAuthUrl = hostname.endsWith('palycofoto.club')
+          ? `http://palycofoto.club${port}/auth`
+          : '/auth';
+        localStorage.setItem('lastVisitedRoute', window.location.href);
+        window.location.href = mainAuthUrl;
+        return <div className="flex h-screen items-center justify-center"><div className="w-12 h-12 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div></div>;
+      }
+      return <OpenSourceScreen currentUser={currentUser} updateUser={updateUser} onLogout={handleLogout} />;
+    }
+    // Default (palycofoto.club, localhost, etc.): serve the main LandingPage at "/"
+    return <LandingPage currentUser={currentUser} onGetStarted={() => navigate(currentUser ? '/dashboard' : '/role-selection')} />;
+  };
+
   const renderContent = () => {
     if (!isSessionLoaded) {
       return <SplashScreen onFinish={NOOP} />;
@@ -436,7 +511,7 @@ export default function App() {
       <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="w-12 h-12 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div></div>}>
         <Routes>
           <Route path="/missions" element={<Navigate to="/dashboard/missions" replace />} />
-          <Route path="/" element={<SplashScreen onFinish={onSplashFinish} />} />
+          <Route path="/" element={getRootElement()} />
 
           <Route path="/language-selection" element={
             currentUser ? <Navigate to="/dashboard" replace /> :
@@ -447,7 +522,7 @@ export default function App() {
           <Route path="/welcome" element={
             currentUser ? <Navigate to="/dashboard" replace /> :
               !hasSelectedLanguage ? <Navigate to="/language-selection" replace /> :
-                <LandingPage onGetStarted={() => navigate('/role-selection')} />
+                <LandingPage currentUser={currentUser} onGetStarted={() => navigate(currentUser ? '/dashboard' : '/role-selection')} />
           } />
 
           <Route path="/role-selection" element={
@@ -481,15 +556,43 @@ export default function App() {
 
           {/* Redirect unauthenticated users */}
           {!currentUser && (
-            <Route path="/dashboard/*" element={<Navigate to="/auth" replace />} />
+            <Route path="/dashboard/*" element={
+              <ProtectedRoute currentUser={currentUser}>
+                <Navigate to="/auth" replace />
+              </ProtectedRoute>
+            } />
           )}
 
-          <Route path="/brain-training" element={<BrainTrainingScreen />} />
-          <Route path="/brain-training/:challengeId" element={<BrainChallengeGameScreen />} />
-          <Route path="/blog" element={<BlogScreen currentUser={currentUser} updateUser={updateUser} />} />
-          <Route path="/blog/:postId" element={<BlogPostScreen currentUser={currentUser} updateUser={updateUser} />} />
-          <Route path="/cftos" element={<OpenSourceScreen currentUser={currentUser} updateUser={updateUser} onLogout={handleLogout} />} />
-          <Route path="/cftos/:category/:slug" element={<RepoArticlePage />} />
+          <Route path="/brain-training" element={
+            <ProtectedRoute currentUser={currentUser}>
+              <BrainTrainingScreen />
+            </ProtectedRoute>
+          } />
+          <Route path="/brain-training/:challengeId" element={
+            <ProtectedRoute currentUser={currentUser}>
+              <BrainChallengeGameScreen />
+            </ProtectedRoute>
+          } />
+          <Route path="/blog" element={
+            <ProtectedRoute currentUser={currentUser}>
+              <BlogScreen currentUser={currentUser} updateUser={updateUser} />
+            </ProtectedRoute>
+          } />
+          <Route path="/blog/:postId" element={
+            <ProtectedRoute currentUser={currentUser}>
+              <BlogPostScreen currentUser={currentUser} updateUser={updateUser} />
+            </ProtectedRoute>
+          } />
+          <Route path="/cftos" element={
+            <ProtectedRoute currentUser={currentUser}>
+              <OpenSourceScreen currentUser={currentUser} updateUser={updateUser} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+          <Route path="/cftos/:category/:slug" element={
+            <ProtectedRoute currentUser={currentUser}>
+              <RepoArticlePage />
+            </ProtectedRoute>
+          } />
 
           {/* ─── Owner Admin Dashboard ────────────────────────────────────── */}
           <Route
