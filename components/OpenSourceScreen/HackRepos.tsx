@@ -59,19 +59,19 @@ export const HackRepos: React.FC = () => {
           <div className="relative w-full md:max-w-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><Search className="h-5 w-5 text-slate-600" /></div>
             <input type="text" placeholder={t('hackRepos.searchPlaceholder')} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2.5 border border-slate-800 rounded-lg bg-[#0e0e11] text-slate-300 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 sm:text-sm transition-colors" />
+              className="block w-full pl-10 pr-3 py-2.5 border border-slate-800 rounded-lg bg-[#0e0e11] text-slate-300 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-[#111827]/50 sm:text-sm transition-colors" />
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             {CATEGORIES.map(cat => (
               <button key={cat} onClick={() => setActiveCategory(cat)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${activeCategory === cat ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-[#0e0e11] text-slate-400 border border-slate-800 hover:text-slate-200'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${activeCategory === cat ? 'bg-[#111827]/20 text-emerald-400 border border-[#111827]/30' : 'bg-[#0e0e11] text-slate-400 border border-slate-800 hover:text-slate-200'}`}
               >{cat}</button>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4 flex items-start gap-3">
+      <div className="bg-[#111827]/5 border border-[#111827]/20 rounded-xl p-4 flex items-start gap-3">
         <Shield className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
         <p className="text-emerald-300/80 text-xs font-medium leading-relaxed">
           <span className="font-bold text-emerald-400">Ethical Use Only.</span> These tools are for authorized security testing, education, and research only.
@@ -86,7 +86,7 @@ export const HackRepos: React.FC = () => {
             const IconComp = repo.icon;
             return (
               <motion.div onClick={() => navigate(`/cftos/hack/${repo.slug}`)} key={repo.id} variants={itemVariants}
-                className="bg-[#121212] rounded-2xl border border-slate-800/60 hover:border-emerald-500/30 p-6 flex flex-col transition-all group cursor-pointer hover:shadow-lg hover:shadow-emerald-500/5">
+                className="bg-[#121212] rounded-2xl border border-slate-800/60 hover:border-[#111827]/30 p-6 flex flex-col transition-all group cursor-pointer hover:shadow-lg hover:shadow-[#111827]/5">
                 <div className="flex items-start gap-4 mb-4">
                   <img src={repo.owner.avatar_url} alt={repo.name} className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800"
                     onError={(e) => { (e.target as HTMLImageElement).src = 'https://github.com/github.png'; }} />
@@ -101,13 +101,13 @@ export const HackRepos: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-2 mb-6 flex-wrap">
                   <span className="px-3 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-[11px] font-bold rounded-md">{repo.language}</span>
-                  <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-bold rounded-md flex items-center gap-1"><IconComp className="w-3 h-3" /> {repo.category}</span>
+                  <span className="px-3 py-1 bg-[#111827]/10 border border-[#111827]/20 text-emerald-400 text-[11px] font-bold rounded-md flex items-center gap-1"><IconComp className="w-3 h-3" /> {repo.category}</span>
                 </div>
                 <div className="flex items-center gap-2 mb-6 mt-auto flex-wrap">
                   {repo.topics.map(topic => <div key={topic} className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">{topic}</div>)}
                 </div>
                 <div className="flex items-center gap-6 pt-5 border-t border-slate-800/60 text-sm font-semibold">
-                  <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-500 fill-current" /><span className="text-white">{t('feed.stars')}</span><span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span></div>
+                  <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-[#FBBF24] fill-current" /><span className="text-white">{t('feed.stars')}</span><span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span></div>
                   <div className="flex items-center gap-1.5"><GitFork className="w-4 h-4 text-slate-500" /><span className="text-white">{t('feed.forks')}</span><span className="text-slate-400">{formatNumber(repo.forks_count)}</span></div>
                 </div>
               </motion.div>
