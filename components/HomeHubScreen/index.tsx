@@ -189,13 +189,13 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                                 +{quest.xpReward} XP
                                             </span>
                                             {isDone && (
-                                                <span className="text-xs bg-emerald-500 text-white rounded-full w-4.5 h-4.5 flex items-center justify-center font-bold">✓</span>
+                                                <span className="text-xs bg-[#111827] text-white rounded-full w-4.5 h-4.5 flex items-center justify-center font-bold">✓</span>
                                             )}
                                         </div>
                                     </div>
                                     <div className="w-full bg-slate-200 dark:bg-slate-850 h-2 rounded-full overflow-hidden">
                                         <div 
-                                            className={`h-full rounded-full transition-all duration-500 ${isDone ? 'bg-emerald-500' : 'bg-[#FBBF24] animate-pulse'}`}
+                                            className={`h-full rounded-full transition-all duration-500 ${isDone ? 'bg-[#111827]' : 'bg-[#FBBF24] animate-pulse'}`}
                                             style={{ width: `${pct}%` }}
                                         ></div>
                                     </div>
@@ -272,7 +272,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
         return (
             <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md rounded-[2rem] p-6 border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-lg transition-all relative overflow-hidden group">
-                <div className="absolute right-0 top-0 w-48 h-48 bg-gradient-to-br from-cyan-500/10 to-brand-500/10 dark:from-cyan-500/5 dark:to-brand-500/5 rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-700"></div>
+                <div className="absolute right-0 top-0 w-48 h-48 bg-gradient-to-br from-[#FBBF24]/10 to-brand-500/10 dark:from-[#FBBF24]/5 dark:to-brand-500/5 rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-700"></div>
                 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
                     <div className="flex items-center space-x-5 flex-1 min-w-0">
@@ -346,7 +346,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer flex flex-col justify-between h-full"
                         >
                             <div className="aspect-[16/10] w-full bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center relative overflow-hidden">
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-cyan-500/5 to-brand-500/5 transition-opacity duration-300"></div>
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-[#FBBF24]/5 to-brand-500/5 transition-opacity duration-300"></div>
                                 <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center shadow-sm transform group-hover:scale-110 transition-transform duration-500">
                                     {isEmoji ? (
                                         <span className="text-3xl select-none">{path.icon}</span>
@@ -358,7 +358,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             
                             <div className="p-4 flex flex-col justify-between flex-1">
                                 <div>
-                                    <h4 className="text-sm font-bold text-slate-800 dark:text-white group-hover:text-cyan-500 transition-colors">
+                                    <h4 className="text-sm font-bold text-slate-800 dark:text-white group-hover:text-[#FBBF24] transition-colors">
                                         {t(path.titleKey as any) || path.titleKey}
                                     </h4>
                                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 min-h-[2rem]">
@@ -620,10 +620,10 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 {/* Reward Reveal Modal Container */}
                 {showRewardModal && (
                     <div className="fixed inset-0 bg-black/75 flex items-center justify-center z-[100] p-4 animate-fade-in backdrop-blur-xl">
-                        <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 text-center max-w-sm w-full relative overflow-hidden animate-pop-in border-b-8 border-yellow-500 shadow-2xl">
-                            <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500"></div>
+                        <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 text-center max-w-sm w-full relative overflow-hidden animate-pop-in border-b-8 border-[#FBBF24] shadow-2xl">
+                            <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#FBBF24] via-amber-500 to-[#FBBF24]"></div>
                             <div className="text-6xl my-4 animate-bounce">🎁✨</div>
-                            <h2 className="text-2xl font-black text-yellow-500 dark:text-yellow-400 mb-2 uppercase tracking-tighter">Moroccan Reward!</h2>
+                            <h2 className="text-2xl font-black text-[#FBBF24] dark:text-[#FBBF24] mb-2 uppercase tracking-tighter">Moroccan Reward!</h2>
                             <p className="text-slate-500 dark:text-slate-400 font-bold text-sm mb-6 leading-relaxed">
                                 You completed today's daily adventure and unlocked the treasure chest:
                             </p>
@@ -653,7 +653,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     setShowRewardModal(false);
                                     setChestState('closed');
                                 }}
-                                className="w-full bg-yellow-500 text-white font-black py-3.5 px-6 rounded-xl text-base uppercase border-b-4 border-yellow-700 hover:bg-yellow-400 active:border-b-2 active:translate-y-1 transition-all shadow-xl bubbly-btn cursor-pointer"
+                                className="w-full bg-[#FBBF24] text-white font-black py-3.5 px-6 rounded-xl text-base uppercase border-b-4 border-yellow-700 hover:bg-[#FBBF24] active:border-b-2 active:translate-y-1 transition-all shadow-xl bubbly-btn cursor-pointer"
                             >
                                 CLAIM REWARDS
                             </button>
@@ -801,10 +801,10 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
             {/* Reward Reveal Modal Container */}
             {showRewardModal && (
                 <div className="fixed inset-0 bg-black/75 flex items-center justify-center z-[100] p-4 animate-fade-in backdrop-blur-xl">
-                    <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 text-center max-w-sm w-full relative overflow-hidden animate-pop-in border-b-8 border-yellow-500 shadow-2xl">
-                        <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500"></div>
+                    <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 text-center max-w-sm w-full relative overflow-hidden animate-pop-in border-b-8 border-[#FBBF24] shadow-2xl">
+                        <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#FBBF24] via-amber-500 to-[#FBBF24]"></div>
                         <div className="text-6xl my-4 animate-bounce">🎁✨</div>
-                        <h2 className="text-2xl font-black text-yellow-500 dark:text-yellow-400 mb-2 uppercase tracking-tighter">Moroccan Reward!</h2>
+                        <h2 className="text-2xl font-black text-[#FBBF24] dark:text-[#FBBF24] mb-2 uppercase tracking-tighter">Moroccan Reward!</h2>
                         <p className="text-slate-500 dark:text-slate-400 font-bold text-sm mb-6 leading-relaxed">
                             You completed today's daily adventure and unlocked the treasure chest:
                         </p>
@@ -831,7 +831,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 setShowRewardModal(false);
                                 setChestState('closed');
                             }}
-                            className="w-full bg-yellow-500 text-white font-black py-3.5 px-6 rounded-xl text-base uppercase border-b-4 border-yellow-700 hover:bg-yellow-400 active:border-b-2 active:translate-y-1 transition-all shadow-xl bubbly-btn cursor-pointer"
+                            className="w-full bg-[#FBBF24] text-white font-black py-3.5 px-6 rounded-xl text-base uppercase border-b-4 border-yellow-700 hover:bg-[#FBBF24] active:border-b-2 active:translate-y-1 transition-all shadow-xl bubbly-btn cursor-pointer"
                         >
                             CLAIM REWARDS
                         </button>
