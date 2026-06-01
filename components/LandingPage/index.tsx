@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { User } from '../../types';
 import { motion, useInView, useAnimation } from 'motion/react';
-import { ChevronRight, X, Menu, Gamepad2, Brush, Bot, Award, Star, Twitter, Instagram, Facebook, Github, Linkedin, Mail, Code, Terminal, Cpu, ChevronDown, CheckCircle, Play, Users, Rocket, Globe, Languages, ShieldCheck, Zap, Users2, Send } from 'lucide-react';
+import { ChevronRight, X, Menu, Gamepad2, Brush, Bot, Award, Star, Twitter, Instagram, Facebook, Github, Linkedin, Mail, Code, Terminal, Cpu, ChevronDown, CheckCircle, Play, Users, Rocket, Globe, Languages, ShieldCheck, Zap, Users2, Send, Youtube, ChevronUp, MessageSquare, Heart, ShoppingBasket, User as UserIcon } from 'lucide-react';
 import Mascot from '../Mascot';
 import { ImageCarousel } from '../ImageCarousel';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const AnimatedSection: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
   const ref = useRef(null);
@@ -43,7 +45,7 @@ const StatCard: React.FC<{ icon: any, value: string, label: string, color: strin
 );
 
 const PricingCard: React.FC<{ title: string, price: string, features: string[], isPopular?: boolean, onGetStarted: () => void }> = ({ title, price, features, isPopular, onGetStarted }) => (
-  <div className={`relative flex flex-col p-8 rounded-3xl border transition-all duration-500 ${isPopular ? 'bg-white dark:bg-slate-800 border-brand-500 shadow-2xl shadow-brand-500/10 scale-105 z-10' : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 hover:scale-[1.02]'}`}>
+  <div className={`relative flex flex-col p-8 rounded-3xl border transition-all duration-500 ${isPopular ? 'bg-white dark:bg-slate-800 border-brand-500 shadow-2xl shadow-brand-500/10 scale-105 z-10' : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800'}`}>
     {isPopular && (
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-500 text-white text-xs font-black px-4 py-1 rounded-full uppercase tracking-widest">
         Most Popular
@@ -71,7 +73,93 @@ const PricingCard: React.FC<{ title: string, price: string, features: string[], 
   </div>
 );
 
-const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) => {
+const statsTranslations = {
+  en: {
+    title: "Key Achievements",
+    studentsVal: "15 Million",
+    studentsSub: "Students",
+    studentsDesc: "Watch and learn from Science Street videos on all digital platforms",
+    viewsVal: "10M",
+    viewsSub: "Views",
+    viewsDesc: "Across our digital platforms",
+    expsVal: "400",
+    expsSub: "Experiments",
+    expsDesc: "Produced and filmed by Science Street",
+    festsVal: "22+",
+    festsSub: "Science Festivals",
+    festsDesc: "Across the Middle East and North Africa",
+    showsVal: "5,000",
+    showsSub: "Science Shows",
+    showsDesc: "Presented to all ages and students in a fun, interactive way"
+  },
+  fr: {
+    title: "Principales Réalisations",
+    studentsVal: "15 Millions",
+    studentsSub: "d'étudiants",
+    studentsDesc: "Regardez et apprenez avec les vidéos de Science Street sur toutes les plateformes",
+    viewsVal: "10M",
+    viewsSub: "de vues",
+    viewsDesc: "Sur nos plateformes numériques",
+    expsVal: "400",
+    expsSub: "Expériences",
+    expsDesc: "Produites et filmées par Science Street",
+    festsVal: "22+",
+    festsSub: "Festivals de sciences",
+    festsDesc: "À travers le Moyen-Orient et l'Afrique du Nord",
+    showsVal: "5 000",
+    showsSub: "Spectacles scientifiques",
+    showsDesc: "Présentés à tous les âges et aux étudiants de manière interactive"
+  },
+  ar: {
+    title: "أهم الإنجازات",
+    studentsVal: "15 مليون",
+    studentsSub: "طالب",
+    studentsDesc: "شاهد وتعلم من فيديوهات شارع العلوم على جميع المنصات الرقمية",
+    viewsVal: "10 مليون",
+    viewsSub: "مشاهدة",
+    viewsDesc: "عبر منصاتنا الرقمية",
+    expsVal: "400",
+    expsSub: "تجربة",
+    expsDesc: "تم انتاجها وتصويرها من شارع العلوم",
+    festsVal: "22+",
+    festsSub: "مهرجانات علمية",
+    festsDesc: "في جميع أنحاء الشرق الأوسط وشمال أفريقيا",
+    showsVal: "5,000",
+    showsSub: "عروض علمية",
+    showsDesc: "مقدم لجميع الأعمار والطلاب بأسلوب تفاعلي ممتع"
+  }
+};
+
+const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void }> = ({ currentUser, onGetStarted }) => {
+  const { language } = useLanguage();
+  const port = window.location.port ? `:${window.location.port}` : '';
+
+  const getPlatformHref = (subdomain: 'academy' | 'os' | 'docs', path: string) => {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1' || !hostname.endsWith('palycofoto.club')) {
+      return path;
+    }
+    return `http://${subdomain}.palycofoto.club${port}`;
+  };
+
+  const handleCardClick = (e: React.MouseEvent<HTMLAnchorElement>, subdomain: 'academy' | 'os' | 'docs', path: string) => {
+    if (!currentUser) {
+      e.preventDefault();
+      const hostname = window.location.hostname;
+      const targetRoute = hostname === 'localhost' || hostname === '127.0.0.1' || !hostname.endsWith('palycofoto.club')
+        ? path
+        : `http://${subdomain}.palycofoto.club${port}`;
+      
+      localStorage.setItem('lastVisitedRoute', targetRoute);
+      
+      const authPath = hostname === 'localhost' || hostname === '127.0.0.1' || !hostname.endsWith('palycofoto.club')
+        ? '/auth'
+        : `http://palycofoto.club${port}/auth`;
+        
+      window.location.href = authPath;
+    }
+  };
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [demoCode, setDemoCode] = useState("");
@@ -101,34 +189,63 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
   return (
     <div className="bg-brand-50 dark:bg-slate-950 font-sans overflow-x-hidden text-slate-900 dark:text-slate-100 selection:bg-brand-100 selection:text-brand-900">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl z-50 border-b border-slate-200/50 dark:border-slate-800/50 transition-all duration-300">
+      <header className="fixed top-0 left-0 right-0 bg-transparent z-50 transition-all duration-300">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-3 cursor-pointer group">
-            <img src="/assets/images/cofoto.png" alt="Code for Tomorrow Logo" className="w-10 h-10 object-contain rounded-xl shadow-lg shadow-brand-500/20 group-hover:scale-110 transition-transform" />
-            <span className="text-lg font-bold tracking-tight uppercase">Code for Tomorrow</span>
+          {/* Logo on the left */}
+          <div className="flex items-center cursor-pointer group shrink-0">
+            <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-14 w-auto object-contain transition-transform group-hover:scale-105" />
           </div>
-          <nav className="hidden md:flex items-center space-x-10">
-            <NavLink href="#features" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">Features</NavLink>
-            <NavLink href="#how-it-works" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">How It Works</NavLink>
-            <NavLink href="#testimonials" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium">Testimonials</NavLink>
-            <Link to="/blog" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-bold transition-colors text-sm">Blog</Link>
-            <Link to="/cftos" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-bold transition-colors text-sm">Open-source</Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-full border border-emerald-500/20 text-[10px] font-black uppercase tracking-wider">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              17 Students Online
-            </div>
-            <button
-              onClick={onGetStarted}
-              className="hidden md:flex items-center gap-2 bg-brand-600 text-white font-semibold px-6 py-2.5 rounded-full hover:bg-brand-500 transition-all text-sm shadow-xl shadow-brand-500/25 active:scale-95"
+
+          {/* Yellow pill Navigation in the center */}
+          <nav className="hidden lg:flex items-center bg-[#FDD501] rounded-full px-12 py-3.5 gap-10">
+            <a href="#" className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide">
+              Home
+            </a>
+            <a 
+              href={getPlatformHref('academy', '/dashboard')} 
+              onClick={(e) => handleCardClick(e, 'academy', '/dashboard')}
+              className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide"
             >
-              Get Started
-              <ChevronRight className="w-4 h-4" />
-            </button>
-            <button className="md:hidden p-2 text-slate-600 dark:text-slate-300" onClick={() => setIsMenuOpen(true)} aria-label="Open menu">
-              <Menu className="w-6 h-6" />
-            </button>
+              Academy
+            </a>
+            <a 
+              href={getPlatformHref('os', '/cftos')} 
+              onClick={(e) => handleCardClick(e, 'os', '/cftos')}
+              className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide"
+            >
+              CFTOS
+            </a>
+            <a 
+              href={getPlatformHref('docs', '/blog')} 
+              onClick={(e) => handleCardClick(e, 'docs', '/blog')}
+              className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide"
+            >
+              Docs & Blog
+            </a>
+            <a href="#features" className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide">
+              Features
+            </a>
+            <a href="#testimonials" className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide">
+              Testimonials
+            </a>
+          </nav>
+
+          {/* Icons on the right */}
+          <div className="flex items-center gap-6">
+            {/* Desktop Icons */}
+            <div className="hidden md:flex items-center gap-6 text-[#FDD501]">
+              <ShoppingBasket className="w-8 h-8 hover:scale-110 transition-transform cursor-pointer" aria-label="Shopping basket" />
+              <Heart className="w-8 h-8 hover:scale-110 transition-transform cursor-pointer" aria-label="Favorites" />
+              <UserIcon className="w-8 h-8 hover:scale-110 transition-transform cursor-pointer" aria-label="Account" onClick={onGetStarted} />
+            </div>
+
+            {/* Mobile Icons & Menu Toggle */}
+            <div className="flex md:hidden items-center gap-4 text-[#FDD501]">
+              <UserIcon className="w-7 h-7 hover:scale-110 transition-transform cursor-pointer" aria-label="Account" onClick={onGetStarted} />
+              <button className="p-1 hover:scale-110 transition-transform" onClick={() => setIsMenuOpen(true)} aria-label="Open menu">
+                <Menu className="w-8 h-8" />
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -143,16 +260,27 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
             <button onClick={() => setIsMenuOpen(false)} className="absolute top-6 right-6 p-1" aria-label="Close menu">
               <X className="w-6 h-6 text-slate-500" />
             </button>
-            <div className="flex items-center space-x-3 cursor-pointer group">
-              <img src="/assets/images/cofoto.png" alt="Code for Tomorrow Logo" className="w-10 h-10 object-contain rounded-xl shadow-lg shadow-brand-500/20 group-hover:scale-110 transition-transform" />
-              <span className="text-lg font-bold tracking-tight uppercase">Code for Tomorrow</span>
+            <div className="flex items-center cursor-pointer group">
+              <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
             </div>
             <nav className="flex flex-col space-y-6 mt-12 mb-8">
               <NavLink href="#features" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-lg">Features</NavLink>
               <NavLink href="#how-it-works" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-lg">How It Works</NavLink>
               <NavLink href="#testimonials" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-lg">Testimonials</NavLink>
-              <Link to="/blog" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium transition-colors text-lg">Blog</Link>
-              <Link to="/cftos" className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium transition-colors text-lg">Open-source</Link>
+              <a 
+                href={getPlatformHref('docs', '/blog')} 
+                onClick={(e) => handleCardClick(e, 'docs', '/blog')}
+                className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium transition-colors text-lg"
+              >
+                Blog & Docs
+              </a>
+              <a 
+                href={getPlatformHref('os', '/cftos')} 
+                onClick={(e) => handleCardClick(e, 'os', '/cftos')}
+                className="text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium transition-colors text-lg"
+              >
+                Open Source
+              </a>
             </nav>
             <div className="flex flex-col gap-4 mt-6">
               <div className="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-full border border-emerald-500/20 text-[10px] font-black uppercase tracking-wider w-fit">
@@ -171,7 +299,7 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
       )}
 
       {/* Hero Section */}
-      <main className="pt-32 md:pt-48 pb-24 container mx-auto px-6 text-center relative isolate">
+      <main className="pt-32 md:pt-40 pb-20 container mx-auto px-6 text-center relative isolate">
         {/* Decorative background elements */}
         <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
           <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)' }}></div>
@@ -179,32 +307,103 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
 
         <AnimatedSection>
           <div className="relative inline-block mb-10">
-            <div className="absolute -inset-4 bg-[#4285F4]/10 rounded-full blur-2xl"></div>
-            <div className="w-32 h-32 md:w-44 md:h-44 transform hover:scale-105 transition-all duration-700 cursor-pointer drop-shadow-[0_20px_50px_rgba(66,133,244,0.3)] relative">
+            <div className="absolute -inset-4 bg-[#2E2FCE]/10 rounded-full blur-2xl"></div>
+            <div className="w-32 h-32 md:w-44 md:h-44 transition-all duration-700 cursor-pointer drop-shadow-[0_20px_50px_rgba(66,133,244,0.3)] relative">
               <Mascot />
             </div>
           </div>
           <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold leading-[1.1] tracking-tight text-slate-900 dark:text-white">
-            Learning to Code is a
+            Building the Tech
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC05] dark:from-[#8ab4f8] dark:to-[#fdd663]">Great Adventure.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2E2FCE] via-[#EA4335] to-[#FBBC05] dark:from-[#a3aaeb] dark:to-[#fdd663]">Ecosystem for Tomorrow.</span>
           </h1>
           <p className="max-w-2xl mx-auto mt-8 text-slate-600 dark:text-slate-400 text-lg md:text-xl leading-relaxed font-medium">
-            Empower your child with the language of the future. Our platform turns complex concepts into interactive play.
+            An all-in-one ecosystem for interactive learning, open-source collaboration, and technical documentation.
           </p>
-          <div className="mt-12 flex flex-col sm:flex-row justify-center items-center gap-5">
+ 
+          {/* Integrated Ecosystem Grid */}
+          <div className="grid md:grid-cols-3 gap-8 mt-12 mb-12 max-w-5xl mx-auto">
+            {/* Card 1: CFT Academy */}
+            <a 
+              href={getPlatformHref('academy', '/dashboard')}
+              onClick={(e) => handleCardClick(e, 'academy', '/dashboard')}
+              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#f0f4ff] dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/30 shadow-[0_15px_50px_rgba(26,115,232,0.03)] dark:shadow-none hover:shadow-[0_20px_60px_rgba(26,115,232,0.06)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-[#e8f0fe] dark:bg-blue-950/60 flex items-center justify-center text-[#2E2FCE] dark:text-blue-400 mb-6 shadow-sm">
+                <Gamepad2 className="w-7 h-7" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">
+                CFT Academy
+              </h3>
+              <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 flex-grow text-[15px]">
+                Interactive coding adventures, gamified lessons, and curriculum builders for students.
+              </p>
+              <span className="inline-flex items-center text-sm font-bold text-[#2E2FCE] dark:text-blue-400 group-hover:underline">
+                Enter Academy &rarr;
+              </span>
+            </a>
+ 
+            {/* Card 2: CFTOS */}
+            <a 
+              href={getPlatformHref('os', '/cftos')}
+              onClick={(e) => handleCardClick(e, 'os', '/cftos')}
+              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#fdf2f2] dark:bg-red-950/20 border border-red-100/50 dark:border-red-900/30 shadow-[0_15px_50px_rgba(217,48,37,0.03)] dark:shadow-none hover:shadow-[0_20px_60px_rgba(217,48,37,0.06)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-[#fce8e6] dark:bg-red-950/60 flex items-center justify-center text-[#d93025] dark:text-red-400 mb-6 shadow-sm">
+                <Cpu className="w-7 h-7" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">
+                CFTOS
+              </h3>
+              <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 flex-grow text-[15px]">
+                Our collaborative developer platform for building autonomous AI agents and open software.
+              </p>
+              <span className="inline-flex items-center text-sm font-bold text-[#d93025] dark:text-red-400 group-hover:underline">
+                Open Platform &rarr;
+              </span>
+            </a>
+ 
+            {/* Card 3: CFT Docs & Blog */}
+            <a 
+              href={getPlatformHref('docs', '/blog')}
+              onClick={(e) => handleCardClick(e, 'docs', '/blog')}
+              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#fdfaf2] dark:bg-amber-950/20 border border-amber-100/50 dark:border-amber-900/30 shadow-[0_15px_50px_rgba(249,171,0,0.03)] dark:shadow-none hover:shadow-[0_20px_60px_rgba(249,171,0,0.06)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-[#fef7e0] dark:bg-amber-950/60 flex items-center justify-center text-[#f9ab00] dark:text-amber-400 mb-6 shadow-sm">
+                <Terminal className="w-7 h-7" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">
+                CFT Docs & Blog
+              </h3>
+              <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 flex-grow text-[15px]">
+                In-depth technical guides, tutorials, and insights for our engineering community.
+              </p>
+              <span className="inline-flex items-center text-sm font-bold text-[#f9ab00] dark:text-amber-400 group-hover:underline">
+                Read Documentation &rarr;
+              </span>
+            </a>
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-5">
             <button
               onClick={onGetStarted}
-              className="w-full sm:w-auto bg-brand-600 text-white font-semibold px-10 py-4 rounded-full hover:bg-brand-500 transition-all shadow-2xl shadow-brand-500/30 flex items-center justify-center gap-2 transform hover:-translate-y-1 active:scale-95"
+              className="w-full sm:w-auto bg-[#2E2FCE] text-white font-bold px-10 py-4 rounded-full hover:bg-[#2324ba] transition-all shadow-xl shadow-[#2E2FCE]/20 flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
             >
-              Start Learning Now <ChevronRight className="w-5 h-5" />
+              Get Started for Free <ChevronRight className="w-4 h-4" strokeWidth={3} />
             </button>
-            <button className="w-full sm:w-auto px-10 py-4 rounded-full border border-slate-200 dark:border-slate-800 font-semibold hover:bg-slate-50 dark:hover:bg-slate-900 transition-all">
-              View Curriculum
+            <button 
+              onClick={() => {
+                const element = document.getElementById('features');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              className="w-full sm:w-auto text-center px-10 py-4 rounded-full border border-slate-200/60 dark:border-slate-800 font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-all text-slate-700 dark:text-slate-300 bg-slate-50/50 dark:bg-slate-900/30 decoration-none cursor-pointer"
+            >
+              Explore Features
             </button>
           </div>
         </AnimatedSection>
-
 
       </main>
 
@@ -229,7 +428,7 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
               </ul>
               <button
                 onClick={onGetStarted}
-                className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold px-8 py-3.5 rounded-full hover:bg-slate-800 dark:hover:bg-slate-100 transition-all shadow-xl flex items-center gap-2 transform hover:-translate-y-1"
+                className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold px-8 py-3.5 rounded-full hover:bg-slate-800 dark:hover:bg-slate-100 transition-all shadow-xl flex items-center gap-2"
               >
                 Try the First Lesson <Code className="w-4 h-4" />
               </button>
@@ -258,12 +457,82 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
             </div>
           </div>
 
-          {/* Stats Grid */}
-          <div className="mt-32 grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            <StatCard icon={Users} value="50k+" label="Active Students" color="bg-blue-500" />
-            <StatCard icon={Code} value="1M+" label="Lines of Code" color="bg-emerald-500" />
-            <StatCard icon={Rocket} value="500+" label="Lessons" color="bg-orange-500" />
-            <StatCard icon={Star} value="4.9/5" label="User Rating" color="bg-amber-500" />
+          {/* Stats Grid Section */}
+          <div className="mt-32 max-w-5xl mx-auto px-4">
+            <h2 className="text-3xl md:text-5xl font-black text-center text-[#2E2FCE] dark:text-[#a3aaeb] mb-12 tracking-tight">
+              {statsTranslations[language as 'en' | 'fr' | 'ar']?.title || statsTranslations.en.title}
+            </h2>
+
+            {/* Top Row: Two Big Highlight Cards */}
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              {/* Card 1: Students */}
+              <div className="bg-[#FDD501] border-2 border-[#2E2FCE] shadow-[6px_6px_0px_#2E2FCE] rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center transition-all duration-300 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_#2E2FCE]">
+                <span className="text-4xl md:text-5xl font-black text-[#2E2FCE] mb-1 leading-none">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.studentsVal || statsTranslations.en.studentsVal}
+                </span>
+                <span className="text-lg md:text-xl font-black text-[#2E2FCE] mb-3">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.studentsSub || statsTranslations.en.studentsSub}
+                </span>
+                <p className="text-xs font-bold text-[#2E2FCE]/80 max-w-sm leading-relaxed">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.studentsDesc || statsTranslations.en.studentsDesc}
+                </p>
+              </div>
+
+              {/* Card 2: Views */}
+              <div className="bg-[#FDD501] border-2 border-[#2E2FCE] shadow-[6px_6px_0px_#2E2FCE] rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center transition-all duration-300 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_#2E2FCE]">
+                <span className="text-4xl md:text-5xl font-black text-[#2E2FCE] mb-1 leading-none">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.viewsVal || statsTranslations.en.viewsVal}
+                </span>
+                <span className="text-lg md:text-xl font-black text-[#2E2FCE] mb-3">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.viewsSub || statsTranslations.en.viewsSub}
+                </span>
+                <p className="text-xs font-bold text-[#2E2FCE]/80 max-w-sm leading-relaxed">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.viewsDesc || statsTranslations.en.viewsDesc}
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom Row: Three White Cards */}
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Card 3: Experiments */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2rem] p-6 shadow-[0_15px_40px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center text-center">
+                <span className="text-3xl md:text-4xl font-black text-[#2E2FCE] dark:text-[#a3aaeb] mb-1">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.expsVal || statsTranslations.en.expsVal}
+                </span>
+                <span className="text-base font-bold text-slate-800 dark:text-white mb-2">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.expsSub || statsTranslations.en.expsSub}
+                </span>
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.expsDesc || statsTranslations.en.expsDesc}
+                </p>
+              </div>
+
+              {/* Card 4: Festivals */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2rem] p-6 shadow-[0_15px_40px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center text-center">
+                <span className="text-3xl md:text-4xl font-black text-[#2E2FCE] dark:text-[#a3aaeb] mb-1">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.festsVal || statsTranslations.en.festsVal}
+                </span>
+                <span className="text-base font-bold text-slate-800 dark:text-white mb-2">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.festsSub || statsTranslations.en.festsSub}
+                </span>
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.festsDesc || statsTranslations.en.festsDesc}
+                </p>
+              </div>
+
+              {/* Card 5: Shows */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2rem] p-6 shadow-[0_15px_40px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center text-center">
+                <span className="text-3xl md:text-4xl font-black text-[#2E2FCE] dark:text-[#a3aaeb] mb-1">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.showsVal || statsTranslations.en.showsVal}
+                </span>
+                <span className="text-base font-bold text-slate-800 dark:text-white mb-2">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.showsSub || statsTranslations.en.showsSub}
+                </span>
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                  {statsTranslations[language as 'en' | 'fr' | 'ar']?.showsDesc || statsTranslations.en.showsDesc}
+                </p>
+              </div>
+            </div>
           </div>
         </AnimatedSection>
       </section>
@@ -288,13 +557,13 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: Gamepad2, title: "Fun Games", color: "bg-[#4285F4]", text: "Learn coding logic through immersive puzzles and interactive challenges." },
+              { icon: Gamepad2, title: "Fun Games", color: "bg-[#2E2FCE]", text: "Learn coding logic through immersive puzzles and interactive challenges." },
               { icon: Brush, title: "Creative Projects", color: "bg-[#EA4335]", text: "Design your own digital worlds, from simple animations to complex games." },
               { icon: Bot, title: "Mentorship", color: "bg-[#34A853]", text: "Personalized guidance that adapts to your child's unique learning pace." },
               { icon: Award, title: "Skill Certification", color: "bg-[#FBBC05]", text: "Earn verifiable badges and certificates as you master new technologies." }
             ].map(feature => (
-              <div key={feature.title} className="group bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200/60 dark:border-slate-700/60 hover:shadow-xl transition-all duration-500 hover:-translate-y-2">
-                <div className={`w-14 h-14 ${feature.color} rounded-2xl flex items-center justify-center text-white mb-6 shadow-md group-hover:scale-110 transition-transform duration-500`}>
+              <div key={feature.title} className="group bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200/60 dark:border-slate-700/60 hover:shadow-xl transition-all duration-500">
+                <div className={`w-14 h-14 ${feature.color} rounded-2xl flex items-center justify-center text-white mb-6 shadow-md`}>
                   <feature.icon className="w-7 h-7" strokeWidth={2} />
                 </div>
                 <h3 className="font-bold text-xl mb-3 text-slate-900 dark:text-white">{feature.title}</h3>
@@ -320,7 +589,7 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
               { icon: <Bot className="w-8 h-8" />, title: "3. Build & Share", text: "Create real projects and share them with a community of young innovators." }
             ].map(step => (
               <div key={step.title} className="flex flex-col items-center group">
-                <div className="w-20 h-20 mb-8 bg-white dark:bg-slate-900 rounded-3xl flex items-center justify-center shadow-xl border border-slate-100 dark:border-slate-800 group-hover:scale-110 transition-transform duration-500 text-brand-600 dark:text-brand-400">
+                <div className="w-20 h-20 mb-8 bg-white dark:bg-slate-900 rounded-3xl flex items-center justify-center shadow-xl border border-slate-100 dark:border-slate-800 text-brand-600 dark:text-brand-400">
                   {step.icon}
                 </div>
                 <h3 className="font-bold text-2xl mb-4 text-slate-900 dark:text-white">{step.title}</h3>
@@ -344,7 +613,7 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
               { id: "js", title: "JavaScript", logo: "/assets/images/js_logo.svg", desc: "The language of the web. Build interactive websites and web-based games.", iconBg: "bg-[#FBBC05]/10 dark:bg-[#FBBC05]/20", glow: "bg-[#FBBC05]/10 group-hover:bg-[#FBBC05]/20", border: 'border-[#FBBC05]/20 dark:border-[#FBBC05]/30', age: "Ages 10-14" },
               { id: "python", title: "Python", logo: "/assets/images/python_logo.svg", desc: "Powerful yet easy to read. Dive into data, back-end logic, and AI concepts.", iconBg: "bg-[#34A853]/10 dark:bg-[#34A853]/20", glow: "bg-[#34A853]/10 group-hover:bg-[#34A853]/20", border: 'border-[#34A853]/20 dark:border-[#34A853]/30', age: "Ages 12-16+" }
             ].map(path => (
-              <div key={path.id} className={`bg-white dark:bg-slate-800 rounded-3xl p-8 border hover:border-transparent ${path.border} hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group cursor-pointer relative overflow-hidden`}>
+              <div key={path.id} className={`bg-white dark:bg-slate-800 rounded-3xl p-8 border hover:border-transparent ${path.border} hover:shadow-xl transition-all duration-500 group cursor-pointer relative overflow-hidden`}>
                 <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-2xl transition-all ${path.glow}`}></div>
                 <div className="flex justify-between items-start mb-6 relative z-10">
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center p-2.5 ${path.iconBg}`}>
@@ -469,7 +738,7 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
               <div className="mt-12 flex flex-col sm:flex-row justify-center items-center gap-6">
                 <button
                   onClick={onGetStarted}
-                  className="w-full sm:w-auto bg-white text-brand-600 font-bold px-12 py-5 rounded-full hover:bg-slate-50 transition-all shadow-xl flex items-center justify-center gap-2 transform hover:-translate-y-1 active:scale-95"
+                  className="w-full sm:w-auto bg-white text-brand-600 font-bold px-12 py-5 rounded-full hover:bg-slate-50 transition-all shadow-xl flex items-center justify-center gap-2 active:scale-95"
                 >
                   Get Started for Free <ChevronRight className="w-5 h-5" />
                 </button>
@@ -501,85 +770,112 @@ const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStarted }) =
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950 text-slate-400 border-t border-slate-900">
-        <div className="container mx-auto px-6 py-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
-            {/* Project Info */}
-            <div className="col-span-1 md:col-span-2 lg:col-span-1">
-              <div className="flex items-center space-x-3 mb-8">
-                <img src="/assets/images/cofoto.png" alt="Code for Tomorrow Logo" className="w-10 h-10 object-contain rounded-xl shadow-lg" />
-                <span className="text-lg font-bold text-white tracking-tight uppercase">Code for Tomorrow</span>
-              </div>
-              <p className="text-base leading-relaxed mb-6">Empowering the next generation with the tools to build the future. We turn coding into a lifelong passion through play and creativity.</p>
-              <div className="flex items-center gap-4 mb-8">
-                <a href="#" className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-brand-600 hover:text-white transition-all"><Twitter className="w-5 h-5" /></a>
-                <a href="https://github.com/hichamoutaleb" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-brand-600 hover:text-white transition-all"><Github className="w-5 h-5" /></a>
-                <a href="https://www.linkedin.com/in/hicham-outaleb-04a49319a/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-brand-600 hover:text-white transition-all"><Linkedin className="w-5 h-5" /></a>
+      <footer className="bg-[#2E2FCE] text-white border-t border-[#1a1f8c] font-sans relative overflow-hidden">
+        <div className="container mx-auto px-6 py-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
+            {/* Column 1: Logo & Social Links */}
+            <div className="flex flex-col items-center md:items-start space-y-6">
+              <div className="flex items-center space-x-3">
+                <img src="/assets/images/cofoto.png" alt="Code for Tomorrow Logo" className="w-12 h-12 object-contain rounded-xl bg-white/10 p-1 shadow-lg ring-2 ring-[#FDD501]/50" />
+                <span className="text-xl font-black text-[#FDD501] tracking-tight uppercase">
+                  Code for Tomorrow<span className="text-xs align-super ml-0.5">®</span>
+                </span>
               </div>
               
-              <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-3">
-                <a href="#" className="flex flex-1 items-center justify-center gap-3 bg-slate-900 border border-slate-800 hover:border-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-xl transition-all w-full sm:w-auto">
-                  <svg viewBox="0 0 384 512" className="w-5 h-5 fill-current"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
-                  <div className="flex flex-col text-left">
-                    <span className="text-[9px] text-slate-400 font-medium leading-none mb-1">Download on the</span>
-                    <span className="text-sm font-bold leading-none">App Store</span>
-                  </div>
+              {/* Social media icons - White on Blue */}
+              <div className="flex items-center gap-5 justify-center md:justify-start">
+                <a href="#" className="text-white hover:text-[#FDD501] transition-all hover:scale-110" aria-label="YouTube">
+                  <Youtube className="w-6 h-6" />
                 </a>
-                <a href="#" className="flex flex-1 items-center justify-center gap-3 bg-slate-900 border border-slate-800 hover:border-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-xl transition-all w-full sm:w-auto">
-                  <svg viewBox="0 0 512 512" className="w-5 h-5 fill-current"><path d="M325.3 234.3L104.6 13.6C100.9 9.8 96 11.2 96 16v480c0 4.8 4.9 6.2 8.6 2.4l220.7-220.7c3.1-3.1 3.1-8.2 0-11.3z"/><path d="M104.6 13.6l220.7 220.7 75.7-75.7L116 19.5c-4.3-2.5-9.4-1.2-11.4-5.9z"/><path d="M325.3 277.7l-220.7 220.7c2 4.7 7.1 6 11.4 3.5l285-139.1-75.7-85.1z"/><path d="M401 158.6l-75.7 75.7 75.7 85.1 79.5-38.8c4.6-2.2 4.6-9.1 0-11.3l-79.5-50.7z"/></svg>
-                  <div className="flex flex-col text-left">
-                    <span className="text-[9px] text-slate-400 font-medium leading-none mb-1">GET IT ON</span>
-                    <span className="text-sm font-bold leading-none">Google Play</span>
-                  </div>
+                <a href="#" className="text-white hover:text-[#FDD501] transition-all hover:scale-110" aria-label="Instagram">
+                  <Instagram className="w-6 h-6" />
+                </a>
+                <a href="https://www.linkedin.com/in/hicham-outaleb-04a49319a/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#FDD501] transition-all hover:scale-110" aria-label="LinkedIn">
+                  <Linkedin className="w-6 h-6" />
+                </a>
+                <a href="#" className="text-white hover:text-[#FDD501] transition-all hover:scale-110" aria-label="Facebook">
+                  <Facebook className="w-6 h-6" />
+                </a>
+                <a href="https://github.com/hichamoutaleb" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#FDD501] transition-all hover:scale-110" aria-label="GitHub">
+                  <Github className="w-6 h-6" />
                 </a>
               </div>
             </div>
 
-            {/* Navigation Links */}
-            <div>
-              <h5 className="font-bold text-white mb-8 uppercase tracking-widest text-xs">Platform</h5>
-              <nav className="flex flex-col space-y-4">
-                <NavLink href="#" className="hover:text-white font-medium">Curriculum</NavLink>
-                <NavLink href="#features" className="hover:text-white font-medium">Features</NavLink>
-                <NavLink href="#how-it-works" className="hover:text-white font-medium">How It Works</NavLink>
-                <NavLink href="#pricing" className="hover:text-white font-medium">Pricing</NavLink>
-                <Link to="/blog" className="hover:text-white font-medium text-sm transition-colors">Blog</Link>
-              </nav>
+            {/* Column 2: Description */}
+            <div className="flex flex-col items-center md:items-start space-y-4">
+              <h4 className="text-lg font-black text-[#FDD501] uppercase tracking-wider">Code for Tomorrow</h4>
+              <p className="text-slate-100 text-sm leading-relaxed max-w-sm font-medium">
+                Empowering the next generation with the tools to build the future. We turn coding into a lifelong passion through play, interactive learning, open-source collaboration, and technical documentation.
+              </p>
             </div>
 
-            {/* Resources */}
-            <div>
-              <h5 className="font-bold text-white mb-8 uppercase tracking-widest text-xs">Resources</h5>
-              <nav className="flex flex-col space-y-4">
-                <NavLink href="#" className="hover:text-white font-medium">Documentation</NavLink>
-                <NavLink href="#" className="hover:text-white font-medium">Parent Guide</NavLink>
-                <NavLink href="#" className="hover:text-white font-medium">Educator Portal</NavLink>
-                <NavLink href="#" className="hover:text-white font-medium">Community</NavLink>
-              </nav>
-            </div>
-
-            {/* Contact */}
-            <div>
-              <h5 className="font-bold text-white mb-8 uppercase tracking-widest text-xs">Get in Touch</h5>
-              <div className="flex flex-col space-y-4">
-                <a href="mailto:hichamoutaleb7@gmail.com" className="flex items-center space-x-3 hover:text-white transition-colors">
-                  <Mail className="w-5 h-5 text-brand-500" />
-                  <span className="font-medium">hichamoutaleb7@gmail.com</span>
+            {/* Column 3: Important Links */}
+            <div className="flex flex-col items-center md:items-start space-y-4">
+              <h4 className="text-lg font-black text-[#FDD501] uppercase tracking-wider">Important Links</h4>
+              <nav className="flex flex-col items-center md:items-start space-y-3 font-bold text-sm">
+                <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-slate-100 hover:text-[#FDD501] transition-colors">Academy</a>
+                <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-slate-100 hover:text-[#FDD501] transition-colors">CFTOS</a>
+                <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-slate-100 hover:text-[#FDD501] transition-colors">Docs & Blog</a>
+                <NavLink href="#features" className="text-slate-100 hover:text-[#FDD501] transition-colors">Features</NavLink>
+                <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-slate-100 hover:text-[#FDD501] transition-colors">
+                  Join Us
+                  <span className="w-5 h-5 rounded-full bg-[#25d366] hover:bg-[#20ba5a] flex items-center justify-center text-white transition-all p-1">
+                    <svg viewBox="0 0 24 24" className="w-full h-full fill-current text-white" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.806-9.799.002-2.618-1.016-5.078-2.87-6.932-1.854-1.854-4.318-2.873-6.93-2.875-5.399 0-9.799 4.4-9.802 9.802-.001 1.572.43 3.102 1.248 4.467l-.989 3.602 3.705-.972zm10.135-4.808c-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                    </svg>
+                  </span>
                 </a>
-                <div className="pt-4">
-                  <p className="text-sm font-semibold text-slate-300">Hicham Outaleb</p>
-                  <p className="text-xs text-slate-500">Founder & Lead Developer</p>
-                </div>
-              </div>
+              </nav>
             </div>
           </div>
-          <div className="border-t border-slate-900 mt-24 pt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-sm font-medium">
-            <p>&copy; {new Date().getFullYear()} Code for Tomorrow. All rights reserved.</p>
-            <div className="flex gap-8">
-              <a href="#" className="hover:text-white">Privacy Policy</a>
-              <a href="#" className="hover:text-white">Terms of Service</a>
+
+          {/* Policy Links & Copyright */}
+          <div className="mt-16 pt-8 border-t border-white/10 flex flex-col items-center space-y-4">
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm font-bold text-[#FDD501]">
+              <a href="#" className="hover:underline transition-all">Privacy Policy</a>
+              <a href="#" className="hover:underline transition-all">Terms of Use</a>
+              <a href="#" className="hover:underline transition-all">Delivery Policy</a>
+              <a href="#" className="hover:underline transition-all">Return Policy</a>
             </div>
+            <p className="text-xs text-slate-200 font-bold">
+              All Rights Reserved @ Code for Tomorrow {new Date().getFullYear()}
+            </p>
           </div>
+        </div>
+
+        {/* Floating buttons in corners */}
+        {/* Left corner: WhatsApp and Scroll-to-Top */}
+        <div className="fixed bottom-6 left-6 flex flex-col gap-3 z-40">
+          <a
+            href="https://wa.me/212600000000"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-12 h-12 rounded-full bg-[#25d366] hover:bg-[#20ba5a] flex flex-center items-center justify-center text-white shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer"
+            aria-label="Contact on WhatsApp"
+          >
+            <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current text-white" xmlns="http://www.w3.org/2000/svg">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.806-9.799.002-2.618-1.016-5.078-2.87-6.932-1.854-1.854-4.318-2.873-6.93-2.875-5.399 0-9.799 4.4-9.802 9.802-.001 1.572.43 3.102 1.248 4.467l-.989 3.602 3.705-.972zm10.135-4.808c-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            </svg>
+          </a>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="w-12 h-12 rounded-full bg-white hover:bg-slate-100 flex items-center justify-center text-[#2E2FCE] shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer border border-slate-200/50"
+            aria-label="Scroll to top"
+          >
+            <ChevronUp className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Right corner: Chat Widget Trigger */}
+        <div className="fixed bottom-6 right-6 z-40">
+          <button
+            onClick={() => alert("Support chat is opening...")}
+            className="w-12 h-12 rounded-full bg-[#f04f63] hover:bg-[#e03f53] flex items-center justify-center text-white shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer"
+            aria-label="Open support chat"
+          >
+            <MessageSquare className="w-6 h-6" />
+          </button>
         </div>
       </footer>
 
