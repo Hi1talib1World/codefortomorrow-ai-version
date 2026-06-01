@@ -17,7 +17,7 @@ interface ConfettiCelebrationProps {
     duration?: number; // ms
 }
 
-const COLORS = ['#4285F4', '#EA4335', '#FBBC05', '#34A853', '#FF6D00', '#AA00FF', '#00BFA5'];
+const COLORS = ['#2E2FCE', '#EA4335', '#FBBC05', '#34A853', '#FF6D00', '#AA00FF', '#00BFA5'];
 
 const ConfettiCelebration: React.FC<ConfettiCelebrationProps> = ({
     isActive,
