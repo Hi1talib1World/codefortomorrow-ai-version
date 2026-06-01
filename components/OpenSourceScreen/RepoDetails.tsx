@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { User } from '../../types';
 import api from '../../services/api';
 import { AuthPromptModal } from '../AuthPromptModal';
+import { useI18n } from './i18n';
 
 interface RepoDetailsProps {
   repo: any;
@@ -15,6 +16,7 @@ interface RepoDetailsProps {
 }
 
 export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentUser, updateUser }) => {
+  const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<'guide' | 'readme'>('guide');
   const [guide, setGuide] = useState<string>('');
   const [readme, setReadme] = useState<string>('');
@@ -41,12 +43,12 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
         const descriptionParam = encodeURIComponent(repo.description || '');
         const res = await fetch(`/api/opensource/repos/${owner}/${name}/setup-guide?description=${descriptionParam}`);
         if (!res.ok) {
-          throw new Error('Failed to fetch AI Setup Guide');
+          throw new Error(t('details.failedFetchGuide'));
         }
         const text = await res.text();
         setGuide(text);
       } catch (err: any) {
-        setError(err.message || 'An error occurred while fetching the setup guide.');
+        setError(err.message || t('details.errorGuide'));
       } finally {
         setLoading(false);
       }
@@ -67,16 +69,16 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
         const res = await fetch(`/api/opensource/repos/${owner}/${name}/readme`);
         if (!res.ok) {
           if (res.status === 404) {
-            setError('No README found for this repository.');
+            setError(t('details.noReadme'));
           } else {
-            throw new Error('Failed to fetch README');
+            throw new Error(t('details.failedFetchReadme'));
           }
         } else {
           const text = await res.text();
           setReadme(text);
         }
       } catch (err: any) {
-        setError(err.message || 'An error occurred while fetching the documentation.');
+        setError(err.message || t('details.errorReadme'));
       } finally {
         setLoading(false);
       }
@@ -125,7 +127,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
           className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="font-semibold">Back to Feed</span>
+          <span className="font-semibold">{t('details.back')}</span>
         </button>
         <div className="flex items-center gap-3">
           <button
@@ -133,14 +135,14 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
             className="flex items-center gap-2 px-4 py-2 border rounded-lg font-semibold transition-colors bg-[#121212] border-slate-800 text-slate-300 hover:bg-slate-800"
           >
             <Share2 className="w-4 h-4" />
-            <span>Share</span>
+            <span>{t('details.share')}</span>
           </button>
           <button 
             onClick={handleSaveRepo}
             className={`flex items-center gap-2 px-4 py-2 border rounded-lg font-semibold transition-colors ${isSaved ? 'bg-brand-500/10 border-brand-500/20 text-brand-500' : 'bg-[#121212] border-slate-800 text-slate-300 hover:bg-slate-800'}`}
           >
             <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
-            <span>{isSaved ? 'Saved' : 'Save'}</span>
+            <span>{isSaved ? t('details.saved') : t('details.save')}</span>
           </button>
           <a 
             href={repo.html_url} 
@@ -149,7 +151,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
             className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-semibold transition-colors"
           >
             <Github className="w-4 h-4" />
-            <span>View on GitHub</span>
+            <span>{t('details.viewOnGithub')}</span>
           </a>
         </div>
       </div>
@@ -173,14 +175,14 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
             <Star className="w-5 h-5 text-yellow-500 fill-current" />
             <div className="flex flex-col">
               <span className="text-white">{formatNumber(repo.stargazers_count)}</span>
-              <span className="text-slate-500 text-xs uppercase tracking-wider">Stars</span>
+              <span className="text-slate-500 text-xs uppercase tracking-wider">{t('feed.stars')}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <GitFork className="w-5 h-5 text-slate-500" />
             <div className="flex flex-col">
               <span className="text-white">{formatNumber(repo.forks_count)}</span>
-              <span className="text-slate-500 text-xs uppercase tracking-wider">Forks</span>
+              <span className="text-slate-500 text-xs uppercase tracking-wider">{t('feed.forks')}</span>
             </div>
           </div>
         </div>
@@ -192,7 +194,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
           <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[2rem] shadow-2xl border border-slate-200/60 dark:border-slate-800/60 overflow-hidden">
             <div className="p-6 flex justify-between items-center border-b border-slate-100 dark:border-slate-800/80">
               <h3 className="font-black tracking-tight text-xl text-slate-900 dark:text-white flex items-center gap-2">
-                <Share2 className="w-5 h-5 text-brand-500" /> Share Repository
+                <Share2 className="w-5 h-5 text-brand-500" /> {t('details.shareTitle')}
               </h3>
               <button 
                 onClick={() => setIsShareModalOpen(false)}
@@ -240,7 +242,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
                   <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center group-hover:-translate-y-1 transition-transform">
                     <Link2 className="w-6 h-6" />
                   </div>
-                  <span className="text-xs font-bold text-slate-500">Copy</span>
+                  <span className="text-xs font-bold text-slate-500">{t('details.copy')}</span>
                 </button>
               </div>
               <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 border border-slate-200 dark:border-slate-700">
@@ -251,7 +253,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
                   onClick={async () => { await navigator.clipboard.writeText(repo.html_url); setIsShareModalOpen(false); }}
                   className="px-4 py-2 bg-white dark:bg-slate-700 text-slate-700 dark:text-white text-xs font-bold rounded-lg shadow-sm hover:shadow transition-shadow border border-slate-200 dark:border-slate-600 shrink-0"
                 >
-                  Copy Link
+                  {t('details.copyLink')}
                 </button>
               </div>
             </div>
@@ -272,7 +274,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
             }`}
           >
             <Sparkles className="w-4 h-4 text-brand-400 fill-brand-400/20" />
-            <span>AI Beginner Guide</span>
+            <span>{t('details.aiBeginnerGuide')}</span>
           </button>
           <button
             onClick={() => setActiveTab('readme')}
@@ -283,7 +285,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
             }`}
           >
             <FileText className="w-4 h-4 text-slate-400" />
-            <span>Full README</span>
+            <span>{t('details.fullReadme')}</span>
           </button>
         </div>
 
@@ -292,7 +294,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
             <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
             {activeTab === 'guide' && (
               <p className="text-slate-400 text-sm animate-pulse font-medium">
-                AI is generating a beginner-friendly setup guide...
+                {t('details.generatingGuide')}
               </p>
             )}
           </div>
