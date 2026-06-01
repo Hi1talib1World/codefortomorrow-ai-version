@@ -48,9 +48,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, currentUse
 
   return (
     <nav className="hidden md:flex flex-col bg-white dark:bg-slate-800 w-60 px-6 py-10 border-r border-slate-200 dark:border-slate-700 shadow-sm transition-colors">
-      <div className="mb-12 px-4">
-        <h1 className="text-2xl font-bold text-[#2E2FCE] dark:text-[#a3aaeb] leading-none tracking-tight">C4T</h1>
-        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Code for Tomorrow</p>
+      <div className="mb-12 px-2">
+        <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-10 w-auto object-contain dark:brightness-110" />
       </div>
       <ul className="space-y-1.5 overflow-y-auto no-scrollbar">
         {navItems.map((item) => {
