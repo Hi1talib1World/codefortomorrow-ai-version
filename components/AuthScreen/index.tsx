@@ -155,7 +155,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
 
         ctx.beginPath();
         ctx.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(6, 182, 212, 0.2)';
+        ctx.fillStyle = 'rgba(251, 191, 36, 0.2)';
         ctx.fill();
 
         for (let j = i + 1; j < particleCount; j++) {
@@ -165,7 +165,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(99, 102, 241, ${0.1 * (1 - dist / 100)})`;
+            ctx.strokeStyle = `rgba(251, 191, 36, ${0.1 * (1 - dist / 100)})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -177,7 +177,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(6, 182, 212, ${0.15 * (1 - mouseDist / 120)})`;
+            ctx.strokeStyle = `rgba(251, 191, 36, ${0.15 * (1 - mouseDist / 120)})`;
             ctx.lineWidth = 0.6;
             ctx.stroke();
           }
@@ -294,7 +294,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
   };
 
   return (
-    <div className="min-h-screen bg-[#070b19] text-slate-100 flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden auth-screen-root">
+    <div className="min-h-screen bg-[#111827] text-slate-100 flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden auth-screen-root">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
         
@@ -375,8 +375,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
         }
 
         .glass-input:focus {
-          border-color: rgba(6, 182, 212, 0.5);
-          box-shadow: 0 0 15px rgba(6, 182, 212, 0.15), inset 0 0 8px rgba(6, 182, 212, 0.05);
+          border-color: rgba(251, 191, 36, 0.5);
+          box-shadow: 0 0 15px rgba(251, 191, 36, 0.15), inset 0 0 8px rgba(251, 191, 36, 0.05);
           background: rgba(10, 15, 30, 0.85);
         }
       `}</style>
@@ -385,8 +385,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
       <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" />
 
       {/* Dynamic Background Mesh Blobs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-500/10 blur-[120px] animate-blob-1 pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-500/10 blur-[120px] animate-blob-2 pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#FBBF24]/10 blur-[120px] animate-blob-1 pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-slate-800/10 blur-[120px] animate-blob-2 pointer-events-none" />
       
       {/* Subtle Digital Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.007)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.007)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
@@ -398,7 +398,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
           <select
             value={language}
             onChange={handleLanguageChange}
-            className="appearance-none bg-slate-900/60 text-slate-300 rounded-full py-2 pl-9 pr-8 font-semibold border border-slate-700/40 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all text-sm cursor-pointer hover:bg-slate-800/80 backdrop-blur-md"
+            className="appearance-none bg-slate-900/60 text-slate-300 rounded-full py-2 pl-9 pr-8 font-semibold border border-slate-700/40 focus:outline-none focus:ring-2 focus:ring-[#FBBF24]/40 transition-all text-sm cursor-pointer hover:bg-slate-800/80 backdrop-blur-md"
             aria-label="Select language"
           >
             <option value={Language.EN} className="bg-slate-900 text-slate-300">🇬🇧 EN</option>
@@ -413,37 +413,37 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
         <div className="flex justify-center mb-6">
           <div className="relative group cursor-pointer">
             {/* Concentric rotating targeting rings */}
-            <div className="absolute inset-[-15px] border border-dashed border-cyan-500/20 rounded-full animate-rotate-cw pointer-events-none" />
-            <div className="absolute inset-[-25px] border border-dashed border-indigo-500/10 rounded-full animate-rotate-ccw pointer-events-none" />
+            <div className="absolute inset-[-15px] border border-dashed border-[#FBBF24]/20 rounded-full animate-rotate-cw pointer-events-none" />
+            <div className="absolute inset-[-25px] border border-dashed border-slate-800/10 rounded-full animate-rotate-ccw pointer-events-none" />
 
-            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-500/20 to-indigo-500/20 blur-md group-hover:scale-110 transition-transform duration-500" />
-            <div className="relative w-28 h-28 rounded-full border border-cyan-500/30 bg-slate-950/80 p-2 flex items-center justify-center overflow-hidden shadow-[0_0_20px_rgba(6,182,212,0.15)]">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#FBBF24]/20 to-slate-800/20 blur-md group-hover:scale-110 transition-transform duration-500" />
+            <div className="relative w-28 h-28 rounded-full border border-[#FBBF24]/30 bg-slate-950/80 p-2 flex items-center justify-center overflow-hidden shadow-[0_0_20px_rgba(6,182,212,0.15)]">
               <div className="w-full h-full transform group-hover:scale-105 transition-transform duration-300 z-10">
                 <Mascot />
               </div>
-              <div className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-80 animate-scan-beam pointer-events-none" />
+              <div className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#FBBF24] to-transparent opacity-80 animate-scan-beam pointer-events-none" />
             </div>
           </div>
         </div>
 
         <div className="glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden">
           {/* Cyberpunk HUD Corner Brackets */}
-          <div className="absolute top-0 left-0 border-t-2 border-l-2 border-cyan-500/40 w-4 h-4 rounded-tl-sm pointer-events-none" />
-          <div className="absolute top-0 right-0 border-t-2 border-r-2 border-cyan-500/40 w-4 h-4 rounded-tr-sm pointer-events-none" />
-          <div className="absolute bottom-0 left-0 border-b-2 border-l-2 border-cyan-500/40 w-4 h-4 rounded-bl-sm pointer-events-none" />
-          <div className="absolute bottom-0 right-0 border-b-2 border-r-2 border-cyan-500/40 w-4 h-4 rounded-br-sm pointer-events-none" />
+          <div className="absolute top-0 left-0 border-t-2 border-l-2 border-[#FBBF24]/40 w-4 h-4 rounded-tl-sm pointer-events-none" />
+          <div className="absolute top-0 right-0 border-t-2 border-r-2 border-[#FBBF24]/40 w-4 h-4 rounded-tr-sm pointer-events-none" />
+          <div className="absolute bottom-0 left-0 border-b-2 border-l-2 border-[#FBBF24]/40 w-4 h-4 rounded-bl-sm pointer-events-none" />
+          <div className="absolute bottom-0 right-0 border-b-2 border-r-2 border-[#FBBF24]/40 w-4 h-4 rounded-br-sm pointer-events-none" />
 
           {/* Decorative tactical dots */}
           <div className="absolute top-3 left-1/2 -translate-x-1/2 flex gap-1 pointer-events-none">
-            <span className="w-1 h-1 rounded-full bg-cyan-500/40 animate-pulse" />
-            <span className="w-1 h-1 rounded-full bg-indigo-500/40" />
-            <span className="w-1 h-1 rounded-full bg-cyan-500/40" />
+            <span className="w-1 h-1 rounded-full bg-[#FBBF24]/40 animate-pulse" />
+            <span className="w-1 h-1 rounded-full bg-slate-800/40" />
+            <span className="w-1 h-1 rounded-full bg-[#FBBF24]/40" />
           </div>
 
           {/* Sliding Capsule Tab Selector */}
           <div className="flex mb-8 rounded-2xl bg-slate-950/60 p-1.5 transition-colors border border-slate-800 relative overflow-hidden">
             <div 
-              className="absolute top-1 bottom-1 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all duration-300 ease-out z-0"
+              className="absolute top-1 bottom-1 rounded-xl bg-gradient-to-r from-[#FBBF24] to-[#f59e0b] shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all duration-300 ease-out z-0"
               style={{
                 width: 'calc(50% - 6px)',
                 left: isLoginView ? '6px' : 'calc(50%)',
@@ -467,7 +467,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
             </button>
           </div>
 
-          <h2 className="text-2xl font-bold text-center mb-8 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 select-none">
+          <h2 className="text-2xl font-bold text-center mb-8 tracking-tight text-white select-none">
             {isLoginView ? t('welcome_back') : t('join_the_adventure')}
           </h2>
 
@@ -477,7 +477,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
                 <div>
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="name">{t('username')}</label>
                   <div className="relative flex items-center">
-                    <UserIcon className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'name' ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
+                    <UserIcon className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'name' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
                     <input
                       type="text"
                       id="name"
@@ -494,7 +494,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
               <div>
                 <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="email">{t('email')}</label>
                 <div className="relative flex items-center">
-                  <Mail className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'email' ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
+                  <Mail className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'email' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
                   <input
                     type="email"
                     id="email"
@@ -510,7 +510,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
               <div>
                 <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="password">{t('password')}</label>
                 <div className="relative flex items-center">
-                  <Lock className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'password' ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
+                  <Lock className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'password' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
                   <input
                     type="password"
                     id="password"
@@ -535,7 +535,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
             <button
               type="submit"
               disabled={isLoading}
-              className="mt-8 w-full py-4 rounded-full bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 hover:from-cyan-400 hover:via-blue-400 hover:to-indigo-400 text-white font-bold text-[15px] tracking-wide shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.35)] active:scale-[0.98] transition-all duration-300 disabled:from-slate-800 disabled:to-slate-900 disabled:text-slate-500 disabled:shadow-none disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
+              className="mt-8 w-full py-4 rounded-full bg-[#FBBF24] hover:bg-[#f59e0b] text-[#111827] font-bold text-[15px] tracking-wide shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.35)] active:scale-[0.98] transition-all duration-300 disabled:from-slate-800 disabled:to-slate-900 disabled:text-slate-500 disabled:shadow-none disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
             >
               {isLoading && (
                 <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -548,15 +548,15 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
           </form>
 
           {/* High-Tech Terminal Diagnostics Logger */}
-          <div className="mt-8 p-3 bg-black/40 border border-slate-900/60 rounded-2xl font-mono text-[10px] text-cyan-400/80 shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)] select-none pointer-events-none">
+          <div className="mt-8 p-3 bg-black/40 border border-slate-900/60 rounded-2xl font-mono text-[10px] text-[#FBBF24]/80 shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)] select-none pointer-events-none">
             <div className="flex items-center justify-between border-b border-slate-800/60 pb-1.5 mb-1.5">
               <span className="text-slate-500 font-bold uppercase tracking-wider">DIAGNOSTIC_LOG</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FBBF24] animate-pulse" />
             </div>
             <div className="space-y-1 min-h-[56px] text-left">
               {terminalLogs.map((log, i) => (
                 <div key={i} className="flex items-center gap-1.5">
-                  <span className="text-indigo-400">&gt;</span>
+                  <span className="text-slate-300">&gt;</span>
                   <span>{log}</span>
                 </div>
               ))}
@@ -570,7 +570,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
             <button
               onClick={skipAuth}
               disabled={isLoading}
-              className="text-slate-400 hover:text-cyan-400 font-semibold text-sm transition-colors disabled:opacity-50 cursor-pointer"
+              className="text-slate-400 hover:text-[#FBBF24] font-semibold text-sm transition-colors disabled:opacity-50 cursor-pointer"
             >
               {t('skip_for_now')}
             </button>
