@@ -157,13 +157,13 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
     // Render Daily Quests HUD Component
     const renderDailyQuestsHUD = () => {
         return (
-            <div className="bg-white dark:bg-slate-800 rounded-[2rem] p-6 border-2 border-slate-100 dark:border-slate-700 shadow-md transition-colors relative overflow-hidden text-center flex flex-col justify-between">
+            <div className="bg-white dark:bg-slate-800 rounded-[2rem] p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-md transition-colors relative overflow-hidden text-center flex flex-col justify-between">
                 <div>
                     <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                        <h3 className="text-sm font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wider flex items-center gap-2">
                             <span>🎯</span> {t('daily_quests_title') || 'Daily Quests'}
                         </h3>
-                        <span className="text-[9px] bg-cyan-500/10 text-cyan-500 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        <span className="text-[9px] bg-[#FBBF24]/20 text-[#111827] dark:text-[#FBBF24] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
                             Resets Daily
                         </span>
                     </div>
@@ -185,17 +185,17 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                             </p>
                                         </div>
                                         <div className="flex items-center gap-1.5 shrink-0">
-                                            <span className="text-[10px] bg-yellow-500/15 text-yellow-600 dark:text-yellow-400 font-black px-2 py-0.5 rounded-lg">
+                                            <span className="text-[10px] bg-[#FBBF24]/25 text-[#111827] dark:text-[#FBBF24] font-black px-2 py-0.5 rounded-lg">
                                                 +{quest.xpReward} XP
                                             </span>
                                             {isDone && (
-                                                <span className="text-xs bg-green-500 text-white rounded-full w-4.5 h-4.5 flex items-center justify-center font-bold">✓</span>
+                                                <span className="text-xs bg-emerald-500 text-white rounded-full w-4.5 h-4.5 flex items-center justify-center font-bold">✓</span>
                                             )}
                                         </div>
                                     </div>
-                                    <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                                    <div className="w-full bg-slate-200 dark:bg-slate-850 h-2 rounded-full overflow-hidden">
                                         <div 
-                                            className={`h-full rounded-full transition-all duration-500 ${isDone ? 'bg-green-500' : 'bg-brand-500 animate-pulse'}`}
+                                            className={`h-full rounded-full transition-all duration-500 ${isDone ? 'bg-emerald-500' : 'bg-[#FBBF24] animate-pulse'}`}
                                             style={{ width: `${pct}%` }}
                                         ></div>
                                     </div>
@@ -205,13 +205,13 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     </div>
                 </div>
 
-                {/* Moroccan Chest Graphic Node */}
+                {/* Moroccan Chest */}
                 <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-700/50 flex flex-col items-center relative">
                     <div 
                         id="moroccan-chest-hud"
                         data-agent-track="treasure_chest_click"
                         data-sync-metric="chest_opening"
-                        className={`relative cursor-pointer select-none group w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500/5 to-yellow-500/5 hover:from-amber-500/10 hover:to-yellow-500/10 border border-yellow-500/20 shadow-inner ${
+                        className={`relative cursor-pointer select-none group w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-tr from-[#FBBF24]/5 to-[#FBBF24]/10 hover:from-[#FBBF24]/10 hover:to-[#FBBF24]/20 border border-[#FBBF24]/25 shadow-inner ${
                             chestState === 'shaking' ? 'animate-chest-shake' : 
                             chestState === 'opening' ? 'scale-110 opacity-75' : 
                             chestState === 'opened' ? 'scale-105' : 'hover:scale-105'
@@ -220,8 +220,8 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     >
                         {/* Golden/emerald aura behind chest */}
                         {allQuestsCompleted && !chestOpenedToday && chestState !== 'opened' && (
-                            <div className="absolute inset-0 bg-yellow-400/20 rounded-2xl blur-lg animate-pulse z-0"></div>
-                        )}
+                            <div className="absolute inset-0 bg-[#FBBF24]/25 rounded-2xl blur-lg animate-pulse z-0"></div>
+                        )}                   )}
                         
                         {/* Chest Emoji */}
                         <div className="text-5xl drop-shadow-md select-none transition-transform z-10">
@@ -285,7 +285,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         </div>
                         
                         <div className="text-left flex-1 min-w-0">
-                            <p className="text-[10px] font-black text-cyan-600 dark:text-cyan-400 uppercase tracking-widest leading-none">
+                            <p className="text-[10px] font-black text-[#111827] dark:text-[#FBBF24] uppercase tracking-widest leading-none">
                                 {t('last_visited_course') || 'Last Visited Course'}
                             </p>
                             <h3 className="text-xl font-bold text-slate-800 dark:text-white mt-2 truncate">
@@ -294,7 +294,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             <div className="flex items-center gap-3 mt-2">
                                 <div className="flex-1 max-w-[240px] bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                                     <div 
-                                        className="h-full bg-gradient-to-r from-cyan-500 to-brand-500 rounded-full transition-all duration-500"
+                                        className="h-full bg-gradient-to-r from-[#FBBF24] to-[#111827] dark:to-indigo-950 rounded-full transition-all duration-500"
                                         style={{ width: `${completionPercent}%` }}
                                     ></div>
                                 </div>
@@ -310,7 +310,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         data-agent-track="resume_last_course_click"
                         data-sync-metric="path_resume"
                         onClick={goToLearn}
-                        className="bg-cyan-500 hover:bg-cyan-600 text-white font-black py-3 px-6 rounded-xl text-xs uppercase tracking-wider flex items-center gap-2 border-b-4 border-cyan-700 active:border-b-2 active:translate-y-0.5 transition-all shadow-md group/btn cursor-pointer shrink-0"
+                        className="bg-[#111827] hover:bg-[#1f2937] text-white font-black py-3 px-6 rounded-xl text-xs uppercase tracking-wider flex items-center gap-2 border-b-4 border-slate-900 active:border-b-2 active:translate-y-0.5 transition-all shadow-md group/btn cursor-pointer shrink-0"
                     >
                         <span>{t('resume_study') || 'Resume Study'}</span>
                         <span className="group-hover/btn:translate-x-1 transition-transform">→</span>
@@ -364,9 +364,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 min-h-[2rem]">
                                         {t(path.descriptionKey as any) || path.descriptionKey}
                                     </p>
-                                </div>
-
-                                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
+                                              <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
                                     {completionPercent > 0 ? (
                                         <div className="flex flex-col w-full gap-1">
                                             <div className="flex items-center justify-between text-[9px] font-bold text-slate-400 uppercase">
@@ -375,22 +373,22 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                             </div>
                                             <div className="w-full bg-slate-200 dark:bg-slate-700 h-1 rounded-full overflow-hidden">
                                                 <div 
-                                                    className="h-full bg-gradient-to-r from-cyan-500 to-brand-500 rounded-full"
+                                                    className="h-full bg-gradient-to-r from-[#FBBF24] to-[#111827] rounded-full"
                                                     style={{ width: `${completionPercent}%` }}
                                                 ></div>
                                             </div>
                                         </div>
                                     ) : (
                                         <>
-                                            <span className="text-[10px] bg-cyan-500/10 text-cyan-500 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                            <span className="text-[10px] bg-[#FBBF24]/20 text-[#111827] dark:text-[#FBBF24] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
                                                 {t('new' as any)}
                                             </span>
-                                            <div className="w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-500 transition-all">
+                                            <div className="w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all">
                                                 <span className="text-xs">→</span>
                                             </div>
                                         </>
                                     )}
-                                </div>
+                                </div>                         </div>
                             </div>
                         </div>
                     );
