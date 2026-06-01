@@ -54,7 +54,7 @@ export const MySaved: React.FC = () => {
               </button>
             </div>
             <div className="mt-auto pt-4 border-t border-slate-800/60 flex items-center gap-4 text-sm font-semibold">
-              <div className="flex items-center gap-2"><Star className="w-4 h-4 text-yellow-400" /> <span className="text-slate-300">{repo.stargazers_count}</span></div>
+              <div className="flex items-center gap-2"><Star className="w-4 h-4 text-[#FBBF24]" /> <span className="text-slate-300">{repo.stargazers_count}</span></div>
               <div className="flex items-center gap-2"><GitFork className="w-4 h-4 text-slate-400" /> <span className="text-slate-300">{repo.forks_count}</span></div>
               <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="ml-auto text-slate-400 hover:text-white"><ExternalLink className="w-4 h-4" /></a>
             </div>
