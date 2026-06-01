@@ -47,24 +47,27 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, currentUse
   ];
 
   return (
-    <nav className="hidden md:flex flex-col bg-white dark:bg-slate-800 w-60 px-6 py-10 border-r border-slate-200 dark:border-slate-700 transition-colors">
+    <nav className="hidden md:flex flex-col bg-[#111827] w-60 px-6 py-10 border-r border-slate-950 transition-colors">
       <div className="mb-12 px-2">
-        <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-10 w-auto object-contain dark:brightness-110" />
+        <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-10 w-auto object-contain brightness-0 invert" />
       </div>
       <ul className="space-y-1.5 overflow-y-auto no-scrollbar">
         {navItems.map((item) => {
           const isActive = activeView === item.id;
           return (
-            <li key={item.id}>
+            <li key={item.id} className="relative">
+              {isActive && (
+                <div className="absolute -left-6 top-3 bottom-3 w-1 bg-[#FBBF24] rounded-r-md z-10" />
+              )}
               <button
                 onClick={() => setActiveView(item.id as DashboardView)}
-                className={`w-full flex items-center space-x-3 rtl:space-x-reverse px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${isActive
-                  ? 'bg-[#2E2FCE]/10 text-[#2E2FCE] dark:bg-[#2E2FCE]/20 dark:text-[#a3aaeb]'
-                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-slate-100'
+                className={`w-full flex items-center space-x-3 rtl:space-x-reverse px-4 py-3 rounded-2xl font-black text-sm transition-all duration-300 relative ${isActive
+                  ? 'bg-white text-[#111827] shadow-md scale-[1.02]'
+                  : 'text-indigo-200/70 hover:bg-white/5 hover:text-white'
                   }`}
               >
-                <div className={`w-8 h-8 flex items-center justify-center transition-transform ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}>{item.icon}</div>
-                <span className="truncate tracking-wide text-xs">{item.label}</span>
+                <div className={`w-8 h-8 flex items-center justify-center transition-transform ${isActive ? 'scale-105 text-[#111827]' : 'text-indigo-300/80 group-hover:scale-105'}`}>{item.icon}</div>
+                <span className="truncate tracking-wide text-[11px] uppercase">{item.label}</span>
               </button>
             </li>
           );
