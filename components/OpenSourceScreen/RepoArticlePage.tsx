@@ -29,7 +29,7 @@ export default function RepoArticlePage() {
 
   const accent = category === 'ai'
     ? { bg: 'bg-purple-500', bgLight: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400', textBright: 'text-purple-300', icon: Sparkles }
-    : { bg: 'bg-emerald-500', bgLight: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400', textBright: 'text-emerald-300', icon: Shield };
+    : { bg: 'bg-[#111827]', bgLight: 'bg-[#111827]/10', border: 'border-[#111827]/20', text: 'text-emerald-400', textBright: 'text-emerald-300', icon: Shield };
 
   const articleUrl = window.location.href;
   const shareUrl = encodeURIComponent(articleUrl);
@@ -92,7 +92,7 @@ export default function RepoArticlePage() {
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm">
               <span className="px-3 py-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold rounded-lg">{repo.language}</span>
-              <div className="flex items-center gap-1.5 font-semibold"><Star className="w-4 h-4 text-yellow-500 fill-current" /><span>{formatNumber(repo.stargazers_count)}</span></div>
+              <div className="flex items-center gap-1.5 font-semibold"><Star className="w-4 h-4 text-[#FBBF24] fill-current" /><span>{formatNumber(repo.stargazers_count)}</span></div>
               <div className="flex items-center gap-1.5 font-semibold text-slate-400"><GitFork className="w-4 h-4" /><span>{formatNumber(repo.forks_count)}</span></div>
               <div className="flex items-center gap-1.5 text-slate-500"><Clock className="w-4 h-4" /><span>{repo.article.readTime}</span></div>
               <div className="flex items-center gap-1.5 text-slate-500"><Calendar className="w-4 h-4" /><span>{repo.article.date}</span></div>
