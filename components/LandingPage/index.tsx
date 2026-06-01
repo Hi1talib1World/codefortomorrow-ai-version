@@ -45,9 +45,9 @@ const StatCard: React.FC<{ icon: any, value: string, label: string, color: strin
 );
 
 const PricingCard: React.FC<{ title: string, price: string, features: string[], isPopular?: boolean, onGetStarted: () => void }> = ({ title, price, features, isPopular, onGetStarted }) => (
-  <div className={`relative flex flex-col p-8 rounded-3xl border transition-all duration-500 ${isPopular ? 'bg-white dark:bg-slate-800 border-brand-500 shadow-2xl shadow-brand-500/10 scale-105 z-10' : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800'}`}>
+  <div className={`relative flex flex-col p-8 rounded-3xl border transition-all duration-500 ${isPopular ? 'bg-white dark:bg-slate-800 border-[#111827] dark:border-[#FBBF24] shadow-2xl shadow-[#111827]/5 dark:shadow-[#FBBF24]/5 scale-105 z-10' : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800'}`}>
     {isPopular && (
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-500 text-white text-xs font-black px-4 py-1 rounded-full uppercase tracking-widest">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#111827] dark:bg-[#FBBF24] text-white dark:text-[#111827] text-xs font-black px-4 py-1 rounded-full uppercase tracking-widest">
         Most Popular
       </div>
     )}
@@ -59,14 +59,14 @@ const PricingCard: React.FC<{ title: string, price: string, features: string[], 
     <ul className="space-y-4 mb-8 flex-grow">
       {features.map((f, i) => (
         <li key={i} className="flex items-start gap-3 group">
-          <CheckCircle className={`w-5 h-5 shrink-0 ${isPopular ? 'text-brand-500' : 'text-slate-400'}`} />
+          <CheckCircle className={`w-5 h-5 shrink-0 ${isPopular ? 'text-[#111827] dark:text-[#FBBF24]' : 'text-slate-400'}`} />
           <span className="text-sm font-medium text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{f}</span>
         </li>
       ))}
     </ul>
     <button
       onClick={onGetStarted}
-      className={`w-full py-4 rounded-full font-bold transition-all active:scale-95 ${isPopular ? 'bg-brand-600 text-white hover:bg-brand-500 shadow-xl shadow-brand-500/25' : 'bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-slate-300 dark:hover:bg-slate-600'}`}
+      className={`w-full py-4 rounded-full font-bold transition-all active:scale-95 ${isPopular ? 'bg-[#111827] dark:bg-[#FBBF24] text-white dark:text-[#111827] hover:bg-slate-800 dark:hover:bg-[#f59e0b] shadow-xl shadow-[#111827]/10 dark:shadow-[#FBBF24]/10' : 'bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-slate-300 dark:hover:bg-slate-600'}`}
     >
       {price === 'Free' ? 'Sign Up Free' : 'Choose Plan'}
     </button>
@@ -189,43 +189,43 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
   return (
     <div className="bg-brand-50 dark:bg-slate-950 font-sans overflow-x-hidden text-slate-900 dark:text-slate-100 selection:bg-brand-100 selection:text-brand-900">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-transparent z-50 transition-all duration-300">
+      <header className="fixed top-0 left-0 right-0 bg-transparent/20 dark:bg-transparent/10 backdrop-blur-md z-50 transition-all duration-300">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           {/* Logo on the left */}
           <div className="flex items-center cursor-pointer group shrink-0">
             <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-14 w-auto object-contain transition-transform group-hover:scale-105" />
           </div>
 
-          {/* Yellow pill Navigation in the center */}
-          <nav className="hidden lg:flex items-center bg-[#FDD501] rounded-full px-12 py-3.5 gap-10">
-            <a href="#" className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide">
+          {/* Transparent glass Navigation in the center */}
+          <nav className="hidden lg:flex items-center bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200/20 dark:border-slate-800/30 rounded-full px-12 py-3.5 gap-10 shadow-sm">
+            <a href="#" className="text-[#111827] dark:text-white hover:text-[#FBBF24] hover:underline decoration-2 underline-offset-4 transition-all text-base font-black tracking-wide">
               Home
             </a>
             <a 
               href={getPlatformHref('academy', '/dashboard')} 
               onClick={(e) => handleCardClick(e, 'academy', '/dashboard')}
-              className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide"
+              className="text-[#111827] dark:text-white hover:text-[#FBBF24] hover:underline decoration-2 underline-offset-4 transition-all text-base font-black tracking-wide"
             >
               Academy
             </a>
             <a 
               href={getPlatformHref('os', '/cftos')} 
               onClick={(e) => handleCardClick(e, 'os', '/cftos')}
-              className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide"
+              className="text-[#111827] dark:text-white hover:text-[#FBBF24] hover:underline decoration-2 underline-offset-4 transition-all text-base font-black tracking-wide"
             >
               CFTOS
             </a>
             <a 
               href={getPlatformHref('docs', '/blog')} 
               onClick={(e) => handleCardClick(e, 'docs', '/blog')}
-              className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide"
+              className="text-[#111827] dark:text-white hover:text-[#FBBF24] hover:underline decoration-2 underline-offset-4 transition-all text-base font-black tracking-wide"
             >
               Docs & Blog
             </a>
-            <a href="#features" className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide">
+            <a href="#features" className="text-[#111827] dark:text-white hover:text-[#FBBF24] hover:underline decoration-2 underline-offset-4 transition-all text-base font-black tracking-wide">
               Features
             </a>
-            <a href="#testimonials" className="text-[#3d1844] hover:opacity-85 transition-opacity text-base font-black tracking-wide">
+            <a href="#testimonials" className="text-[#111827] dark:text-white hover:text-[#FBBF24] hover:underline decoration-2 underline-offset-4 transition-all text-base font-black tracking-wide">
               Testimonials
             </a>
           </nav>
@@ -233,16 +233,16 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
           {/* Icons on the right */}
           <div className="flex items-center gap-6">
             {/* Desktop Icons */}
-            <div className="hidden md:flex items-center gap-6 text-[#FDD501]">
-              <ShoppingBasket className="w-8 h-8 hover:scale-110 transition-transform cursor-pointer" aria-label="Shopping basket" />
-              <Heart className="w-8 h-8 hover:scale-110 transition-transform cursor-pointer" aria-label="Favorites" />
-              <UserIcon className="w-8 h-8 hover:scale-110 transition-transform cursor-pointer" aria-label="Account" onClick={onGetStarted} />
+            <div className="hidden md:flex items-center gap-6 text-[#111827] dark:text-white">
+              <ShoppingBasket className="w-8 h-8 hover:text-[#FBBF24] hover:scale-110 transition-all cursor-pointer" aria-label="Shopping basket" />
+              <Heart className="w-8 h-8 hover:text-[#FBBF24] hover:scale-110 transition-all cursor-pointer" aria-label="Favorites" />
+              <UserIcon className="w-8 h-8 hover:text-[#FBBF24] hover:scale-110 transition-all cursor-pointer" aria-label="Account" onClick={onGetStarted} />
             </div>
 
             {/* Mobile Icons & Menu Toggle */}
-            <div className="flex md:hidden items-center gap-4 text-[#FDD501]">
-              <UserIcon className="w-7 h-7 hover:scale-110 transition-transform cursor-pointer" aria-label="Account" onClick={onGetStarted} />
-              <button className="p-1 hover:scale-110 transition-transform" onClick={() => setIsMenuOpen(true)} aria-label="Open menu">
+            <div className="flex md:hidden items-center gap-4 text-[#111827] dark:text-white">
+              <UserIcon className="w-7 h-7 hover:text-[#FBBF24] hover:scale-110 transition-all cursor-pointer" aria-label="Account" onClick={onGetStarted} />
+              <button className="p-1 hover:text-[#FBBF24] hover:scale-110 transition-all" onClick={() => setIsMenuOpen(true)} aria-label="Open menu">
                 <Menu className="w-8 h-8" />
               </button>
             </div>
@@ -302,20 +302,20 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       <main className="pt-32 md:pt-40 pb-20 container mx-auto px-6 text-center relative isolate">
         {/* Decorative background elements */}
         <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
-          <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)' }}></div>
+          <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#111827] to-[#FBBF24] opacity-10 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)' }}></div>
         </div>
 
         <AnimatedSection>
           <div className="relative inline-block mb-10">
-            <div className="absolute -inset-4 bg-[#2E2FCE]/10 rounded-full blur-2xl"></div>
-            <div className="w-32 h-32 md:w-44 md:h-44 transition-all duration-700 cursor-pointer drop-shadow-[0_20px_50px_rgba(66,133,244,0.3)] relative">
+            <div className="absolute -inset-4 bg-[#111827]/10 dark:bg-[#FBBF24]/10 rounded-full blur-2xl"></div>
+            <div className="w-32 h-32 md:w-44 md:h-44 transition-all duration-700 cursor-pointer drop-shadow-[0_20px_50px_rgba(17,24,39,0.15)] relative">
               <Mascot />
             </div>
           </div>
           <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold leading-[1.1] tracking-tight text-slate-900 dark:text-white">
             Building the Tech
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2E2FCE] via-[#EA4335] to-[#FBBC05] dark:from-[#a3aaeb] dark:to-[#fdd663]">Ecosystem for Tomorrow.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#111827] to-[#FBBF24] dark:from-white dark:to-[#FBBF24]">Ecosystem for Tomorrow.</span>
           </h1>
           <p className="max-w-2xl mx-auto mt-8 text-slate-600 dark:text-slate-400 text-lg md:text-xl leading-relaxed font-medium">
             An all-in-one ecosystem for interactive learning, open-source collaboration, and technical documentation.
@@ -327,9 +327,9 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <a 
               href={getPlatformHref('academy', '/dashboard')}
               onClick={(e) => handleCardClick(e, 'academy', '/dashboard')}
-              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#f0f4ff] dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/30 shadow-[0_15px_50px_rgba(26,115,232,0.03)] dark:shadow-none hover:shadow-[0_20px_60px_rgba(26,115,232,0.06)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
+              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#111827]/5 dark:bg-slate-900/40 border border-[#111827]/10 dark:border-slate-800 shadow-[0_15px_50px_rgba(17,24,39,0.02)] hover:shadow-[0_20px_60px_rgba(17,24,39,0.05)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
             >
-              <div className="w-14 h-14 rounded-2xl bg-[#e8f0fe] dark:bg-blue-950/60 flex items-center justify-center text-[#2E2FCE] dark:text-blue-400 mb-6 shadow-sm">
+              <div className="w-14 h-14 rounded-2xl bg-[#111827]/10 dark:bg-slate-800 flex items-center justify-center text-[#111827] dark:text-[#FBBF24] mb-6 shadow-sm">
                 <Gamepad2 className="w-7 h-7" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">
@@ -338,7 +338,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 flex-grow text-[15px]">
                 Interactive coding adventures, gamified lessons, and curriculum builders for students.
               </p>
-              <span className="inline-flex items-center text-sm font-bold text-[#2E2FCE] dark:text-blue-400 group-hover:underline">
+              <span className="inline-flex items-center text-sm font-bold text-[#111827] dark:text-[#FBBF24] group-hover:underline">
                 Enter Academy &rarr;
               </span>
             </a>
@@ -347,9 +347,9 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <a 
               href={getPlatformHref('os', '/cftos')}
               onClick={(e) => handleCardClick(e, 'os', '/cftos')}
-              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#fdfbeb] dark:bg-yellow-950/20 border border-yellow-100/50 dark:border-yellow-900/30 shadow-[0_15px_50px_rgba(253,213,1,0.03)] dark:shadow-none hover:shadow-[0_20px_60px_rgba(253,213,1,0.06)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
+              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#FBBF24]/5 dark:bg-slate-900/40 border border-[#FBBF24]/15 dark:border-slate-800 shadow-[0_15px_50px_rgba(251,191,36,0.02)] hover:shadow-[0_20px_60px_rgba(251,191,36,0.05)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
             >
-              <div className="w-14 h-14 rounded-2xl bg-[#fef7e0] dark:bg-yellow-950/60 flex items-center justify-center text-[#b49800] dark:text-[#FDD501] mb-6 shadow-sm">
+              <div className="w-14 h-14 rounded-2xl bg-[#FBBF24]/10 dark:bg-slate-800 flex items-center justify-center text-[#d97706] dark:text-[#FBBF24] mb-6 shadow-sm">
                 <Cpu className="w-7 h-7" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">
@@ -358,7 +358,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 flex-grow text-[15px]">
                 Our collaborative developer platform for building autonomous AI agents and open software.
               </p>
-              <span className="inline-flex items-center text-sm font-bold text-[#b49800] dark:text-[#FDD501] group-hover:underline">
+              <span className="inline-flex items-center text-sm font-bold text-[#d97706] dark:text-[#FBBF24] group-hover:underline">
                 Open Platform &rarr;
               </span>
             </a>
@@ -367,9 +367,9 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <a 
               href={getPlatformHref('docs', '/blog')}
               onClick={(e) => handleCardClick(e, 'docs', '/blog')}
-              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#f0f4ff] dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/30 shadow-[0_15px_50px_rgba(46,47,206,0.03)] dark:shadow-none hover:shadow-[0_20px_60px_rgba(46,47,206,0.06)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
+              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#111827]/5 dark:bg-slate-900/40 border border-[#111827]/10 dark:border-slate-800 shadow-[0_15px_50px_rgba(17,24,39,0.02)] hover:shadow-[0_20px_60px_rgba(17,24,39,0.05)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
             >
-              <div className="w-14 h-14 rounded-2xl bg-[#e8f0fe] dark:bg-blue-950/60 flex items-center justify-center text-[#2E2FCE] dark:text-blue-400 mb-6 shadow-sm">
+              <div className="w-14 h-14 rounded-2xl bg-[#111827]/10 dark:bg-slate-800 flex items-center justify-center text-[#111827] dark:text-[#FBBF24] mb-6 shadow-sm">
                 <Terminal className="w-7 h-7" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">
@@ -378,7 +378,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 flex-grow text-[15px]">
                 In-depth technical guides, tutorials, and insights for our engineering community.
               </p>
-              <span className="inline-flex items-center text-sm font-bold text-[#2E2FCE] dark:text-blue-400 group-hover:underline">
+              <span className="inline-flex items-center text-sm font-bold text-[#111827] dark:text-[#FBBF24] group-hover:underline">
                 Read Documentation &rarr;
               </span>
             </a>
@@ -387,7 +387,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5">
             <button
               onClick={onGetStarted}
-              className="w-full sm:w-auto bg-[#2E2FCE] text-white font-bold px-10 py-4 rounded-full hover:bg-[#2324ba] transition-all shadow-xl shadow-[#2E2FCE]/20 flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
+              className="w-full sm:w-auto bg-[#111827] dark:bg-[#FBBF24] text-white dark:text-[#111827] font-bold px-10 py-4 rounded-full hover:bg-slate-850 dark:hover:bg-[#f59e0b] transition-all shadow-xl shadow-[#111827]/15 dark:shadow-[#FBBF24]/15 flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
             >
               Get Started for Free <ChevronRight className="w-4 h-4" strokeWidth={3} />
             </button>
@@ -412,7 +412,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
         <AnimatedSection className="container mx-auto px-6">
           <div className="flex flex-col lg:flex-row items-center gap-16">
             <div className="lg:w-1/2">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 font-bold mb-6 text-sm">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#111827]/10 dark:bg-slate-800 text-[#111827] dark:text-[#FBBF24] font-bold mb-6 text-sm">
                 <Terminal className="w-4 h-4" /> Try It Out
               </div>
               <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">See the Magic in Action.</h2>
@@ -422,13 +422,13 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               <ul className="space-y-4 mb-8">
                 {["Live syntax highlighting", "Instant feedback mechanism", "Safe sandbox environment"].map((item, i) => (
                   <li key={i} className="flex items-center gap-3 font-semibold text-slate-700 dark:text-slate-300">
-                    <CheckCircle className="w-5 h-5 text-brand-500" /> {item}
+                    <CheckCircle className="w-5 h-5 text-[#FBBF24]" /> {item}
                   </li>
                 ))}
               </ul>
               <button
                 onClick={onGetStarted}
-                className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold px-8 py-3.5 rounded-full hover:bg-slate-800 dark:hover:bg-slate-100 transition-all shadow-xl flex items-center gap-2"
+                className="bg-[#111827] dark:bg-[#FBBF24] text-white dark:text-[#111827] font-bold px-8 py-3.5 rounded-full hover:bg-slate-800 dark:hover:bg-[#f59e0b] transition-all shadow-xl flex items-center gap-2"
               >
                 Try the First Lesson <Code className="w-4 h-4" />
               </button>
@@ -444,14 +444,14 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
                 <div className="bg-[#181825] p-6 rounded-xl text-slate-300 h-56 overflow-hidden relative">
                   <pre className="whitespace-pre-wrap"><code className="text-emerald-400">{demoCode}</code><span className="animate-pulse">_</span></pre>
                   {demoCode.length === fullCode.length && !showOutput && (
-                    <button onClick={() => setShowOutput(true)} className="absolute bottom-6 right-6 bg-brand-500 hover:bg-brand-400 text-white font-bold py-2 px-5 rounded flex items-center gap-2 transition-all shadow-lg active:scale-95">
+                    <button onClick={() => setShowOutput(true)} className="absolute bottom-6 right-6 bg-[#111827] dark:bg-[#FBBF24] hover:bg-slate-800 dark:hover:bg-[#f59e0b] text-white dark:text-[#111827] font-bold py-2 px-5 rounded flex items-center gap-2 transition-all shadow-lg active:scale-95">
                       <Play className="w-4 h-4 fill-current" /> Run
                     </button>
                   )}
                 </div>
                 <div className={`mt-4 bg-black/50 rounded-xl border border-slate-700/50 transition-all overflow-hidden ${showOutput ? 'h-24 opacity-100 p-4' : 'h-0 opacity-0 py-0 border-transparent p-0'}`}>
                   <p className="text-slate-400 text-xs mb-1">Console Output:</p>
-                  <p className="text-brand-300 font-semibold">{showOutput ? "> Hello, World!" : ""}</p>
+                  <p className="text-[#FBBF24] font-semibold">{showOutput ? "> Hello, World!" : ""}</p>
                 </div>
               </div>
             </div>
@@ -459,34 +459,34 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
 
           {/* Stats Grid Section */}
           <div className="mt-32 max-w-5xl mx-auto px-4">
-            <h2 className="text-3xl md:text-5xl font-black text-center text-[#2E2FCE] dark:text-[#a3aaeb] mb-12 tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-center text-[#111827] dark:text-white mb-12 tracking-tight">
               {statsTranslations[language as 'en' | 'fr' | 'ar']?.title || statsTranslations.en.title}
             </h2>
 
             {/* Top Row: Two Big Highlight Cards */}
             <div className="grid md:grid-cols-2 gap-8 mb-8">
               {/* Card 1: Students */}
-              <div className="bg-[#FDD501] border-2 border-[#2E2FCE] shadow-[6px_6px_0px_#2E2FCE] rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center transition-all duration-300 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_#2E2FCE]">
-                <span className="text-4xl md:text-5xl font-black text-[#2E2FCE] mb-1 leading-none">
+              <div className="bg-[#FBBF24] border-2 border-[#111827] shadow-[6px_6px_0px_#111827] rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center transition-all duration-300 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_#111827]">
+                <span className="text-4xl md:text-5xl font-black text-[#111827] mb-1 leading-none">
                   {statsTranslations[language as 'en' | 'fr' | 'ar']?.studentsVal || statsTranslations.en.studentsVal}
                 </span>
-                <span className="text-lg md:text-xl font-black text-[#2E2FCE] mb-3">
+                <span className="text-lg md:text-xl font-black text-[#111827] mb-3">
                   {statsTranslations[language as 'en' | 'fr' | 'ar']?.studentsSub || statsTranslations.en.studentsSub}
                 </span>
-                <p className="text-xs font-bold text-[#2E2FCE]/80 max-w-sm leading-relaxed">
+                <p className="text-xs font-bold text-[#111827]/80 max-w-sm leading-relaxed">
                   {statsTranslations[language as 'en' | 'fr' | 'ar']?.studentsDesc || statsTranslations.en.studentsDesc}
                 </p>
               </div>
 
               {/* Card 2: Views */}
-              <div className="bg-[#FDD501] border-2 border-[#2E2FCE] shadow-[6px_6px_0px_#2E2FCE] rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center transition-all duration-300 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_#2E2FCE]">
-                <span className="text-4xl md:text-5xl font-black text-[#2E2FCE] mb-1 leading-none">
+              <div className="bg-[#FBBF24] border-2 border-[#111827] shadow-[6px_6px_0px_#111827] rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center transition-all duration-300 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_#111827]">
+                <span className="text-4xl md:text-5xl font-black text-[#111827] mb-1 leading-none">
                   {statsTranslations[language as 'en' | 'fr' | 'ar']?.viewsVal || statsTranslations.en.viewsVal}
                 </span>
-                <span className="text-lg md:text-xl font-black text-[#2E2FCE] mb-3">
+                <span className="text-lg md:text-xl font-black text-[#111827] mb-3">
                   {statsTranslations[language as 'en' | 'fr' | 'ar']?.viewsSub || statsTranslations.en.viewsSub}
                 </span>
-                <p className="text-xs font-bold text-[#2E2FCE]/80 max-w-sm leading-relaxed">
+                <p className="text-xs font-bold text-[#111827]/80 max-w-sm leading-relaxed">
                   {statsTranslations[language as 'en' | 'fr' | 'ar']?.viewsDesc || statsTranslations.en.viewsDesc}
                 </p>
               </div>
@@ -496,7 +496,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <div className="grid md:grid-cols-3 gap-6">
               {/* Card 3: Experiments */}
               <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2rem] p-6 shadow-[0_15px_40px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center text-center">
-                <span className="text-3xl md:text-4xl font-black text-[#2E2FCE] dark:text-[#a3aaeb] mb-1">
+                <span className="text-3xl md:text-4xl font-black text-[#111827] dark:text-[#FBBF24] mb-1">
                   {statsTranslations[language as 'en' | 'fr' | 'ar']?.expsVal || statsTranslations.en.expsVal}
                 </span>
                 <span className="text-base font-bold text-slate-800 dark:text-white mb-2">
@@ -509,7 +509,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
 
               {/* Card 4: Festivals */}
               <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2rem] p-6 shadow-[0_15px_40px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center text-center">
-                <span className="text-3xl md:text-4xl font-black text-[#2E2FCE] dark:text-[#a3aaeb] mb-1">
+                <span className="text-3xl md:text-4xl font-black text-[#111827] dark:text-[#FBBF24] mb-1">
                   {statsTranslations[language as 'en' | 'fr' | 'ar']?.festsVal || statsTranslations.en.festsVal}
                 </span>
                 <span className="text-base font-bold text-slate-800 dark:text-white mb-2">
@@ -522,7 +522,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
 
               {/* Card 5: Shows */}
               <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2rem] p-6 shadow-[0_15px_40px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center text-center">
-                <span className="text-3xl md:text-4xl font-black text-[#2E2FCE] dark:text-[#a3aaeb] mb-1">
+                <span className="text-3xl md:text-4xl font-black text-[#111827] dark:text-[#FBBF24] mb-1">
                   {statsTranslations[language as 'en' | 'fr' | 'ar']?.showsVal || statsTranslations.en.showsVal}
                 </span>
                 <span className="text-base font-bold text-slate-800 dark:text-white mb-2">
