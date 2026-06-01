@@ -76,9 +76,9 @@ const PricingCard: React.FC<{ title: string, price: string, features: string[], 
 const statsTranslations = {
   en: {
     title: "Key Achievements",
-    studentsVal: "15 Million",
+    studentsVal: "150",
     studentsSub: "Students",
-    studentsDesc: "Watch and learn from Science Street videos on all digital platforms",
+    studentsDesc: "Active students learning on our platforms right now",
     viewsVal: "10M",
     viewsSub: "Views",
     viewsDesc: "Across our digital platforms",
@@ -88,15 +88,15 @@ const statsTranslations = {
     festsVal: "22+",
     festsSub: "Science Festivals",
     festsDesc: "Across the Middle East and North Africa",
-    showsVal: "5,000",
+    showsVal: "50",
     showsSub: "Science Shows",
     showsDesc: "Presented to all ages and students in a fun, interactive way"
   },
   fr: {
     title: "Principales Réalisations",
-    studentsVal: "15 Millions",
+    studentsVal: "150",
     studentsSub: "d'étudiants",
-    studentsDesc: "Regardez et apprenez avec les vidéos de Science Street sur toutes les plateformes",
+    studentsDesc: "étudiants connectés en direct sur nos plateformes",
     viewsVal: "10M",
     viewsSub: "de vues",
     viewsDesc: "Sur nos plateformes numériques",
@@ -106,15 +106,15 @@ const statsTranslations = {
     festsVal: "22+",
     festsSub: "Festivals de sciences",
     festsDesc: "À travers le Moyen-Orient et l'Afrique du Nord",
-    showsVal: "5 000",
+    showsVal: "50",
     showsSub: "Spectacles scientifiques",
     showsDesc: "Présentés à tous les âges et aux étudiants de manière interactive"
   },
   ar: {
     title: "أهم الإنجازات",
-    studentsVal: "15 مليون",
+    studentsVal: "150",
     studentsSub: "طالب",
-    studentsDesc: "شاهد وتعلم من فيديوهات شارع العلوم على جميع المنصات الرقمية",
+    studentsDesc: "طالب يتعلمون الآن عبر الإنترنت على منصاتنا",
     viewsVal: "10 مليون",
     viewsSub: "مشاهدة",
     viewsDesc: "عبر منصاتنا الرقمية",
@@ -124,7 +124,7 @@ const statsTranslations = {
     festsVal: "22+",
     festsSub: "مهرجانات علمية",
     festsDesc: "في جميع أنحاء الشرق الأوسط وشمال أفريقيا",
-    showsVal: "5,000",
+    showsVal: "50",
     showsSub: "عروض علمية",
     showsDesc: "مقدم لجميع الأعمار والطلاب بأسلوب تفاعلي ممتع"
   }
@@ -347,9 +347,9 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <a 
               href={getPlatformHref('os', '/cftos')}
               onClick={(e) => handleCardClick(e, 'os', '/cftos')}
-              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#fdf2f2] dark:bg-red-950/20 border border-red-100/50 dark:border-red-900/30 shadow-[0_15px_50px_rgba(217,48,37,0.03)] dark:shadow-none hover:shadow-[0_20px_60px_rgba(217,48,37,0.06)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
+              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#fdfbeb] dark:bg-yellow-950/20 border border-yellow-100/50 dark:border-yellow-900/30 shadow-[0_15px_50px_rgba(253,213,1,0.03)] dark:shadow-none hover:shadow-[0_20px_60px_rgba(253,213,1,0.06)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
             >
-              <div className="w-14 h-14 rounded-2xl bg-[#fce8e6] dark:bg-red-950/60 flex items-center justify-center text-[#d93025] dark:text-red-400 mb-6 shadow-sm">
+              <div className="w-14 h-14 rounded-2xl bg-[#fef7e0] dark:bg-yellow-950/60 flex items-center justify-center text-[#b49800] dark:text-[#FDD501] mb-6 shadow-sm">
                 <Cpu className="w-7 h-7" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">
@@ -358,7 +358,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 flex-grow text-[15px]">
                 Our collaborative developer platform for building autonomous AI agents and open software.
               </p>
-              <span className="inline-flex items-center text-sm font-bold text-[#d93025] dark:text-red-400 group-hover:underline">
+              <span className="inline-flex items-center text-sm font-bold text-[#b49800] dark:text-[#FDD501] group-hover:underline">
                 Open Platform &rarr;
               </span>
             </a>
@@ -367,9 +367,9 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <a 
               href={getPlatformHref('docs', '/blog')}
               onClick={(e) => handleCardClick(e, 'docs', '/blog')}
-              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#fdfaf2] dark:bg-amber-950/20 border border-amber-100/50 dark:border-amber-900/30 shadow-[0_15px_50px_rgba(249,171,0,0.03)] dark:shadow-none hover:shadow-[0_20px_60px_rgba(249,171,0,0.06)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
+              className="group relative flex flex-col h-full p-8 md:p-10 rounded-[2.5rem] bg-[#f0f4ff] dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/30 shadow-[0_15px_50px_rgba(46,47,206,0.03)] dark:shadow-none hover:shadow-[0_20px_60px_rgba(46,47,206,0.06)] hover:-translate-y-1 transition-all duration-300 overflow-hidden decoration-none text-left"
             >
-              <div className="w-14 h-14 rounded-2xl bg-[#fef7e0] dark:bg-amber-950/60 flex items-center justify-center text-[#f9ab00] dark:text-amber-400 mb-6 shadow-sm">
+              <div className="w-14 h-14 rounded-2xl bg-[#e8f0fe] dark:bg-blue-950/60 flex items-center justify-center text-[#2E2FCE] dark:text-blue-400 mb-6 shadow-sm">
                 <Terminal className="w-7 h-7" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">
@@ -378,7 +378,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 flex-grow text-[15px]">
                 In-depth technical guides, tutorials, and insights for our engineering community.
               </p>
-              <span className="inline-flex items-center text-sm font-bold text-[#f9ab00] dark:text-amber-400 group-hover:underline">
+              <span className="inline-flex items-center text-sm font-bold text-[#2E2FCE] dark:text-blue-400 group-hover:underline">
                 Read Documentation &rarr;
               </span>
             </a>
@@ -557,13 +557,13 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: Gamepad2, title: "Fun Games", color: "bg-[#2E2FCE]", text: "Learn coding logic through immersive puzzles and interactive challenges." },
-              { icon: Brush, title: "Creative Projects", color: "bg-[#EA4335]", text: "Design your own digital worlds, from simple animations to complex games." },
-              { icon: Bot, title: "Mentorship", color: "bg-[#34A853]", text: "Personalized guidance that adapts to your child's unique learning pace." },
-              { icon: Award, title: "Skill Certification", color: "bg-[#FBBC05]", text: "Earn verifiable badges and certificates as you master new technologies." }
+              { icon: Gamepad2, title: "Fun Games", color: "bg-[#2E2FCE] text-white", text: "Learn coding logic through immersive puzzles and interactive challenges." },
+              { icon: Brush, title: "Creative Projects", color: "bg-[#FDD501] text-slate-900", text: "Design your own digital worlds, from simple animations to complex games." },
+              { icon: Bot, title: "Mentorship", color: "bg-[#2E2FCE] text-white", text: "Personalized guidance that adapts to your child's unique learning pace." },
+              { icon: Award, title: "Skill Certification", color: "bg-[#FDD501] text-slate-900", text: "Earn verifiable badges and certificates as you master new technologies." }
             ].map(feature => (
               <div key={feature.title} className="group bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200/60 dark:border-slate-700/60 hover:shadow-xl transition-all duration-500">
-                <div className={`w-14 h-14 ${feature.color} rounded-2xl flex items-center justify-center text-white mb-6 shadow-md`}>
+                <div className={`w-14 h-14 ${feature.color} rounded-2xl flex items-center justify-center mb-6 shadow-md`}>
                   <feature.icon className="w-7 h-7" strokeWidth={2} />
                 </div>
                 <h3 className="font-bold text-xl mb-3 text-slate-900 dark:text-white">{feature.title}</h3>
@@ -609,9 +609,9 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
-              { id: "block", title: "Block Coding", logo: "/assets/images/scratch_logo.svg", desc: "Drag and drop blocks to learn logic. Perfect for beginners mapping out their first games.", iconBg: "bg-[#EA4335]/10 dark:bg-[#EA4335]/20", glow: "bg-[#EA4335]/10 group-hover:bg-[#EA4335]/20", border: 'border-[#EA4335]/20 dark:border-[#EA4335]/30', age: "Ages 7-9" },
-              { id: "js", title: "JavaScript", logo: "/assets/images/js_logo.svg", desc: "The language of the web. Build interactive websites and web-based games.", iconBg: "bg-[#FBBC05]/10 dark:bg-[#FBBC05]/20", glow: "bg-[#FBBC05]/10 group-hover:bg-[#FBBC05]/20", border: 'border-[#FBBC05]/20 dark:border-[#FBBC05]/30', age: "Ages 10-14" },
-              { id: "python", title: "Python", logo: "/assets/images/python_logo.svg", desc: "Powerful yet easy to read. Dive into data, back-end logic, and AI concepts.", iconBg: "bg-[#34A853]/10 dark:bg-[#34A853]/20", glow: "bg-[#34A853]/10 group-hover:bg-[#34A853]/20", border: 'border-[#34A853]/20 dark:border-[#34A853]/30', age: "Ages 12-16+" }
+              { id: "block", title: "Block Coding", logo: "/assets/images/scratch_logo.svg", desc: "Drag and drop blocks to learn logic. Perfect for beginners mapping out their first games.", iconBg: "bg-[#2E2FCE]/10 dark:bg-[#2E2FCE]/20", glow: "bg-[#2E2FCE]/10 group-hover:bg-[#2E2FCE]/20", border: 'border-[#2E2FCE]/20 dark:border-[#2E2FCE]/30', age: "Ages 7-9" },
+              { id: "js", title: "JavaScript", logo: "/assets/images/js_logo.svg", desc: "The language of the web. Build interactive websites and web-based games.", iconBg: "bg-[#FDD501]/10 dark:bg-[#FDD501]/20", glow: "bg-[#FDD501]/10 group-hover:bg-[#FDD501]/20", border: 'border-[#FDD501]/20 dark:border-[#FDD501]/30', age: "Ages 10-14" },
+              { id: "python", title: "Python", logo: "/assets/images/python_logo.svg", desc: "Powerful yet easy to read. Dive into data, back-end logic, and AI concepts.", iconBg: "bg-[#2E2FCE]/10 dark:bg-[#2E2FCE]/20", glow: "bg-[#2E2FCE]/10 group-hover:bg-[#2E2FCE]/20", border: 'border-[#2E2FCE]/20 dark:border-[#2E2FCE]/30', age: "Ages 12-16+" }
             ].map(path => (
               <div key={path.id} className={`bg-white dark:bg-slate-800 rounded-3xl p-8 border hover:border-transparent ${path.border} hover:shadow-xl transition-all duration-500 group cursor-pointer relative overflow-hidden`}>
                 <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-2xl transition-all ${path.glow}`}></div>
