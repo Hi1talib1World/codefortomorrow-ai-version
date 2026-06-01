@@ -88,7 +88,7 @@ export const AdminPanel: React.FC = () => {
     <div className="max-w-3xl mx-auto pb-24 md:pb-0">
       <div className="mb-12">
         <div className="flex items-center gap-3 mb-2">
-          <Settings className="w-8 h-8 text-[#facc15]" />
+          <Settings className="w-8 h-8 text-[#FBBF24]" />
           <h1 className="text-3xl font-bold font-mono uppercase tracking-widest text-white">Curate Content</h1>
         </div>
         <p className="text-slate-400 font-mono text-sm">
@@ -96,14 +96,14 @@ export const AdminPanel: React.FC = () => {
         </p>
       </div>
 
-      <div className="bg-[#121212]/80 backdrop-blur-md border border-dashed border-[#facc15]/30 rounded-xl p-8 relative overflow-hidden">
+      <div className="bg-[#121212]/80 backdrop-blur-md border border-dashed border-[#FBBF24]/30 rounded-xl p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
-          <ShieldAlert className="w-32 h-32 text-[#facc15]" />
+          <ShieldAlert className="w-32 h-32 text-[#FBBF24]" />
         </div>
 
         <div className="relative z-10">
           <h2 className="text-xl font-bold text-white font-mono mb-6 flex items-center gap-2">
-            <Plus className="w-5 h-5 text-[#facc15]" /> Add Repository
+            <Plus className="w-5 h-5 text-[#FBBF24]" /> Add Repository
           </h2>
           
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -121,7 +121,7 @@ export const AdminPanel: React.FC = () => {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://github.com/owner/repo"
-                  className="w-full bg-[#09090b] border border-slate-700 text-white font-mono rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:border-[#facc15] focus:ring-1 focus:ring-[#facc15] transition-all"
+                  className="w-full bg-[#09090b] border border-slate-700 text-white font-mono rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:border-[#FBBF24] focus:ring-1 focus:ring-[#FBBF24] transition-all"
                   required
                 />
               </div>
@@ -133,7 +133,7 @@ export const AdminPanel: React.FC = () => {
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="w-full sm:w-auto bg-[#facc15]/10 border border-[#facc15]/50 hover:bg-[#facc15]/20 text-[#facc15] font-mono font-bold px-8 py-3 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto bg-[#FBBF24]/10 border border-[#FBBF24]/50 hover:bg-[#FBBF24]/20 text-[#FBBF24] font-mono font-bold px-8 py-3 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {status === 'loading' ? (
                 <><Loader2 className="w-5 h-5 animate-spin" /> PROCESSING...</>
@@ -147,7 +147,7 @@ export const AdminPanel: React.FC = () => {
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg flex items-start gap-3"
+              className="mt-6 p-4 bg-[#111827]/10 border border-[#111827]/30 rounded-lg flex items-start gap-3"
             >
               <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
               <p className="text-sm font-mono text-emerald-400">{message}</p>
@@ -168,15 +168,15 @@ export const AdminPanel: React.FC = () => {
       </div>
 
       {/* Trending Section */}
-      <div className="mt-8 bg-[#121212]/80 backdrop-blur-md border border-dashed border-[#facc15]/30 rounded-xl p-8 relative overflow-hidden">
+      <div className="mt-8 bg-[#121212]/80 backdrop-blur-md border border-dashed border-[#FBBF24]/30 rounded-xl p-8 relative overflow-hidden">
         <div className="relative z-10">
           <h2 className="text-xl font-bold text-white font-mono mb-6 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-[#facc15]" /> Discover Trending (Last 7 Days)
+            <TrendingUp className="w-5 h-5 text-[#FBBF24]" /> Discover Trending (Last 7 Days)
           </h2>
           
           {trendingLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 text-[#facc15] animate-spin" />
+              <Loader2 className="w-8 h-8 text-[#FBBF24] animate-spin" />
             </div>
           ) : trending.length === 0 ? (
             <p className="text-slate-400 font-mono text-sm">No trending repositories found.</p>
@@ -185,7 +185,7 @@ export const AdminPanel: React.FC = () => {
               {trending.map((repo) => (
                 <div key={repo.id} className="bg-[#09090b] border border-slate-700 rounded-lg p-4 flex flex-col justify-between">
                   <div>
-                    <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="font-bold text-[#facc15] font-mono text-sm hover:underline flex items-center gap-2 mb-1">
+                    <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="font-bold text-[#FBBF24] font-mono text-sm hover:underline flex items-center gap-2 mb-1">
                       {repo.full_name}
                     </a>
                     <p className="text-xs text-slate-400 line-clamp-2 mb-3">
@@ -199,7 +199,7 @@ export const AdminPanel: React.FC = () => {
                     <button
                       onClick={() => handleAddTrending(repo.html_url, repo.full_name)}
                       disabled={addingRepo === repo.full_name}
-                      className="text-xs bg-[#facc15]/10 hover:bg-[#facc15]/20 text-[#facc15] border border-[#facc15]/30 px-3 py-1.5 rounded transition-colors disabled:opacity-50 flex items-center gap-1 font-bold"
+                      className="text-xs bg-[#FBBF24]/10 hover:bg-[#FBBF24]/20 text-[#FBBF24] border border-[#FBBF24]/30 px-3 py-1.5 rounded transition-colors disabled:opacity-50 flex items-center gap-1 font-bold"
                     >
                       {addingRepo === repo.full_name ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
                       Add
