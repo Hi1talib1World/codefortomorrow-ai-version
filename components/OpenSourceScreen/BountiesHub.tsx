@@ -17,7 +17,7 @@ export const BountiesHub: React.FC = () => {
       <div className="grid grid-cols-1 gap-6">
         <div className="bg-[#121212] rounded-3xl border border-slate-800/60 p-8">
           <div className="flex items-center gap-3 mb-6">
-            <Sparkles className="w-6 h-6 text-[#facc15]" />
+            <Sparkles className="w-6 h-6 text-[#FBBF24]" />
             <h2 className="text-2xl font-bold text-white">{t('bounties.topPlatforms')}</h2>
           </div>
           <div className="space-y-4 text-slate-300 text-sm">
@@ -30,14 +30,14 @@ export const BountiesHub: React.FC = () => {
 
         <div className="bg-[#121212] rounded-3xl border border-slate-800/60 p-8">
           <div className="flex items-center gap-3 mb-6">
-            <Trophy className="w-6 h-6 text-[#facc15]" />
+            <Trophy className="w-6 h-6 text-[#FBBF24]" />
             <h2 className="text-2xl font-bold text-white">{t('bounties.maximizePayout')}</h2>
           </div>
           <div className="space-y-4 text-slate-300 text-sm">
             <p>{t('bounties.tip1')}</p>
             <p>{t('bounties.tip2')}</p>
             <p>{t('bounties.tip3')}</p>
-            <p>{t('bounties.tip4')} <span className="text-[#facc15] font-bold">good first issue</span>, <span className="text-[#facc15] font-bold">help wanted</span>, and <span className="text-[#facc15] font-bold">bounty</span>.</p>
+            <p>{t('bounties.tip4')} <span className="text-[#FBBF24] font-bold">good first issue</span>, <span className="text-[#FBBF24] font-bold">help wanted</span>, and <span className="text-[#FBBF24] font-bold">bounty</span>.</p>
           </div>
         </div>
       </div>
