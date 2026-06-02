@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { User } from '../../types';
 import { BADGES_BY_PATH } from '../../constants';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -10,8 +10,6 @@ import AnimatedCounter from '../AnimatedCounter';
 import { AvatarPreview } from '../StoreScreen';
 
 // Mock data
-const mockFollowing = 12;
-const mockFollowers = 8;
 const mockLeague = "Bronze";
 
 const LeagueIcon = ({ className }: { className?: string }) => (
@@ -41,6 +39,33 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [aiProfile, setAiProfile] = useState<any>(null);
   const [loadingAI, setLoadingAI] = useState(true);
+
+  const coverInputRef = useRef<HTMLInputElement>(null);
+  const profilePicInputRef = useRef<HTMLInputElement>(null);
+
+  const handleCoverUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64Data = e.target?.result as string;
+        onUpdateUser({ coverPictureUrl: base64Data });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleProfilePicUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64Data = e.target?.result as string;
+        onUpdateUser({ profilePictureUrl: base64Data });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     const fetchAIProfile = async () => {
@@ -86,32 +111,86 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
         <div className="max-w-4xl mx-auto">
 
           <div className="relative mb-20">
-            <div className="h-60 bg-[#2E2FCE] rounded-3xl relative shadow-md overflow-hidden group border border-[#2E2FCE]">
+            <div 
+              className="h-60 rounded-3xl relative shadow-md overflow-hidden group border border-[#2E2FCE] bg-[#2E2FCE]"
+              style={currentUser.coverPictureUrl ? { backgroundImage: `url(${currentUser.coverPictureUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+            >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <button className="absolute top-6 left-6 w-12 h-12 bg-black/30 backdrop-blur-md rounded-xl flex items-center justify-center hover:bg-black/50 transition-all text-white border border-white/20">
+              
+              <input 
+                type="file" 
+                ref={coverInputRef} 
+                accept="image/*" 
+                className="hidden" 
+                onChange={handleCoverUpload} 
+              />
+              
+              <button 
+                onClick={() => coverInputRef.current?.click()} 
+                title="Upload Cover Image"
+                className="absolute top-6 left-6 w-12 h-12 bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-xl flex items-center justify-center transition-all text-white border border-white/20 cursor-pointer"
+              >
                 <Plus className="w-8 h-8" />
               </button>
-              <button onClick={() => setIsEditModalOpen(true)} className="absolute bottom-6 right-6 w-12 h-12 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-black/50 transition-all text-white border border-white/20">
+              <button 
+                onClick={() => setIsEditModalOpen(true)} 
+                title="Edit Profile Info"
+                className="absolute bottom-6 right-6 w-12 h-12 bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center transition-all text-white border border-white/20 cursor-pointer"
+              >
                 <Pencil className="w-6 h-6" />
               </button>
             </div>
+            
             <div className="absolute -bottom-14 left-1/2 -translate-x-1/2">
-              <div className="w-40 h-40 rounded-full bg-white dark:bg-slate-800 border-8 border-white dark:border-slate-900 flex items-center justify-center relative overflow-hidden shadow-lg transition-colors">
-                <AvatarPreview 
-                  equipped={userProgress?.skillGraph?.equippedAvatarItems || []} 
-                  className="w-full h-full text-7xl rounded-full border-none shadow-none"
+              <div className="w-40 h-40 rounded-full bg-white dark:bg-slate-800 border-8 border-white dark:border-slate-900 flex items-center justify-center relative overflow-hidden shadow-lg transition-colors group shrink-0 aspect-square">
+                
+                <input 
+                  type="file" 
+                  ref={profilePicInputRef} 
+                  accept="image/*" 
+                  className="hidden" 
+                  onChange={handleProfilePicUpload} 
                 />
+
+                {currentUser.profilePictureUrl ? (
+                  <img 
+                    src={currentUser.profilePictureUrl} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover rounded-full" 
+                  />
+                ) : (
+                  <AvatarPreview 
+                    equipped={userProgress?.skillGraph?.equippedAvatarItems || []} 
+                    className="w-full h-full text-7xl rounded-full border-none shadow-none"
+                  />
+                )}
+
+                <button 
+                  onClick={() => profilePicInputRef.current?.click()} 
+                  title="Change Profile Picture"
+                  className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white cursor-pointer rounded-full"
+                >
+                  <Pencil className="w-6 h-6" />
+                </button>
               </div>
             </div>
           </div>
 
           <div className="text-center mb-12">
             <h1 className="text-5xl font-black tracking-tighter uppercase">{currentUser.name}</h1>
-            <p className="text-slate-500 dark:text-slate-400 font-bold text-xl mt-2">{currentUser.bio || t('no_bio')}</p>
+            <div className="flex flex-col items-center justify-center mt-2.5 gap-1.5 font-bold text-slate-400 dark:text-slate-500 text-sm">
+              <span className="flex items-center gap-1.5">
+                ✉️ {currentUser.email}
+              </span>
+              <span className="text-[10px] uppercase tracking-widest font-black bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full text-slate-500/80 dark:text-slate-400/80 mt-1 flex items-center gap-1 border border-slate-200/50 dark:border-slate-700/50">
+                👤 {currentUser.role === 'teacher' ? 'Instructor' : 'Student'}
+              </span>
+            </div>
+            <p className="text-slate-500 dark:text-slate-400 font-bold text-xl mt-4 max-w-xl mx-auto">{currentUser.bio || t('no_bio')}</p>
             <div className="mt-6 flex items-center justify-center space-x-6 text-lg font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-              <span className="hover:text-brand-500 transition-colors cursor-pointer">{mockFollowing} {t('following')}</span>
+              <span className="hover:text-brand-500 transition-colors cursor-pointer">0 {t('following')}</span>
               <span className="text-slate-200 dark:text-slate-800">|</span>
-              <span className="hover:text-brand-500 transition-colors cursor-pointer">{mockFollowers} {t('followers')}</span>
+              <span className="hover:text-brand-500 transition-colors cursor-pointer">0 {t('followers')}</span>
             </div>
           </div>
 
