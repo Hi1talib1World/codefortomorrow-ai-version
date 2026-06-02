@@ -343,6 +343,18 @@ const api = {
     return data;
   },
 
+  searchUsers: async (query: string): Promise<any[]> => {
+    const response = await customFetch(`${API_BASE_URL}/users/search?q=${encodeURIComponent(query)}`, {
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to search users.');
+    }
+    return data;
+  },
+
   // --- AI Endpoints ---
   getAILearningProfile: async (): Promise<any> => {
     const response = await customFetch(`${API_BASE_URL}/ai/profile`, {
