@@ -69,6 +69,15 @@ body:not(.dark) {
   background-clip: content-box;
 }
 
+/* Hide scrollbar utility for horizontal scroll flows */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 .dark ::-webkit-scrollbar-thumb {
   background: #334155;
 }
