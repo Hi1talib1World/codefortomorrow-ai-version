@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import crypto from 'crypto';
 import User from '../models/user.model';
 import Progress from '../models/progress.model';
@@ -74,7 +75,7 @@ export const getSkillStates = async (req: Request, res: Response) => {
     const studentId = req.params.id;
     const skillId = req.query.skill_id as string | undefined;
 
-    const filter: Record<string, any> = { student_id: studentId };
+    const filter: mongoose.FilterQuery<any> = { student_id: studentId };
     if (skillId) {
       filter.skill_id = skillId;
     }
