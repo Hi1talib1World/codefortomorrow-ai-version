@@ -365,10 +365,11 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
             token: appToken,
         });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Firebase verify failed:', error);
-        console.error("Firebase Auth Error:", error);
-        next(new ApiError(401, 'Firebase authentication failed'));
+        console.error('Firebase Auth Error code:', error?.code, 'message:', error?.message);
+        const message = error?.message || error?.code || 'Firebase authentication failed';
+        next(new ApiError(401, `Firebase authentication failed: ${message}`));
     }
 };
 
