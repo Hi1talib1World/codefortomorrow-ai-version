@@ -12,6 +12,7 @@ const connectDB = async () => {
   if (mongoose.connection.readyState === 1) return;
 
   const mongoUri = process.env.MONGO_URI;
+  console.log('MONGO_URI =', process.env.MONGO_URI);
 
   if (!mongoUri) {
     const message = 'MONGO_URI is not defined in environment variables. Database connection cannot be established.';
