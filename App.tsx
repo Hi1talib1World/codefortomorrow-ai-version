@@ -32,6 +32,7 @@ const BlogPostScreen = lazy(() => import('./components/BlogPostScreen'));
 const OpenSourceScreen = lazy(() => import('./components/OpenSourceScreen'));
 const RepoArticlePage = lazy(() => import('./components/OpenSourceScreen/RepoArticlePage'));
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+const AgentsPage = lazy(() => import('./components/AgentsPage'));
 
 /** Default blank progress object used when creating a guest/new user session. */
 const defaultProgress: UserProgress = {
@@ -603,6 +604,15 @@ export default function App() {
                   currentUser={currentUser}
                   onLogout={handleLogout}
                 />
+              </AdminGuard>
+            }
+          />
+
+          <Route
+            path="/agents"
+            element={
+              <AdminGuard currentUser={currentUser}>
+                <AgentsPage />
               </AdminGuard>
             }
           />
