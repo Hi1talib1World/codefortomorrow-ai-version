@@ -35,6 +35,7 @@ const userSchema: Schema = new Schema({
     type: String,
     required: false, // Not required for users signing up with Google OAuth
     minlength: 6,
+    select: false,
   },
   googleId: {
     type: String,
