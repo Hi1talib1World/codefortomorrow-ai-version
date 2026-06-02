@@ -195,6 +195,7 @@ export interface User {
   email: string;
   profilePictureUrl: string;
   bio?: string;
+  coverPictureUrl?: string;
   password?: string; // Optional for OAuth users
   provider: 'google' | 'email';
   role: 'teacher' | 'student';
