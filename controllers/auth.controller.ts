@@ -366,10 +366,15 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
         });
 
     } catch (error: any) {
-        console.error('Firebase verify failed:', error);
-        console.error('Firebase Auth Error code:', error?.code, 'message:', error?.message);
-        const message = error?.message || error?.code || 'Firebase authentication failed';
-        next(new ApiError(401, `Firebase authentication failed: ${message}`));
+        console.error('Firebase verify failed: raw error:', error);
+        console.error('Firebase Auth Error code:', error?.code, 'message:', error?.message, 'errorInfo:', error?.errorInfo);
+        const firebaseErrorMessage =
+          error?.message ||
+          error?.code ||
+          error?.errorInfo?.message ||
+          (typeof error === 'string' ? error : undefined) ||
+          (error?.toString && error.toString() !== '[object Object]' ? error.toString() : 'Unknown Firebase auth error');
+        next(new ApiError(401, `Firebase authentication failed: ${firebaseErrorMessage}`));
     }
 };
 
