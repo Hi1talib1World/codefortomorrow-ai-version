@@ -273,7 +273,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
       const isDummyConfig = !auth.app.options.apiKey || auth.app.options.apiKey === 'dummy-api-key';
       if (isDummyConfig) {
         console.warn('⚠️ Firebase has a dummy configuration. Using mock Google token.');
-        const mockToken = generateMockFirebaseToken('wizard@codefortomorrow.org', 'Developer Wizard 🪄');
+        const generatedName = `Guest ${Math.random().toString(36).substring(2, 8)}`;
+        const generatedEmail = `${generatedName.toLowerCase().replace(/[^a-z0-9]/g, '')}.${Date.now()}@codefortomorrow.org`;
+        const mockToken = generateMockFirebaseToken(generatedEmail, generatedName);
         const user = await api.loginWithFirebase(mockToken);
         onAuthSuccess(user);
       } else {
