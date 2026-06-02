@@ -14,8 +14,9 @@ const connectDB = async () => {
   const mongoUri = process.env.MONGO_URI;
 
   if (!mongoUri) {
-    console.warn('⚠️ MONGO_URI is not defined in environment variables. Database connection skipped.');
-    return;
+    const message = 'MONGO_URI is not defined in environment variables. Database connection cannot be established.';
+    console.error(`❌ ${message}`);
+    throw new Error(message);
   }
 
   isConnecting = true;
@@ -30,11 +31,8 @@ const connectDB = async () => {
     });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    // If the connection fails, log the error but don't exit the process
-    // to allow the dev server to start and show instructions to the user.
     const errorMessage = (error as Error).message;
     console.error(`❌ Error connecting to MongoDB: ${errorMessage}`);
-    
     if (errorMessage.includes('IP isn\'t whitelisted') || errorMessage.includes('Could not connect to any servers')) {
       console.log('\n' + '='.repeat(80));
       console.log('🛠️  HOW TO FIX THIS ERROR:');
@@ -46,6 +44,7 @@ const connectDB = async () => {
       console.log('5. Click "Confirm" and wait a minute for the changes to apply.');
       console.log('='.repeat(80) + '\n');
     }
+    throw error;
   } finally {
     isConnecting = false;
   }
