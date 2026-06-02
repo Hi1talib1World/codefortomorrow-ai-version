@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { User } from '../../types';
 import { motion, useInView, useAnimation } from 'motion/react';
-import { Terminal, Play, CheckCircle, Menu, X, ArrowRight, Code, BookOpen, Layers, Users, Star, MessageSquare, ChevronUp } from 'lucide-react';
+import { Terminal, Play, CheckCircle, Menu, X, ArrowRight, BookOpen, Layers, Users, Star, MessageSquare, ChevronUp } from 'lucide-react';
 import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 
