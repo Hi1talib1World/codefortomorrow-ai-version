@@ -1,5 +1,4 @@
 import express from 'express';
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -51,11 +50,6 @@ async function startServer() {
     // Log host and path routing information
     const routingLine = `[Host Routing] Host: ${host} | Subdomain: ${subdomain || 'none'} | Path: ${req.path}`;
     console.log(routingLine);
-    try {
-      fs.appendFileSync('debug-requests.log', `${new Date().toISOString()} ${routingLine}\n`);
-    } catch (err) {
-      console.error('Failed to write debug-requests.log:', err);
-    }
     
     // Attach subdomain to the request object for downstream routes/controllers if needed
     (req as any).subdomain = subdomain;
