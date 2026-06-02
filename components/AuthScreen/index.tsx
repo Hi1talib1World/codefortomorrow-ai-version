@@ -6,26 +6,6 @@ import api from '../../services/api';
 import { auth, firebaseService, handleGoogleRedirectResult } from '../../services/firebase';
 import { Mail, Lock, User as UserIcon, Globe } from 'lucide-react';
 
-const generateMockFirebaseToken = (emailAddress: string, displayName: string): string => {
-  const header = 'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0';
-  const payload = {
-    email: emailAddress || 'developer@codefortomorrow.org',
-    name: displayName || 'Developer User',
-    picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName || 'Developer')}&background=0D8ABC&color=fff`,
-    sub: 'mock-firebase-uid-' + Math.random().toString(36).substring(2, 11),
-    iss: 'https://securetoken.google.com/dummy-project',
-    aud: 'dummy-project',
-    auth_time: Math.floor(Date.now() / 1000),
-    user_id: 'mock-firebase-uid-' + Math.random().toString(36).substring(2, 11),
-    exp: Math.floor(Date.now() / 1000) + 3600
-  };
-  const base64Payload = btoa(unescape(encodeURIComponent(JSON.stringify(payload))))
-    .replace(/=/g, '')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_');
-  return `${header}.${base64Payload}.dummySignature`;
-};
-
 interface AuthScreenProps {
   onAuthSuccess: (user: User) => void;
   skipAuth: () => void;
@@ -223,35 +203,28 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
 
     try {
       const isDummyConfig = !auth.app.options.apiKey || auth.app.options.apiKey === 'dummy-api-key';
-      let user: User;
-
       if (isDummyConfig) {
-        console.warn('⚠️ Firebase has a dummy configuration. Simulating backend login/registration.');
-        if (isLoginView) {
-          user = await api.login(email, password);
-        } else {
-          user = await api.register(name, email, password, role || 'student');
-        }
+        throw new Error('Firebase is not configured. Please provide a valid Firebase API key and project settings.');
+      }
+
+      let token: string;
+      if (isLoginView) {
+        console.log('Logging in via Firebase Auth...');
+        token = await firebaseService.loginWithEmail(email, password);
       } else {
-        let token: string;
-        if (isLoginView) {
-          console.log('Logging in via Firebase Auth...');
-          token = await firebaseService.loginWithEmail(email, password);
-        } else {
-          console.log('Registering via Firebase Auth...');
-          token = await firebaseService.registerWithEmail(email, password);
-          if (auth.currentUser) {
-            try {
-              const { updateProfile } = await import('firebase/auth');
-              await updateProfile(auth.currentUser, { displayName: name });
-            } catch (profileErr) {
-              console.error('Failed to update display name in Firebase:', profileErr);
-            }
+        console.log('Registering via Firebase Auth...');
+        token = await firebaseService.registerWithEmail(email, password);
+        if (auth.currentUser) {
+          try {
+            const { updateProfile } = await import('firebase/auth');
+            await updateProfile(auth.currentUser, { displayName: name });
+          } catch (profileErr) {
+            console.error('Failed to update display name in Firebase:', profileErr);
           }
         }
-        console.log('Firebase token acquired, syncing session with backend database...');
-        user = await api.loginWithFirebase(token);
       }
+      console.log('Firebase token acquired, syncing session with backend database...');
+      const user = await api.loginWithFirebase(token);
       onAuthSuccess(user);
     } catch (err) {
       console.error('Auth Submit Error:', err);
@@ -272,19 +245,14 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
     try {
       const isDummyConfig = !auth.app.options.apiKey || auth.app.options.apiKey === 'dummy-api-key';
       if (isDummyConfig) {
-        console.warn('⚠️ Firebase has a dummy configuration. Using mock Google token.');
-        const generatedName = `Guest ${Math.random().toString(36).substring(2, 8)}`;
-        const generatedEmail = `${generatedName.toLowerCase().replace(/[^a-z0-9]/g, '')}.${Date.now()}@codefortomorrow.org`;
-        const mockToken = generateMockFirebaseToken(generatedEmail, generatedName);
-        const user = await api.loginWithFirebase(mockToken);
-        onAuthSuccess(user);
-      } else {
-        console.log('Initiating Firebase Google Sign-In Popup...');
-        const token = await firebaseService.loginWithGooglePopup();
-        console.log('Google login token retrieved, verifying with backend...');
-        const user = await api.loginWithFirebase(token);
-        onAuthSuccess(user);
+        throw new Error('Firebase is not configured. Google sign-in cannot proceed until valid Firebase settings are provided.');
       }
+
+      console.log('Initiating Firebase Google Sign-In Popup...');
+      const token = await firebaseService.loginWithGooglePopup();
+      console.log('Google login token retrieved, verifying with backend...');
+      const user = await api.loginWithFirebase(token);
+      onAuthSuccess(user);
     } catch (err) {
       console.error('Google Sign In Error:', err);
       setError(err instanceof Error ? err.message : 'Google login failed.');
