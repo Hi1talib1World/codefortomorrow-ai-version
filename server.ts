@@ -30,9 +30,8 @@ const _filename = typeof __filename !== 'undefined' ? __filename : fileURLToPath
 const _dirname = path.dirname(_filename);
 
 async function startServer() {
-  // Connect to the MongoDB database
-  // We don't await it here to avoid blocking server startup if DB is down or unconfigured
-  connectDB();
+  // Connect to the MongoDB database and block startup if the database cannot be reached.
+  await connectDB();
 
   // Initialize the Express application
   const app: express.Application = express();
@@ -233,4 +232,5 @@ async function startServer() {
 
 startServer().catch((err) => {
   console.error('Failed to start server:', err);
+  process.exit(1);
 });
