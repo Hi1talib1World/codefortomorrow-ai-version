@@ -3,9 +3,11 @@ import { User } from '../../types';
 
 interface EditProfileModalProps {
     user: User;
-    onSave: (updatedData: Partial<User>) => void;
+    onSave: (updatedData: Partial<User>) => Promise<void>;
     onClose: () => void;
 }
+
+const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClose }) => {
 
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClose }) => {
     const [name, setName] = useState(user.name);
@@ -39,14 +41,18 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClo
         }
     };
 
-    const handleSave = () => {
-        onSave({
-            name,
-            email,
-            bio,
-            profilePictureUrl,
-            coverPictureUrl
-        });
+    const handleSave = async () => {
+        try {
+            await onSave({
+                name,
+                email,
+                bio,
+                profilePictureUrl,
+                coverPictureUrl
+            });
+        } catch (error) {
+            console.error('Failed to save profile details:', error);
+        }
     };
 
     return (
