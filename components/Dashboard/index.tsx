@@ -17,9 +17,10 @@ import DocumentationScreen from '../DocumentationScreen';
 import AIAssistantScreen from '../AIAssistantScreen';
 import MissionsScreen from '../MissionsScreen';
 import HowToLearnScreen from '../HowToLearnScreen';
+import PrivacyPolicyScreen from '../PrivacyPolicyScreen';
 import { User, Lesson, ProgrammingPath } from '../../types';
 
-export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'goals' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions' | 'how-to-learn';
+export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'goals' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions' | 'how-to-learn' | 'privacy-policy';
 
 // Map URL :view param → DashboardView enum
 const VIEW_MAP: Record<string, DashboardView> = {
@@ -35,6 +36,7 @@ const VIEW_MAP: Record<string, DashboardView> = {
   'ai-assistant': 'ai-assistant',
   missions: 'missions',
   'how-to-learn': 'how-to-learn',
+  'privacy-policy': 'privacy-policy',
 };
 
 interface DashboardProps {
@@ -123,6 +125,8 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
         return <MissionsScreen currentUser={currentUser} />;
       case 'how-to-learn':
         return <HowToLearnScreen />;
+      case 'privacy-policy':
+        return <PrivacyPolicyScreen />;
       default:
         return (
           <HomeHubScreen 
