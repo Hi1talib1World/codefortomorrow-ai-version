@@ -25,7 +25,7 @@ export const updateUserProfile = async (req: Request, res: Response, next: NextF
                     bio: req.body.bio,
                     currentPath: req.body.currentPath,
                 },
-                { new: true }
+                { returnDocument: 'after', runValidators: true }
             ).select('-password');
 
             if (!updatedUser) {
