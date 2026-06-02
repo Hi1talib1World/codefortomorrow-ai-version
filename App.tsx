@@ -194,8 +194,15 @@ export default function App() {
   const [isSessionLoaded, setIsSessionLoaded] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  // Effect to check for an existing session on app load by calling the API
+  // Effect to clear any stale legacy session storage and check for a real authenticated session.
   useEffect(() => {
+    try {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+    } catch (storageError) {
+      console.warn('Unable to clear legacy session storage:', storageError);
+    }
+
     const checkUserSession = async () => {
       try {
         const user = await api.getLoggedInUser();
