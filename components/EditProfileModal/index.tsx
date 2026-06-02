@@ -8,8 +8,6 @@ interface EditProfileModalProps {
 }
 
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClose }) => {
-
-const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClose }) => {
     const [name, setName] = useState(user.name);
     const [email, setEmail] = useState(user.email || '');
     const [bio, setBio] = useState(user.bio || '');
