@@ -63,7 +63,12 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         progress: mockProgress,
         currentPath: null,
       };
-      const token = generateToken(mockUserId);
+      const token = generateToken(mockUserId, {
+        email,
+        name,
+        profilePictureUrl: userResponse.profilePictureUrl,
+        role: 'student',
+      });
       setAuthCookie(res, token, req);
       res.status(201).json({ ...userResponse, token });
       return;
@@ -146,7 +151,12 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         progress: mockProgress,
         currentPath: "block_coding",
       };
-      const token = generateToken(mockUserId);
+      const token = generateToken(mockUserId, {
+        email,
+        name: userResponse.name,
+        profilePictureUrl: userResponse.profilePictureUrl,
+        role: 'student',
+      });
       setAuthCookie(res, token, req);
       res.json({ ...userResponse, token });
       return;
@@ -283,7 +293,12 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
                 currentPath: "block_coding",
                 role: "student",
             };
-            const appToken = generateToken(mockUserId);
+            const appToken = generateToken(mockUserId, {
+              email,
+              name,
+              profilePictureUrl: userResponse.profilePictureUrl,
+              role: userResponse.role,
+            });
             setAuthCookie(res, appToken, req);
             res.status(200).json({ ...userResponse, token: appToken });
             return;
@@ -390,7 +405,12 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
                 currentPath: "block_coding",
                 role: "student",
             };
-            const appToken = generateToken(mockUserId);
+            const appToken = generateToken(mockUserId, {
+              email,
+              name,
+              profilePictureUrl: userResponse.profilePictureUrl,
+              role: userResponse.role,
+            });
             setAuthCookie(res, appToken, req);
             res.status(200).json({ ...userResponse, token: appToken });
             return;
