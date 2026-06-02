@@ -17,23 +17,23 @@ export const updateUserProfile = async (req: Request, res: Response, next: NextF
         const user = await User.findById(req.user?.id);
 
         if (user) {
-            user.name = req.body.name || user.name;
-            user.profilePictureUrl = req.body.profilePictureUrl || user.profilePictureUrl;
-            (user as any).bio = req.body.bio || (user as any).bio;
-            (user as any).currentPath = req.body.currentPath || (user as any).currentPath;
-            
-            const updatedUser = await user.save();
+            const updatedUser = await User.findByIdAndUpdate(
+                req.user._id,
+                {
+                    name: req.body.name,
+                    profilePictureUrl: req.body.profilePictureUrl,
+                    bio: req.body.bio,
+                    currentPath: req.body.currentPath,
+                },
+                { new: true }
+            );
+
+            if (!updatedUser) {
+                throw new ApiError(404, 'User not found');
+            }
+
             await updatedUser.populate('progress');
-            
-            res.json({
-                _id: updatedUser._id,
-                name: updatedUser.name,
-                email: updatedUser.email,
-                profilePictureUrl: updatedUser.profilePictureUrl,
-                bio: (updatedUser as any).bio,
-                currentPath: (updatedUser as any).currentPath,
-                progress: updatedUser.progress,
-            });
+            return res.json(updatedUser);
 
         } else {
             throw new ApiError(404, 'User not found');
