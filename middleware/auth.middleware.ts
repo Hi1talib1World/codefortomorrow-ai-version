@@ -34,23 +34,8 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
     const isDbConnected = mongoose.connection.readyState === 1;
 
     if (!isDbConnected) {
-      // DB is not available — set req.user from the JWT payload so controllers
-      // can use their existing mock-data fallback paths.
-      console.warn("⚠️ MongoDB not connected. Auth middleware using JWT payload only.");
-      const decodedAny = decoded as any;
-      const name = decodedAny.name || decodedAny.email?.split('@')[0] || 'Offline User';
-      const email = decodedAny.email || `offline_${decodedAny.id}@codefortomorrow.com`;
-      req.user = {
-        _id: decodedAny.id,
-        id: decodedAny.id,
-        name,
-        email,
-        profilePictureUrl:
-          decodedAny.profilePictureUrl ||
-          `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff`,
-        role: decodedAny.role || 'student',
-      };
-      return next();
+      console.warn("⚠️ MongoDB not connected. Authentication cannot proceed.");
+      return res.status(503).json({ message: 'Service unavailable: database connection is required for authentication.' });
     }
 
     const user = await User.findById((decoded as any).id).select("-password");
