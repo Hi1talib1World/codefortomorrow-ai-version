@@ -31,7 +31,7 @@ export function startAiWorkers() {
             result = await AIEngine.generateQuiz(aiJob.payload);
             break;
           case AIJobType.STUDENT_ANALYSIS:
-            result = await AIEngine.generateTeacherSummary(aiJob.payload.classData || []);
+            result = await AIEngine.generateStudentAnalysis(aiJob.payload);
             break;
           case AIJobType.SALES_PROPOSAL:
             result = await AIEngine.generateSalesProposal(aiJob.payload);
