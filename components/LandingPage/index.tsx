@@ -22,7 +22,7 @@ const AnimatedSection: React.FC<{ children: React.ReactNode, className?: string 
 const statsTranslations = {
   en: {
     title: "Key Achievements",
-    studentsVal: "150", studentsSub: "Students", studentsDesc: "Active students learning on our platforms right now",
+    studentsVal: "17", studentsSub: "students connected from 7 am to 9 pm after change to 0 students to 7 am", studentsDesc: "Active students learning on our platforms right now",
     viewsVal: "10M", viewsSub: "Views", viewsDesc: "Across our digital platforms",
     expsVal: "400", expsSub: "Experiments", expsDesc: "Produced and filmed by Science Street",
     festsVal: "22+", festsSub: "Science Festivals", festsDesc: "Across the Middle East and North Africa",
@@ -30,7 +30,7 @@ const statsTranslations = {
   },
   fr: {
     title: "Principales Réalisations",
-    studentsVal: "150", studentsSub: "d'étudiants", studentsDesc: "étudiants connectés en direct sur nos plateformes",
+    studentsVal: "17", studentsSub: "étudiants connectés de 7h à 21h après passage à 0 étudiant à 7h", studentsDesc: "étantiants connectés en direct sur nos plateformes",
     viewsVal: "10M", viewsSub: "de vues", viewsDesc: "Sur nos plateformes numériques",
     expsVal: "400", expsSub: "Expériences", expsDesc: "Produites et filmées par Science Street",
     festsVal: "22+", festsSub: "Festivals de sciences", festsDesc: "À travers le Moyen-Orient et l'Afrique du Nord",
@@ -38,7 +38,7 @@ const statsTranslations = {
   },
   ar: {
     title: "أهم الإنجازات",
-    studentsVal: "150", studentsSub: "طالب", studentsDesc: "طالب يتعلمون الآن عبر الإنترنت على منصاتنا",
+    studentsVal: "17", studentsSub: "طالب متصلين من 7 صباحاً إلى 9 مساءً بعد التغيير إلى 0 طالب حتى 7 صباحاً", studentsDesc: "طالب يتعلمون الآن عبر الإنترنت على منصاتنا",
     viewsVal: "10 مليون", viewsSub: "مشاهدة", viewsDesc: "عبر منصاتنا الرقمية",
     expsVal: "400", expsSub: "تجربة", expsDesc: "تم انتاجها وتصويرها من شارع العلوم",
     festsVal: "22+", festsSub: "مهرجانات علمية", festsDesc: "في جميع أنحاء الشرق الأوسط وشمال أفريقيا",
@@ -174,8 +174,8 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               </a>
 
               <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="group flex flex-col h-full p-8 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-[#FBBF24]/50 hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(251,191,36,0.15)] transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#111827] border border-white/10 flex items-center justify-center text-[#FBBF24] mb-6">
-                  <Cpu className="w-6 h-6" />
+                <div className="w-12 h-12 rounded-xl bg-[#111827] border border-white/10 flex items-center justify-center overflow-hidden mb-6">
+                  <img src="/assets/images/cftos_logo.jpg" alt="CFTOS" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-[#FBBF24] transition-colors">CFTOS</h3>
                 <p className="text-slate-400 leading-relaxed mb-6 flex-grow">A collaborative environment for building autonomous AI agents and contributing to open-source software.</p>
