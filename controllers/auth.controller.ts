@@ -379,7 +379,7 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
           error?.errorInfo?.message ||
           (typeof error === 'string' ? error : undefined) ||
           (error?.toString && error.toString() !== '[object Object]' ? error.toString() : 'Unknown Firebase auth error');
-        next(new ApiError(401, `Firebase authentication failed: ${firebaseErrorMessage}`));
+        next(new ApiError(401, `Firebase authentication failed [PATCHED]: ${firebaseErrorMessage}`));
     }
 };
 
