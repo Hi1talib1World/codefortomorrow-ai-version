@@ -44,7 +44,7 @@ interface DashboardProps {
   onStartLesson: (lesson: Lesson) => void;
   onLogout: () => void;
   onSwitchPath: (pathId: ProgrammingPath['id']) => void;
-  onUpdateUser: (updatedData: Partial<User>) => void;
+  onUpdateUser: (updatedData: Partial<User>) => Promise<void>;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLogout, onSwitchPath, onUpdateUser }) => {
