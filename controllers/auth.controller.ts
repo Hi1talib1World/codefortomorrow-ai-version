@@ -21,6 +21,12 @@ const initializeFirebaseAdmin = () => {
     });
   }
 
+  if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+    throw new Error(
+      'Firebase admin credentials are not configured. Set FIREBASE_SERVICE_ACCOUNT_KEY or GOOGLE_APPLICATION_CREDENTIALS.'
+    );
+  }
+
   return admin.initializeApp({
     credential: admin.credential.applicationDefault(),
   });
