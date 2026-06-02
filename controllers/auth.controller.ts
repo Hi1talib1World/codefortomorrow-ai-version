@@ -266,10 +266,13 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
  * @access  Public
  */
 export const firebaseLogin = async (req: Request, res: Response, next: NextFunction) => {
-    const { token } = req.body;
+    const token =
+      req.body.token ||
+      req.body.idToken ||
+      req.body.id_token;
 
     console.log('Firebase auth endpoint hit');
-    console.log('Token received:', !!req.body.token);
+    console.log('Token received:', !!token);
 
     if (!token) {
        return next(new ApiError(400, 'Firebase ID token is required'));
