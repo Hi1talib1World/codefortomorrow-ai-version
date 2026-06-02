@@ -30,7 +30,7 @@ const HexagonBadgeIcon = ({ icon, earned }: { icon: React.ReactNode; earned: boo
 
 interface ProfileScreenProps {
   currentUser: User;
-  onUpdateUser: (updatedData: Partial<User>) => void;
+  onUpdateUser: (updatedData: Partial<User>) => Promise<void>;
 }
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser }) => {
@@ -47,9 +47,13 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         const base64Data = e.target?.result as string;
-        onUpdateUser({ coverPictureUrl: base64Data });
+        try {
+          await onUpdateUser({ coverPictureUrl: base64Data });
+        } catch (error) {
+          console.error('Failed to update cover picture:', error);
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -59,9 +63,13 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         const base64Data = e.target?.result as string;
-        onUpdateUser({ profilePictureUrl: base64Data });
+        try {
+          await onUpdateUser({ profilePictureUrl: base64Data });
+        } catch (error) {
+          console.error('Failed to update profile picture:', error);
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -93,9 +101,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
     ? Math.round((quizScores as number[]).reduce((a, b) => a + b, 0) / quizScores.length)
     : 0;
 
-  const handleSaveProfile = (updatedData: Partial<User>) => {
-    onUpdateUser(updatedData);
-    setIsEditModalOpen(false);
+  const handleSaveProfile = async (updatedData: Partial<User>) => {
+    try {
+      await onUpdateUser(updatedData);
+    } catch (error) {
+      console.error('Failed to save profile updates:', error);
+    } finally {
+      setIsEditModalOpen(false);
+    }
   };
 
   return (
