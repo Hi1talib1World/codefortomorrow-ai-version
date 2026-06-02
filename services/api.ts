@@ -395,6 +395,30 @@ const api = {
     return data;
   },
 
+  getAgentDashboard: async (): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/agents/status`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch agent dashboard.');
+    }
+    return data;
+  },
+
+  sendAgentCommand: async (agentId: string, command: string): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/agents/${agentId}/command`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ command }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to send command to agent.');
+    }
+    return data;
+  },
+
   getStudentProgress: async (userId: string): Promise<any> => {
     const response = await customFetch(`${API_BASE_URL}/progress/${userId}`, {
       headers: getAuthHeaders(),
