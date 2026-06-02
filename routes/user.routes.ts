@@ -1,6 +1,7 @@
 
 import express from 'express';
 import { updateUserProfile, updateUserProgress, getTeachers, toggleSaveItem, searchUsers } from '../controllers/user.controller';
+import { getMe } from '../controllers/auth.controller';
 import { protect } from '../middleware/auth.middleware';
 
 const router = express.Router();
@@ -22,6 +23,13 @@ router.get('/search', searchUsers);
  * @access  Private
  */
 router.get('/teachers', getTeachers);
+
+/**
+ * @route   GET /api/users/me
+ * @desc    Get current user profile
+ * @access  Private
+ */
+router.get('/me', getMe);
 
 /**
  * @route   PUT /api/users/profile
