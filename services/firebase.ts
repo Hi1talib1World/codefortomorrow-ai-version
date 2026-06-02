@@ -63,9 +63,15 @@ export const firebaseService = {
    * Returns the Firebase User ID token.
    */
   loginWithEmail: async (email: string, password: string): Promise<string> => {
-    const userCredential = await fbSignInWithEmailAndPassword(auth, email, password);
-    const idToken = await userCredential.user.getIdToken();
-    return idToken;
+    try {
+      const userCredential = await fbSignInWithEmailAndPassword(auth, email, password);
+      const idToken = await userCredential.user.getIdToken();
+      return idToken;
+    } catch (error: any) {
+      console.error('Firebase login error:', error?.code);
+      console.error('Firebase login message:', error?.message);
+      throw error;
+    }
   },
 
   /**
