@@ -45,7 +45,30 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
   const [isSending, setIsSending] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [view, setView] = useState<'conversations' | 'contacts'>('conversations');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearchingUsers, setIsSearchingUsers] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (view === 'contacts') {
+      if (searchQuery.trim().length > 0) {
+        const delayDebounceFn = setTimeout(async () => {
+          setIsSearchingUsers(true);
+          try {
+            const results = await api.searchUsers(searchQuery);
+            setSearchResults(results);
+          } catch (error) {
+            console.error('Error searching users:', error);
+          } finally {
+            setIsSearchingUsers(false);
+          }
+        }, 300);
+        return () => clearTimeout(delayDebounceFn);
+      } else {
+        setSearchResults([]);
+      }
+    }
+  }, [searchQuery, view]);
 
   useEffect(() => {
     fetchConversations();
@@ -133,15 +156,13 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Messages</h2>
             <div className="flex items-center gap-2">
-              {currentUser.role === 'student' && (
-                <button
-                  onClick={() => setView(view === 'conversations' ? 'contacts' : 'conversations')}
-                  className={`p-2 rounded-xl transition-all ${view === 'contacts' ? 'bg-brand-600 text-white' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
-                  title={view === 'contacts' ? 'Back to chats' : 'New message to teacher'}
-                >
-                  <Plus className="w-5 h-5" />
-                </button>
-              )}
+              <button
+                onClick={() => setView(view === 'conversations' ? 'contacts' : 'conversations')}
+                className={`p-2 rounded-xl transition-all ${view === 'contacts' ? 'bg-brand-600 text-white' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                title={view === 'contacts' ? 'Back to chats' : 'New message'}
+              >
+                <Plus className="w-5 h-5" />
+              </button>
               {onClose && (
                 <button onClick={onClose} className="md:hidden p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
                   <ArrowLeft className="w-5 h-5" />
@@ -153,7 +174,7 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
-              placeholder={view === 'conversations' ? "Search conversations..." : "Search teachers..."}
+              placeholder={view === 'conversations' ? "Search conversations..." : "Search registered users..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-bold border-none focus:ring-2 focus:ring-brand-500"
@@ -217,32 +238,68 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
           ) : (
             <div className="p-2">
               <div className="px-4 py-2 mb-2">
-                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Available Teachers</h3>
+                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                  {searchQuery.trim().length > 0 ? 'Search Results' : 'Available Contacts'}
+                </h3>
               </div>
-              {filteredTeachers.length === 0 ? (
-                <div className="p-8 text-center text-slate-400 font-bold text-sm">No teachers found.</div>
+              {isSearchingUsers ? (
+                <div className="p-8 flex justify-center">
+                  <div className="w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : searchQuery.trim().length > 0 ? (
+                searchResults.length === 0 ? (
+                  <div className="p-8 text-center text-slate-400 font-bold text-sm">No users found.</div>
+                ) : (
+                  searchResults.map((user) => (
+                    <button
+                      key={user._id}
+                      onClick={() => {
+                        setSelectedUser(user);
+                        setView('conversations');
+                      }}
+                      className="w-full p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-2xl transition-all"
+                    >
+                      <img
+                        src={user.profilePictureUrl || 'https://picsum.photos/seed/user/100/100'}
+                        alt={user.name}
+                        className="w-12 h-12 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-sm"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="text-left">
+                        <h3 className="font-black text-slate-800 dark:text-white text-sm">{user.name}</h3>
+                        <p className="text-[10px] font-black text-brand-600 uppercase tracking-widest">{user.role}</p>
+                      </div>
+                    </button>
+                  ))
+                )
               ) : (
-                filteredTeachers.map((teacher) => (
-                  <button
-                    key={teacher._id}
-                    onClick={() => {
-                      setSelectedUser(teacher);
-                      setView('conversations');
-                    }}
-                    className="w-full p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-2xl transition-all"
-                  >
-                    <img
-                      src={teacher.profilePictureUrl || 'https://picsum.photos/seed/teacher/100/100'}
-                      alt={teacher.name}
-                      className="w-12 h-12 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-sm"
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="text-left">
-                      <h3 className="font-black text-slate-800 dark:text-white text-sm">{teacher.name}</h3>
-                      <p className="text-[10px] font-black text-brand-600 uppercase tracking-widest">Teacher</p>
-                    </div>
-                  </button>
-                ))
+                currentUser.role === 'student' && filteredTeachers.length > 0 ? (
+                  filteredTeachers.map((teacher) => (
+                    <button
+                      key={teacher._id}
+                      onClick={() => {
+                        setSelectedUser(teacher);
+                        setView('conversations');
+                      }}
+                      className="w-full p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-2xl transition-all"
+                    >
+                      <img
+                        src={teacher.profilePictureUrl || 'https://picsum.photos/seed/teacher/100/100'}
+                        alt={teacher.name}
+                        className="w-12 h-12 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-sm"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="text-left">
+                        <h3 className="font-black text-slate-800 dark:text-white text-sm">{teacher.name}</h3>
+                        <p className="text-[10px] font-black text-brand-600 uppercase tracking-widest">Teacher</p>
+                      </div>
+                    </button>
+                  ))
+                ) : (
+                  <div className="p-8 text-center text-slate-400 font-bold text-sm">
+                    Type a name to search registered users.
+                  </div>
+                )
               )}
             </div>
           )}
