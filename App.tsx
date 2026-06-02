@@ -314,6 +314,7 @@ export default function App() {
     try {
       const updatedUser = await api.updateUserProfile(updatedData);
       setCurrentUser(updatedUser);
+      console.log('FRONTEND USER AFTER UPDATE:', updatedUser);
     } catch (error) {
       console.error("Failed to update user profile:", error);
     }
