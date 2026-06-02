@@ -1,5 +1,6 @@
 
 import { Request, Response, NextFunction } from 'express';
+import mongoose from 'mongoose';
 import User from '../models/user.model';
 import Progress from '../models/progress.model';
 import ApiError from '../utils/ApiError';
@@ -155,6 +156,43 @@ export const toggleSaveItem = async (req: Request, res: Response, next: NextFunc
             savedRepos: updatedUser.savedRepos,
             savedPosts: updatedUser.savedPosts,
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * @desc    Search registered users by name
+ * @route   GET /api/users/search
+ * @access  Private
+ */
+export const searchUsers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const query = (req.query.q as string) || '';
+        if (!query.trim()) {
+            return res.json([]);
+        }
+
+        const isDbConnected = mongoose.connection.readyState === 1;
+        if (!isDbConnected) {
+            const mockUsers = [
+                { _id: 'mock-u1', name: 'Hicham Outaleb', role: 'student', profilePictureUrl: 'https://ui-avatars.com/api/?name=Hicham+Outaleb' },
+                { _id: 'mock-u2', name: 'John Doe', role: 'student', profilePictureUrl: 'https://ui-avatars.com/api/?name=John+Doe' },
+                { _id: 'mock-u3', name: 'Jane Smith', role: 'teacher', profilePictureUrl: 'https://ui-avatars.com/api/?name=Jane+Smith' },
+                { _id: 'mock-u4', name: 'Alice Cooper', role: 'student', profilePictureUrl: 'https://ui-avatars.com/api/?name=Alice+Cooper' },
+            ];
+            const filtered = mockUsers.filter(u => u.name.toLowerCase().includes(query.toLowerCase()));
+            return res.json(filtered);
+        }
+
+        // @ts-ignore
+        const currentUserId = req.user?.id || req.user?._id;
+        const users = await User.find({
+            name: { $regex: query, $options: 'i' },
+            _id: { $ne: currentUserId }
+        }).select('name profilePictureUrl role bio').limit(15);
+
+        res.json(users);
     } catch (error) {
         next(error);
     }
