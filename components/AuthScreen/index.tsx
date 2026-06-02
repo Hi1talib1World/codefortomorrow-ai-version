@@ -41,6 +41,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   // Advanced Interactive UI State
   const [focusedField, setFocusedField] = useState<string | null>(null);
@@ -52,6 +53,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
     setEmail('');
     setPassword('');
     setError('');
+    setAcceptedTerms(false);
   };
 
   const handleViewChange = (isLogin: boolean) => {
@@ -525,6 +527,37 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
               </div>
             </div>
 
+            {/* Terms of Use Checkbox — Sign Up only */}
+            {!isLoginView && (
+              <label className="flex items-start gap-3 mt-5 cursor-pointer group select-none">
+                <div className="relative mt-0.5">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-5 h-5 rounded-md border border-slate-600 bg-slate-900/60 peer-checked:bg-[#FBBF24] peer-checked:border-[#FBBF24] transition-all flex items-center justify-center">
+                    {acceptedTerms && (
+                      <svg className="w-3 h-3 text-[#111827]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                </div>
+                <span className="text-xs text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">
+                  I agree to the{' '}
+                  <a href="/dashboard/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#FBBF24] hover:underline font-semibold">
+                    Terms of Service
+                  </a>{' '}
+                  and{' '}
+                  <a href="/dashboard/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#FBBF24] hover:underline font-semibold">
+                    Privacy Policy
+                  </a>
+                </span>
+              </label>
+            )}
+
             {error && (
               <div className="mt-6 p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-[#EA4335] text-sm text-center font-semibold animate-shake flex items-center justify-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
@@ -534,7 +567,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || (!isLoginView && !acceptedTerms)}
               className="mt-8 w-full py-4 rounded-full bg-[#FBBF24] hover:bg-[#f59e0b] text-[#111827] font-bold text-[15px] tracking-wide shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.35)] active:scale-[0.98] transition-all duration-300 disabled:from-slate-800 disabled:to-slate-900 disabled:text-slate-500 disabled:shadow-none disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
             >
               {isLoading && (
