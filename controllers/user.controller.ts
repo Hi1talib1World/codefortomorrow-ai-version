@@ -33,7 +33,7 @@ export const updateUserProfile = async (req: Request, res: Response, next: NextF
             }
 
             await updatedUser.populate('progress');
-            console.log('UPDATED USER:', updatedUser);
+            console.error('UPDATED USER:', JSON.stringify(updatedUser, null, 2));
             return res.json(updatedUser);
 
         } else {
