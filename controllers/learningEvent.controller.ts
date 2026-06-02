@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import crypto from 'crypto';
 import User from '../models/user.model';
-import Progress from '../models/progress.model';
 import SkillState from '../models/skillState.model';
 import LearningEvent from '../models/learningEvent.model';
 
@@ -80,7 +79,7 @@ export const getSkillStates = async (req: Request, res: Response) => {
       filter.skill_id = skillId;
     }
 
-    const skillStates = await SkillState.find(filter).lean();
+    const skillStates = await (SkillState as mongoose.Model<any>).find(filter as any).lean();
 
     return res.json({ student_id: studentId, skillStates });
   } catch (error) {
