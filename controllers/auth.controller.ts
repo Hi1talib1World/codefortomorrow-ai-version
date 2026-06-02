@@ -3,11 +3,28 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import admin from 'firebase-admin';
 import User from '../models/user.model';
 import Progress from '../models/progress.model';
 import { generateToken } from '../services/token.service';
 import ApiError from '../utils/ApiError';
 
+const initializeFirebaseAdmin = () => {
+  if (admin.apps.length > 0) {
+    return admin.app();
+  }
+
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+    return admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+    });
+  }
+
+  return admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+  });
+};
 
 const setAuthCookie = (res: Response, token: string, req?: Request) => {
   const cookieOptions: any = {
@@ -256,16 +273,23 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
     }
 
     try {
-        // Decode the Firebase ID Token
-        const decodedToken: any = jwt.decode(token);
+        const firebaseAdmin = initializeFirebaseAdmin();
+        const decodedToken: any = await firebaseAdmin.auth().verifyIdToken(token);
         if (!decodedToken) {
             throw new ApiError(400, 'Invalid Firebase ID token');
         }
 
+        console.log('Firebase ID token decoded:', {
+          uid: decodedToken.uid,
+          email: decodedToken.email,
+          name: decodedToken.name,
+          picture: decodedToken.picture,
+        });
+
         const email = decodedToken.email;
-        const name = decodedToken.name || email.split('@')[0];
+        const name = decodedToken.name || (email ? email.split('@')[0] : 'User');
         const picture = decodedToken.picture || `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`;
-        const googleId = decodedToken.sub; // Firebase user ID (uid)
+        const googleId = decodedToken.uid;
 
         const isDbConnected = mongoose.connection.readyState === 1;
         if (!isDbConnected) {
@@ -308,6 +332,12 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
              user.googleId = googleId;
              await user.save();
         }
+
+        console.log('Firebase auth found/created user:', {
+          id: user._id,
+          email: user.email,
+          googleId: user.googleId,
+        });
 
         const appToken = generateToken(user._id);
 
