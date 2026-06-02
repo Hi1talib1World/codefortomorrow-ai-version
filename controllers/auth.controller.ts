@@ -39,39 +39,9 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
   try {
     const isDbConnected = mongoose.connection.readyState === 1;
-    
     if (!isDbConnected) {
-      console.warn("⚠️ MongoDB is not connected. Returning mock registered user.");
-      const mockUserId = new mongoose.Types.ObjectId().toString();
-      const mockProgress = {
-        _id: new mongoose.Types.ObjectId().toString(),
-        xp: 0,
-        streak: 0,
-        completedLessons: new Map(),
-        scores: new Map(),
-        badgesEarned: new Map(),
-        skillMastery: new Map(),
-        learningProfile: { strengths: [], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
-        skillGraph: {},
-        lastLessonCompletedDate: null
-      };
-      const userResponse = {
-        _id: mockUserId,
-        name,
-        email,
-        profilePictureUrl: `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`,
-        progress: mockProgress,
-        currentPath: null,
-      };
-      const token = generateToken(mockUserId, {
-        email,
-        name,
-        profilePictureUrl: userResponse.profilePictureUrl,
-        role: 'student',
-      });
-      setAuthCookie(res, token, req);
-      res.status(201).json({ ...userResponse, token });
-      return;
+      console.warn("⚠️ MongoDB is not connected. Registration cannot proceed.");
+      throw new ApiError(503, 'Service unavailable: database connection is required to register users.');
     }
 
     const userExists = await User.findOne({ email });
@@ -127,39 +97,9 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
   try {
     const isDbConnected = mongoose.connection.readyState === 1;
-
     if (!isDbConnected) {
-      console.warn("⚠️ MongoDB is not connected. Simulating login for offline developer testing.");
-      const mockUserId = new mongoose.Types.ObjectId().toString();
-      const mockProgress = {
-        _id: new mongoose.Types.ObjectId().toString(),
-        xp: 150,
-        streak: 3,
-        completedLessons: new Map(),
-        scores: new Map(),
-        badgesEarned: new Map(),
-        skillMastery: new Map(),
-        learningProfile: { strengths: [], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
-        skillGraph: {},
-        lastLessonCompletedDate: new Date()
-      };
-      const userResponse = {
-        _id: mockUserId,
-        name: email.split('@')[0],
-        email,
-        profilePictureUrl: `https://ui-avatars.com/api/?name=${email.charAt(0).toUpperCase()}&background=random&color=fff`,
-        progress: mockProgress,
-        currentPath: "block_coding",
-      };
-      const token = generateToken(mockUserId, {
-        email,
-        name: userResponse.name,
-        profilePictureUrl: userResponse.profilePictureUrl,
-        role: 'student',
-      });
-      setAuthCookie(res, token, req);
-      res.json({ ...userResponse, token });
-      return;
+      console.warn("⚠️ MongoDB is not connected. Login cannot proceed.");
+      throw new ApiError(503, 'Service unavailable: database connection is required to authenticate users.');
     }
 
     const user = await User.findOne({ email }).populate('progress');
@@ -199,32 +139,9 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const getMe = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const isDbConnected = mongoose.connection.readyState === 1;
-
     if (!isDbConnected) {
-      console.warn("⚠️ MongoDB is not connected. Returning mock user details.");
-      const mockUserId = req.user?._id || new mongoose.Types.ObjectId().toString();
-      const mockProgress = {
-        _id: new mongoose.Types.ObjectId().toString(),
-        xp: 150,
-        streak: 3,
-        completedLessons: new Map(),
-        scores: new Map(),
-        badgesEarned: new Map(),
-        skillMastery: new Map(),
-        learningProfile: { strengths: [], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
-        skillGraph: {},
-        lastLessonCompletedDate: new Date()
-      };
-      res.json({
-        _id: mockUserId,
-        name: req.user?.name || "Developer Wizard 🪄",
-        email: req.user?.email || "wizard@codefortomorrow.org",
-        profilePictureUrl: req.user?.profilePictureUrl || "https://ui-avatars.com/api/?name=W&background=random&color=fff",
-        progress: mockProgress,
-        currentPath: "block_coding",
-        role: req.user?.role || "student",
-      });
-      return;
+      console.warn("⚠️ MongoDB is not connected. User profile cannot be retrieved.");
+      throw new ApiError(503, 'Service unavailable: database connection is required to retrieve user profile.');
     }
 
     // @ts-ignore
@@ -270,38 +187,8 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
 
         const isDbConnected = mongoose.connection.readyState === 1;
         if (!isDbConnected) {
-            console.warn("⚠️ MongoDB is not connected. Simulating Google login via developer fallback.");
-            const mockUserId = new mongoose.Types.ObjectId().toString();
-            const mockProgress = {
-                _id: new mongoose.Types.ObjectId().toString(),
-                xp: 120,
-                streak: 4,
-                completedLessons: new Map(),
-                scores: new Map(),
-                badgesEarned: new Map(),
-                skillMastery: new Map(),
-                learningProfile: { strengths: [], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
-                skillGraph: {},
-                lastLessonCompletedDate: null
-            };
-            const userResponse = {
-                _id: mockUserId,
-                name,
-                email,
-                profilePictureUrl: picture || `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`,
-                progress: mockProgress,
-                currentPath: "block_coding",
-                role: "student",
-            };
-            const appToken = generateToken(mockUserId, {
-              email,
-              name,
-              profilePictureUrl: userResponse.profilePictureUrl,
-              role: userResponse.role,
-            });
-            setAuthCookie(res, appToken, req);
-            res.status(200).json({ ...userResponse, token: appToken });
-            return;
+            console.warn("⚠️ MongoDB is not connected. Google login cannot proceed.");
+            throw new ApiError(503, 'Service unavailable: database connection is required for Google authentication.');
         }
 
         // 2. Check if the user already exists by Google ID or Email
@@ -382,38 +269,8 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
 
         const isDbConnected = mongoose.connection.readyState === 1;
         if (!isDbConnected) {
-            console.warn("⚠️ MongoDB is not connected. Simulating Firebase login via developer fallback.");
-            const mockUserId = new mongoose.Types.ObjectId().toString();
-            const mockProgress = {
-                _id: new mongoose.Types.ObjectId().toString(),
-                xp: 120,
-                streak: 4,
-                completedLessons: new Map(),
-                scores: new Map(),
-                badgesEarned: new Map(),
-                skillMastery: new Map(),
-                learningProfile: { strengths: [], weaknesses: [], recommendations: [], lastAIUpdate: new Date() },
-                skillGraph: {},
-                lastLessonCompletedDate: null
-            };
-            const userResponse = {
-                _id: mockUserId,
-                name,
-                email,
-                profilePictureUrl: picture,
-                progress: mockProgress,
-                currentPath: "block_coding",
-                role: "student",
-            };
-            const appToken = generateToken(mockUserId, {
-              email,
-              name,
-              profilePictureUrl: userResponse.profilePictureUrl,
-              role: userResponse.role,
-            });
-            setAuthCookie(res, appToken, req);
-            res.status(200).json({ ...userResponse, token: appToken });
-            return;
+            console.warn("⚠️ MongoDB is not connected. Firebase login cannot proceed.");
+            throw new ApiError(503, 'Service unavailable: database connection is required for Firebase authentication.');
         }
 
         // Find or create user
