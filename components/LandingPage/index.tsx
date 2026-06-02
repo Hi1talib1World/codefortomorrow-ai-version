@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { User } from '../../types';
 import { motion, useInView, useAnimation } from 'motion/react';
-import { Terminal, Cpu, Play, CheckCircle, Menu, X, ArrowRight, Code, BookOpen, Layers, Users, Star, MessageSquare, ChevronUp } from 'lucide-react';
+import { Terminal, Play, CheckCircle, Menu, X, ArrowRight, Code, BookOpen, Layers, Users, Star, MessageSquare, ChevronUp } from 'lucide-react';
 import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 
@@ -165,8 +165,8 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             {/* Built-in Portal Grid */}
             <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto text-left">
               <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="group flex flex-col h-full p-8 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-[#FBBF24]/50 hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(251,191,36,0.15)] transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#111827] border border-white/10 flex items-center justify-center text-[#FBBF24] mb-6">
-                  <Code className="w-6 h-6" />
+                <div className="w-12 h-12 rounded-xl bg-[#111827] border border-white/10 flex items-center justify-center overflow-hidden mb-6">
+                  <img src="/assets/images/logo.png" alt="CFT Academy" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-[#FBBF24] transition-colors">CFT Academy</h3>
                 <p className="text-slate-400 leading-relaxed mb-6 flex-grow">Interactive coding adventures, gamified lessons, and curriculum builders tailored for all skill levels.</p>
