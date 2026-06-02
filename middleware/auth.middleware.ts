@@ -14,9 +14,8 @@ declare global {
 
 /**
  * Middleware to protect routes that require authentication.
- * It verifies the JWT stored in the cookie.
- * When MongoDB is not connected, it falls back to using JWT-decoded data
- * so controllers can serve mock responses for offline development.
+ * It verifies the JWT stored in the cookie or authorization header.
+ * If the database is unavailable, authentication is blocked.
  */
 export const protect = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -24,30 +23,26 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
     const token = req.cookies?.token || (authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : undefined);
 
     if (!token) {
-      return res.status(401).json({ message: "No token" });
+      return res.status(401).json({ error: 'No token' });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
 
-    // Check if MongoDB is actually connected before querying it.
-    // readyState: 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
     const isDbConnected = mongoose.connection.readyState === 1;
-
     if (!isDbConnected) {
-      console.warn("⚠️ MongoDB not connected. Authentication cannot proceed.");
-      return res.status(503).json({ message: 'Service unavailable: database connection is required for authentication.' });
+      console.warn('⚠️ MongoDB not connected. Authentication cannot proceed.');
+      return res.status(503).json({ error: 'Database unavailable' });
     }
 
-    const user = await User.findById((decoded as any).id).select("-password");
-
+    const user = await User.findById((decoded as any).id).select('-password');
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.status(401).json({ error: 'Invalid token' });
     }
 
     req.user = user;
-    next();
+    return next();
   } catch (err) {
-    console.error("AUTH ERROR:", err.message);
-    return res.status(401).json({ message: "Invalid token" });
+    console.error('AUTH ERROR:', (err as Error).message);
+    return res.status(401).json({ error: 'Invalid token' });
   }
 };
