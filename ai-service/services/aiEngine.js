@@ -43,6 +43,30 @@ export class AIEngine {
     return response.text || 'No summary generated.';
   }
 
+  static async generateStudentAnalysis(payload) {
+    const prompt = `You are an AI student analytics coach for rural and emerging-market classrooms. Analyze the given learning event or student submission payload and return a concise diagnostic output.\n\nPayload:\n${JSON.stringify(payload, null, 2)}\n\nReturn valid JSON with keys: weaknesses, strengths, next_hint, confidence.`;
+
+    const response = await client.models.generateContent({
+      model: MODEL,
+      contents: prompt,
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            weaknesses: { type: Type.ARRAY, items: { type: Type.STRING } },
+            strengths: { type: Type.ARRAY, items: { type: Type.STRING } },
+            next_hint: { type: Type.STRING },
+            confidence: { type: Type.NUMBER }
+          },
+          required: ['weaknesses', 'strengths', 'next_hint', 'confidence']
+        }
+      }
+    });
+
+    return JSON.parse(response.text || '{}');
+  }
+
   static async generateSalesProposal(payload) {
     const prompt = `You are an expert B2B EdTech growth marketer. Build a concise sales proposal for a North African school or NGO based on this payload:\n\n${JSON.stringify(payload, null, 2)}\n\nReturn valid JSON with keys: proposal, pricing, keyBenefits, nextSteps.`;
 
