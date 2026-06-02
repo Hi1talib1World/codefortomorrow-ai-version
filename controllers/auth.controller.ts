@@ -268,11 +268,15 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
 export const firebaseLogin = async (req: Request, res: Response, next: NextFunction) => {
     const { token } = req.body;
 
+    console.log('Firebase auth endpoint hit');
+    console.log('Token received:', !!req.body.token);
+
     if (!token) {
        return next(new ApiError(400, 'Firebase ID token is required'));
     }
 
     try {
+        console.log('Verifying Firebase token...');
         const firebaseAdmin = initializeFirebaseAdmin();
         const decodedToken: any = await firebaseAdmin.auth().verifyIdToken(token);
         if (!decodedToken) {
@@ -359,6 +363,7 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
         });
 
     } catch (error) {
+        console.error('Firebase verify failed:', error);
         console.error("Firebase Auth Error:", error);
         next(new ApiError(401, 'Firebase authentication failed'));
     }
