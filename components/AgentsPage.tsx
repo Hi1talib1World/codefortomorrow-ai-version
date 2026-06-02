@@ -14,11 +14,6 @@ const AgentsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('student-analytics');
   const [streamError, setStreamError] = useState<string | null>(null);
 
-  const selectedAgent = useMemo(
-    () => agents.find((agent) => agent.id === activeTab) ?? agents[0],
-    [agents, activeTab]
-  );
-
   useEffect(() => {
     const loadDashboard = async () => {
       try {
