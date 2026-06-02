@@ -176,11 +176,5 @@ function triggerAgentCommand(agentId: string, command: string) {
 
 initAgentMonitor();
 
-export {
-  AgentState,
-  AgentLogEntry,
-  getAgentDashboard,
-  createSseClient,
-  triggerAgentCommand,
-  AgentStatus,
-};
+export type { AgentState, AgentLogEntry, AgentStatus };
+export { getAgentDashboard, createSseClient, triggerAgentCommand };
