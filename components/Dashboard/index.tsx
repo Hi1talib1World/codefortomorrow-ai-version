@@ -2,7 +2,6 @@
 import React from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Header from '../Header';
-import Sidebar from '../Sidebar';
 import BottomNav from '../BottomNav';
 import LearnScreen from '../ProgressMap';
 import ProfileScreen from '../ProfileScreen';
@@ -17,9 +16,10 @@ import MessagingSystem from '../MessagingSystem';
 import DocumentationScreen from '../DocumentationScreen';
 import AIAssistantScreen from '../AIAssistantScreen';
 import MissionsScreen from '../MissionsScreen';
+import HowToLearnScreen from '../HowToLearnScreen';
 import { User, Lesson, ProgrammingPath } from '../../types';
 
-export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'goals' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions';
+export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'goals' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions' | 'how-to-learn';
 
 // Map URL :view param → DashboardView enum
 const VIEW_MAP: Record<string, DashboardView> = {
@@ -34,6 +34,7 @@ const VIEW_MAP: Record<string, DashboardView> = {
   docs: 'docs',
   'ai-assistant': 'ai-assistant',
   missions: 'missions',
+  'how-to-learn': 'how-to-learn',
 };
 
 interface DashboardProps {
@@ -120,6 +121,8 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
         return <AIAssistantScreen currentUser={currentUser} />;
       case 'missions':
         return <MissionsScreen currentUser={currentUser} />;
+      case 'how-to-learn':
+        return <HowToLearnScreen />;
       default:
         return (
           <HomeHubScreen 
@@ -143,10 +146,11 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
     : (activeView === 'home' ? 'bg-transparent' : 'bg-brand-50 dark:bg-slate-900');
 
   return (
-    <div className="flex h-screen bg-brand-50 dark:bg-slate-900 transition-colors duration-300">
-      <Sidebar activeView={activeView} setActiveView={setActiveView} currentUser={currentUser} />
+    <div className="flex flex-col h-screen bg-brand-50 dark:bg-slate-900 transition-colors duration-300">
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header
+          activeView={activeView}
+          setActiveView={setActiveView}
           currentUser={currentUser}
           onLogout={onLogout}
           onSwitchPath={(pId) => navigate(`/dashboard/learn/${pId}`)}
