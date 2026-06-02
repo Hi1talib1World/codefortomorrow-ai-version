@@ -311,10 +311,9 @@ export default function App() {
 
   const updateUser = useCallback(async (updatedData: Partial<User>) => {
     if (!currentUser) return;
-    const updatedUser = { ...currentUser, ...updatedData };
-    setCurrentUser(updatedUser);
     try {
-      await api.updateUserProfile(updatedData);
+      const updatedUser = await api.updateUserProfile(updatedData);
+      setCurrentUser(updatedUser);
     } catch (error) {
       console.error("Failed to update user profile:", error);
     }
