@@ -93,10 +93,11 @@ const api = {
    * Firebase login takes a Firebase ID token and authenticates with the backend.
    */
   loginWithFirebase: async (token: string): Promise<User> => {
+    const payload = { token };
     const response = await customFetch(`${API_BASE_URL}/auth/firebase`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token }),
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();
