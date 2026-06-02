@@ -230,9 +230,13 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
       console.log('Firebase token acquired, syncing session with backend database...');
       const user = await api.loginWithFirebase(token);
       onAuthSuccess(user);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Auth Submit Error:', err);
-      const errMsg = err instanceof Error ? err.message : 'An unknown error occurred.';
+      if (err?.code || err?.message) {
+        console.error('Firebase login error:', err.code);
+        console.error('Firebase login message:', err.message);
+      }
+      const errMsg = err?.code && err?.message ? `${err.code}: ${err.message}` : err instanceof Error ? err.message : 'An unknown error occurred.';
       if (errMsg.includes('auth/operation-not-allowed')) {
         setError('Error: Email/Password provider is disabled in Firebase Console. Please enable it under Authentication > Sign-in method.');
       } else {
