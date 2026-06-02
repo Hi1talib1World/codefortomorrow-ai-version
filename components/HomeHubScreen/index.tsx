@@ -25,9 +25,51 @@ const FloatingStat: React.FC<{ icon: string, value: string | number, label: stri
 );
 
 const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, onUpdateUser }) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const navigate = useNavigate();
     const { showToast } = useToast();
+
+    const howToLearnTexts = {
+        en: {
+            title: "How Do I Learn?",
+            desc: "Follow these 4 simple steps to master coding and earn daily rewards on Code for Tomorrow!",
+            step1_title: "Choose your Path",
+            step1_desc: "Hover over the Learn menu to choose Python, JavaScript, Web Dev, or Math.",
+            step2_title: "Complete Lessons",
+            step2_desc: "Read theory explanation cards, solve interactive coding tasks in the live editor, or pass quizzes.",
+            step3_title: "Solve Daily Missions",
+            step3_desc: "Complete your 3 daily quests: do a lesson, earn 30 XP, and complete 1 quiz to unlock the treasure.",
+            step4_title: "Unlock Rewards",
+            step4_desc: "Open the Moroccan Chest to claim your +50 XP stars bonus and unlock streak freeze items!",
+        },
+        fr: {
+            title: "Comment apprendre ?",
+            desc: "Suivez ces 4 étapes simples pour maîtriser le code et gagner des récompenses quotidiennes !",
+            step1_title: "Choisissez votre parcours",
+            step1_desc: "Survolez le menu Apprendre pour choisir Python, JavaScript, le développement Web ou les Mathématiques.",
+            step2_title: "Complétez les leçons",
+            step2_desc: "Lisez les fiches d'explications théoriques, résolvez des exercices de codage interactifs ou passez des quiz.",
+            step3_title: "Missions quotidiennes",
+            step3_desc: "Terminez vos 3 quêtes quotidiennes : faites une leçon, gagnez 30 XP et complétez 1 quiz pour débloquer le trésor.",
+            step4_title: "Débloquez les récompenses",
+            step4_desc: "Ouvrez le coffre marocain pour réclamer votre bonus de +50 étoiles XP et débloquer des gel-streaks !",
+        },
+        ar: {
+            title: "كيف أتعلم؟",
+            desc: "اتبع هذه الخطوات الأربع البسيطة لاحتراف البرمجة وكسب مكافآت يومية في برنامج Code for Tomorrow!",
+            step1_title: "اختر مسارك",
+            step1_desc: "قم بتمرير الفأرة فوق قائمة (تعلم) لاختيار لغة البرمجة (بايثون، جافا سكريبت، إلخ) أو الرياضيات.",
+            step2_title: "أكمل الدروس",
+            step2_desc: "اقرأ بطاقات الشرح النظري، وحل مهام البرمجة التفاعلية في المحرر المباشر، أو اجتز الاختبارات القصيرة.",
+            step3_title: "حل المهام اليومية",
+            step3_desc: "أكمل مهامك اليومية الثلاث: درس واحد، واكسب 30 نقطة خبرة، واجتز اختبارًا واحدًا لفتح الكنز.",
+            step4_title: "افتح المكافآت",
+            step4_desc: "افتح الصندوق المغربي للحصول على مكافأة +50 نجمة خبرة وفك تجميد الحماس!",
+        }
+    };
+
+    const guideTexts = howToLearnTexts[language as 'en' | 'fr' | 'ar'] || howToLearnTexts.en;
+
 
     // Chest Opening Animation States
     const [chestState, setChestState] = useState<'closed' | 'shaking' | 'opening' | 'opened'>('closed');
@@ -401,19 +443,41 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
         return (
             <div className="min-h-full w-full bg-transparent overflow-x-hidden relative p-4 md:p-8">
                 <div className="max-w-6xl mx-auto space-y-10 relative z-10">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <h1 className="text-3xl font-bold text-slate-800 dark:text-white flex items-center gap-3 tracking-tight">
-                            <span>👋</span> Hello, {userName}!
-                        </h1>
-                        {/* Streak multiplier details */}
-                        {streak >= 3 && (
-                            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500/10 to-orange-500/10 dark:from-red-500/20 dark:to-orange-500/20 border border-orange-500/30 px-3.5 py-1.5 rounded-xl animate-pulse self-start md:self-auto">
-                                <span className="text-sm">🔥</span>
-                                <p className="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest leading-none">
-                                    Streak Multiplier: {streak >= 5 ? '1.5x XP Active!' : '1.2x XP Active!'}
-                                </p>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+                        <div className="flex flex-col gap-2.5 text-left">
+                            <div className="flex flex-wrap items-center gap-4">
+                                <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-16 w-auto" />
+                                <h1 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight flex items-center gap-2">
+                                    <span>👋</span> Hello, {userName}!
+                                </h1>
                             </div>
-                        )}
+                            {streak >= 3 && (
+                                <div className="inline-flex items-center gap-1.5 self-start">
+                                    <span className="text-xs">🔥</span>
+                                    <p className="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest leading-none">
+                                        Streak Multiplier: {streak >= 5 ? '1.5x XP Active!' : '1.2x XP Active!'}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                        
+                        {/* Streak & Points display on Home Page */}
+                        <div className="flex items-center gap-3.5 self-start sm:self-auto">
+                            <div className="flex items-center gap-2 text-red-500 dark:text-red-400 font-black text-sm bg-red-500/10 px-4 py-2 rounded-2xl border border-red-500/20 shadow-sm transition-transform hover:scale-105 duration-200">
+                                <span className="text-lg">🔥</span>
+                                <div className="text-left leading-none">
+                                    <p className="text-sm font-black text-slate-800 dark:text-white">{streak}</p>
+                                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mt-0.5">Day Streak</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2 text-amber-500 dark:text-amber-400 font-black text-sm bg-amber-500/10 px-4 py-2 rounded-2xl border border-amber-500/20 shadow-sm transition-transform hover:scale-105 duration-200">
+                                <span className="text-lg">⭐</span>
+                                <div className="text-left leading-none">
+                                    <p className="text-sm font-black text-slate-800 dark:text-white">{xp}</p>
+                                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mt-0.5">Total XP</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     {renderLastCourseVisited()}
@@ -466,6 +530,48 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                         {/* MentalUP & Daily Quests Right Sidebar Section */}
                         <div className="space-y-8">
+                            {/* Profile Card */}
+                            <div className="space-y-4">
+                                <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">My Profile</h2>
+                                <div 
+                                    onClick={() => onNavigate('profile')}
+                                    className="group bg-white dark:bg-slate-800 rounded-[2rem] p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-sm hover:border-[#111827]/25 dark:hover:border-[#FBBF24]/40 hover:shadow-md transition-all cursor-pointer text-center relative overflow-hidden"
+                                >
+                                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#FBBF24]/10 to-transparent rounded-full blur-xl"></div>
+                                    <div className="flex flex-col items-center gap-3.5 relative z-10">
+                                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-slate-200 dark:border-slate-700 shadow-sm group-hover:scale-105 transition-transform duration-300 shrink-0 aspect-square">
+                                            <img 
+                                                src={currentUser.profilePictureUrl || 'https://ui-avatars.com/api/?name=U&background=random'} 
+                                                alt={userName} 
+                                                className="w-full h-full object-cover"
+                                                referrerPolicy="no-referrer"
+                                            />
+                                        </div>
+                                        <div className="text-center">
+                                            <h3 className="font-extrabold text-base text-slate-800 dark:text-white leading-none">
+                                                {userName}
+                                            </h3>
+                                            <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1.5 flex items-center justify-center gap-1">
+                                                <span>👤</span> {currentUser.role === 'teacher' ? 'Instructor' : 'Student'}
+                                            </p>
+                                        </div>
+                                        <div className="w-full grid grid-cols-2 gap-3 mt-1.5 pt-3.5 border-t border-slate-100 dark:border-slate-700/50 text-left">
+                                            <div className="bg-slate-50 dark:bg-slate-900/50 p-2.5 rounded-xl border border-slate-100/50 dark:border-slate-850">
+                                                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase leading-none">XP</p>
+                                                <p className="text-xs font-black text-slate-700 dark:text-slate-200 mt-1">⭐ {xp}</p>
+                                            </div>
+                                            <div className="bg-slate-50 dark:bg-slate-900/50 p-2.5 rounded-xl border border-slate-100/50 dark:border-slate-850">
+                                                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase leading-none">Streak</p>
+                                                <p className="text-xs font-black text-slate-700 dark:text-slate-200 mt-1">🔥 {streak} days</p>
+                                            </div>
+                                        </div>
+                                        <span className="text-[10px] font-black text-[#111827] dark:text-[#FBBF24] uppercase tracking-wider mt-1 group-hover:underline flex items-center justify-center gap-1">
+                                            View Full Profile <span>→</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="space-y-4">
                                 <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">Daily Missions</h2>
                                 {renderDailyQuestsHUD()}
@@ -612,6 +718,68 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     <p className="text-sm font-bold text-slate-400">Discover & Learn</p>
                                     <span className="text-xs font-bold text-red-400">Coming soon</span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* How to Learn Section */}
+                    <div id="how-to-learn" className="space-y-6 pt-10 border-t border-slate-200 dark:border-slate-800 scroll-mt-24">
+                        <div className="text-left space-y-2">
+                            <h2 className="text-2xl font-black text-[#111827] dark:text-indigo-200 uppercase tracking-tight flex items-center gap-2">
+                                <span>📖</span> {guideTexts.title}
+                            </h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+                                {guideTexts.desc}
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-left">
+                            {/* Step 1 */}
+                            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-sm relative overflow-hidden group hover:border-[#111827]/30 dark:hover:border-[#FBBF24]/40 hover:shadow-md transition-all">
+                                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-indigo-500/10 to-transparent rounded-full blur-md"></div>
+                                <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-2xl font-black text-indigo-600 dark:text-indigo-400 mb-4 group-hover:scale-105 transition-transform">
+                                    1
+                                </div>
+                                <h3 className="font-extrabold text-base text-slate-800 dark:text-white mb-2">{guideTexts.step1_title}</h3>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
+                                    {guideTexts.step1_desc}
+                                </p>
+                            </div>
+
+                            {/* Step 2 */}
+                            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-sm relative overflow-hidden group hover:border-[#111827]/30 dark:hover:border-[#FBBF24]/40 hover:shadow-md transition-all">
+                                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-emerald-500/10 to-transparent rounded-full blur-md"></div>
+                                <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-2xl font-black text-emerald-600 dark:text-emerald-400 mb-4 group-hover:scale-105 transition-transform">
+                                    2
+                                </div>
+                                <h3 className="font-extrabold text-base text-slate-800 dark:text-white mb-2">{guideTexts.step2_title}</h3>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
+                                    {guideTexts.step2_desc}
+                                </p>
+                            </div>
+
+                            {/* Step 3 */}
+                            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-sm relative overflow-hidden group hover:border-[#111827]/30 dark:hover:border-[#FBBF24]/40 hover:shadow-md transition-all">
+                                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-amber-500/10 to-transparent rounded-full blur-md"></div>
+                                <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center text-2xl font-black text-amber-600 dark:text-amber-400 mb-4 group-hover:scale-105 transition-transform">
+                                    3
+                                </div>
+                                <h3 className="font-extrabold text-base text-slate-800 dark:text-white mb-2">{guideTexts.step3_title}</h3>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
+                                    {guideTexts.step3_desc}
+                                </p>
+                            </div>
+
+                            {/* Step 4 */}
+                            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-sm relative overflow-hidden group hover:border-[#111827]/30 dark:hover:border-[#FBBF24]/40 hover:shadow-md transition-all">
+                                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-[#FBBF24]/10 to-transparent rounded-full blur-md"></div>
+                                <div className="w-12 h-12 rounded-2xl bg-[#FBBF24]/10 dark:bg-[#FBBF24]/25 flex items-center justify-center text-2xl font-black text-[#111827] dark:text-[#FBBF24] mb-4 group-hover:scale-105 transition-transform">
+                                    4
+                                </div>
+                                <h3 className="font-extrabold text-base text-slate-800 dark:text-white mb-2">{guideTexts.step4_title}</h3>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
+                                    {guideTexts.step4_desc}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -792,6 +960,68 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             <div className="bg-[#FBBC05] text-white w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-2xl shadow-sm group-hover:scale-105 transition-transform">💡</div>
                             <p className="text-slate-700 dark:text-slate-300 font-medium text-sm leading-relaxed">
                                 "{t('did_you_know')} {t('code_fact')}"
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* How to Learn Section */}
+                <div id="how-to-learn" className="space-y-6 pt-10 border-t border-slate-200 dark:border-slate-800 scroll-mt-24">
+                    <div className="text-left space-y-2">
+                        <h2 className="text-2xl font-black text-[#111827] dark:text-indigo-200 uppercase tracking-tight flex items-center gap-2">
+                            <span>📖</span> {guideTexts.title}
+                        </h2>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+                            {guideTexts.desc}
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-left">
+                        {/* Step 1 */}
+                        <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-sm relative overflow-hidden group hover:border-[#111827]/30 dark:hover:border-[#FBBF24]/40 hover:shadow-md transition-all">
+                            <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-indigo-500/10 to-transparent rounded-full blur-md"></div>
+                            <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-2xl font-black text-indigo-600 dark:text-indigo-400 mb-4 group-hover:scale-105 transition-transform">
+                                1
+                            </div>
+                            <h3 className="font-extrabold text-base text-slate-800 dark:text-white mb-2">{guideTexts.step1_title}</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
+                                {guideTexts.step1_desc}
+                            </p>
+                        </div>
+
+                        {/* Step 2 */}
+                        <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-sm relative overflow-hidden group hover:border-[#111827]/30 dark:hover:border-[#FBBF24]/40 hover:shadow-md transition-all">
+                            <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-emerald-500/10 to-transparent rounded-full blur-md"></div>
+                            <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-2xl font-black text-emerald-600 dark:text-emerald-400 mb-4 group-hover:scale-105 transition-transform">
+                                2
+                            </div>
+                            <h3 className="font-extrabold text-base text-slate-800 dark:text-white mb-2">{guideTexts.step2_title}</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
+                                {guideTexts.step2_desc}
+                            </p>
+                        </div>
+
+                        {/* Step 3 */}
+                        <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-sm relative overflow-hidden group hover:border-[#111827]/30 dark:hover:border-[#FBBF24]/40 hover:shadow-md transition-all">
+                            <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-amber-500/10 to-transparent rounded-full blur-md"></div>
+                            <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center text-2xl font-black text-amber-600 dark:text-amber-400 mb-4 group-hover:scale-105 transition-transform">
+                                3
+                            </div>
+                            <h3 className="font-extrabold text-base text-slate-800 dark:text-white mb-2">{guideTexts.step3_title}</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
+                                {guideTexts.step3_desc}
+                            </p>
+                        </div>
+
+                        {/* Step 4 */}
+                        <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-sm relative overflow-hidden group hover:border-[#111827]/30 dark:hover:border-[#FBBF24]/40 hover:shadow-md transition-all">
+                            <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-[#FBBF24]/10 to-transparent rounded-full blur-md"></div>
+                            <div className="w-12 h-12 rounded-2xl bg-[#FBBF24]/10 dark:bg-[#FBBF24]/25 flex items-center justify-center text-2xl font-black text-[#111827] dark:text-[#FBBF24] mb-4 group-hover:scale-105 transition-transform">
+                                4
+                            </div>
+                            <h3 className="font-extrabold text-base text-slate-800 dark:text-white mb-2">{guideTexts.step4_title}</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
+                                {guideTexts.step4_desc}
                             </p>
                         </div>
                     </div>
