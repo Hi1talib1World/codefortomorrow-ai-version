@@ -367,6 +367,11 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
 
     } catch (error: any) {
         console.error('Firebase verify failed: raw error:', error);
+        try {
+          console.error('Firebase verify failed: error JSON', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+        } catch (jsonErr) {
+          console.error('Firebase verify failed: error JSON stringify failed', jsonErr);
+        }
         console.error('Firebase Auth Error code:', error?.code, 'message:', error?.message, 'errorInfo:', error?.errorInfo);
         const firebaseErrorMessage =
           error?.message ||
