@@ -211,9 +211,13 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
       if (isLoginView) {
         console.log('Logging in via Firebase Auth...');
         token = await firebaseService.loginWithEmail(email, password);
+        console.log('Firebase ID token:', token);
+        console.log('Firebase current user email:', auth.currentUser?.email);
       } else {
         console.log('Registering via Firebase Auth...');
         token = await firebaseService.registerWithEmail(email, password);
+        console.log('Firebase ID token:', token);
+        console.log('Firebase current user email:', auth.currentUser?.email);
         if (auth.currentUser) {
           try {
             const { updateProfile } = await import('firebase/auth');
@@ -250,6 +254,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
 
       console.log('Initiating Firebase Google Sign-In Popup...');
       const token = await firebaseService.loginWithGooglePopup();
+      console.log('Firebase ID token:', token);
+      console.log('Firebase current user email:', auth.currentUser?.email);
       console.log('Google login token retrieved, verifying with backend...');
       const user = await api.loginWithFirebase(token);
       onAuthSuccess(user);
