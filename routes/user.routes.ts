@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { updateUserProfile, updateUserProgress, getTeachers, toggleSaveItem } from '../controllers/user.controller';
+import { updateUserProfile, updateUserProgress, getTeachers, toggleSaveItem, searchUsers } from '../controllers/user.controller';
 import { protect } from '../middleware/auth.middleware';
 
 const router = express.Router();
@@ -8,6 +8,13 @@ const router = express.Router();
 // Apply the 'protect' middleware to all routes in this file.
 // This ensures that only authenticated users can access these endpoints.
 router.use(protect);
+
+/**
+ * @route   GET /api/users/search
+ * @desc    Search registered users by name
+ * @access  Private
+ */
+router.get('/search', searchUsers);
 
 /**
  * @route   GET /api/users/teachers
