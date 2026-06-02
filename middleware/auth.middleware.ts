@@ -27,6 +27,7 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    console.log('Protected JWT payload:', decoded);
 
     const isDbConnected = mongoose.connection.readyState === 1;
     if (!isDbConnected) {
