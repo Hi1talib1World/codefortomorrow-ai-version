@@ -175,14 +175,8 @@ export const searchUsers = async (req: Request, res: Response, next: NextFunctio
 
         const isDbConnected = mongoose.connection.readyState === 1;
         if (!isDbConnected) {
-            const mockUsers = [
-                { _id: 'mock-u1', name: 'Hicham Outaleb', role: 'student', profilePictureUrl: 'https://ui-avatars.com/api/?name=Hicham+Outaleb' },
-                { _id: 'mock-u2', name: 'John Doe', role: 'student', profilePictureUrl: 'https://ui-avatars.com/api/?name=John+Doe' },
-                { _id: 'mock-u3', name: 'Jane Smith', role: 'teacher', profilePictureUrl: 'https://ui-avatars.com/api/?name=Jane+Smith' },
-                { _id: 'mock-u4', name: 'Alice Cooper', role: 'student', profilePictureUrl: 'https://ui-avatars.com/api/?name=Alice+Cooper' },
-            ];
-            const filtered = mockUsers.filter(u => u.name.toLowerCase().includes(query.toLowerCase()));
-            return res.json(filtered);
+            console.warn("⚠️ MongoDB is not connected. User search cannot proceed.");
+            throw new ApiError(503, 'Service unavailable: database connection is required to search users.');
         }
 
         // @ts-ignore
