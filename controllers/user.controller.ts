@@ -26,14 +26,13 @@ export const updateUserProfile = async (req: Request, res: Response, next: NextF
                     currentPath: req.body.currentPath,
                 },
                 { new: true }
-            );
+            ).select('-password');
 
             if (!updatedUser) {
                 throw new ApiError(404, 'User not found');
             }
 
             await updatedUser.populate('progress');
-            console.error('UPDATED USER:', JSON.stringify(updatedUser, null, 2));
             return res.json(updatedUser);
 
         } else {
