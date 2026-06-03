@@ -125,7 +125,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
       case 'goals':
         return <GoalsScreen />;
       case 'leaderboard':
-        return <LeaderboardScreen />;
+        return <LeaderboardScreen currentUser={currentUser} />;
       case 'store':
         return <StoreScreen currentUser={currentUser} onUpdateUser={onUpdateUser} />;
       case 'settings':
