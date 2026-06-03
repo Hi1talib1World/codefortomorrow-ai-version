@@ -420,6 +420,30 @@ const api = {
     return data;
   },
 
+  pauseAgent: async (agentId: string): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/agents/${agentId}/pause`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to pause agent.');
+    }
+    return data;
+  },
+
+  resumeAgent: async (agentId: string): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/agents/${agentId}/resume`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to resume agent.');
+    }
+    return data;
+  },
+
   getStudentProgress: async (userId: string): Promise<any> => {
     const response = await customFetch(`${API_BASE_URL}/progress/${userId}`, {
       headers: getAuthHeaders(),
