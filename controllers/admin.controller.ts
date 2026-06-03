@@ -3,6 +3,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { z } from 'zod';
 import Content from '../models/Content';
 import ApiError from '../utils/ApiError';
+import User from '../models/user.model';
 
 // ─── Cloudinary Config ────────────────────────────────────────────────────────
 cloudinary.config({
@@ -195,24 +196,116 @@ export const uploadImage = async (req: Request, res: Response, next: NextFunctio
 
 /**
  * GET /api/admin/analytics
- * Proxy PostHog metrics
+ * Comprehensive analytics dashboard data: PostHog metrics + MongoDB aggregations
  */
 export const getAnalytics = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const apiKey = process.env.POSTHOG_PERSONAL_API_KEY;
     const projectId = process.env.POSTHOG_PROJECT_ID;
+    const now = new Date();
+
+    // ─── MongoDB Aggregations (always available) ────────────────────────────────
+
+    // 1. New signups in the last 7 days
+    const sevenDaysAgo = new Date(now);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const newSignups = await User.countDocuments({ createdAt: { $gte: sevenDaysAgo } });
+
+    // 2. Previous-week signups for comparison (days -14 to -7)
+    const fourteenDaysAgo = new Date(now);
+    fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+    const prevWeekSignups = await User.countDocuments({
+      createdAt: { $gte: fourteenDaysAgo, $lt: sevenDaysAgo },
+    });
+
+    // 3. Daily signup breakdown (last 7 days) for sparkline
+    const dailySignups = await User.aggregate([
+      { $match: { createdAt: { $gte: sevenDaysAgo } } },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    // Build a filled 7-day array (some days may have 0 signups)
+    const signupSparkline: number[] = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().split('T')[0];
+      const found = dailySignups.find((r: any) => r._id === key);
+      signupSparkline.push(found ? found.count : 0);
+    }
+
+    // 4. All current accounts
+    const currentAccounts = await User.find()
+      .select('name email role profilePictureUrl createdAt emailVerified updatedAt')
+      .sort({ createdAt: -1 });
+
+    // 5. Role distribution
+    const roleDistribution = await User.aggregate([
+      { $group: { _id: '$role', count: { $sum: 1 } } },
+    ]);
+
+    const roleCounts = { admin: 0, teacher: 0, student: 0 };
+    roleDistribution.forEach((group) => {
+      if (group._id in roleCounts) {
+        roleCounts[group._id as keyof typeof roleCounts] = group.count;
+      }
+    });
+
+    // 6. Verification stats
+    const totalUsers = await User.countDocuments();
+    const verifiedCount = await User.countDocuments({ emailVerified: true });
+    const pendingCount = totalUsers - verifiedCount;
+    const verificationStats = {
+      total: totalUsers,
+      verified: verifiedCount,
+      pending: pendingCount,
+      verifiedPct: totalUsers > 0 ? Math.round((verifiedCount / totalUsers) * 100) : 0,
+    };
+
+    // 7. User growth timeline (last 6 months, grouped by month)
+    const sixMonthsAgo = new Date(now);
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    const growthTimeline = await User.aggregate([
+      { $match: { createdAt: { $gte: sixMonthsAgo } } },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m', date: '$createdAt' } },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    // 8. Recent active users (updated in the last 24 hours — rough proxy)
+    const oneDayAgo = new Date(now);
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    const recentlyActive = await User.countDocuments({ updatedAt: { $gte: oneDayAgo } });
+
+    // ─── PostHog Metrics (only when configured) ─────────────────────────────────
 
     if (!apiKey || !projectId) {
-      // Return mock data if not configured
       return res.json({
         configured: false,
         message: 'Set POSTHOG_PERSONAL_API_KEY and POSTHOG_PROJECT_ID to enable analytics.',
         mock: {
           pageviews: 0,
           uniqueVisitors: 0,
-          newSignups: 0,
+          newSignups,
           topPages: [],
         },
+        currentAccounts,
+        roleCounts,
+        verificationStats,
+        signupSparkline,
+        prevWeekSignups,
+        growthTimeline,
+        recentlyActive,
       });
     }
 
@@ -221,18 +314,125 @@ export const getAnalytics = async (req: Request, res: Response, next: NextFuncti
       'Content-Type': 'application/json',
     };
 
-    // Fetch last 7 days of pageview insights
-    const insightRes = await fetch(
-      `https://app.posthog.com/api/projects/${projectId}/insights/trend/?events=[{"id":"$pageview"}]&date_from=-7d`,
-      { headers }
-    );
+    // Run PostHog queries in parallel for speed
+    const [insightRes, prevPeriodRes, topPagesRes] = await Promise.all([
+      // Current 7-day trends
+      fetch(`https://app.posthog.com/api/projects/${projectId}/query/`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          query: {
+            kind: 'TrendsQuery',
+            dateRange: { date_from: '-7d' },
+            series: [
+              { event: '$pageview', kind: 'EventsNode' },
+              { event: '$pageview', kind: 'EventsNode', math: 'dau' },
+              { event: '$pageview', kind: 'EventsNode', math: 'avg', math_property: '$session_duration' },
+            ],
+            interval: 'day',
+          },
+        }),
+      }),
+
+      // Previous 7-day trends (for % change comparison)
+      fetch(`https://app.posthog.com/api/projects/${projectId}/query/`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          query: {
+            kind: 'TrendsQuery',
+            dateRange: { date_from: '-14d', date_to: '-7d' },
+            series: [
+              { event: '$pageview', kind: 'EventsNode' },
+              { event: '$pageview', kind: 'EventsNode', math: 'dau' },
+              { event: '$pageview', kind: 'EventsNode', math: 'avg', math_property: '$session_duration' },
+            ],
+            interval: 'day',
+          },
+        }),
+      }),
+
+      // Top pages breakdown
+      fetch(`https://app.posthog.com/api/projects/${projectId}/query/`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          query: {
+            kind: 'TrendsQuery',
+            dateRange: { date_from: '-7d' },
+            series: [
+              { event: '$pageview', kind: 'EventsNode' },
+            ],
+            breakdownFilter: {
+              breakdown: '$current_url',
+              breakdown_type: 'event',
+            },
+            interval: 'day',
+          },
+        }),
+      }),
+    ]);
 
     if (!insightRes.ok) {
+      console.error('PostHog API Error status:', insightRes.status, await insightRes.text().catch(() => ''));
       return next(new ApiError(502, 'Failed to fetch PostHog analytics'));
     }
 
     const insightData = await insightRes.json();
-    res.json({ configured: true, data: insightData });
+
+    // Parse previous-period data (non-blocking — fallback to empty on error)
+    let prevPeriodData: any = { results: [] };
+    try {
+      if (prevPeriodRes.ok) {
+        prevPeriodData = await prevPeriodRes.json();
+      }
+    } catch { /* ignore */ }
+
+    // Parse top pages (non-blocking)
+    let topPagesData: any[] = [];
+    try {
+      if (topPagesRes.ok) {
+        const tpJson = await topPagesRes.json();
+        const raw = tpJson.results || [];
+        // Sort by total count descending, take top 10
+        topPagesData = raw
+          .map((r: any) => ({
+            path: (r.breakdown_value || r.label || 'Unknown')
+              .replace(/https?:\/\/[^/]+/, '') // strip domain
+              .replace(/\?.*$/, ''),            // strip query params
+            count: r.count ?? r.aggregated_value ?? 0,
+          }))
+          .sort((a: any, b: any) => b.count - a.count)
+          .slice(0, 10);
+      }
+    } catch { /* ignore */ }
+
+    // Build previous-period comparison counts
+    const prevResults = prevPeriodData.results || [];
+    const prevPageviews = prevResults[0]?.count ?? 0;
+    const prevVisitors = prevResults[1]?.count ?? 0;
+    const prevAvgSession = prevResults[2]?.count ?? 0;
+
+    res.json({
+      configured: true,
+      data: {
+        result: insightData.results || [],
+        newSignups,
+        currentAccounts,
+        roleCounts,
+        verificationStats,
+        signupSparkline,
+        prevWeekSignups,
+        growthTimeline,
+        recentlyActive,
+        topPages: topPagesData,
+        previousPeriod: {
+          pageviews: prevPageviews,
+          visitors: prevVisitors,
+          avgSession: prevAvgSession,
+        },
+      },
+    });
   } catch (error) {
     next(error);
   }
