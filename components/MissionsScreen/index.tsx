@@ -147,12 +147,9 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
   const [selectedMission, setSelectedMission] = useState<Mission | null>(null);
   const [pollingActive, setPollingActive] = useState(true);
   
-  // Custom states for the new interactive UI
-  const [viewMode, setViewMode] = useState<'map' | 'grid'>('map');
+  // Filter states
   const [difficultyFilter, setDifficultyFilter] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'locked' | 'in-progress' | 'completed'>('all');
-  const [hoveredMissionId, setHoveredMissionId] = useState<string | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   // Poll missions endpoint every 5 seconds
   useEffect(() => {
@@ -617,23 +614,8 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
               </div>
             </div>
 
-            {/* View switcher and Polling toggle */}
+            {/* Polling toggle */}
             <div className="col-span-2 sm:col-span-1 flex gap-2">
-              <div className="p-1 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center">
-                <button
-                  onClick={() => setViewMode('map')}
-                  className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'map' ? 'bg-[#0a66c2] text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
-                >
-                  <Map className="w-3.5 h-3.5" /> Map
-                </button>
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'grid' ? 'bg-[#0a66c2] text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
-                >
-                  <Grid className="w-3.5 h-3.5" /> Grid
-                </button>
-              </div>
-
               <button 
                 onClick={() => setPollingActive(!pollingActive)}
                 className="px-4 py-3 bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center gap-2 cursor-pointer transition-all active:scale-95 group flex-grow sm:flex-grow-0"
