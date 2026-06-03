@@ -394,6 +394,8 @@ function pauseAgent(agentId: string) {
     throw new Error(`Unknown agent ${agentId}`);
   }
   state.isPaused = true;
+  state.status = 'Idle'; // Force state to Idle to immediately halt active timeout progress logs
+  state.activeTask = null; // Clear any active task reference
   state.lastUpdated = new Date().toISOString();
   agentStateMap.set(agentId, state);
   broadcastSse({ eventType: 'status', state: Array.from(agentStateMap.values()) });
