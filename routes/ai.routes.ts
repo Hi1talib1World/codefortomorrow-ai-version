@@ -1,6 +1,14 @@
 
 import { Router } from 'express';
-import { getLearningProfile, getClassAnalytics, logTokenUsage, generateQuiz } from '../controllers/ai.controller';
+import { 
+  getLearningProfile, 
+  getClassAnalytics, 
+  logTokenUsage, 
+  generateQuiz,
+  chatWithAssistant,
+  generateHint,
+  getAIStatus
+} from '../controllers/ai.controller';
 import { protect } from '../middleware/auth.middleware';
 import rateLimit from 'express-rate-limit';
 
@@ -16,9 +24,12 @@ const aiLimiter = rateLimit({
 router.use(protect);
 router.use(aiLimiter);
 
+router.get('/status', getAIStatus);
 router.get('/profile', getLearningProfile);
 router.get('/analytics', getClassAnalytics);
 router.post('/generate-quiz', generateQuiz);
 router.post('/log-usage', logTokenUsage);
+router.post('/chat', chatWithAssistant);
+router.post('/generate-hint', generateHint);
 
 export default router;
