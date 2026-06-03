@@ -46,9 +46,10 @@ const AgentsPage: React.FC = () => {
 
     loadDashboard();
   }, []);
-
   useEffect(() => {
-    const source = new EventSource('/api/agents/stream');
+    const token = localStorage.getItem('authToken');
+    const streamUrl = token ? `/api/agents/stream?token=${encodeURIComponent(token)}` : '/api/agents/stream';
+    const source = new EventSource(streamUrl);
 
     source.addEventListener('agentEvent', (event) => {
       try {
