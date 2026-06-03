@@ -97,13 +97,15 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
           </div>
 
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-4">
             <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-white hover:text-[#FBBF24] transition-colors text-sm font-bold tracking-wide">
               Academy
             </a>
+            <div className="w-[1px] h-4 bg-slate-800 self-center" />
             <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-white hover:text-[#FBBF24] transition-colors text-sm font-bold tracking-wide">
               Open Source
             </a>
+            <div className="w-[1px] h-4 bg-slate-800 self-center" />
             <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-white hover:text-[#FBBF24] transition-colors text-sm font-bold tracking-wide">
               Docs & Blog
             </a>
