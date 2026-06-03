@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import api from '../../services/api';
 import { User } from '../../types';
@@ -13,7 +13,16 @@ import {
   Award, 
   BookOpen,
   Sparkles,
-  RefreshCw
+  RefreshCw,
+  Map,
+  Grid,
+  Trophy,
+  Filter,
+  ArrowRight,
+  ShieldAlert,
+  Flame,
+  User as UserIcon,
+  Compass
 } from 'lucide-react';
 
 interface MissionTelemetry {
@@ -39,6 +48,97 @@ interface MissionsScreenProps {
   currentUser: User;
 }
 
+// Maps path IDs to their educational Tier (1-4)
+const TIER_MAPPING: { [key: string]: { tier: number; name: string; color: string } } = {
+  block_coding: { tier: 1, name: 'Tier 1: Foundations', color: '#10b981' }, // Emerald
+  math: { tier: 1, name: 'Tier 1: Foundations', color: '#10b981' },
+  python: { tier: 2, name: 'Tier 2: Core Coding', color: '#06b6d4' }, // Cyan
+  javascript: { tier: 2, name: 'Tier 2: Core Coding', color: '#06b6d4' },
+  sql: { tier: 2, name: 'Tier 2: Core Coding', color: '#06b6d4' },
+  web_dev: { tier: 3, name: 'Tier 3: Web & Engine', color: '#a855f7' }, // Purple
+  lua: { tier: 3, name: 'Tier 3: Web & Engine', color: '#a855f7' },
+  typescript: { tier: 3, name: 'Tier 3: Web & Engine', color: '#a855f7' },
+  'c++': { tier: 4, name: 'Tier 4: Advanced Systems', color: '#f43f5e' }, // Rose
+  c_sharp: { tier: 4, name: 'Tier 4: Advanced Systems', color: '#f43f5e' },
+  java: { tier: 4, name: 'Tier 4: Advanced Systems', color: '#f43f5e' },
+  go: { tier: 4, name: 'Tier 4: Advanced Systems', color: '#f43f5e' },
+  rust: { tier: 4, name: 'Tier 4: Advanced Systems', color: '#f43f5e' },
+};
+
+// Generates high contrast color themes dynamically for each card
+const getCardStyles = (missionId: string, status: string) => {
+  const isLocked = status === 'locked';
+  const isCompleted = status === 'completed';
+  const tier = TIER_MAPPING[missionId]?.tier || 2;
+
+  if (isLocked) {
+    return {
+      cardBg: 'bg-[#0f1322] border-slate-900/60 shadow-[inset_0_1px_3px_rgba(255,255,255,0.01)]',
+      textTitle: 'text-slate-400 group-hover:text-slate-300',
+      textDesc: 'text-slate-500/90',
+      progressBarBg: 'bg-slate-950/80',
+      progressFill: 'bg-slate-800',
+      glowShadow: '',
+      iconContainer: 'bg-slate-950/50 border-slate-900/80 text-slate-600',
+    };
+  }
+
+  // Emerald theme for Tier 1
+  if (tier === 1) {
+    return {
+      cardBg: isCompleted 
+        ? 'bg-gradient-to-br from-[#064e3b]/30 via-[#0b1b17]/85 to-[#0b0f19]/95 border-emerald-500/30' 
+        : 'bg-gradient-to-br from-[#064e3b]/15 via-[#0b1b17]/40 to-[#0f172a]/80 border-emerald-500/20 hover:border-emerald-400/50',
+      textTitle: 'text-white group-hover:text-emerald-300 font-extrabold',
+      textDesc: 'text-slate-300 group-hover:text-emerald-100/80',
+      progressBarBg: 'bg-slate-950 border-slate-900/50',
+      progressFill: 'bg-gradient-to-r from-emerald-500 to-teal-400 shadow-[0_0_12px_rgba(16,185,129,0.4)]',
+      glowShadow: 'hover:shadow-[0_0_25px_rgba(16,185,129,0.12)]',
+      iconContainer: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
+    };
+  }
+  // Cyan theme for Tier 2
+  if (tier === 2) {
+    return {
+      cardBg: isCompleted 
+        ? 'bg-gradient-to-br from-[#0891b2]/20 via-[#0c1f2e]/85 to-[#0b0f19]/95 border-cyan-500/30' 
+        : 'bg-gradient-to-br from-[#0891b2]/10 via-[#0c1f2e]/40 to-[#0f172a]/80 border-cyan-500/20 hover:border-cyan-400/50',
+      textTitle: 'text-white group-hover:text-cyan-300 font-extrabold',
+      textDesc: 'text-slate-300 group-hover:text-cyan-100/80',
+      progressBarBg: 'bg-slate-950 border-slate-900/50',
+      progressFill: 'bg-gradient-to-r from-cyan-500 to-sky-400 shadow-[0_0_12px_rgba(6,182,212,0.4)]',
+      glowShadow: 'hover:shadow-[0_0_25px_rgba(6,182,212,0.12)]',
+      iconContainer: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400',
+    };
+  }
+  // Purple theme for Tier 3
+  if (tier === 3) {
+    return {
+      cardBg: isCompleted 
+        ? 'bg-gradient-to-br from-[#581c87]/25 via-[#18112b]/85 to-[#0b0f19]/95 border-purple-500/30' 
+        : 'bg-gradient-to-br from-[#581c87]/10 via-[#18112b]/40 to-[#0f172a]/80 border-purple-500/20 hover:border-purple-400/50',
+      textTitle: 'text-white group-hover:text-purple-300 font-extrabold',
+      textDesc: 'text-slate-300 group-hover:text-purple-100/80',
+      progressBarBg: 'bg-slate-950 border-slate-900/50',
+      progressFill: 'bg-gradient-to-r from-purple-500 to-fuchsia-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]',
+      glowShadow: 'hover:shadow-[0_0_25px_rgba(168,85,247,0.12)]',
+      iconContainer: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
+    };
+  }
+  // Rose theme for Tier 4
+  return {
+    cardBg: isCompleted 
+      ? 'bg-gradient-to-br from-[#881337]/25 via-[#230f16]/85 to-[#0b0f19]/95 border-rose-500/30' 
+      : 'bg-gradient-to-br from-[#881337]/10 via-[#230f16]/40 to-[#0f172a]/80 border-rose-500/20 hover:border-rose-400/50',
+    textTitle: 'text-white group-hover:text-rose-300 font-extrabold',
+    textDesc: 'text-slate-300 group-hover:text-rose-100/80',
+    progressBarBg: 'bg-slate-950 border-slate-900/50',
+    progressFill: 'bg-gradient-to-r from-rose-500 to-pink-400 shadow-[0_0_12px_rgba(244,63,94,0.4)]',
+    glowShadow: 'hover:shadow-[0_0_25px_rgba(244,63,94,0.12)]',
+    iconContainer: 'bg-rose-500/10 border-rose-500/20 text-rose-400',
+  };
+};
+
 const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
   const { t } = useLanguage();
   const [missions, setMissions] = useState<Mission[]>([]);
@@ -46,6 +146,13 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
   const [error, setError] = useState<string | null>(null);
   const [selectedMission, setSelectedMission] = useState<Mission | null>(null);
   const [pollingActive, setPollingActive] = useState(true);
+  
+  // Custom states for the new interactive UI
+  const [viewMode, setViewMode] = useState<'map' | 'grid'>('map');
+  const [difficultyFilter, setDifficultyFilter] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'locked' | 'in-progress' | 'completed'>('all');
+  const [hoveredMissionId, setHoveredMissionId] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Poll missions endpoint every 5 seconds
   useEffect(() => {
@@ -178,133 +285,143 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
   }, [currentUser._id, pollingActive, loading]);
 
   // SVG Concept illustrations rendering
-  const renderConceptArt = (skillId: string, status: string) => {
+  const renderConceptArt = (skillId: string, status: string, customSizeClass = "w-16 h-16") => {
     const isLocked = status === 'locked';
-    const strokeColor = isLocked ? '#64748b' : '#38bdf8'; // slate vs cyan
+    const strokeColor = isLocked ? 'rgba(148, 163, 184, 0.4)' : '#38bdf8'; // slate vs cyan
 
     switch (skillId) {
       case 'block_coding':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M12 28 C12 24, 16 20, 20 20 H28 C30 20, 32 16, 32 14 C32 12, 34 10, 36 10 C38 10, 40 12, 40 14 C40 16, 42 20, 44 20 H52 C56 20, 60 24, 60 28 V44 C60 48, 56 52, 52 52 H44 C42 52, 40 56, 40 58 C40 60, 38 62, 36 62 C34 62, 32 60, 32 58 C32 56, 30 52, 28 52 H20 C16 52, 12 48, 12 44 Z" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            <circle cx="36" cy="31" r="3" fill="#10b981" />
-            <path d="M24 38 H48" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <defs>
+              <linearGradient id="blockGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0.2" />
+              </linearGradient>
+            </defs>
+            <path d="M12 28 C12 24, 16 20, 20 20 H28 C30 20, 32 16, 32 14 C32 12, 34 10, 36 10 C38 10, 40 12, 40 14 C40 16, 42 20, 44 20 H52 C56 20, 60 24, 60 28 V44 C60 48, 56 52, 52 52 H44 C42 52, 40 56, 40 58 C40 60, 38 62, 36 62 C34 62, 32 60, 32 58 C32 56, 30 52, 28 52 H20 C16 52, 12 48, 12 44 Z" fill={isLocked ? 'none' : 'url(#blockGrad)'} stroke={isLocked ? strokeColor : '#10b981'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="36" cy="31" r="3.5" fill={isLocked ? 'none' : '#34d399'} stroke={isLocked ? strokeColor : 'none'} />
+            <path d="M24 38 H48" stroke={isLocked ? strokeColor : '#34d399'} strokeWidth="2.5" strokeLinecap="round" />
           </svg>
         );
       case 'python':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M30 14 C30 10, 36 10, 40 10 H48 C52 10, 54 12, 54 16 V24 C54 28, 50 30, 46 30 H32 C26 30, 24 32, 24 38 V42 C24 46, 28 50, 32 50 H38" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M34 50 C34 54, 28 54, 24 54 H16 C12 54, 10 52, 10 48 V40 C10 36, 14 34, 18 34 H32 C38 34, 40 32, 40 26 V22 C40 18, 36 14, 32 14 H26" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="48" cy="16" r="2.5" fill="#f59e0b" />
-            <circle cx="16" cy="48" r="2.5" fill="#3b82f6" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <path d="M30 14 C30 10, 36 10, 40 10 H48 C52 10, 54 12, 54 16 V24 C54 28, 50 30, 46 30 H32 C26 30, 24 32, 24 38 V42 C24 46, 28 50, 32 50 H38" stroke={isLocked ? strokeColor : '#3b82f6'} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M34 50 C34 54, 28 54, 24 54 H16 C12 54, 10 52, 10 48 V40 C10 36, 14 34, 18 34 H32 C38 34, 40 32, 40 26 V22 C40 18, 36 14, 32 14 H26" stroke={isLocked ? strokeColor : '#ffd43b'} strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="48" cy="16" r="2.5" fill={isLocked ? 'none' : '#3b82f6'} stroke={isLocked ? strokeColor : 'none'} />
+            <circle cx="16" cy="48" r="2.5" fill={isLocked ? 'none' : '#ffd43b'} stroke={isLocked ? strokeColor : 'none'} />
           </svg>
         );
       case 'javascript':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M12 12 H52 V44 L32 54 L12 44 Z" stroke={strokeColor} strokeWidth="2.5" strokeLinejoin="round" />
-            <path d="M22 24 C22 20, 26 20, 26 20 M26 28 H22 M22 36 C22 40, 26 40, 26 40" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M42 24 C42 20, 38 20, 38 20 M38 28 H42 M42 36 C42 40, 38 40, 38 40" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <defs>
+              <linearGradient id="jsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#fef08a" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#facc15" stopOpacity="0.05" />
+              </linearGradient>
+            </defs>
+            <path d="M12 12 H52 V44 L32 54 L12 44 Z" fill={isLocked ? 'none' : 'url(#jsGrad)'} stroke={isLocked ? strokeColor : '#eab308'} strokeWidth="2.5" strokeLinejoin="round" />
+            <path d="M22 24 C22 20, 26 20, 26 20 M26 28 H22 M22 36 C22 40, 26 40, 26 40" stroke={isLocked ? strokeColor : '#facc15'} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M42 24 C42 20, 38 20, 38 20 M38 28 H42 M42 36 C42 40, 38 40, 38 40" stroke={isLocked ? strokeColor : '#facc15'} strokeWidth="2.5" strokeLinecap="round" />
           </svg>
         );
       case 'math':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M16 22 H32 M24 14 V30" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M40 22 H52" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M16 46 H28 M16 50 H28" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="46" cy="42" r="2.5" fill={strokeColor} />
-            <path d="M40 50 L52 38" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="46" cy="46" r="2.5" fill={strokeColor} />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <path d="M16 22 H32 M24 14 V30" stroke={isLocked ? strokeColor : '#10b981'} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M40 22 H52" stroke={isLocked ? strokeColor : '#34d399'} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M16 46 H28 M16 50 H28" stroke={isLocked ? strokeColor : '#059669'} strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="46" cy="42" r="2.5" fill={isLocked ? strokeColor : '#10b981'} />
+            <path d="M40 50 L52 38" stroke={isLocked ? strokeColor : '#10b981'} strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="46" cy="46" r="2.5" fill={isLocked ? strokeColor : '#10b981'} />
           </svg>
         );
       case 'web_dev':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <rect x="10" y="14" width="44" height="36" rx="4" stroke={strokeColor} strokeWidth="2.5" />
-            <line x1="10" y1="24" x2="54" y2="24" stroke={strokeColor} strokeWidth="2" />
-            <circle cx="16" cy="19" r="1.5" fill="#ef4444" />
-            <circle cx="22" cy="19" r="1.5" fill="#f59e0b" />
-            <circle cx="28" cy="19" r="1.5" fill="#10b981" />
-            <path d="M20 32 L15 37 L20 42" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M44 32 L49 37 L44 42" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <line x1="35" y1="31" x2="29" y2="43" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <rect x="10" y="14" width="44" height="36" rx="4" stroke={isLocked ? strokeColor : '#a855f7'} strokeWidth="2.5" />
+            <line x1="10" y1="24" x2="54" y2="24" stroke={isLocked ? strokeColor : '#a855f7'} strokeWidth="2" />
+            <circle cx="16" cy="19" r="1.5" fill={isLocked ? strokeColor : '#ef4444'} />
+            <circle cx="22" cy="19" r="1.5" fill={isLocked ? strokeColor : '#f59e0b'} />
+            <circle cx="28" cy="19" r="1.5" fill={isLocked ? strokeColor : '#10b981'} />
+            <path d="M20 32 L15 37 L20 42" stroke={isLocked ? strokeColor : '#c084fc'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M44 32 L49 37 L44 42" stroke={isLocked ? strokeColor : '#c084fc'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <line x1="35" y1="31" x2="29" y2="43" stroke={isLocked ? strokeColor : '#c084fc'} strokeWidth="2.5" strokeLinecap="round" />
           </svg>
         );
       case 'typescript':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M12 12 H52 V44 L32 54 L12 44 Z" stroke={strokeColor} strokeWidth="2.5" strokeLinejoin="round" />
-            <path d="M22 20 H34 M28 20 V40" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M38 38 C38 42, 44 42, 44 38 C44 34, 38 35, 38 31 C38 27, 44 27, 44 31" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <path d="M12 12 H52 V44 L32 54 L12 44 Z" stroke={isLocked ? strokeColor : '#2563eb'} strokeWidth="2.5" strokeLinejoin="round" />
+            <path d="M22 20 H34 M28 20 V40" stroke={isLocked ? strokeColor : '#60a5fa'} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M38 38 C38 42, 44 42, 44 38 C44 34, 38 35, 38 31 C38 27, 44 27, 44 31" stroke={isLocked ? strokeColor : '#60a5fa'} strokeWidth="2.5" strokeLinecap="round" />
           </svg>
         );
       case 'lua':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <circle cx="32" cy="32" r="20" stroke={strokeColor} strokeWidth="2.5" />
-            <path d="M32 12 A 10 10 0 0 1 32 52 A 15 15 0 0 0 32 12" fill={strokeColor} opacity="0.3" />
-            <circle cx="32" cy="12" r="4.5" fill="#38bdf8" />
-            <circle cx="48" cy="32" r="2.5" fill="#f59e0b" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="20" stroke={isLocked ? strokeColor : '#a855f7'} strokeWidth="2.5" />
+            <path d="M32 12 A 10 10 0 0 1 32 52 A 15 15 0 0 0 32 12" fill={isLocked ? 'none' : 'rgba(168, 85, 247, 0.25)'} stroke={isLocked ? 'none' : '#d8b4fe'} strokeWidth="1" />
+            <circle cx="32" cy="12" r="4.5" fill={isLocked ? strokeColor : '#a855f7'} />
+            <circle cx="48" cy="32" r="2.5" fill={isLocked ? strokeColor : '#f59e0b'} />
           </svg>
         );
       case 'c++':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M28 20 C22 20, 16 24, 16 32 C16 40, 22 44, 28 44" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M36 32 H44 M40 28 V36" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
-            <path d="M48 32 H56 M52 28 V36" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <path d="M28 20 C22 20, 16 24, 16 32 C16 40, 22 44, 28 44" stroke={isLocked ? strokeColor : '#f43f5e'} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M36 32 H44 M40 28 V36" stroke={isLocked ? strokeColor : '#fda4af'} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M48 32 H56 M52 28 V36" stroke={isLocked ? strokeColor : '#fda4af'} strokeWidth="2.5" strokeLinecap="round" />
           </svg>
         );
       case 'c_sharp':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M28 20 C22 20, 16 24, 16 32 C16 40, 22 44, 28 44" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M38 26 V42 M44 22 V38 M34 30 H48 M34 36 H48" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <path d="M28 20 C22 20, 16 24, 16 32 C16 40, 22 44, 28 44" stroke={isLocked ? strokeColor : '#f43f5e'} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M38 26 V42 M44 22 V38 M34 30 H48 M34 36 H48" stroke={isLocked ? strokeColor : '#fda4af'} strokeWidth="2" strokeLinecap="round" />
           </svg>
         );
       case 'java':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M16 30 C16 42, 20 46, 36 46 C46 46, 48 42, 48 30 H16 Z" stroke={strokeColor} strokeWidth="2.5" strokeLinejoin="round" />
-            <path d="M48 34 C54 34, 54 40, 48 40" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M24 14 C24 14, 28 10, 26 22" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" />
-            <path d="M32 14 C32 14, 36 10, 34 22" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" />
-            <path d="M40 14 C40 14, 44 10, 42 22" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <path d="M16 30 C16 42, 20 46, 36 46 C46 46, 48 42, 48 30 H16 Z" stroke={isLocked ? strokeColor : '#f43f5e'} strokeWidth="2.5" strokeLinejoin="round" />
+            <path d="M48 34 C54 34, 54 40, 48 40" stroke={isLocked ? strokeColor : '#fda4af'} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M24 14 C24 14, 28 10, 26 22" stroke={isLocked ? strokeColor : '#f43f5e'} strokeWidth="2" strokeLinecap="round" />
+            <path d="M32 14 C32 14, 36 10, 34 22" stroke={isLocked ? strokeColor : '#fb7185'} strokeWidth="2" strokeLinecap="round" />
           </svg>
         );
       case 'go':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M10 26 H44 M10 32 H50 M10 38 H42" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="44" cy="24" r="3" fill={strokeColor} />
-            <circle cx="50" cy="30" r="3" fill={strokeColor} />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <path d="M10 26 H44 M10 32 H50 M10 38 H42" stroke={isLocked ? strokeColor : '#06b6d4'} strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="44" cy="24" r="3" fill={isLocked ? strokeColor : '#22d3ee'} />
+            <circle cx="50" cy="30" r="3" fill={isLocked ? strokeColor : '#22d3ee'} />
           </svg>
         );
       case 'rust':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <circle cx="32" cy="32" r="14" stroke={strokeColor} strokeWidth="2.5" />
-            <circle cx="32" cy="32" r="6" stroke={strokeColor} strokeWidth="2" />
-            <path d="M32 10 V14 M32 50 V54 M10 32 H14 M50 32 H54 M16 16 L20 20 M44 44 L48 48 M16 48 L20 44 M44 16 L48 20" stroke={strokeColor} strokeWidth="3" strokeLinecap="round" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="14" stroke={isLocked ? strokeColor : '#ea580c'} strokeWidth="2.5" />
+            <circle cx="32" cy="32" r="6" stroke={isLocked ? strokeColor : '#ea580c'} strokeWidth="2" />
+            <path d="M32 10 V14 M32 50 V54 M10 32 H14 M50 32 H54 M16 16 L20 20 M44 44 L48 48 M16 48 L20 44 M44 16 L48 20" stroke={isLocked ? strokeColor : '#f97316'} strokeWidth="3" strokeLinecap="round" />
           </svg>
         );
       case 'sql':
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <ellipse cx="32" cy="18" rx="18" ry="6" stroke={strokeColor} strokeWidth="2.5" />
-            <path d="M14 18 V30 C14 34, 20 36, 32 36 C44 36, 50 34, 50 30 V18" stroke={strokeColor} strokeWidth="2.5" />
-            <path d="M14 30 V42 C14 46, 20 48, 32 48 C44 48, 50 46, 50 42 V30" stroke={strokeColor} strokeWidth="2.5" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <ellipse cx="32" cy="18" rx="18" ry="6" stroke={isLocked ? strokeColor : '#38bdf8'} strokeWidth="2.5" />
+            <path d="M14 18 V30 C14 34, 20 36, 32 36 C44 36, 50 34, 50 30 V18" stroke={isLocked ? strokeColor : '#0284c7'} strokeWidth="2.5" />
+            <path d="M14 30 V42 C14 46, 20 48, 32 48 C44 48, 50 46, 50 42 V30" stroke={isLocked ? strokeColor : '#0284c7'} strokeWidth="2.5" />
           </svg>
         );
       default:
-        // Generic code tag </> fallback
         return (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none">
-            <path d="M22 22 L12 32 L22 42" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M42 22 L52 32 L42 42" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            <line x1="36" y1="18" x2="28" y2="46" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />
+          <svg className={customSizeClass} viewBox="0 0 64 64" fill="none">
+            <path d="M22 22 L12 32 L22 42" stroke={isLocked ? strokeColor : '#38bdf8'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M42 22 L52 32 L42 42" stroke={isLocked ? strokeColor : '#38bdf8'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <line x1="36" y1="18" x2="28" y2="46" stroke={isLocked ? strokeColor : '#38bdf8'} strokeWidth="2.5" strokeLinecap="round" />
           </svg>
         );
     }
@@ -313,11 +430,11 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
   const getDifficultyBadge = (difficulty: string) => {
     switch (difficulty) {
       case 'easy':
-        return <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">{t('easy') || 'Easy'}</span>;
+        return <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">{t('easy') || 'Easy'}</span>;
       case 'medium':
-        return <span className="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">{t('medium') || 'Medium'}</span>;
+        return <span className="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">{t('medium') || 'Medium'}</span>;
       case 'hard':
-        return <span className="bg-purple-500/10 text-purple-400 border border-purple-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">{t('hard') || 'Hard'}</span>;
+        return <span className="bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">{t('hard') || 'Hard'}</span>;
       default:
         return null;
     }
@@ -327,20 +444,20 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
     switch (status) {
       case 'locked':
         return (
-          <span className="flex items-center gap-1 bg-slate-500/10 text-slate-400 border border-slate-700/50 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-            <Lock className="w-3.5 h-3.5" /> {t('locked') || 'Locked'}
+          <span className="flex items-center gap-1 text-slate-400/80 bg-slate-900/50 border border-slate-800 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
+            <Lock className="w-3 h-3" /> {t('locked') || 'Locked'}
           </span>
         );
       case 'in-progress':
         return (
-          <span className="flex items-center gap-1 bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse">
-            <Activity className="w-3.5 h-3.5" /> {t('in_progress') || 'In Progress'}
+          <span className="flex items-center gap-1 text-amber-400 bg-amber-500/10 border border-amber-500/20 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider animate-pulse-subtle">
+            <Activity className="w-3 h-3" /> {t('in_progress') || 'Active'}
           </span>
         );
       case 'completed':
         return (
-          <span className="flex items-center gap-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-            <Award className="w-3.5 h-3.5" /> {t('completed') || 'Completed'}
+          <span className="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
+            <Award className="w-3 h-3" /> {t('completed') || 'Mastered'}
           </span>
         );
       default:
@@ -348,165 +465,504 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
     }
   };
 
+  // Filtering logic
+  const filteredMissions = missions.filter(m => {
+    const diffMatch = difficultyFilter === 'all' || m.difficulty === difficultyFilter;
+    const statusMatch = statusFilter === 'all' || m.status === statusFilter;
+    return diffMatch && statusMatch;
+  });
+
   const completedCount = missions.filter(m => m.status === 'completed').length;
-  const xpGained = missions.reduce((sum, m) => sum + (m.progress * 2), 0); // Mock score XP
+  const totalCount = missions.length;
+  const overallProgressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+  const xpGained = missions.reduce((sum, m) => sum + (m.progress * 2), 0);
+
+  // Group by Tiers for the Interactive Map View
+  const groupedTiers: { [key: number]: { info: { name: string; color: string }; list: Mission[] } } = {
+    1: { info: { name: 'Tier 1: Foundations', color: '#10b981' }, list: [] },
+    2: { info: { name: 'Tier 2: Core Coding', color: '#06b6d4' }, list: [] },
+    3: { info: { name: 'Tier 3: Web & Engine', color: '#a855f7' }, list: [] },
+    4: { info: { name: 'Tier 4: Advanced Systems', color: '#f43f5e' }, list: [] }
+  };
+
+  missions.forEach(m => {
+    const mapping = TIER_MAPPING[m.mission_id] || { tier: 2, name: 'Tier 2: Core Coding', color: '#06b6d4' };
+    if (groupedTiers[mapping.tier]) {
+      groupedTiers[mapping.tier].list.push(m);
+    }
+  });
 
   if (loading && missions.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-slate-400 font-bold animate-pulse">Initializing Missions Map...</p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 text-slate-100 bg-[#0f172a] rounded-3xl border border-slate-800">
+        <div className="relative w-20 h-20">
+          <div className="absolute inset-0 border-4 border-cyan-500/20 rounded-full"></div>
+          <div className="absolute inset-0 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+          <Compass className="absolute inset-0 m-auto w-8 h-8 text-cyan-400 animate-pulse" />
+        </div>
+        <div className="space-y-1.5 text-center">
+          <h3 className="text-lg font-bold tracking-tight text-white">Initializing Orbit Grid</h3>
+          <p className="text-xs text-slate-400 animate-pulse font-medium">Calibrating learning telemetry & compiling connections...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 select-none">
-      {/* HUD Telemetry Header */}
-      <div className="relative overflow-hidden backdrop-blur-md bg-slate-900/40 dark:bg-slate-950/30 border border-slate-700/50 rounded-3xl p-6 md:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-cyan-500/10 rounded-2xl border border-cyan-500/30">
-              <Target className="w-6 h-6 text-cyan-400" />
+    <div className="space-y-8 select-none text-slate-100 bg-slate-950/20 p-1 rounded-3xl">
+      <style>{`
+        @keyframes pulse-subtle {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(0.98); }
+        }
+        .animate-pulse-subtle {
+          animation: pulse-subtle 2.5s infinite ease-in-out;
+        }
+        .custom-glass {
+          background: rgba(15, 23, 42, 0.45);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .neon-shadow-cyan:hover {
+          box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);
+          border-color: rgba(6, 182, 212, 0.4);
+        }
+        .neon-shadow-emerald:hover {
+          box-shadow: 0 0 25px rgba(16, 185, 129, 0.15);
+          border-color: rgba(16, 185, 129, 0.4);
+        }
+        .neon-shadow-purple:hover {
+          box-shadow: 0 0 25px rgba(168, 85, 247, 0.15);
+          border-color: rgba(168, 85, 247, 0.4);
+        }
+        .neon-shadow-rose:hover {
+          box-shadow: 0 0 25px rgba(244, 63, 94, 0.15);
+          border-color: rgba(244, 63, 94, 0.4);
+        }
+        .animated-bg-radial {
+          background: radial-gradient(circle at top left, rgba(6, 182, 212, 0.04) 0%, transparent 50%),
+                      radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.04) 0%, transparent 50%);
+        }
+        .dashed-svg-path {
+          stroke-dasharray: 6 4;
+          animation: flow 30s linear infinite;
+        }
+        @keyframes flow {
+          to { stroke-dashoffset: -100; }
+        }
+        .scrollbar-hidden::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hidden {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
+      {/* Cyberpunk Telemetry HUD Header */}
+      <div className="relative overflow-hidden custom-glass rounded-3xl p-6 md:p-8 shadow-2xl animated-bg-radial border border-slate-800/80">
+        {/* Subtle grid lines background */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.005)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.005)_1px,transparent_1px)] bg-[size:30px_30px] pointer-events-none" />
+        
+        <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="relative p-4 bg-gradient-to-br from-cyan-900/30 to-indigo-950/30 rounded-2xl border border-cyan-500/30 flex-shrink-0 shadow-lg shadow-cyan-950/20">
+              <Compass className="w-8 h-8 text-cyan-400 animate-pulse-subtle" />
+              <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-cyan-400 border-2 border-[#0f172a] animate-ping" />
             </div>
-            <div>
-              <h2 className="text-2xl font-black tracking-tight text-white">{t('missions') || 'Missions Dashboard'}</h2>
-              <p className="text-xs text-slate-400 font-medium">{t('missions_desc') || 'Complete quests and master coding skills to achieve badges!'}</p>
+            <div className="space-y-1">
+              <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white flex items-center gap-2">
+                MISSION COMPASS <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 tracking-normal uppercase">Quest Terminal</span>
+              </h2>
+              <p className="text-xs md:text-sm text-slate-300 font-medium max-w-md leading-relaxed">
+                Interact with the visual path map below to track prerequisites, view concept diagnostic data, and access specialized learning paths.
+              </p>
+            </div>
+          </div>
+
+          {/* HUD Progress & Telemetry Cards */}
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-3 md:gap-4">
+            {/* Total progress visual gauge */}
+            <div className="px-5 py-4 bg-slate-950/70 border border-slate-800/80 rounded-2xl flex items-center gap-4 min-w-[130px] hover:border-slate-700/60 transition-all">
+              <div className="relative w-12 h-12 flex-shrink-0">
+                {/* Background Ring */}
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="3.5" />
+                  <circle cx="18" cy="18" r="16" fill="none" stroke="#06b6d4" strokeWidth="3.5" 
+                    strokeDasharray="100" 
+                    strokeDashoffset={100 - overallProgressPercent} 
+                    strokeLinecap="round"
+                    className="transition-all duration-1000"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-xs font-black text-white font-mono">{overallProgressPercent}%</span>
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Campaign</span>
+                <span className="text-sm font-black text-slate-200">{completedCount} <span className="text-xs font-medium text-slate-500">/ {totalCount} CLR</span></span>
+              </div>
+            </div>
+
+            {/* Score XP */}
+            <div className="px-5 py-4 bg-slate-950/70 border border-slate-800/80 rounded-2xl flex items-center gap-3.5 min-w-[120px] hover:border-slate-700/60 transition-all">
+              <div className="p-2.5 bg-amber-500/10 rounded-xl border border-amber-500/20 text-amber-400">
+                <Flame className="w-5 h-5 fill-amber-500/10 text-amber-400 animate-pulse" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Telemetry XP</span>
+                <span className="text-lg font-black text-amber-400 font-mono">{xpGained}</span>
+              </div>
+            </div>
+
+            {/* View switcher and Polling toggle */}
+            <div className="col-span-2 sm:col-span-1 flex gap-2">
+              <div className="p-1.5 bg-slate-950/70 border border-slate-800/80 rounded-2xl flex items-center">
+                <button
+                  onClick={() => setViewMode('map')}
+                  className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'map' ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-900/30' : 'text-slate-400 hover:text-slate-200'}`}
+                >
+                  <Map className="w-3.5 h-3.5" /> Map
+                </button>
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'grid' ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-900/30' : 'text-slate-400 hover:text-slate-200'}`}
+                >
+                  <Grid className="w-3.5 h-3.5" /> Grid
+                </button>
+              </div>
+
+              <button 
+                onClick={() => setPollingActive(!pollingActive)}
+                className="px-4 py-3 bg-slate-950/70 hover:bg-slate-900 border border-slate-800/80 hover:border-slate-700 rounded-2xl flex items-center gap-2 cursor-pointer transition-all active:scale-95 group flex-grow sm:flex-grow-0"
+              >
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${pollingActive ? 'bg-emerald-400' : 'bg-rose-400'}`}></span>
+                  <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${pollingActive ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+                </span>
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                  {pollingActive ? 'Syncing' : 'Paused'}
+                  <RefreshCw className={`w-3.5 h-3.5 text-slate-500 transition-transform ${pollingActive ? 'animate-spin-slow' : 'group-hover:rotate-45'}`} />
+                </span>
+              </button>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* HUD Statistics */}
-        <div className="flex flex-wrap items-center gap-4 md:gap-8">
-          <div className="px-5 py-3.5 bg-slate-950/40 border border-slate-800 rounded-2xl flex flex-col items-center min-w-[90px]">
-            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Completed</span>
-            <span className="text-2xl font-black text-emerald-400">{completedCount} <span className="text-xs text-slate-500">/ {missions.length}</span></span>
+      {/* Interactive Map View */}
+      {viewMode === 'map' && (
+        <div className="space-y-6">
+          {/* Legend HUD */}
+          <div className="flex flex-wrap items-center gap-4 bg-slate-900/20 border border-slate-850/80 px-4 py-3 rounded-2xl text-xs text-slate-300">
+            <span className="font-extrabold text-white">SKILL TIERS:</span>
+            <span className="flex items-center gap-1.5 font-semibold"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Tier 1: Foundations</span>
+            <span className="flex items-center gap-1.5 font-semibold"><span className="w-2.5 h-2.5 rounded-full bg-cyan-500" /> Tier 2: Core Coding</span>
+            <span className="flex items-center gap-1.5 font-semibold"><span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> Tier 3: Web & Engine</span>
+            <span className="flex items-center gap-1.5 font-semibold"><span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Tier 4: Advanced Systems</span>
           </div>
 
-          <div className="px-5 py-3.5 bg-slate-950/40 border border-slate-800 rounded-2xl flex flex-col items-center min-w-[90px]">
-            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Missions XP</span>
-            <span className="text-2xl font-black text-amber-400 flex items-center gap-1">⭐ {xpGained}</span>
-          </div>
-
-          {/* Live Sync Status indicator */}
-          <button 
-            onClick={() => setPollingActive(!pollingActive)}
-            className="px-4 py-3.5 bg-slate-950/40 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl flex items-center gap-2 cursor-pointer transition-all active:scale-95 group"
+          {/* Map canvas containing tiers */}
+          <div 
+            ref={containerRef}
+            className="relative overflow-x-auto pb-6 pt-2 scrollbar-hidden flex gap-8 min-h-[600px] select-none snap-x"
           >
-            <span className="relative flex h-2 w-2">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${pollingActive ? 'bg-emerald-400' : 'bg-rose-400'}`}></span>
-              <span className={`relative inline-flex rounded-full h-2 w-2 ${pollingActive ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
-            </span>
-            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
-              {pollingActive ? 'Live Polling' : 'Paused'}
-              <RefreshCw className={`w-3.5 h-3.5 text-slate-500 transition-transform ${pollingActive ? 'animate-spin-slow' : 'group-hover:rotate-45'}`} />
-            </span>
-          </button>
-        </div>
-      </div>
-
-      {/* Grid of Mission Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {missions.map((mission) => {
-          const isLocked = mission.status === 'locked';
-          const isCompleted = mission.status === 'completed';
-
-          return (
-            <div
-              key={mission.mission_id}
-              onClick={() => {
-                if (!isLocked) {
-                  setSelectedMission(mission);
-                }
-              }}
-              className={`relative overflow-hidden group backdrop-blur-md bg-slate-900/40 dark:bg-slate-950/20 border rounded-3xl p-6 transition-all duration-300 ${
-                isLocked 
-                  ? 'border-slate-800 opacity-60' 
-                  : 'border-slate-700/50 hover:border-cyan-500/50 cursor-pointer shadow-lg hover:shadow-cyan-500/5 hover:-translate-y-1'
-              }`}
-            >
-              {/* Card visual elements */}
-              <div className="flex justify-between items-start mb-4">
-                <div className={`p-3 rounded-2xl border transition-all ${
-                  isLocked 
-                    ? 'bg-slate-950/40 border-slate-800' 
-                    : isCompleted 
-                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
-                      : 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400'
-                }`}>
-                  {renderConceptArt(mission.skill, mission.status)}
-                </div>
-
-                <div className="flex flex-col items-end gap-1.5">
-                  {getStatusBadge(mission.status)}
-                  {getDifficultyBadge(mission.difficulty)}
-                </div>
-              </div>
-
-              {/* Title & info */}
-              <div className="space-y-1.5 mb-6">
-                <h3 className="text-lg font-bold text-white tracking-tight flex items-center gap-1.5">
-                  {mission.title}
-                  {!isLocked && <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 transition-colors group-hover:translate-x-0.5" />}
-                </h3>
-                <p className="text-xs text-slate-400 font-medium">
-                  {isLocked 
-                    ? mission.telemetry.prerequisiteText || 'Prerequisite locked.'
-                    : `Learn and master ${mission.title} concepts in code editor.`}
-                </p>
-              </div>
-
-              {/* Progress bar */}
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-[11px] font-bold tracking-wide">
-                  <span className="text-slate-400 uppercase">Progress</span>
-                  <span className={isCompleted ? 'text-emerald-400' : 'text-cyan-400'}>{mission.progress}%</span>
-                </div>
-                <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden p-[2px] border border-slate-800">
-                  <div
-                    className={`h-full rounded-full transition-all duration-1000 ${
-                      isCompleted 
-                        ? 'bg-gradient-to-r from-emerald-500 to-green-400 shadow-[0_0_8px_rgba(16,185,129,0.5)]' 
-                        : 'bg-gradient-to-r from-cyan-500 to-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.5)]'
-                    }`}
-                    style={{ width: `${isLocked ? 0 : mission.progress}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              {/* Lock overlay for locked state */}
-              {isLocked && (
-                <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-[1px] flex flex-col items-center justify-center p-4 text-center">
-                  <div className="p-3 bg-slate-900 border border-slate-700 rounded-full mb-2.5 shadow-lg">
-                    <Lock className="w-6 h-6 text-slate-400" />
-                  </div>
-                  <h4 className="text-sm font-black text-white uppercase tracking-wider mb-1">Locked</h4>
-                  <p className="text-[11px] text-slate-400 font-medium px-4">
-                    {mission.telemetry.prerequisiteText || 'Clear previous path levels to unlock.'}
-                  </p>
-                </div>
-              )}
+            {/* SVG Connecting Paths inside Map background */}
+            <div className="absolute inset-0 pointer-events-none min-w-[1200px]" style={{ zIndex: 0 }}>
+              <svg className="w-full h-full" viewBox="0 0 1200 600" fill="none">
+                {/* Tier 1 -> Tier 2 Connections */}
+                <path d="M220 180 C 300 180, 300 180, 380 180" stroke={missions.find(m => m.mission_id === 'block_coding')?.progress && (missions.find(m => m.mission_id === 'block_coding')?.progress || 0) >= 30 ? '#10b981' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
+                <path d="M220 180 C 300 180, 300 320, 380 320" stroke={missions.find(m => m.mission_id === 'block_coding')?.progress && (missions.find(m => m.mission_id === 'block_coding')?.progress || 0) >= 30 ? '#10b981' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
+                
+                {/* Tier 2 -> Tier 3 Connections */}
+                <path d="M580 320 C 650 320, 650 200, 740 200" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 30 ? '#06b6d4' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
+                <path d="M580 320 C 650 320, 650 340, 740 340" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 30 ? '#06b6d4' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
+                <path d="M580 320 C 650 320, 650 480, 740 480" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 30 ? '#06b6d4' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
+                
+                {/* Tier 2 -> Tier 4 Connections */}
+                <path d="M580 320 C 680 320, 800 120, 1080 120" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 40 ? '#f43f5e' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
+                <path d="M580 320 C 680 320, 800 240, 1080 240" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 40 ? '#f43f5e' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
+                <path d="M580 320 C 680 320, 800 360, 1080 360" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 40 ? '#f43f5e' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
+                <path d="M580 320 C 680 320, 800 480, 1080 480" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 40 ? '#f43f5e' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
+              </svg>
             </div>
-          );
-        })}
-      </div>
 
-      {/* Details Modal */}
+            {/* Render Tier Columns */}
+            {Object.keys(groupedTiers).map((tierKeyStr) => {
+              const tierKey = parseInt(tierKeyStr);
+              const tierData = groupedTiers[tierKey];
+              if (tierData.list.length === 0) return null;
+
+              return (
+                <div 
+                  key={tierKey}
+                  className="flex-shrink-0 w-[290px] md:w-[330px] flex flex-col gap-6 snap-start relative z-10"
+                >
+                  {/* Column Header */}
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-800/80 px-2">
+                    <span 
+                      className="text-xs font-black uppercase tracking-wider"
+                      style={{ color: tierData.info.color }}
+                    >
+                      {tierData.info.name}
+                    </span>
+                    <span className="text-[10px] text-slate-300 bg-slate-900 border border-slate-800/60 px-2.5 py-0.5 rounded-full font-bold">
+                      {tierData.list.length} Missions
+                    </span>
+                  </div>
+
+                  {/* List of items inside Tier lane */}
+                  <div className="flex flex-col gap-5">
+                    {tierData.list.map((mission) => {
+                      const isLocked = mission.status === 'locked';
+                      const isCompleted = mission.status === 'completed';
+                      const isNodeFocused = hoveredMissionId === mission.mission_id;
+                      
+                      // Fetch high fidelity styling configs
+                      const cardStyle = getCardStyles(mission.mission_id, mission.status);
+
+                      return (
+                        <div
+                          key={mission.mission_id}
+                          onMouseEnter={() => setHoveredMissionId(mission.mission_id)}
+                          onMouseLeave={() => setHoveredMissionId(null)}
+                          onClick={() => {
+                            if (!isLocked) {
+                              setSelectedMission(mission);
+                            }
+                          }}
+                          className={`relative overflow-hidden group border rounded-3xl p-5 transition-all duration-300 transform ${
+                            cardStyle.cardBg
+                          } ${cardStyle.glowShadow} ${
+                            isLocked 
+                              ? 'cursor-not-allowed' 
+                              : 'cursor-pointer hover:-translate-y-1 hover:scale-[1.01]'
+                          } ${isNodeFocused && !isLocked ? 'border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.25)]' : ''}`}
+                        >
+                          {/* Inner glowing corner for active elements */}
+                          {!isLocked && (
+                            <div className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-bl from-white/5 to-transparent rounded-bl-full opacity-30 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                          )}
+
+                          <div className="flex justify-between items-start mb-4">
+                            <div className={`p-3 rounded-2xl border transition-all ${cardStyle.iconContainer}`}>
+                              {renderConceptArt(mission.skill, mission.status, "w-12 h-12")}
+                            </div>
+
+                            <div className="flex flex-col items-end gap-1.5">
+                              {getStatusBadge(mission.status)}
+                              {getDifficultyBadge(mission.difficulty)}
+                            </div>
+                          </div>
+
+                          <div className="space-y-1.5 mb-5">
+                            <h4 className={`text-md tracking-tight flex items-center gap-1 ${cardStyle.textTitle}`}>
+                              {mission.title}
+                              {!isLocked && <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors group-hover:translate-x-0.5" />}
+                            </h4>
+                            <p className={`text-[11px] font-semibold leading-relaxed ${cardStyle.textDesc}`}>
+                              {isLocked 
+                                ? mission.telemetry.prerequisiteText || 'Prerequisite locked.'
+                                : `Progress through roadmap level quests to claim telemetry badges.`}
+                            </p>
+                          </div>
+
+                          {/* Futuristic progress indicator */}
+                          <div className="space-y-2">
+                            <div className="flex justify-between text-[10px] font-bold tracking-wide">
+                              <span className="text-slate-400 uppercase">Proficiency</span>
+                              <span className={isCompleted ? 'text-emerald-400' : 'text-cyan-400 font-extrabold'}>{mission.progress}%</span>
+                            </div>
+                            <div className={`w-full h-2.5 rounded-full overflow-hidden p-[1.5px] border ${cardStyle.progressBarBg}`}>
+                              <div
+                                className={`h-full rounded-full transition-all duration-1000 ${cardStyle.progressFill}`}
+                                style={{ width: `${isLocked ? 0 : mission.progress}%` }}
+                              ></div>
+                            </div>
+                          </div>
+
+                          {/* Sealed Lock screen with high-contrast readable text */}
+                          {isLocked && (
+                            <div className="absolute inset-0 bg-[#070b13]/92 backdrop-blur-[3px] flex flex-col items-center justify-center p-3 text-center transition-all border border-slate-900">
+                              <div className="p-2.5 bg-slate-900 border border-slate-800 rounded-full mb-2.5 shadow-lg">
+                                <Lock className="w-5 h-5 text-slate-400" />
+                              </div>
+                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Locked Block</span>
+                              <p className="text-[11px] text-slate-200 font-bold px-4 leading-normal">
+                                {mission.telemetry.prerequisiteText || 'Complete previous requirements.'}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Grid Dashboard View (Available as filterable listing fallback) */}
+      {viewMode === 'grid' && (
+        <div className="space-y-6">
+          {/* Advanced Sorting & Filter Toolbar */}
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between p-4 bg-slate-900/30 border border-slate-800/80 rounded-2xl">
+            <div className="flex items-center gap-2.5 text-xs text-slate-250 font-bold self-start sm:self-center">
+              <Filter className="w-4 h-4 text-cyan-400" />
+              <span className="text-slate-200">FILTER MATRIX:</span>
+            </div>
+            
+            <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+              {/* Difficulty selector */}
+              <div className="flex items-center bg-slate-950/60 border border-slate-850/80 rounded-xl p-1 w-full sm:w-auto justify-between sm:justify-start">
+                <span className="text-[10px] text-slate-400 font-black uppercase px-2">Difficulty:</span>
+                <div className="flex">
+                  {['all', 'easy', 'medium', 'hard'].map((opt) => (
+                    <button
+                      key={opt}
+                      onClick={() => setDifficultyFilter(opt as any)}
+                      className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${difficultyFilter === opt ? 'bg-cyan-500 text-white' : 'text-slate-400 hover:text-slate-250'}`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Status selector */}
+              <div className="flex items-center bg-slate-950/60 border border-slate-850/80 rounded-xl p-1 w-full sm:w-auto justify-between sm:justify-start">
+                <span className="text-[10px] text-slate-400 font-black uppercase px-2">Status:</span>
+                <div className="flex">
+                  {['all', 'locked', 'in-progress', 'completed'].map((opt) => (
+                    <button
+                      key={opt}
+                      onClick={() => setStatusFilter(opt as any)}
+                      className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${statusFilter === opt ? 'bg-cyan-500 text-white' : 'text-slate-400 hover:text-slate-250'}`}
+                    >
+                      {opt.replace('-', ' ')}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Filtered Grid Display */}
+          {filteredMissions.length === 0 ? (
+            <div className="flex flex-col items-center justify-center p-12 bg-slate-900/10 border border-slate-800 rounded-3xl gap-4">
+              <ShieldAlert className="w-10 h-10 text-slate-500 animate-bounce" />
+              <div className="space-y-1 text-center">
+                <h4 className="text-sm font-bold text-white uppercase tracking-wider">No Missions Match Filter</h4>
+                <p className="text-xs text-slate-400 font-medium">Try clearing your difficulty or status selectors to view options.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredMissions.map((mission) => {
+                const isLocked = mission.status === 'locked';
+                const isCompleted = mission.status === 'completed';
+                const cardStyle = getCardStyles(mission.mission_id, mission.status);
+
+                return (
+                  <div
+                    key={mission.mission_id}
+                    onClick={() => {
+                      if (!isLocked) {
+                        setSelectedMission(mission);
+                      }
+                    }}
+                    className={`relative overflow-hidden group border rounded-3xl p-6 transition-all duration-300 ${
+                      cardStyle.cardBg
+                    } ${cardStyle.glowShadow} ${
+                      isLocked 
+                        ? 'cursor-not-allowed' 
+                        : 'cursor-pointer hover:-translate-y-1'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <div className={`p-3 rounded-2xl border transition-all ${cardStyle.iconContainer}`}>
+                        {renderConceptArt(mission.skill, mission.status, "w-14 h-14")}
+                      </div>
+
+                      <div className="flex flex-col items-end gap-1.5">
+                        {getStatusBadge(mission.status)}
+                        {getDifficultyBadge(mission.difficulty)}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5 mb-6">
+                      <h4 className={`text-lg tracking-tight flex items-center gap-1 ${cardStyle.textTitle}`}>
+                        {mission.title}
+                        {!isLocked && <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors group-hover:translate-x-0.5" />}
+                      </h4>
+                      <p className={`text-xs font-semibold leading-relaxed ${cardStyle.textDesc}`}>
+                        {isLocked 
+                          ? mission.telemetry.prerequisiteText || 'Prerequisite locked.'
+                          : `Learn and master ${mission.title} concepts inside active code workspace.`}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-[10px] font-bold tracking-wide">
+                        <span className="text-slate-400 uppercase">Progress</span>
+                        <span className={isCompleted ? 'text-emerald-400 font-extrabold' : 'text-cyan-400 font-extrabold'}>{mission.progress}%</span>
+                      </div>
+                      <div className={`w-full h-3 rounded-full overflow-hidden p-[2px] border ${cardStyle.progressBarBg}`}>
+                        <div
+                          className={`h-full rounded-full transition-all duration-1000 ${cardStyle.progressFill}`}
+                          style={{ width: `${isLocked ? 0 : mission.progress}%` }}
+                        ></div>
+                      </div>
+                    </div>
+
+                    {/* Sealed Lock Overlay for locked grid cards */}
+                    {isLocked && (
+                      <div className="absolute inset-0 bg-[#070b13]/92 backdrop-blur-[3px] flex flex-col items-center justify-center p-4 text-center border border-slate-900">
+                        <div className="p-3 bg-slate-900 border border-slate-800 rounded-full mb-2.5 shadow-lg">
+                          <Lock className="w-5 h-5 text-slate-400" />
+                        </div>
+                        <span className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Locked Node</span>
+                        <p className="text-[11px] text-slate-200 font-bold px-4">
+                          {mission.telemetry.prerequisiteText || 'Complete previous requirements.'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Holographic Diagnostic Details Modal */}
       {selectedMission && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="relative overflow-hidden bg-slate-900 border border-slate-700/80 rounded-3xl w-full max-w-lg shadow-2xl p-6 md:p-8 animate-in fade-in-50 zoom-in-95 duration-200">
-            {/* Corner highlight */}
-            <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/10 rounded-bl-full border-b border-l border-cyan-500/20 pointer-events-none"></div>
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="relative overflow-hidden bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-lg shadow-[0_0_50px_rgba(0,0,0,0.8)] p-6 md:p-8 animate-in zoom-in-95 duration-200 flex flex-col">
+            {/* Hologram scanner beam lines */}
+            <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-60 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-20 pointer-events-none" />
+            
+            {/* Corner details */}
+            <div className="absolute top-3 left-3 border-t-2 border-l-2 border-slate-850 w-3 h-3 pointer-events-none" />
+            <div className="absolute top-3 right-3 border-t-2 border-r-2 border-slate-850 w-3 h-3 pointer-events-none" />
+            <div className="absolute bottom-3 left-3 border-b-2 border-l-2 border-slate-850 w-3 h-3 pointer-events-none" />
+            <div className="absolute bottom-3 right-3 border-b-2 border-r-2 border-slate-850 w-3 h-3 pointer-events-none" />
 
             {/* Modal Header */}
             <div className="flex justify-between items-start mb-6">
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl text-cyan-400">
-                  {renderConceptArt(selectedMission.skill, selectedMission.status)}
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-br from-cyan-950/30 to-indigo-950/30 border border-cyan-500/30 rounded-2xl text-cyan-400 animate-pulse-subtle">
+                  {renderConceptArt(selectedMission.skill, selectedMission.status, "w-14 h-14")}
                 </div>
-                <div>
-                  <h3 className="text-xl font-black text-white">{selectedMission.title} Stats</h3>
-                  <div className="flex gap-2 mt-1">
+                <div className="space-y-1">
+                  <span className="text-[9px] font-black text-cyan-400 uppercase tracking-widest font-mono">MISSION PROFILE</span>
+                  <h3 className="text-xl font-black text-white">{selectedMission.title}</h3>
+                  <div className="flex gap-2">
                     {getStatusBadge(selectedMission.status)}
                     {getDifficultyBadge(selectedMission.difficulty)}
                   </div>
@@ -514,64 +970,71 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
               </div>
               <button 
                 onClick={() => setSelectedMission(null)}
-                className="p-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl text-slate-400 hover:text-white transition-colors cursor-pointer"
+                className="p-2 bg-slate-950/60 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl text-slate-400 hover:text-white transition-colors cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Telemetry Stats Grid */}
+            {/* Stats Telemetry Dossier Grid */}
             <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="p-4 bg-slate-950/40 border border-slate-800 rounded-2xl flex flex-col justify-center min-h-[75px]">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Total Attempts</span>
+              <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-700 transition-colors">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Dossier Attempts</span>
                 <span className="text-2xl font-black text-white font-mono">{selectedMission.telemetry.attempts}</span>
               </div>
 
-              <div className="p-4 bg-slate-950/40 border border-slate-800 rounded-2xl flex flex-col justify-center min-h-[75px]">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Success / Failures</span>
-                <span className="text-xl font-black text-emerald-400 font-mono">
-                  {selectedMission.telemetry.successes} <span className="text-xs text-slate-500">/</span> <span className="text-rose-400">{selectedMission.telemetry.failures}</span>
+              <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-700 transition-colors">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Verify Pass / Fail</span>
+                <span className="text-lg font-black text-white font-mono">
+                  <span className="text-emerald-400">{selectedMission.telemetry.successes}</span>
+                  <span className="text-slate-600 px-1.5">/</span>
+                  <span className="text-rose-400">{selectedMission.telemetry.failures}</span>
                 </span>
               </div>
 
-              <div className="p-4 bg-slate-950/40 border border-slate-800 rounded-2xl flex flex-col justify-center min-h-[75px]">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Proficiency Score</span>
+              <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-700 transition-colors">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Proficiency Gauge</span>
                 <span className="text-2xl font-black text-cyan-400 font-mono">{selectedMission.progress}%</span>
               </div>
 
-              <div className="p-4 bg-slate-950/40 border border-slate-800 rounded-2xl flex flex-col justify-center min-h-[75px]">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Concept Trend</span>
-                <span className="text-lg font-black text-white flex items-center gap-1.5 uppercase font-mono">
-                  {selectedMission.telemetry.trend === 'improving' ? 'Improving 📈' : selectedMission.telemetry.trend === 'declining' ? 'Declining 📉' : 'Stable ➡️'}
+              <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-700 transition-colors">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Mastery Trend</span>
+                <span className="text-sm font-black text-slate-200 flex items-center gap-1.5 uppercase font-mono mt-0.5">
+                  {selectedMission.telemetry.trend === 'improving' ? (
+                    <span className="text-emerald-400 flex items-center gap-1 font-bold">IMPROVING <TrendingUp className="w-3.5 h-3.5" /></span>
+                  ) : selectedMission.telemetry.trend === 'declining' ? (
+                    <span className="text-rose-400 flex items-center gap-1 font-bold">DECLINING 📉</span>
+                  ) : (
+                    <span className="text-slate-400 flex items-center gap-1 font-bold">STABLE ➡️</span>
+                  )}
                 </span>
               </div>
             </div>
 
-            {/* AI Diagnostics Advice */}
-            <div className="bg-cyan-950/20 border border-cyan-500/20 rounded-2xl p-4 space-y-2 mb-6">
+            {/* AI Diagnosis Insights Panel */}
+            <div className="bg-cyan-950/20 border border-cyan-500/20 rounded-2xl p-4.5 space-y-2 mb-7">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse" />
-                <span className="text-xs font-black text-cyan-300 uppercase tracking-wide">AI Code Doctor Advice</span>
+                <span className="text-[10px] font-black text-cyan-300 uppercase tracking-widest font-mono">AI Diagnostics Insight</span>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed font-medium">
+              <p className="text-xs text-slate-200 leading-relaxed font-semibold">
                 {selectedMission.progress >= 90 
-                  ? `Incredible mastery! You have unlocked deep understanding of ${selectedMission.title}. Continue onto complex tasks.` 
+                  ? `Exceptional telemetry metrics. You have fully unlocked and mastered ${selectedMission.title}. Start advanced application templates in the compiler screen.` 
                   : selectedMission.progress > 0 
-                    ? `We noticed some compiler bugs with ${selectedMission.title}. Try breaking nested blocks into clear components and using console logs to print variables.` 
-                    : `Ready to start! Begin study by opening the learning path roadmap and launching the starter code tutorial.`}
+                    ? `We analyzed your compilation errors in ${selectedMission.title}. Ensure your variables are initialized correctly, structure code blocks cleanly, and resolve key loops.` 
+                    : `Telemetry empty. Initialize lessons on ${selectedMission.title} by opening the syllabus roadmap. We will generate custom tasks.`}
               </p>
             </div>
 
-            {/* Resume button */}
+            {/* Action CTA */}
             <button
               onClick={() => {
                 setSelectedMission(null);
-                // Redirect user to roadmap
                 window.location.href = `/dashboard/learn`;
               }}
-              className="w-full py-4 bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 border border-cyan-400/30 text-white font-black uppercase text-sm tracking-wider rounded-2xl cursor-pointer shadow-lg hover:shadow-cyan-500/10 active:scale-98 transition-all flex items-center justify-center gap-2"
+              className="w-full py-4.5 bg-gradient-to-r from-cyan-500 via-sky-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 border border-cyan-400/20 text-white font-black uppercase text-xs tracking-widest rounded-2xl cursor-pointer shadow-lg hover:shadow-cyan-500/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
-              <BookOpen className="w-4 h-4" /> Start Learning {selectedMission.title}
+              <BookOpen className="w-4 h-4" /> START ROADMAP
             </button>
           </div>
         </div>
