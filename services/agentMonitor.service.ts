@@ -388,7 +388,33 @@ function triggerAgentCommand(agentId: string, command: string) {
   return state;
 }
 
+function pauseAgent(agentId: string) {
+  const state = agentStateMap.get(agentId);
+  if (!state) {
+    throw new Error(`Unknown agent ${agentId}`);
+  }
+  state.isPaused = true;
+  state.lastUpdated = new Date().toISOString();
+  agentStateMap.set(agentId, state);
+  broadcastSse({ eventType: 'status', state: Array.from(agentStateMap.values()) });
+  appendAgentLog(agentId, 'Agent execution paused. Background jobs suspended.', 'warning');
+  return state;
+}
+
+function resumeAgent(agentId: string) {
+  const state = agentStateMap.get(agentId);
+  if (!state) {
+    throw new Error(`Unknown agent ${agentId}`);
+  }
+  state.isPaused = false;
+  state.lastUpdated = new Date().toISOString();
+  agentStateMap.set(agentId, state);
+  broadcastSse({ eventType: 'status', state: Array.from(agentStateMap.values()) });
+  appendAgentLog(agentId, 'Agent execution resumed. Background jobs active.', 'success');
+  return state;
+}
+
 initAgentMonitor();
 
 export type { AgentState, AgentLogEntry };
-export { getAgentDashboard, createSseClient, triggerAgentCommand };
+export { getAgentDashboard, createSseClient, triggerAgentCommand, pauseAgent, resumeAgent };
