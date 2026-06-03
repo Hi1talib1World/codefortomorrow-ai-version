@@ -22,8 +22,14 @@ export const updateUserProfile = async (req: Request, res: Response, next: NextF
                 {
                     name: req.body.name,
                     profilePictureUrl: req.body.profilePictureUrl,
+                    coverPictureUrl: req.body.coverPictureUrl,
                     bio: req.body.bio,
                     currentPath: req.body.currentPath,
+                    githubUrl: req.body.githubUrl,
+                    linkedinUrl: req.body.linkedinUrl,
+                    websiteUrl: req.body.websiteUrl,
+                    professionalTitle: req.body.professionalTitle,
+                    skills: req.body.skills,
                 },
                 { returnDocument: 'after', runValidators: true }
             ).select('-password');
