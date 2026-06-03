@@ -806,22 +806,22 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
       {viewMode === 'grid' && (
         <div className="space-y-6">
           {/* Advanced Sorting & Filter Toolbar */}
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between p-4 bg-slate-900/30 border border-slate-800/80 rounded-2xl">
-            <div className="flex items-center gap-2.5 text-xs text-slate-250 font-bold self-start sm:self-center">
-              <Filter className="w-4 h-4 text-cyan-400" />
-              <span className="text-slate-200">FILTER MATRIX:</span>
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+            <div className="flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400 font-bold self-start sm:self-center">
+              <Filter className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />
+              <span className="text-slate-800 dark:text-slate-200 uppercase tracking-wider">Filter Matrix:</span>
             </div>
             
             <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
               {/* Difficulty selector */}
-              <div className="flex items-center bg-slate-950/60 border border-slate-850/80 rounded-xl p-1 w-full sm:w-auto justify-between sm:justify-start">
-                <span className="text-[10px] text-slate-400 font-black uppercase px-2">Difficulty:</span>
+              <div className="flex items-center bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl p-1 w-full sm:w-auto justify-between sm:justify-start">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase px-2">Difficulty:</span>
                 <div className="flex">
                   {['all', 'easy', 'medium', 'hard'].map((opt) => (
                     <button
                       key={opt}
                       onClick={() => setDifficultyFilter(opt as any)}
-                      className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${difficultyFilter === opt ? 'bg-cyan-500 text-white' : 'text-slate-400 hover:text-slate-250'}`}
+                      className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${difficultyFilter === opt ? 'bg-cyan-500 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
                     >
                       {opt}
                     </button>
@@ -830,14 +830,14 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
               </div>
 
               {/* Status selector */}
-              <div className="flex items-center bg-slate-950/60 border border-slate-850/80 rounded-xl p-1 w-full sm:w-auto justify-between sm:justify-start">
-                <span className="text-[10px] text-slate-400 font-black uppercase px-2">Status:</span>
+              <div className="flex items-center bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl p-1 w-full sm:w-auto justify-between sm:justify-start">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase px-2">Status:</span>
                 <div className="flex">
                   {['all', 'locked', 'in-progress', 'completed'].map((opt) => (
                     <button
                       key={opt}
                       onClick={() => setStatusFilter(opt as any)}
-                      className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${statusFilter === opt ? 'bg-cyan-500 text-white' : 'text-slate-400 hover:text-slate-250'}`}
+                      className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${statusFilter === opt ? 'bg-cyan-500 text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
                     >
                       {opt.replace('-', ' ')}
                     </button>
@@ -849,11 +849,11 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
 
           {/* Filtered Grid Display */}
           {filteredMissions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-12 bg-slate-900/10 border border-slate-800 rounded-3xl gap-4">
-              <ShieldAlert className="w-10 h-10 text-slate-500 animate-bounce" />
+            <div className="flex flex-col items-center justify-center p-12 bg-slate-50 dark:bg-slate-900/10 border border-slate-200 dark:border-slate-800 rounded-3xl gap-4">
+              <ShieldAlert className="w-10 h-10 text-slate-450 animate-bounce" />
               <div className="space-y-1 text-center">
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider">No Missions Match Filter</h4>
-                <p className="text-xs text-slate-400 font-medium">Try clearing your difficulty or status selectors to view options.</p>
+                <h4 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider">No Missions Match Filter</h4>
+                <p className="text-xs text-slate-450 dark:text-slate-500 font-medium">Try clearing your difficulty or status selectors to view options.</p>
               </div>
             </div>
           ) : (
@@ -871,12 +871,12 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
                         setSelectedMission(mission);
                       }
                     }}
-                    className={`relative overflow-hidden group border rounded-3xl p-6 transition-all duration-300 ${
+                    className={`relative overflow-hidden group border rounded-3xl p-6 transition-all duration-350 shadow-sm hover:shadow-md ${
                       cardStyle.cardBg
                     } ${
                       isLocked 
                         ? 'cursor-not-allowed' 
-                        : 'cursor-pointer hover:bg-slate-800/20'
+                        : 'cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/20 hover:-translate-y-0.5'
                     }`}
                   >
                     <div className="flex justify-between items-start mb-4">
@@ -890,10 +890,10 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
                       </div>
                     </div>
 
-                    <div className="space-y-1.5 mb-6">
+                    <div className="space-y-1.5 mb-6 text-left">
                       <h4 className={`text-lg tracking-tight flex items-center gap-1 ${cardStyle.textTitle}`}>
                         {mission.title}
-                        {!isLocked && <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors group-hover:translate-x-0.5" />}
+                        {!isLocked && <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors group-hover:translate-x-0.5" />}
                       </h4>
                       <p className={`text-xs font-semibold leading-relaxed ${cardStyle.textDesc}`}>
                         {isLocked 
@@ -904,8 +904,8 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
 
                     <div className="space-y-2">
                       <div className="flex justify-between text-[10px] font-bold tracking-wide">
-                        <span className="text-slate-400 uppercase">Progress</span>
-                        <span className={isCompleted ? 'text-emerald-400 font-extrabold' : 'text-cyan-400 font-extrabold'}>{mission.progress}%</span>
+                        <span className="text-slate-400 dark:text-slate-500 uppercase">Progress</span>
+                        <span className={isCompleted ? 'text-emerald-500 dark:text-emerald-400 font-extrabold' : 'text-cyan-500 dark:text-cyan-400 font-extrabold'}>{mission.progress}%</span>
                       </div>
                       <div className={`w-full h-3 rounded-full overflow-hidden p-[2px] border ${cardStyle.progressBarBg}`}>
                         <div
@@ -917,12 +917,12 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
 
                     {/* Sealed Lock Overlay for locked grid cards */}
                     {isLocked && (
-                      <div className="absolute inset-0 bg-[#070b13]/92 backdrop-blur-[3px] flex flex-col items-center justify-center p-4 text-center border border-slate-900">
-                        <div className="p-3 bg-slate-900 border border-slate-800 rounded-full mb-2.5 shadow-lg">
-                          <Lock className="w-5 h-5 text-slate-400" />
+                      <div className="absolute inset-0 bg-white/95 dark:bg-slate-950/95 backdrop-blur-[2px] flex flex-col items-center justify-center p-4 text-center border border-slate-200 dark:border-slate-900">
+                        <div className="p-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full mb-2.5 shadow-sm">
+                          <Lock className="w-5 h-5 text-slate-400 dark:text-slate-500" />
                         </div>
-                        <span className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Locked Node</span>
-                        <p className="text-[11px] text-slate-200 font-bold px-4">
+                        <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Locked Node</span>
+                        <p className="text-[11px] text-slate-700 dark:text-slate-200 font-bold px-4">
                           {mission.telemetry.prerequisiteText || 'Complete previous requirements.'}
                         </p>
                       </div>
