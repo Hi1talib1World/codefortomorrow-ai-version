@@ -410,21 +410,64 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
             )}
           </div>
 
-          {/* Theme Toggle */}
+          {/* Theme Toggle — Animated Pill */}
           <button
             onClick={toggleTheme}
-            className="w-10 h-10 rounded-full bg-white/10 text-slate-200 hover:bg-white/20 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600 transition-all flex items-center justify-center border border-white/10 dark:border-slate-600 shrink-0 aspect-square"
+            className={`relative w-[52px] h-[28px] rounded-full transition-all duration-500 ease-in-out flex items-center cursor-pointer shrink-0 border focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-[#111827] ${
+              theme === 'light'
+                ? 'bg-gradient-to-r from-amber-400 to-orange-400 border-amber-500/30 focus:ring-amber-400/50'
+                : 'bg-gradient-to-r from-indigo-600 to-violet-700 border-indigo-400/30 focus:ring-indigo-400/50'
+            }`}
             aria-label="Toggle theme"
+            title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
           >
-            {theme === 'light' ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            {/* Sliding indicator */}
+            <div
+              className={`absolute top-[3px] w-[22px] h-[22px] rounded-full shadow-md transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex items-center justify-center ${
+                theme === 'light'
+                  ? 'left-[3px] bg-white'
+                  : 'left-[27px] bg-slate-900'
+              }`}
+            >
+              {/* Sun icon */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={`w-3.5 h-3.5 text-amber-500 absolute transition-all duration-400 ${
+                  theme === 'light' ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-0'
+                }`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m3.343-5.657l-.707-.707m12.728 0l.707-.707M6.343 17.657l-.707.707m12.728 0l.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 9H3m3.343-5.657l.707.707m12.728 12.728l.707.707M6.343 17.657l-.707.707M17.657 6.343l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              {/* Moon icon */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={`w-3.5 h-3.5 text-indigo-300 absolute transition-all duration-400 ${
+                  theme === 'dark' ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-0'
+                }`}
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
               </svg>
-            )}
+            </div>
+            {/* Decorative stars for dark mode */}
+            <div className={`absolute right-[8px] top-[5px] transition-all duration-500 ${theme === 'dark' ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`}>
+              <div className="w-1 h-1 bg-white rounded-full animate-pulse"></div>
+            </div>
+            <div className={`absolute right-[14px] top-[10px] transition-all duration-500 delay-75 ${theme === 'dark' ? 'opacity-70 scale-100' : 'opacity-0 scale-0'}`}>
+              <div className="w-0.5 h-0.5 bg-white/80 rounded-full animate-pulse [animation-delay:0.5s]"></div>
+            </div>
+            {/* Decorative rays for light mode */}
+            <div className={`absolute left-[30px] top-[6px] transition-all duration-500 ${theme === 'light' ? 'opacity-60 scale-100' : 'opacity-0 scale-0'}`}>
+              <div className="w-1 h-1 bg-white rounded-full"></div>
+            </div>
+            <div className={`absolute left-[38px] top-[12px] transition-all duration-500 delay-75 ${theme === 'light' ? 'opacity-40 scale-100' : 'opacity-0 scale-0'}`}>
+              <div className="w-0.5 h-0.5 bg-white/80 rounded-full"></div>
+            </div>
           </button>
 
           {/* Messaging Shortcut Icon */}
