@@ -457,18 +457,45 @@ User Message: "${message}"`;
   }
 
   static async chatWithAssistant(message: string, history: { role: 'user' | 'model'; parts: { text: string }[] }[], user: any): Promise<string> {
+    const userName = user?.name || 'Student';
     const systemInstruction = `You are a helpful and friendly AI Coding Assistant for the "Code for Tomorrow" platform. 
 Your role is to help students (ages 8-15) learn coding, debugging, and programming concepts.
-The student you are chatting with is named ${user.name}.
+The student you are chatting with is named ${userName}.
 Keep explanations beginner-friendly, visual, and highly encouraging. Use Markdown and code blocks for code examples.`;
 
     try {
       if (!hasValidGeminiKey()) {
         throw new Error("No valid Gemini API key configured.");
       }
+
+      // Safeguard: Ensure history turns alternate and start with 'user'
+      let filteredHistory = (history || []).map(h => ({
+        role: h.role === 'model' ? 'model' as const : 'user' as const,
+        parts: h.parts || []
+      })).filter(h => h.parts && h.parts.length > 0 && h.parts[0]?.text);
+
+      if (filteredHistory.length > 0 && filteredHistory[0].role === 'model') {
+        filteredHistory.shift(); // Remove model welcome message to ensure history starts with user
+      }
+
+      // strictly alternate turns
+      const finalHistory: typeof filteredHistory = [];
+      for (const turn of filteredHistory) {
+        if (finalHistory.length === 0) {
+          if (turn.role === 'user') {
+            finalHistory.push(turn);
+          }
+        } else {
+          const lastTurn = finalHistory[finalHistory.length - 1];
+          if (lastTurn.role !== turn.role) {
+            finalHistory.push(turn);
+          }
+        }
+      }
+
       const response = await getAi().models.generateContent({
         model: this.model,
-        contents: [...history, { role: 'user', parts: [{ text: message }] }],
+        contents: [...finalHistory, { role: 'user', parts: [{ text: message }] }],
         config: {
           systemInstruction: systemInstruction,
         }
@@ -514,7 +541,7 @@ console.log(factorial(5)); // Output: 120
 
 Think of it like a set of Russian nesting dolls; you keep opening smaller dolls until you find the tiniest one (the base case)!`;
       }
-      return `Hi ${user.name}! I am currently running in offline database-aware mode because there is no valid Gemini API key configured. 
+      return `Hi ${userName}! I am currently running in offline database-aware mode because there is no valid Gemini API key configured. 
 
 If you are a student or developer:
 - You can ask me about **loops**, **recursion**, or general programming concepts.
