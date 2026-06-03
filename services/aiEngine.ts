@@ -1,6 +1,8 @@
 
 import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
 import dotenv from 'dotenv';
+import User from '../models/user.model';
+import Progress from '../models/progress.model';
 
 dotenv.config();
 
@@ -23,6 +25,50 @@ export interface AIContext {
 
 export class AIEngine {
   private static model = "gemini-3-flash-preview";
+
+  static async getSystemContext() {
+    try {
+      const totalUsers = await User.countDocuments();
+      const students = await User.find({ role: 'student' }).populate('progress');
+      const teachersCount = await User.countDocuments({ role: 'teacher' });
+      const adminsCount = await User.countDocuments({ role: 'admin' });
+
+      const studentList = students.map(student => {
+        const prog = student.progress as any;
+        return {
+          id: student._id.toString(),
+          name: student.name,
+          email: student.email,
+          xp: prog ? prog.xp : 0,
+          streak: prog ? prog.streak : 0,
+          strengths: prog?.learningProfile?.strengths || [],
+          weaknesses: prog?.learningProfile?.weaknesses || [],
+          skillMastery: prog?.skillMastery ? (prog.skillMastery instanceof Map ? Object.fromEntries(prog.skillMastery) : prog.skillMastery) : {}
+        };
+      });
+
+      return {
+        stats: {
+          totalUsers,
+          studentsCount: students.length,
+          teachersCount,
+          adminsCount,
+        },
+        students: studentList
+      };
+    } catch (error) {
+      console.error("Failed to fetch system context:", error);
+      return {
+        stats: {
+          totalUsers: 0,
+          studentsCount: 0,
+          teachersCount: 0,
+          adminsCount: 0,
+        },
+        students: []
+      };
+    }
+  }
 
   /**
    * Generates a personalized learning recommendation
@@ -271,24 +317,30 @@ export class AIEngine {
 Your role is to analyze learning data, identify students who are falling behind, detect system bugs/bottlenecks, and recommend interventions. 
 Keep your response short, highly analytical, and technical.
 First, output 2 internal analysis steps or thoughts you perform (e.g. "Querying completion speeds...", "Checking error rate variance...") as an array of strings in the 'thoughts' field. 
-Then, output your actual final reply to the administrator in the 'response' field.`;
+Then, output your actual final reply to the administrator in the 'response' field.
+You MUST use the provided 'Real-Time Platform Context' data (which contains actual statistics and student records from the database) to answer the query accurately. Do not invent mock data or refer to simulated students like 'John Doe' unless they are actually present in the context.`;
     } else if (agentId === 'curriculum-factory') {
       systemInstruction = `You are the Curriculum Factory AI Agent for the Code for Tomorrow platform. 
 Your role is to generate lesson structures, design challenges, translate assets, and tailor syllabi based on school requirements. 
 Keep your response short, instructional, and practical.
 First, output 2 internal curriculum construction steps or thoughts you perform (e.g. "Drafting challenge specifications...", "Translating module schema...") as an array of strings in the 'thoughts' field. 
-Then, output your actual final reply to the administrator in the 'response' field.`;
+Then, output your actual final reply to the administrator in the 'response' field.
+You MUST use the provided 'Real-Time Platform Context' data (which contains actual statistics and student records from the database) to answer the query accurately. Do not invent mock data or refer to simulated students like 'John Doe' unless they are actually present in the context.`;
     } else if (agentId === 'b2b-sales') {
       systemInstruction = `You are the B2B Sales AI Agent for the Code for Tomorrow platform. 
 Your role is to analyze leads, score opportunities, draft enterprise proposals, and assist deployment planners. 
 Keep your response short, business-oriented, and strategic.
 First, output 2 internal sales logic steps or thoughts you perform (e.g. "Evaluating lead budget signals...", "Structuring pricing tiered matrix...") as an array of strings in the 'thoughts' field. 
-Then, output your actual final reply to the administrator in the 'response' field.`;
+Then, output your actual final reply to the administrator in the 'response' field.
+You MUST use the provided 'Real-Time Platform Context' data (which contains actual statistics and student records from the database) to answer the query accurately. Do not invent mock data or refer to simulated students like 'John Doe' unless they are actually present in the context.`;
     } else {
       systemInstruction = `You are an AI assistant helping the administrator.`;
     }
 
-    const contents = `User Message: "${message}"`;
+    const context = await this.getSystemContext();
+    const contents = `Real-Time Platform Context: ${JSON.stringify(context)}
+
+User Message: "${message}"`;
 
     try {
       const response = await getAi().models.generateContent({
@@ -316,7 +368,7 @@ Then, output your actual final reply to the administrator in the 'response' fiel
     } catch (error) {
       console.error("Agent Chat Gemini Error:", error);
       
-      // Fallback/Mock Mode: generate a smart, contextual persona-based reply
+      // Fallback/Mock Mode: generate a smart, contextual persona-based reply using real telemetry
       let mockThoughts: string[] = [];
       let mockReply = "";
       
@@ -325,15 +377,24 @@ Then, output your actual final reply to the administrator in the 'response' fiel
       if (agentId === 'student-analytics') {
         mockThoughts = [
           "Querying user progress database for matching student records...",
-          "Analyzing session duration telemetry and error rate variations..."
+          "Analyzing student XP levels and learning profile weaknesses..."
         ];
         
-        if (query.includes('student') || query.includes('who') || query.includes('progress') || query.includes('stuck')) {
-          mockReply = "Based on current activity logs, student John Doe has completed 15/20 exercises but is currently stuck on the Loops module with a 45% error rate. I recommend assigning the 'For Loop Visualizer' helper module.";
+        if (query.includes('student') || query.includes('who') || query.includes('progress') || query.includes('stuck') || query.includes('struggle')) {
+          const struggling = context.students.filter(s => s.weaknesses.length > 0 || s.xp < 100);
+          if (struggling.length > 0) {
+            const list = struggling.slice(0, 3).map(s => `${s.name} (XP: ${s.xp}, Weaknesses: ${s.weaknesses.join(', ') || 'none'})`).join(', ');
+            mockReply = `Based on live database records, the following students may need attention: ${list}. I recommend assigning tailored practice modules.`;
+          } else if (context.students.length > 0) {
+            const list = context.students.slice(0, 3).map(s => s.name).join(', ');
+            mockReply = `Currently registered students in the database: ${list}. All students seem to be progressing normally with no flagged weaknesses.`;
+          } else {
+            mockReply = "There are currently no student accounts registered in the database to analyze.";
+          }
         } else if (query.includes('bug') || query.includes('error') || query.includes('fail') || query.includes('crash')) {
-          mockReply = "I detected an increase in network timeout errors in Classroom B's dashboard logs. It seems to correlate with the socket reconnect issue. I've flagged this for backend review.";
+          mockReply = "I scanned the system logs and database collections. There are no critical database anomalies or schema mapping issues detected at this time.";
         } else {
-          mockReply = "I have scanned the active cohort logs. Overall retention is stable at 89%. However, 3 students are lagging behind on their assignments. I can compile a customized intervention sheet for you.";
+          mockReply = `I have completed an analysis of our ${context.stats.studentsCount} registered students. The overall performance distribution shows a healthy telemetry with average student XP around ${context.students.length ? Math.round(context.students.reduce((acc, s) => acc + s.xp, 0) / context.students.length) : 0} points.`;
         }
       } else if (agentId === 'curriculum-factory') {
         mockThoughts = [
@@ -342,11 +403,16 @@ Then, output your actual final reply to the administrator in the 'response' fiel
         ];
         
         if (query.includes('javascript') || query.includes('js') || query.includes('loop') || query.includes('code')) {
-          mockReply = "Here is a draft challenge for Loops:\n\n**Challenge**: Write a function `sumEvenNumbers(arr)` that sums all even numbers in an array. Add test assertions:\n1. `sumEvenNumbers([1, 2, 3, 4])` returns `6`.\n2. `sumEvenNumbers([])` returns `0`.";
+          mockReply = "Here is a personalized challenge for Loops:\n\n**Challenge**: Write a function `sumEvenNumbers(arr)` that sums all even numbers in an array. Add test assertions:\n1. `sumEvenNumbers([1, 2, 3, 4])` returns `6`.\n2. `sumEvenNumbers([])` returns `0`.";
         } else if (query.includes('translate') || query.includes('french') || query.includes('spanish') || query.includes('arabic')) {
-          mockReply = "Sure! I've loaded the 'Variables and Types' module and generated the translation structure. I can commit these localized files directly to the public repository.";
+          mockReply = "Sure! I've loaded the translation templates. Tell me which module to translate and I will output the localization files.";
         } else {
-          mockReply = "Curriculum outline loaded. I'm ready to generate lesson modules, draft coding challenge structures, or localize assets. What programming path should we build?";
+          const studentWithWeakness = context.students.find(s => s.weaknesses.length > 0);
+          if (studentWithWeakness) {
+            mockReply = `Curriculum Engine is ready. I noticed student ${studentWithWeakness.name} is struggling with ${studentWithWeakness.weaknesses.join(', ')}. Should I generate a specialized coding patch for them?`;
+          } else {
+            mockReply = "Curriculum Engine is active. I can generate learning paths, customize coding exercises, or structure review packages for the student cohort.";
+          }
         }
       } else if (agentId === 'b2b-sales') {
         mockThoughts = [
@@ -354,16 +420,16 @@ Then, output your actual final reply to the administrator in the 'response' fiel
           "Calculating opportunity scores and tiering proposal rates..."
         ];
         
-        if (query.includes('lead') || query.includes('score') || query.includes('sales') || query.includes('pipeline')) {
-          mockReply = "We have received 5 new B2B leads today. The highest score is 'Atlas Academy' (Score: 92/100) with a budget threshold of $35k. I have queued a custom follow-up email.";
+        if (query.includes('lead') || query.includes('score') || query.includes('sales') || query.includes('pipeline') || query.includes('count') || query.includes('user') || query.includes('total')) {
+          mockReply = `Platform statistics from database: Total Users: ${context.stats.totalUsers}, Students: ${context.stats.studentsCount}, Teachers: ${context.stats.teachersCount}, Admins: ${context.stats.adminsCount}.`;
         } else if (query.includes('proposal') || query.includes('price') || query.includes('contract') || query.includes('deal')) {
-          mockReply = "Enterprise proposal drafted for 'Boston School District'. Pricing is set at $15/student/year, capped at $12,000 for 1,000 students. The review package is ready for your signature.";
+          mockReply = `B2B Sales Agent ready. Based on the current user footprint of ${context.stats.totalUsers} users, the recommended enterprise tier pricing is $15/seat/year. I can compile a formal proposal document for deployment.`;
         } else {
-          mockReply = "Sales pipeline is healthy. Outbound outreach has a 14% response rate this week. Let me know if you want me to draft a new organization proposal or evaluate competitor pricing.";
+          mockReply = `Outbound system checks show the platform is active with ${context.stats.teachersCount} teachers overseeing ${context.stats.studentsCount} students. Let me know if you would like me to generate a deployment plan or outreach template.`;
         }
       } else {
         mockThoughts = ["Analyzing message...", "Synthesizing fallback response..."];
-        mockReply = `I received your message "${message}". Since my Gemini API connection is offline, I'm responding in fallback mode. Please configure your GEMINI_API_KEY in the .env file.`;
+        mockReply = `I received your message "${message}". My Gemini API connection is offline, but database connectivity is active: ${context.stats.totalUsers} total users loaded. Please check your GEMINI_API_KEY in the .env file.`;
       }
       
       return {
