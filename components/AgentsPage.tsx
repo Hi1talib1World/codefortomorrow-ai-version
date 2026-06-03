@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import AgentPanel, { AgentLogEntry, AgentState } from './AgentPanel';
+import ReportFeed, { GlobalAgentLogEntry } from './ReportFeed';
 import api from '../services/api';
 
 const AGENT_TABS = [
@@ -13,6 +14,24 @@ const AgentsPage: React.FC = () => {
   const [logsByAgent, setLogsByAgent] = useState<Record<string, AgentLogEntry[]>>({});
   const [activeTab, setActiveTab] = useState<string>('student-analytics');
   const [streamError, setStreamError] = useState<string | null>(null);
+
+  // Centralized operations log aggregator
+  const allLogs = useMemo(() => {
+    const combined: GlobalAgentLogEntry[] = [];
+    Object.entries(logsByAgent).forEach(([agentId, logsList]) => {
+      const agent = agents.find((a) => a.id === agentId);
+      logsList.forEach((log) => {
+        combined.push({
+          ...log,
+          agentId,
+          agentName: agent ? agent.name : agentId,
+        });
+      });
+    });
+    return combined
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, 50);
+  }, [logsByAgent, agents]);
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -110,10 +129,18 @@ const AgentsPage: React.FC = () => {
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        {agents.map((agent) => (
-          <AgentPanel key={agent.id} agent={agent} logs={logsByAgent[agent.id] || []} onCommand={handleCommand} />
-        ))}
+      <div className="grid gap-6 lg:grid-cols-4">
+        {/* Left column: Individual Agent Monitoring cards */}
+        <div className="lg:col-span-3 grid gap-6 md:grid-cols-3 items-start">
+          {agents.map((agent) => (
+            <AgentPanel key={agent.id} agent={agent} logs={logsByAgent[agent.id] || []} onCommand={handleCommand} />
+          ))}
+        </div>
+
+        {/* Right column: Global Centralized live operations feed */}
+        <div className="lg:col-span-1">
+          <ReportFeed logs={allLogs} isGlobal />
+        </div>
       </div>
 
       <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-700">
