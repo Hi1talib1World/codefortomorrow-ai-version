@@ -71,16 +71,46 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
   }, [searchQuery, view]);
 
   useEffect(() => {
-    fetchConversations();
     if (currentUser.role === 'student') {
       fetchTeachers();
     }
   }, []);
 
+  // Poll conversations and active messages in real-time (every 4 seconds)
   useEffect(() => {
-    if (selectedUser) {
-      fetchConversation(selectedUser._id);
-    }
+    let isMounted = true;
+
+    const pollMessageUpdates = async () => {
+      try {
+        const conversationsData = await api.getConversations();
+        if (isMounted) {
+          setConversations(conversationsData);
+        }
+
+        if (selectedUser) {
+          const messagesData = await api.getConversation(selectedUser._id);
+          if (isMounted) {
+            setMessages(prev => {
+              // Avoid updating if the messages list hasn't changed to prevent scroll jumping
+              const hasChanged = prev.length !== messagesData.length || 
+                (messagesData.length > 0 && prev[prev.length - 1]?._id !== messagesData[messagesData.length - 1]?._id);
+              return hasChanged ? messagesData : prev;
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error polling messaging updates:', error);
+      }
+    };
+
+    pollMessageUpdates(); // Fetch immediately on mount or user change
+
+    const interval = setInterval(pollMessageUpdates, 4000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, [selectedUser]);
 
   useEffect(() => {
