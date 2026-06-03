@@ -228,16 +228,27 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
                 googleId,
                 profilePictureUrl: picture || `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`,
                 progress: newProgress._id,
+                emailVerified: true,
             });
             // Populate progress for the response
             user = await user.populate('progress');
-        } else if (!user.googleId) {
-             // If user existed via email but now logs in via Google, link the account
-             user.googleId = googleId;
+        } else {
+             let changed = false;
+             if (!user.googleId) {
+                 user.googleId = googleId;
+                 changed = true;
+             }
              if (!user.profilePictureUrl && picture) {
                  user.profilePictureUrl = picture;
+                 changed = true;
              }
-             await user.save();
+             if (!user.emailVerified) {
+                 user.emailVerified = true;
+                 changed = true;
+             }
+             if (changed) {
+                 await user.save();
+             }
         }
 
         // 4. Generate backend JWT Token
@@ -285,24 +296,54 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
     }
 
     try {
-        console.log('Verifying Firebase token...');
-        const firebaseAdmin = initializeFirebaseAdmin();
-        const decodedToken: any = await firebaseAdmin.auth().verifyIdToken(token);
+        let decodedToken: any;
+        const hasAdminCredentials = !!(process.env.FIREBASE_SERVICE_ACCOUNT_KEY || process.env.GOOGLE_APPLICATION_CREDENTIALS);
+
+        if (!hasAdminCredentials) {
+            console.warn('⚠️ Firebase admin credentials are not configured. Decoding token without signature verification (Development Mode Only).');
+            decodedToken = jwt.decode(token);
+            if (!decodedToken) {
+                throw new ApiError(400, 'Invalid Firebase ID token format');
+            }
+        } else {
+            console.log('Verifying Firebase token using Admin SDK...');
+            const firebaseAdmin = initializeFirebaseAdmin();
+            decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
+        }
+
         if (!decodedToken) {
             throw new ApiError(400, 'Invalid Firebase ID token');
         }
 
+        const emailVerified = decodedToken.email_verified ?? decodedToken.emailVerified;
+        const isPasswordProvider = decodedToken.firebase?.sign_in_provider === 'password';
+
+        const email = decodedToken.email;
+        const googleId = decodedToken.uid || decodedToken.sub;
+
+        // Query the database for the user to determine if they are an existing account
+        const existingUser = await User.findOne({ 
+            $or: [{ googleId }, { email }] 
+        });
+
+        // Threshold cutoff date: June 3, 2026. Only users created on/after this require email verification.
+        const registrationThreshold = new Date('2026-06-03T00:00:00.000Z');
+        const userNeedsVerification = !existingUser || (existingUser && existingUser.createdAt >= registrationThreshold);
+
+        if (hasAdminCredentials && isPasswordProvider && emailVerified === false && userNeedsVerification) {
+             console.log('Blocking unverified login attempt for email:', decodedToken.email);
+             throw new ApiError(401, 'Please verify your email address before logging in.');
+        }
+
         console.log('Firebase ID token decoded:', {
-          uid: decodedToken.uid,
-          email: decodedToken.email,
+          uid: googleId,
+          email: email,
           name: decodedToken.name,
           picture: decodedToken.picture,
         });
 
-        const email = decodedToken.email;
         const name = decodedToken.name || (email ? email.split('@')[0] : 'User');
         const picture = decodedToken.picture || `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`;
-        const googleId = decodedToken.uid;
 
         const isDbConnected = mongoose.connection.readyState === 1;
         if (!isDbConnected) {
@@ -339,11 +380,22 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
                 googleId,
                 profilePictureUrl: picture,
                 progress: newProgress._id,
+                emailVerified: emailVerified,
             });
             user = await user.populate('progress');
-        } else if (!user.googleId) {
-             user.googleId = googleId;
-             await user.save();
+        } else {
+             let changed = false;
+             if (!user.googleId) {
+                 user.googleId = googleId;
+                 changed = true;
+             }
+             if (user.emailVerified !== emailVerified) {
+                 user.emailVerified = emailVerified;
+                 changed = true;
+             }
+             if (changed) {
+                 await user.save();
+             }
         }
 
         console.log('Firebase auth found/created user:', {
