@@ -838,6 +838,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
               </p>
             </div>
 
+
             {/* Action CTA */}
             <button
               onClick={() => {
@@ -849,6 +850,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
               <BookOpen className="w-4 h-4" /> START ROADMAP
             </button>
           </div>
+        </div>
       )}
     </div>
   );
