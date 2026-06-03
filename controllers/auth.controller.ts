@@ -32,6 +32,37 @@ const initializeFirebaseAdmin = () => {
   });
 };
 
+const determineRole = (email: string, requestedRole?: string): 'student' | 'teacher' | 'admin' => {
+  const allowedEmails = (process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (allowedEmails.includes(email.toLowerCase())) {
+    return 'admin';
+  }
+
+  if (requestedRole === 'teacher') {
+    return 'teacher';
+  }
+
+  return 'student';
+};
+
+const syncUserRole = async (user: any) => {
+  const allowedEmails = (process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (allowedEmails.includes(user.email.toLowerCase())) {
+    if (user.role !== 'admin') {
+      user.role = 'admin';
+      await user.save();
+    }
+  }
+};
+
 const setAuthCookie = (res: Response, token: string, req?: Request) => {
   const cookieOptions: any = {
     httpOnly: true,
@@ -56,9 +87,8 @@ const setAuthCookie = (res: Response, token: string, req?: Request) => {
  * @route   POST /api/auth/register
  * @access  Public
  */
-// Fix: Use Request, Response, NextFunction types from express to resolve property errors.
 export const register = async (req: Request, res: Response, next: NextFunction) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
     const isDbConnected = mongoose.connection.readyState === 1;
@@ -76,15 +106,17 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     // Each new user gets a corresponding progress document.
     const newProgress = await Progress.create({});
 
+    const userRole = determineRole(email, role);
+
     const user = await User.create({
       name,
       email,
       password,
+      role: userRole,
       progress: newProgress._id,
     });
 
     if (user) {
-      // We don't want to send the password back, even if it's hashed.
       const userResponse = {
         _id: user._id,
         name: user.name,
@@ -92,6 +124,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         profilePictureUrl: user.profilePictureUrl,
         progress: newProgress,
         currentPath: null,
+        role: user.role,
       };
 
       const token = generateToken(user._id);
@@ -114,7 +147,6 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
  * @route   POST /api/auth/login
  * @access  Public
  */
-// Fix: Use Request, Response, NextFunction types from express to resolve property errors.
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
 
@@ -128,6 +160,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     const user = await User.findOne({ email }).populate('progress');
 
     if (user && (await bcrypt.compare(password, user.password || ''))) {
+      // Sync admin status from environment variables dynamically
+      await syncUserRole(user);
       
       const userResponse = {
         _id: user._id,
@@ -136,6 +170,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         profilePictureUrl: user.profilePictureUrl,
         progress: user.progress,
         currentPath: (user as any).currentPath,
+        role: user.role,
       };
       
       const token = generateToken(user._id);
@@ -158,7 +193,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
  * @route   GET /api/auth/me
  * @access  Private
  */
-// Fix: Use Request, Response, NextFunction types from express to resolve property errors.
 export const getMe = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const isDbConnected = mongoose.connection.readyState === 1;
@@ -172,6 +206,10 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
     if (!user) {
         throw new ApiError(404, 'User not found');
     }
+    
+    // Sync admin status from environment variables dynamically
+    await syncUserRole(user);
+
     res.json(user);
   } catch (error) {
     next(error);

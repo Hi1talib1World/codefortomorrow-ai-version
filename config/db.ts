@@ -1,5 +1,14 @@
 
 import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+
+let mongoUri = process.env.MONGO_URI;
+// If no URI or pointing to localhost, fall back to in‑memory MongoDB
+if (!mongoUri || mongoUri.includes('localhost') || mongoUri.includes('127.0.0.1')) {
+  console.warn('⚠️ Using MongoMemoryServer fallback (no external DB).');
+  const mongod = await MongoMemoryServer.create();
+  mongoUri = mongod.getUri();
+}
 
 let isConnecting = false;
 
@@ -11,8 +20,8 @@ const connectDB = async () => {
   if (isConnecting) return;
   if (mongoose.connection.readyState === 1) return;
 
-  const mongoUri = process.env.MONGO_URI;
-  console.log('MONGO_URI =', process.env.MONGO_URI);
+  // mongoUri is defined above with fallback logic
+  console.log('MONGO_URI =', mongoUri);
 
   if (!mongoUri) {
     const message = 'MONGO_URI is not defined in environment variables. Database connection cannot be established.';

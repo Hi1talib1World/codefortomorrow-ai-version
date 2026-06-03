@@ -6,7 +6,7 @@ import { BADGES_BY_PATH } from '../../constants';
 import { useLanguage } from '../../contexts/LanguageContext';
 import EditProfileModal from '../EditProfileModal';
 import api from '../../services/api';
-import { Sparkles, Target, Zap, Brain, Plus, Pencil, Award, BookOpen, Shield, Bot } from 'lucide-react';
+import { Sparkles, Target, Zap, Brain, Plus, Pencil, Award, BookOpen, Shield, Bot, BarChart3 } from 'lucide-react';
 import AnimatedCounter from '../AnimatedCounter';
 import { AvatarPreview } from '../StoreScreen';
 
@@ -201,7 +201,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                 👤 {currentUser.role === 'admin' ? 'Admin' : currentUser.role === 'teacher' ? 'Instructor' : 'Student'}
               </span>
               {currentUser.role === 'admin' && (
-                <div className="flex justify-center gap-3 mt-4">
+                <div className="flex justify-center gap-3 mt-4 flex-wrap">
                   <button
                     onClick={() => navigate('/admin')}
                     className="flex items-center gap-2 bg-[#2E2FCE] hover:bg-[#1E1FB5] text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg uppercase tracking-wider cursor-pointer border border-[#2E2FCE]/50"
@@ -209,10 +209,16 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                     <Shield className="w-3.5 h-3.5" /> Admin Panel
                   </button>
                   <button
+                    onClick={() => navigate('/admin/analytics')}
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg uppercase tracking-wider cursor-pointer border border-blue-600/50"
+                  >
+                    <BarChart3 className="w-3.5 h-3.5" /> Analytics
+                  </button>
+                  <button
                     onClick={() => navigate('/admin/agents')}
                     className="flex items-center gap-2 bg-[#FBBF24] hover:bg-[#D9A406] text-slate-900 font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg uppercase tracking-wider cursor-pointer border border-[#FBBF24]/50"
                   >
-                    <Bot className="w-3.5 h-3.5" /> Agents Dashboard
+                    <Bot className="w-3.5 h-3.5" /> Agents
                   </button>
                 </div>
               )}

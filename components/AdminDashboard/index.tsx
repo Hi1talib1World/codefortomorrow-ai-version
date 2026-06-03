@@ -10,7 +10,6 @@ import ContentEditor from './ContentEditor';
 import AnalyticsPanel from './AnalyticsPanel';
 import { AdminPanel as OpenSourceAdmin } from '../OpenSourceScreen/AdminPanel';
 import AgentsPage from '../AgentsPage';
-import DiagnosticsPanel from './DiagnosticsPanel';
 
 interface AdminDashboardProps {
   currentUser: { name: string; email: string; profilePictureUrl: string } | null;

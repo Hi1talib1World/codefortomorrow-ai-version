@@ -166,7 +166,7 @@ async function startServer() {
   app.use('/api/admin', adminRoutes);
   app.use('/api', missionsRoutes);
   app.use('/api', learningEventsRoutes);
-  app.use('/api', agentsRoutes);
+  app.use('/api/agents', agentsRoutes);
 
   const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:5001';
   app.use(
