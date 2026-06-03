@@ -99,6 +99,20 @@ const AgentsPage: React.FC = () => {
     }
   };
 
+  const handleTogglePause = async (agentId: string, isCurrentlyPaused: boolean) => {
+    try {
+      const result = isCurrentlyPaused 
+        ? await api.resumeAgent(agentId)
+        : await api.pauseAgent(agentId);
+      
+      if (result.agent) {
+        setAgents((current) => current.map((agent) => agent.id === result.agent.id ? result.agent : agent));
+      }
+    } catch (error) {
+      console.error('Agent pause/resume toggle failed:', error);
+    }
+  };
+
   const getAgentStatus = (agentId: string) => {
     return agents.find((a) => a.id === agentId)?.status;
   };
