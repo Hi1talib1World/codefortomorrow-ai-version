@@ -37,7 +37,6 @@ interface Message {
 
 const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose }) => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [teachers, setTeachers] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<Conversation['user'] | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
@@ -51,30 +50,26 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
 
   useEffect(() => {
     if (view === 'contacts') {
+      const fetchContacts = async () => {
+        setIsSearchingUsers(true);
+        try {
+          const results = await api.searchUsers(searchQuery);
+          setSearchResults(results);
+        } catch (error) {
+          console.error('Error searching users:', error);
+        } finally {
+          setIsSearchingUsers(false);
+        }
+      };
+
       if (searchQuery.trim().length > 0) {
-        const delayDebounceFn = setTimeout(async () => {
-          setIsSearchingUsers(true);
-          try {
-            const results = await api.searchUsers(searchQuery);
-            setSearchResults(results);
-          } catch (error) {
-            console.error('Error searching users:', error);
-          } finally {
-            setIsSearchingUsers(false);
-          }
-        }, 300);
+        const delayDebounceFn = setTimeout(fetchContacts, 300);
         return () => clearTimeout(delayDebounceFn);
       } else {
-        setSearchResults([]);
+        fetchContacts();
       }
     }
   }, [searchQuery, view]);
-
-  useEffect(() => {
-    if (currentUser.role === 'student') {
-      fetchTeachers();
-    }
-  }, []);
 
   // Poll conversations and active messages in real-time (every 4 seconds)
   useEffect(() => {
@@ -133,15 +128,6 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
     }
   };
 
-  const fetchTeachers = async () => {
-    try {
-      const data = await api.getTeachers();
-      setTeachers(data);
-    } catch (error) {
-      console.error('Error fetching teachers:', error);
-    }
-  };
-
   const fetchConversation = async (userId: string) => {
     try {
       const data = await api.getConversation(userId);
@@ -172,10 +158,6 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
 
   const filteredConversations = conversations.filter(c =>
     c.user.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const filteredTeachers = teachers.filter(t =>
-    t.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -276,60 +258,32 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
                 <div className="p-8 flex justify-center">
                   <div className="w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
                 </div>
-              ) : searchQuery.trim().length > 0 ? (
-                searchResults.length === 0 ? (
-                  <div className="p-8 text-center text-slate-400 font-bold text-sm">No users found.</div>
-                ) : (
-                  searchResults.map((user) => (
-                    <button
-                      key={user._id}
-                      onClick={() => {
-                        setSelectedUser(user);
-                        setView('conversations');
-                      }}
-                      className="w-full p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-2xl transition-all"
-                    >
-                      <img
-                        src={user.profilePictureUrl || 'https://picsum.photos/seed/user/100/100'}
-                        alt={user.name}
-                        className="w-12 h-12 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-sm"
-                        referrerPolicy="no-referrer"
-                      />
-                      <div className="text-left">
-                        <h3 className="font-black text-slate-800 dark:text-white text-sm">{user.name}</h3>
-                        <p className="text-[10px] font-black text-brand-600 uppercase tracking-widest">{user.role}</p>
-                      </div>
-                    </button>
-                  ))
-                )
+              ) : searchResults.length === 0 ? (
+                <div className="p-8 text-center text-slate-400 font-bold text-sm">
+                  {searchQuery.trim().length > 0 ? 'No users found.' : 'No available contacts.'}
+                </div>
               ) : (
-                currentUser.role === 'student' && filteredTeachers.length > 0 ? (
-                  filteredTeachers.map((teacher) => (
-                    <button
-                      key={teacher._id}
-                      onClick={() => {
-                        setSelectedUser(teacher);
-                        setView('conversations');
-                      }}
-                      className="w-full p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-2xl transition-all"
-                    >
-                      <img
-                        src={teacher.profilePictureUrl || 'https://picsum.photos/seed/teacher/100/100'}
-                        alt={teacher.name}
-                        className="w-12 h-12 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-sm"
-                        referrerPolicy="no-referrer"
-                      />
-                      <div className="text-left">
-                        <h3 className="font-black text-slate-800 dark:text-white text-sm">{teacher.name}</h3>
-                        <p className="text-[10px] font-black text-brand-600 uppercase tracking-widest">Teacher</p>
-                      </div>
-                    </button>
-                  ))
-                ) : (
-                  <div className="p-8 text-center text-slate-400 font-bold text-sm">
-                    Type a name to search registered users.
-                  </div>
-                )
+                searchResults.map((user) => (
+                  <button
+                    key={user._id}
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setView('conversations');
+                    }}
+                    className="w-full p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-2xl transition-all"
+                  >
+                    <img
+                      src={user.profilePictureUrl || 'https://picsum.photos/seed/user/100/100'}
+                      alt={user.name}
+                      className="w-12 h-12 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-sm"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="text-left">
+                      <h3 className="font-black text-slate-800 dark:text-white text-sm">{user.name}</h3>
+                      <p className="text-[10px] font-black text-brand-600 uppercase tracking-widest">{user.role}</p>
+                    </div>
+                  </button>
+                ))
               )}
             </div>
           )}
