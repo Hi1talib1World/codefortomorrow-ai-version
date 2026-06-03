@@ -134,7 +134,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
           onClose={() => setIsEditModalOpen(false)}
         />
       )}
-      <div className="bg-[#f3f2ef] dark:bg-slate-950 min-h-screen text-slate-800 dark:text-white font-sans py-8 px-4 sm:px-6 transition-colors">
+      <div className="bg-brand-50 dark:bg-slate-900 min-h-screen text-slate-800 dark:text-white font-sans py-8 px-4 sm:px-6 transition-colors">
         <div className="max-w-4xl mx-auto flex flex-col gap-5">
 
           {/* CARD 1: Intro Card (LinkedIn Header Style) */}
