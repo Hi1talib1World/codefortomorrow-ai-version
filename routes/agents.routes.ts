@@ -1,13 +1,12 @@
-import { Router } from 'express';
-import { protect } from '../middleware/auth.middleware';
-import { adminOnly } from '../middleware/admin.middleware';
-import { getAgentsStatus, streamAgentEvents, postAgentCommand } from '../controllers/agents.controller';
+import express from 'express';
+import { getActiveAgents, sendMessageToAgent } from '../controllers/agents.controller';
 
-const router = Router();
+const router = express.Router();
 
-router.use(protect, adminOnly);
-router.get('/agents/status', getAgentsStatus);
-router.get('/agents/stream', streamAgentEvents);
-router.post('/agents/:agentId/command', postAgentCommand);
+// Get list of active subagents
+router.get('/', getActiveAgents);
+
+// Send a message to a subagent
+router.post('/:id/message', sendMessageToAgent);
 
 export default router;
