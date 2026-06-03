@@ -456,6 +456,124 @@ User Message: "${message}"`;
     }
   }
 
+  static async chatWithAssistant(message: string, history: { role: 'user' | 'model'; parts: { text: string }[] }[], user: any): Promise<string> {
+    const systemInstruction = `You are a helpful and friendly AI Coding Assistant for the "Code for Tomorrow" platform. 
+Your role is to help students (ages 8-15) learn coding, debugging, and programming concepts.
+The student you are chatting with is named ${user.name}.
+Keep explanations beginner-friendly, visual, and highly encouraging. Use Markdown and code blocks for code examples.`;
+
+    try {
+      if (!hasValidGeminiKey()) {
+        throw new Error("No valid Gemini API key configured.");
+      }
+      const response = await getAi().models.generateContent({
+        model: this.model,
+        contents: [...history, { role: 'user', parts: [{ text: message }] }],
+        config: {
+          systemInstruction: systemInstruction,
+        }
+      });
+      return response.text || "I'm not sure what to say.";
+    } catch (error) {
+      console.error("AI Assistant Chat API Error:", error);
+      
+      // Fallback/Mock response
+      const lower = message.toLowerCase();
+      if (lower.includes('loop')) {
+        return `Here is a local explanation of loops in **Python**! 
+A loop lets you repeat a block of code multiple times.
+
+\`\`\`python
+# A simple for loop to print numbers from 1 to 5
+for i in range(1, 6):
+    print(f"Iteration: {i}")
+\`\`\`
+
+* **\`for\`**: tells Python we want to start a loop.
+* **\`range(1, 6)\`**: defines the start (1) and stop (6, which is exclusive) values.
+* **\`print\`**: repeats for each iteration.
+
+Let me know if you want me to explain \`while\` loops or another topic!`;
+      }
+      if (lower.includes('recursion') || lower.includes('recursive')) {
+        return `**Recursion** is when a function calls itself to solve a smaller version of the same problem! 
+
+Here is a classic example: calculating the factorial of a number in **JavaScript**.
+
+\`\`\`javascript
+function factorial(n) {
+  // 1. Base case: stop the recursion when n is 1 or 0
+  if (n <= 1) return 1;
+  
+  // 2. Recursive case: call the function with a smaller number
+  return n * factorial(n - 1);
+}
+
+console.log(factorial(5)); // Output: 120
+\`\`\`
+
+Think of it like a set of Russian nesting dolls; you keep opening smaller dolls until you find the tiniest one (the base case)!`;
+      }
+      return `Hi ${user.name}! I am currently running in offline database-aware mode because there is no valid Gemini API key configured. 
+
+If you are a student or developer:
+- You can ask me about **loops**, **recursion**, or general programming concepts.
+- I am connected to the platform database and can help analyze code templates locally.
+- To enable full AI intelligence, please update \`GEMINI_API_KEY\` in your \`.env\` file.`;
+    }
+  }
+
+  static async generateHint(titleKey: string, expectedOutput: string, failedCode: string): Promise<string> {
+    const promptText = `You are a helpful and encouraging coding teacher for children (ages 8-15) on the "Code for Tomorrow" platform. 
+The student is working on a lesson about: "${titleKey}".
+Their goal is to write code that outputs EXACTLY: "${expectedOutput}".
+They wrote the following code which failed:
+\`\`\`
+${failedCode}
+\`\`\`
+Provide a concise, encouraging hint (1-2 sentences) of what is wrong and how they can fix it.
+Do not give them the complete solution code directly. Focus on guidance and debug clues.`;
+
+    try {
+      if (!hasValidGeminiKey()) {
+        throw new Error("No valid Gemini API key configured.");
+      }
+      const response = await getAi().models.generateContent({
+        model: this.model,
+        contents: promptText
+      });
+      return response.text || "Let's review the code logic together! 💡";
+    } catch (error) {
+      console.error("AI Hint Generation API Error:", error);
+      
+      const lower = failedCode.toLowerCase();
+      // Bracket/Parenthesis check
+      const openCurly = (failedCode.match(/\{/g) || []).length;
+      const closeCurly = (failedCode.match(/\}/g) || []).length;
+      if (openCurly !== closeCurly) {
+        return `It looks like you have a bracket mismatch! You have ${openCurly} open curly braces '{' and ${closeCurly} closing braces '}'. Double check that every block is closed properly! 🧩`;
+      }
+      
+      const openParen = (failedCode.match(/\(/g) || []).length;
+      const closeParen = (failedCode.match(/\)/g) || []).length;
+      if (openParen !== closeParen) {
+        return `Parenthesis mismatch detected! Make sure every open '(' has a matching closing ')' in your code. 🔍`;
+      }
+
+      const singleQuotes = (failedCode.match(/'/g) || []).length;
+      const doubleQuotes = (failedCode.match(/"/g) || []).length;
+      if (singleQuotes % 2 !== 0 || doubleQuotes % 2 !== 0) {
+        return `You have an unclosed string value! Check your quotation marks ('' or "") to ensure strings are fully closed. 💬`;
+      }
+
+      if (lower.includes('print') || lower.includes('log')) {
+        return `The output did not match "${expectedOutput}". Double-check your logic to make sure you are calculating and printing the correct result! 💡`;
+      }
+
+      return `Make sure you are printing/logging your output to the console! For example, using \`console.log()\` in JavaScript or \`print()\` in Python. ⚙️`;
+    }
+  }
+
   private static getFallbackRecommendation() {
     return {
       recommendation: "Keep practicing your core skills to build a strong foundation!",
