@@ -7,7 +7,7 @@ import { protect } from '../middleware/auth.middleware';
 // Stricter rate limiter for authentication routes (15 attempts per 15 minutes per IP)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 15,
+  max: process.env.NODE_ENV === 'production' ? 15 : 1000, // relaxed limit in development
   standardHeaders: true,
   legacyHeaders: false,
   message: { message: 'Too many login or registration attempts, please try again after 15 minutes' },
