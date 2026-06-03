@@ -65,7 +65,7 @@ const TIER_MAPPING: { [key: string]: { tier: number; name: string; color: string
   rust: { tier: 4, name: 'Tier 4: Advanced Systems', color: '#f43f5e' },
 };
 
-// Generates high contrast color themes dynamically for each card
+// Generates flat color themes dynamically for each card
 const getCardStyles = (missionId: string, status: string) => {
   const isLocked = status === 'locked';
   const isCompleted = status === 'completed';
@@ -73,13 +73,13 @@ const getCardStyles = (missionId: string, status: string) => {
 
   if (isLocked) {
     return {
-      cardBg: 'bg-[#0f1322] border-slate-900/60 shadow-[inset_0_1px_3px_rgba(255,255,255,0.01)]',
-      textTitle: 'text-slate-400 group-hover:text-slate-300',
-      textDesc: 'text-slate-500/90',
-      progressBarBg: 'bg-slate-950/80',
+      cardBg: 'bg-[#13192b] border-[#1e2942]/60 text-slate-500',
+      textTitle: 'text-slate-400',
+      textDesc: 'text-slate-650',
+      progressBarBg: 'bg-[#0b0f19] border-[#1e2942]/30',
       progressFill: 'bg-slate-800',
       glowShadow: '',
-      iconContainer: 'bg-slate-950/50 border-slate-900/80 text-slate-600',
+      iconContainer: 'bg-[#0f1422] border-[#1e2942]/30 text-slate-600',
     };
   }
 
@@ -87,55 +87,55 @@ const getCardStyles = (missionId: string, status: string) => {
   if (tier === 1) {
     return {
       cardBg: isCompleted 
-        ? 'bg-gradient-to-br from-[#064e3b]/30 via-[#0b1b17]/85 to-[#0b0f19]/95 border-emerald-500/30' 
-        : 'bg-gradient-to-br from-[#064e3b]/15 via-[#0b1b17]/40 to-[#0f172a]/80 border-emerald-500/20 hover:border-emerald-400/50',
-      textTitle: 'text-white group-hover:text-emerald-300 font-extrabold',
-      textDesc: 'text-slate-300 group-hover:text-emerald-100/80',
-      progressBarBg: 'bg-slate-950 border-slate-900/50',
-      progressFill: 'bg-gradient-to-r from-emerald-500 to-teal-400 shadow-[0_0_12px_rgba(16,185,129,0.4)]',
-      glowShadow: 'hover:shadow-[0_0_25px_rgba(16,185,129,0.12)]',
-      iconContainer: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
+        ? 'bg-[#111c18] border-emerald-500/30' 
+        : 'bg-[#111827] border-slate-800 hover:border-slate-700',
+      textTitle: 'text-white group-hover:text-emerald-400 font-extrabold',
+      textDesc: 'text-slate-400 group-hover:text-slate-300',
+      progressBarBg: 'bg-slate-950 border-slate-900',
+      progressFill: 'bg-emerald-500',
+      glowShadow: '',
+      iconContainer: 'bg-emerald-500/10 border-emerald-500/10 text-emerald-400',
     };
   }
   // Cyan theme for Tier 2
   if (tier === 2) {
     return {
       cardBg: isCompleted 
-        ? 'bg-gradient-to-br from-[#0891b2]/20 via-[#0c1f2e]/85 to-[#0b0f19]/95 border-cyan-500/30' 
-        : 'bg-gradient-to-br from-[#0891b2]/10 via-[#0c1f2e]/40 to-[#0f172a]/80 border-cyan-500/20 hover:border-cyan-400/50',
-      textTitle: 'text-white group-hover:text-cyan-300 font-extrabold',
-      textDesc: 'text-slate-300 group-hover:text-cyan-100/80',
-      progressBarBg: 'bg-slate-950 border-slate-900/50',
-      progressFill: 'bg-gradient-to-r from-cyan-500 to-sky-400 shadow-[0_0_12px_rgba(6,182,212,0.4)]',
-      glowShadow: 'hover:shadow-[0_0_25px_rgba(6,182,212,0.12)]',
-      iconContainer: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400',
+        ? 'bg-[#101d24] border-cyan-500/30' 
+        : 'bg-[#111827] border-slate-800 hover:border-slate-700',
+      textTitle: 'text-white group-hover:text-cyan-400 font-extrabold',
+      textDesc: 'text-slate-400 group-hover:text-slate-300',
+      progressBarBg: 'bg-slate-950 border-slate-900',
+      progressFill: 'bg-cyan-500',
+      glowShadow: '',
+      iconContainer: 'bg-cyan-500/10 border-cyan-500/10 text-cyan-400',
     };
   }
   // Purple theme for Tier 3
   if (tier === 3) {
     return {
       cardBg: isCompleted 
-        ? 'bg-gradient-to-br from-[#581c87]/25 via-[#18112b]/85 to-[#0b0f19]/95 border-purple-500/30' 
-        : 'bg-gradient-to-br from-[#581c87]/10 via-[#18112b]/40 to-[#0f172a]/80 border-purple-500/20 hover:border-purple-400/50',
-      textTitle: 'text-white group-hover:text-purple-300 font-extrabold',
-      textDesc: 'text-slate-300 group-hover:text-purple-100/80',
-      progressBarBg: 'bg-slate-950 border-slate-900/50',
-      progressFill: 'bg-gradient-to-r from-purple-500 to-fuchsia-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]',
-      glowShadow: 'hover:shadow-[0_0_25px_rgba(168,85,247,0.12)]',
-      iconContainer: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
+        ? 'bg-[#151426] border-purple-500/30' 
+        : 'bg-[#111827] border-slate-800 hover:border-slate-700',
+      textTitle: 'text-white group-hover:text-purple-400 font-extrabold',
+      textDesc: 'text-slate-400 group-hover:text-slate-300',
+      progressBarBg: 'bg-slate-950 border-slate-900',
+      progressFill: 'bg-purple-500',
+      glowShadow: '',
+      iconContainer: 'bg-purple-500/10 border-purple-500/10 text-purple-400',
     };
   }
   // Rose theme for Tier 4
   return {
     cardBg: isCompleted 
-      ? 'bg-gradient-to-br from-[#881337]/25 via-[#230f16]/85 to-[#0b0f19]/95 border-rose-500/30' 
-      : 'bg-gradient-to-br from-[#881337]/10 via-[#230f16]/40 to-[#0f172a]/80 border-rose-500/20 hover:border-rose-400/50',
-    textTitle: 'text-white group-hover:text-rose-300 font-extrabold',
-    textDesc: 'text-slate-300 group-hover:text-rose-100/80',
-    progressBarBg: 'bg-slate-950 border-slate-900/50',
-    progressFill: 'bg-gradient-to-r from-rose-500 to-pink-400 shadow-[0_0_12px_rgba(244,63,94,0.4)]',
-    glowShadow: 'hover:shadow-[0_0_25px_rgba(244,63,94,0.12)]',
-    iconContainer: 'bg-rose-500/10 border-rose-500/20 text-rose-400',
+      ? 'bg-[#1d131a] border-rose-500/30' 
+      : 'bg-[#111827] border-slate-800 hover:border-slate-700',
+    textTitle: 'text-white group-hover:text-rose-400 font-extrabold',
+    textDesc: 'text-slate-400 group-hover:text-slate-300',
+    progressBarBg: 'bg-slate-950 border-slate-900',
+    progressFill: 'bg-rose-500',
+    glowShadow: '',
+    iconContainer: 'bg-rose-500/10 border-rose-500/10 text-rose-400',
   };
 };
 
@@ -733,18 +733,14 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
                               setSelectedMission(mission);
                             }
                           }}
-                          className={`relative overflow-hidden group border rounded-3xl p-5 transition-all duration-300 transform ${
+                          className={`relative overflow-hidden group border rounded-3xl p-5 transition-all duration-300 ${
                             cardStyle.cardBg
-                          } ${cardStyle.glowShadow} ${
+                          } ${
                             isLocked 
                               ? 'cursor-not-allowed' 
-                              : 'cursor-pointer hover:-translate-y-1 hover:scale-[1.01]'
-                          } ${isNodeFocused && !isLocked ? 'border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.25)]' : ''}`}
+                              : 'cursor-pointer hover:bg-slate-800/20'
+                          } ${isNodeFocused && !isLocked ? 'border-cyan-500/80' : ''}`}
                         >
-                          {/* Inner glowing corner for active elements */}
-                          {!isLocked && (
-                            <div className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-bl from-white/5 to-transparent rounded-bl-full opacity-30 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                          )}
 
                           <div className="flex justify-between items-start mb-4">
                             <div className={`p-3 rounded-2xl border transition-all ${cardStyle.iconContainer}`}>
@@ -877,10 +873,10 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
                     }}
                     className={`relative overflow-hidden group border rounded-3xl p-6 transition-all duration-300 ${
                       cardStyle.cardBg
-                    } ${cardStyle.glowShadow} ${
+                    } ${
                       isLocked 
                         ? 'cursor-not-allowed' 
-                        : 'cursor-pointer hover:-translate-y-1'
+                        : 'cursor-pointer hover:bg-slate-800/20'
                     }`}
                   >
                     <div className="flex justify-between items-start mb-4">
