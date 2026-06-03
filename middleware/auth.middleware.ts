@@ -20,7 +20,9 @@ declare global {
 export const protect = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization?.toString();
-    const token = req.cookies?.token || (authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : undefined);
+    const token = req.cookies?.token || 
+                  req.query.token?.toString() || 
+                  (authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : undefined);
 
     if (!token) {
       return res.status(401).json({ error: 'No token' });
