@@ -2,15 +2,15 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { AIEngine } from '../services/aiEngine';
 import User from '../models/user.model';
+import connectDB from '../config/db';
 
 dotenv.config();
 
 async function run() {
   try {
-    const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/codefortomorrow';
-    console.log('Connecting to Mongo at:', mongoUri);
-    await mongoose.connect(mongoUri);
-    console.log('Connected to Mongo.');
+    console.log('Connecting to database...');
+    await connectDB();
+    console.log('Connected to database.');
 
     let user = await User.findOne({ role: 'student' });
     if (!user) {
@@ -31,7 +31,12 @@ async function run() {
     console.log('GEMINI_API_KEY set:', !!process.env.GEMINI_API_KEY);
     console.log('Calling AIEngine.chatWithAssistant with message "Explain loops"...');
     
-    const response = await AIEngine.chatWithAssistant("Explain loops", [], user);
+    // Test with a history turn starting with 'model' to test our history sanitization
+    const history: any = [
+      { role: 'model', parts: [{ text: 'Welcome hichamoutaleb7!' }] }
+    ];
+    
+    const response = await AIEngine.chatWithAssistant("Explain loops", history, user);
     console.log('\n--- RESPONSE SUCCESS ---');
     console.log(response);
     console.log('------------------------\n');
