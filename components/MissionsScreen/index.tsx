@@ -935,29 +935,20 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
         </div>
       )}
 
-      {/* Holographic Diagnostic Details Modal */}
+      {/* Telemetry Diagnostic Details Modal */}
       {selectedMission && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="relative overflow-hidden bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-lg shadow-[0_0_50px_rgba(0,0,0,0.8)] p-6 md:p-8 animate-in zoom-in-95 duration-200 flex flex-col">
-            {/* Hologram scanner beam lines */}
-            <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-60 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-20 pointer-events-none" />
+        <div className="fixed inset-0 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="relative overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-lg shadow-xl p-6 md:p-8 animate-in zoom-in-95 duration-200 flex flex-col transition-colors">
             
-            {/* Corner details */}
-            <div className="absolute top-3 left-3 border-t-2 border-l-2 border-slate-850 w-3 h-3 pointer-events-none" />
-            <div className="absolute top-3 right-3 border-t-2 border-r-2 border-slate-850 w-3 h-3 pointer-events-none" />
-            <div className="absolute bottom-3 left-3 border-b-2 border-l-2 border-slate-850 w-3 h-3 pointer-events-none" />
-            <div className="absolute bottom-3 right-3 border-b-2 border-r-2 border-slate-850 w-3 h-3 pointer-events-none" />
-
             {/* Modal Header */}
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-br from-cyan-950/30 to-indigo-950/30 border border-cyan-500/30 rounded-2xl text-cyan-400 animate-pulse-subtle">
+                <div className="p-3 bg-gradient-to-br from-cyan-50 to-cyan-100/50 dark:from-cyan-950/30 dark:to-indigo-950/30 border border-cyan-500/20 dark:border-cyan-500/30 rounded-2xl text-cyan-600 dark:text-cyan-400 animate-pulse-subtle">
                   {renderConceptArt(selectedMission.skill, selectedMission.status, "w-14 h-14")}
                 </div>
-                <div className="space-y-1">
-                  <span className="text-[9px] font-black text-cyan-400 uppercase tracking-widest font-mono">MISSION PROFILE</span>
-                  <h3 className="text-xl font-black text-white">{selectedMission.title}</h3>
+                <div className="space-y-1 text-left">
+                  <span className="text-[9px] font-black text-cyan-600 dark:text-cyan-400 uppercase tracking-widest font-mono">MISSION PROFILE</span>
+                  <h3 className="text-xl font-black text-slate-900 dark:text-white leading-tight">{selectedMission.title}</h3>
                   <div className="flex gap-2">
                     {getStatusBadge(selectedMission.status)}
                     {getDifficultyBadge(selectedMission.difficulty)}
@@ -966,7 +957,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
               </div>
               <button 
                 onClick={() => setSelectedMission(null)}
-                className="p-2 bg-slate-950/60 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl text-slate-400 hover:text-white transition-colors cursor-pointer"
+                className="p-2 bg-slate-50 dark:bg-slate-950/60 hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700 text-slate-400 hover:text-slate-750 dark:hover:text-white rounded-xl transition-all cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -974,46 +965,46 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
 
             {/* Stats Telemetry Dossier Grid */}
             <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-700 transition-colors">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Dossier Attempts</span>
-                <span className="text-2xl font-black text-white font-mono">{selectedMission.telemetry.attempts}</span>
+              <div className="p-4 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-300 dark:hover:border-slate-700 transition-colors text-left">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-1">Dossier Attempts</span>
+                <span className="text-2xl font-black text-slate-850 dark:text-white font-mono leading-none">{selectedMission.telemetry.attempts}</span>
               </div>
 
-              <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-700 transition-colors">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Verify Pass / Fail</span>
-                <span className="text-lg font-black text-white font-mono">
-                  <span className="text-emerald-400">{selectedMission.telemetry.successes}</span>
-                  <span className="text-slate-600 px-1.5">/</span>
-                  <span className="text-rose-400">{selectedMission.telemetry.failures}</span>
+              <div className="p-4 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-300 dark:hover:border-slate-700 transition-colors text-left">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-1">Verify Pass / Fail</span>
+                <span className="text-lg font-black text-slate-850 dark:text-white font-mono leading-none">
+                  <span className="text-emerald-500 dark:text-emerald-400">{selectedMission.telemetry.successes}</span>
+                  <span className="text-slate-400 px-1.5">/</span>
+                  <span className="text-rose-500 dark:text-rose-450">{selectedMission.telemetry.failures}</span>
                 </span>
               </div>
 
-              <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-700 transition-colors">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Proficiency Gauge</span>
-                <span className="text-2xl font-black text-cyan-400 font-mono">{selectedMission.progress}%</span>
+              <div className="p-4 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-300 dark:hover:border-slate-700 transition-colors text-left">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-1">Proficiency Gauge</span>
+                <span className="text-2xl font-black text-cyan-600 dark:text-cyan-400 font-mono leading-none">{selectedMission.progress}%</span>
               </div>
 
-              <div className="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-700 transition-colors">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Mastery Trend</span>
-                <span className="text-sm font-black text-slate-200 flex items-center gap-1.5 uppercase font-mono mt-0.5">
+              <div className="p-4 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl flex flex-col justify-center min-h-[75px] hover:border-slate-300 dark:hover:border-slate-700 transition-colors text-left">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-1">Mastery Trend</span>
+                <span className="text-sm font-black text-slate-850 dark:text-slate-200 flex items-center gap-1.5 uppercase font-mono mt-0.5 leading-none">
                   {selectedMission.telemetry.trend === 'improving' ? (
-                    <span className="text-emerald-400 flex items-center gap-1 font-bold">IMPROVING <TrendingUp className="w-3.5 h-3.5" /></span>
+                    <span className="text-emerald-500 dark:text-emerald-400 flex items-center gap-1 font-bold">IMPROVING <TrendingUp className="w-3.5 h-3.5" /></span>
                   ) : selectedMission.telemetry.trend === 'declining' ? (
-                    <span className="text-rose-400 flex items-center gap-1 font-bold">DECLINING 📉</span>
+                    <span className="text-rose-500 dark:text-rose-450 flex items-center gap-1 font-bold">DECLINING 📉</span>
                   ) : (
-                    <span className="text-slate-400 flex items-center gap-1 font-bold">STABLE ➡️</span>
+                    <span className="text-slate-400 dark:text-slate-500 flex items-center gap-1 font-bold">STABLE ➡️</span>
                   )}
                 </span>
               </div>
             </div>
 
             {/* AI Diagnosis Insights Panel */}
-            <div className="bg-cyan-950/20 border border-cyan-500/20 rounded-2xl p-4.5 space-y-2 mb-7">
+            <div className="bg-cyan-500/5 dark:bg-cyan-950/20 border border-cyan-500/25 dark:border-cyan-500/20 rounded-2xl p-4.5 space-y-2 mb-7 text-left">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse" />
-                <span className="text-[10px] font-black text-cyan-300 uppercase tracking-widest font-mono">AI Diagnostics Insight</span>
+                <Sparkles className="w-4 h-4 text-cyan-500 dark:text-cyan-400 animate-pulse" />
+                <span className="text-[10px] font-black text-cyan-600 dark:text-cyan-300 uppercase tracking-widest font-mono">AI Diagnostics Insight</span>
               </div>
-              <p className="text-xs text-slate-200 leading-relaxed font-semibold">
+              <p className="text-xs text-slate-650 dark:text-slate-200 leading-relaxed font-semibold">
                 {selectedMission.progress >= 90 
                   ? `Exceptional telemetry metrics. You have fully unlocked and mastered ${selectedMission.title}. Start advanced application templates in the compiler screen.` 
                   : selectedMission.progress > 0 
@@ -1028,7 +1019,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
                 setSelectedMission(null);
                 window.location.href = `/dashboard/learn`;
               }}
-              className="w-full py-4.5 bg-gradient-to-r from-cyan-500 via-sky-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 border border-cyan-400/20 text-white font-black uppercase text-xs tracking-widest rounded-2xl cursor-pointer shadow-lg hover:shadow-cyan-500/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="w-full py-4.5 bg-slate-900 dark:bg-gradient-to-r from-cyan-500 via-sky-500 to-indigo-600 hover:bg-slate-800 dark:hover:from-cyan-400 dark:hover:to-indigo-500 border border-slate-200 dark:border-cyan-400/20 text-white font-black uppercase text-xs tracking-widest rounded-2xl cursor-pointer shadow-lg hover:shadow-cyan-500/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
               <BookOpen className="w-4 h-4" /> START ROADMAP
             </button>
