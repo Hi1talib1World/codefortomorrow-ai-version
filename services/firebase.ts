@@ -43,6 +43,15 @@ export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : nul
 // Initialize Firebase Auth
 export const auth = getAuth(app);
 
+// Validate essential Firebase config keys
+const REQUIRED_KEYS = ['apiKey', 'authDomain', 'projectId', 'appId'];
+export const isFirebaseConfigured = REQUIRED_KEYS.every((key) => {
+  const value = (firebaseConfig as any)[key];
+  if (!value) return false;
+  const lowered = value.toLowerCase();
+  return !(lowered.includes('dummy') || lowered.includes('placeholder'));
+});
+
 // Google Auth Provider instance
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
