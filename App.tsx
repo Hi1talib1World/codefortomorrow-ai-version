@@ -322,6 +322,21 @@ export default function App() {
 
   const updateUser = useCallback(async (updatedData: Partial<User>) => {
     if (!currentUser) return;
+    
+    // Update local state first to ensure responsiveness and support guest users
+    setCurrentUser(prevUser => {
+      if (!prevUser) return null;
+      return {
+        ...prevUser,
+        ...updatedData
+      };
+    });
+
+    // Only update backend if not a guest user
+    if (currentUser._id.startsWith('guest_')) {
+      return;
+    }
+
     try {
       const updatedUser = await api.updateUserProfile(updatedData);
       setCurrentUser(updatedUser);
