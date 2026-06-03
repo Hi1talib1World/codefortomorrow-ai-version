@@ -39,24 +39,27 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeView, setActiveView, unread
             )}
             <button
               onClick={() => setActiveView(item.id as DashboardView)}
-              className={`flex-1 flex flex-col items-center justify-center pt-4 pb-4 transition-all transform active:scale-95 ${activeView === item.id ? 'text-[#111827] dark:text-[#FBBF24]' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
-                }`}
+              className={`flex-1 flex flex-col items-center justify-center pt-4 pb-4 transition-all transform active:scale-95 ${
+                activeView === item.id 
+                  ? 'text-[#111827] dark:text-[#FBBF24]' 
+                  : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
+              }`}
             >
-            <div className={`relative mb-1 transition-all ${activeView === item.id ? 'scale-110' : 'opacity-70 hover:opacity-100'}`}>
-              {item.icon}
-              {item.id === 'messages' && unreadMessagesCount && unreadMessagesCount > 0 ? (
-                <span className="absolute -top-1 -right-2 min-w-4 h-4 px-1 bg-red-500 text-white text-[8px] font-black rounded-full flex items-center justify-center border border-white dark:border-slate-800 animate-pulse">
-                  {unreadMessagesCount}
-                </span>
-              ) : null}
-            </div>
-            <span className="text-[10px] font-bold uppercase tracking-wide">{item.label}</span>
-            {activeView === item.id && (
-              <div className="w-8 h-1 bg-[#FBBF24] rounded-full mt-1.5"></div>
-            )}
-          </button>
-        </React.Fragment>
-      ))}
+              <div className={`relative mb-1 transition-all ${activeView === item.id ? 'scale-110' : 'opacity-70 hover:opacity-100'}`}>
+                {item.icon}
+                {item.id === 'messages' && unreadMessagesCount && unreadMessagesCount > 0 ? (
+                  <span className="absolute -top-1 -right-2 min-w-4 h-4 px-1 bg-red-500 text-white text-[8px] font-black rounded-full flex items-center justify-center border border-white dark:border-slate-800 animate-pulse">
+                    {unreadMessagesCount}
+                  </span>
+                ) : null}
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wide">{item.label}</span>
+              {activeView === item.id && (
+                <div className="w-8 h-1 bg-[#FBBF24] rounded-full mt-1.5"></div>
+              )}
+            </button>
+          </React.Fragment>
+        ))}
       </div>
     </nav>
   );
