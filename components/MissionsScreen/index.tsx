@@ -759,7 +759,6 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
             </div>
           )}
         </div>
-      )}
 
       {/* Telemetry Diagnostic Details Modal */}
       {selectedMission && (
@@ -850,7 +849,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
               <BookOpen className="w-4 h-4" /> START ROADMAP
             </button>
           </div>
-        </div>
+      )}
     </div>
   );
 };
