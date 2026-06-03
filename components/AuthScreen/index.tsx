@@ -3,8 +3,42 @@ import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { User, Language } from '../../types';
 import api from '../../services/api';
-import { auth, firebaseService, handleGoogleRedirectResult } from '../../services/firebase';
+import { auth, firebaseService, handleGoogleRedirectResult, isFirebaseConfigured } from '../../services/firebase';
 import { Mail, Lock, User as UserIcon, Globe } from 'lucide-react';
+import { sendEmailVerification, signOut } from 'firebase/auth';
+
+const verifTranslations = {
+  en: {
+    verify_email: 'Verify Your Email',
+    verification_sent: "We've sent a verification link to your email address:",
+    check_inbox: 'Please check your inbox and click the verification link to activate your account.',
+    btn_check: 'I have verified my email',
+    btn_resend: 'Resend Verification Email',
+    btn_cancel: 'Back to Login',
+    err_not_verified: 'Email is not verified yet. Please check your inbox.',
+    success_resent: 'Verification email resent successfully.',
+  },
+  fr: {
+    verify_email: 'Vérifiez votre e-mail',
+    verification_sent: 'Nous avons envoyé un lien de vérification à votre adresse e-mail :',
+    check_inbox: 'Veuillez vérifier votre boîte de réception et cliquer sur le lien de vérification pour activer votre compte.',
+    btn_check: "J'ai vérifié mon e-mail",
+    btn_resend: "Renvoyer l'e-mail de vérification",
+    btn_cancel: 'Retour à la connexion',
+    err_not_verified: "L'e-mail n'est pas encore vérifié. Veuillez vérifier votre boîte de réception.",
+    success_resent: "L'e-mail de vérification a été renvoyé avec succès.",
+  },
+  ar: {
+    verify_email: 'التحقق من بريدك الإلكتروني',
+    verification_sent: 'لقد أرسلنا رابط تحقق إلى عنوان بريدك الإلكتروني:',
+    check_inbox: 'يرجى التحقق من صندوق الوارد الخاص بك والنقر على رابط التحقق لتفعيل حسابك.',
+    btn_check: 'لقد قمت بالتحقق من بريدي الإلكتروني',
+    btn_resend: 'إعادة إرسال بريد التحقق',
+    btn_cancel: 'العودة لتسجيل الدخول',
+    err_not_verified: 'البريد الإلكتروني لم يتم التحقق منه بعد. يرجى التحقق من صندوق الوارد.',
+    success_resent: 'تم إعادة إرسال بريد التحقق بنجاح.',
+  }
+};
 
 interface AuthScreenProps {
   onAuthSuccess: (user: User) => void;
@@ -22,6 +56,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
 
   // Advanced Interactive UI State
   const [focusedField, setFocusedField] = useState<string | null>(null);
@@ -196,15 +231,76 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
     processRedirect();
   }, []);
 
+  const handleCheckVerification = async () => {
+    if (auth.currentUser) {
+      setIsLoading(true);
+      setError('');
+      setTerminalLogs(prev => [...prev, 'SEC_SYS: Querying authentication state...']);
+      try {
+        await auth.currentUser.reload();
+        if (auth.currentUser.emailVerified) {
+          setTerminalLogs(prev => [...prev, 'SEC_SYS: Authentication state: VERIFIED.']);
+          const token = await auth.currentUser.getIdToken(true);
+          setTerminalLogs(prev => [...prev, 'SEC_SYS: Syncing session with database...']);
+          const user = await api.loginWithFirebase(token);
+          onAuthSuccess(user);
+        } else {
+          setTerminalLogs(prev => [...prev, 'SEC_SYS: Authentication state: UNVERIFIED.']);
+          const currentLang = language as keyof typeof verifTranslations;
+          const dict = verifTranslations[currentLang] || verifTranslations.en;
+          setError(dict.err_not_verified);
+        }
+      } catch (err: any) {
+        console.error('Verification check error:', err);
+        setError(err instanceof Error ? err.message : 'Verification check failed.');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (auth.currentUser) {
+      setIsLoading(true);
+      setError('');
+      setTerminalLogs(prev => [...prev, 'SEC_SYS: Dispatching verification link...']);
+      try {
+        await sendEmailVerification(auth.currentUser);
+        setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification email resent successfully.']);
+      } catch (err: any) {
+        console.error('Resend verification error:', err);
+        setError(err instanceof Error ? err.message : 'Failed to resend verification email.');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleCancelVerification = async () => {
+    setIsLoading(true);
+    try {
+      await signOut(auth);
+      setNeedsVerification(false);
+      clearForm();
+      setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification cancelled. Session closed.']);
+    } catch (err: any) {
+      console.error('Cancel verification error:', err);
+      setError(err instanceof Error ? err.message : 'Error signing out.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
     setIsLoading(true);
 
     try {
-      const isDummyConfig = !auth.app.options.apiKey || auth.app.options.apiKey === 'dummy-api-key';
-      if (isDummyConfig) {
-        throw new Error('Firebase is not configured. Please provide a valid Firebase API key and project settings.');
+      if (!isFirebaseConfigured) {
+        setError('Firebase is not configured. Please check your environment settings.');
+        setIsLoading(false);
+        return;
       }
 
       let token: string;
@@ -225,9 +321,19 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
           } catch (profileErr) {
             console.error('Failed to update display name in Firebase:', profileErr);
           }
+
+          try {
+            await sendEmailVerification(auth.currentUser);
+            setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification email dispatched.']);
+          } catch (verifErr) {
+            console.error('Failed to send verification email on register:', verifErr);
+          }
+          setNeedsVerification(true);
+          setIsLoading(false);
+          return;
         }
       }
-      console.log('Firebase token acquired, syncing session with backend database...');
+      console.log('Firebase token acquired, syncing session with database...');
       const user = await api.loginWithFirebase(token);
       onAuthSuccess(user);
     } catch (err: any) {
@@ -237,6 +343,21 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
         console.error('Firebase login message:', err.message);
       }
       const errMsg = err?.code && err?.message ? `${err.code}: ${err.message}` : err instanceof Error ? err.message : 'An unknown error occurred.';
+      
+      if (errMsg.includes('verify your email')) {
+        if (auth.currentUser) {
+          try {
+            await sendEmailVerification(auth.currentUser);
+            setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification email dispatched.']);
+          } catch (verifErr) {
+            console.error('Failed to send verification email during login:', verifErr);
+          }
+        }
+        setNeedsVerification(true);
+        setIsLoading(false);
+        return;
+      }
+
       if (errMsg.includes('auth/operation-not-allowed')) {
         setError('Error: Email/Password provider is disabled in Firebase Console. Please enable it under Authentication > Sign-in method.');
       } else {
@@ -423,142 +544,207 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
           </div>
 
           {/* Sliding Capsule Tab Selector */}
-          <div className="flex mb-8 rounded-2xl bg-slate-950/60 p-1.5 transition-colors border border-slate-800 relative overflow-hidden">
-            <div 
-              className="absolute top-1 bottom-1 rounded-xl bg-gradient-to-r from-[#FBBF24] to-[#f59e0b] shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all duration-300 ease-out z-0"
-              style={{
-                width: 'calc(50% - 6px)',
-                left: isLoginView ? '6px' : 'calc(50%)',
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => handleViewChange(true)}
-              disabled={isLoading}
-              className={`w-1/2 py-2.5 rounded-xl font-bold text-sm transition-all focus:outline-none cursor-pointer relative z-10 ${isLoginView ? 'text-white' : 'text-slate-400 hover:text-slate-200'}`}
-            >
-              {t('login')}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleViewChange(false)}
-              disabled={isLoading}
-              className={`w-1/2 py-2.5 rounded-xl font-bold text-sm transition-all focus:outline-none cursor-pointer relative z-10 ${!isLoginView ? 'text-white' : 'text-slate-400 hover:text-slate-200'}`}
-            >
-              {t('signUp')}
-            </button>
-          </div>
+          {!needsVerification && (
+            <div className="flex mb-8 rounded-2xl bg-slate-950/60 p-1.5 transition-colors border border-slate-800 relative overflow-hidden">
+              <div 
+                className="absolute top-1 bottom-1 rounded-xl bg-gradient-to-r from-[#FBBF24] to-[#f59e0b] shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all duration-300 ease-out z-0"
+                style={{
+                  width: 'calc(50% - 6px)',
+                  left: isLoginView ? '6px' : 'calc(50%)',
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => handleViewChange(true)}
+                disabled={isLoading}
+                className={`w-1/2 py-2.5 rounded-xl font-bold text-sm transition-all focus:outline-none cursor-pointer relative z-10 ${isLoginView ? 'text-white' : 'text-slate-400 hover:text-slate-200'}`}
+              >
+                {t('login')}
+              </button>
+              <button
+                type="button"
+                onClick={() => handleViewChange(false)}
+                disabled={isLoading}
+                className={`w-1/2 py-2.5 rounded-xl font-bold text-sm transition-all focus:outline-none cursor-pointer relative z-10 ${!isLoginView ? 'text-white' : 'text-slate-400 hover:text-slate-200'}`}
+              >
+                {t('signUp')}
+              </button>
+            </div>
+          )}
 
           <h2 className="text-2xl font-bold text-center mb-8 tracking-tight text-white select-none">
-            {isLoginView ? t('welcome_back') : t('join_the_adventure')}
+            {needsVerification 
+              ? (verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).verify_email
+              : (isLoginView ? t('welcome_back') : t('join_the_adventure'))
+            }
           </h2>
 
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-5">
-              {!isLoginView && (
+          {needsVerification ? (
+            <div className="space-y-6">
+              <div className="text-sm text-slate-300 leading-relaxed text-center space-y-4">
+                <p>
+                  {(verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).verification_sent}
+                </p>
+                <p className="font-bold text-[#FBBF24] text-base break-all bg-slate-950/40 py-2.5 px-4 rounded-xl border border-slate-800">
+                  {email}
+                </p>
+                <p className="text-slate-400 text-xs">
+                  {(verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).check_inbox}
+                </p>
+              </div>
+
+              {error && (
+                <div className="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-[#EA4335] text-sm text-center font-semibold animate-shake flex items-center justify-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+                  {error}
+                </div>
+              )}
+
+              <div className="space-y-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleCheckVerification}
+                  disabled={isLoading}
+                  className="w-full py-4 rounded-full bg-[#FBBF24] hover:bg-[#f59e0b] text-[#111827] font-bold text-[15px] tracking-wide shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.35)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {isLoading && (
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#111827]" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  )}
+                  {isLoading ? '...' : (verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).btn_check}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleResendVerification}
+                  disabled={isLoading}
+                  className="w-full py-3.5 rounded-full border border-slate-700 hover:border-[#FBBF24]/50 text-slate-300 hover:text-white font-bold text-[14px] tracking-wide active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {isLoading ? '...' : (verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).btn_resend}
+                </button>
+
+                <div className="text-center pt-2">
+                  <button
+                    type="button"
+                    onClick={handleCancelVerification}
+                    disabled={isLoading}
+                    className="text-slate-400 hover:text-[#FBBF24] font-semibold text-sm transition-colors disabled:opacity-50 cursor-pointer"
+                  >
+                    {(verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).btn_cancel}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-5">
+                {!isLoginView && (
+                  <div>
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="name">{t('username')}</label>
+                    <div className="relative flex items-center">
+                      <UserIcon className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'name' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
+                      <input
+                        type="text"
+                        id="name"
+                        value={name}
+                        onFocus={() => setFocusedField('name')}
+                        onBlur={() => setFocusedField(null)}
+                        onChange={e => setName(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-white focus:outline-none transition-all font-medium text-base glass-input"
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
                 <div>
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="name">{t('username')}</label>
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="email">{t('email')}</label>
                   <div className="relative flex items-center">
-                    <UserIcon className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'name' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
+                    <Mail className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'email' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
                     <input
-                      type="text"
-                      id="name"
-                      value={name}
-                      onFocus={() => setFocusedField('name')}
+                      type="email"
+                      id="email"
+                      value={email}
+                      onFocus={() => setFocusedField('email')}
                       onBlur={() => setFocusedField(null)}
-                      onChange={e => setName(e.target.value)}
+                      onChange={e => setEmail(e.target.value)}
                       className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-white focus:outline-none transition-all font-medium text-base glass-input"
                       required
                     />
                   </div>
                 </div>
-              )}
-              <div>
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="email">{t('email')}</label>
-                <div className="relative flex items-center">
-                  <Mail className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'email' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onFocus={() => setFocusedField('email')}
-                    onBlur={() => setFocusedField(null)}
-                    onChange={e => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-white focus:outline-none transition-all font-medium text-base glass-input"
-                    required
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="password">{t('password')}</label>
-                <div className="relative flex items-center">
-                  <Lock className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'password' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
-                  <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onFocus={() => setFocusedField('password')}
-                    onBlur={() => setFocusedField(null)}
-                    onChange={e => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-white focus:outline-none transition-all font-medium text-base glass-input"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Terms of Use Checkbox — Sign Up only */}
-            {!isLoginView && (
-              <label className="flex items-start gap-3 mt-5 cursor-pointer group select-none">
-                <div className="relative mt-0.5">
-                  <input
-                    type="checkbox"
-                    checked={acceptedTerms}
-                    onChange={(e) => setAcceptedTerms(e.target.checked)}
-                    className="sr-only peer"
-                  />
-                  <div className="w-5 h-5 rounded-md border border-slate-600 bg-slate-900/60 peer-checked:bg-[#FBBF24] peer-checked:border-[#FBBF24] transition-all flex items-center justify-center">
-                    {acceptedTerms && (
-                      <svg className="w-3 h-3 text-[#111827]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    )}
+                <div>
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="password">{t('password')}</label>
+                  <div className="relative flex items-center">
+                    <Lock className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'password' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
+                    <input
+                      type="password"
+                      id="password"
+                      value={password}
+                      onFocus={() => setFocusedField('password')}
+                      onBlur={() => setFocusedField(null)}
+                      onChange={e => setPassword(e.target.value)}
+                      className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-white focus:outline-none transition-all font-medium text-base glass-input"
+                      required
+                    />
                   </div>
                 </div>
-                <span className="text-xs text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">
-                  I agree to the{' '}
-                  <a href="/dashboard/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#FBBF24] hover:underline font-semibold">
-                    Terms of Service
-                  </a>{' '}
-                  and{' '}
-                  <a href="/dashboard/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#FBBF24] hover:underline font-semibold">
-                    Privacy Policy
-                  </a>
-                </span>
-              </label>
-            )}
-
-            {error && (
-              <div className="mt-6 p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-[#EA4335] text-sm text-center font-semibold animate-shake flex items-center justify-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
-                {error}
               </div>
-            )}
 
-            <button
-              type="submit"
-              disabled={isLoading || (!isLoginView && !acceptedTerms)}
-              className="mt-8 w-full py-4 rounded-full bg-[#FBBF24] hover:bg-[#f59e0b] text-[#111827] font-bold text-[15px] tracking-wide shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.35)] active:scale-[0.98] transition-all duration-300 disabled:from-slate-800 disabled:to-slate-900 disabled:text-slate-500 disabled:shadow-none disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
-            >
-              {isLoading && (
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
+              {/* Terms of Use Checkbox — Sign Up only */}
+              {!isLoginView && (
+                <label className="flex items-start gap-3 mt-5 cursor-pointer group select-none">
+                  <div className="relative mt-0.5">
+                    <input
+                      type="checkbox"
+                      checked={acceptedTerms}
+                      onChange={(e) => setAcceptedTerms(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-5 h-5 rounded-md border border-slate-600 bg-slate-900/60 peer-checked:bg-[#FBBF24] peer-checked:border-[#FBBF24] transition-all flex items-center justify-center">
+                      {acceptedTerms && (
+                        <svg className="w-3 h-3 text-[#111827]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                  </div>
+                  <span className="text-xs text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">
+                    I agree to the{' '}
+                    <a href="/dashboard/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#FBBF24] hover:underline font-semibold">
+                      Terms of Service
+                    </a>{' '}
+                    and{' '}
+                    <a href="/dashboard/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#FBBF24] hover:underline font-semibold">
+                      Privacy Policy
+                    </a>
+                  </span>
+                </label>
               )}
-              {isLoading ? '...' : (isLoginView ? t('login') : t('create_account'))}
-            </button>
-          </form>
+
+              {error && (
+                <div className="mt-6 p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-[#EA4335] text-sm text-center font-semibold animate-shake flex items-center justify-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isLoading || (!isLoginView && !acceptedTerms)}
+                className="mt-8 w-full py-4 rounded-full bg-[#FBBF24] hover:bg-[#f59e0b] text-[#111827] font-bold text-[15px] tracking-wide shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.35)] active:scale-[0.98] transition-all duration-300 disabled:from-slate-800 disabled:to-slate-900 disabled:text-slate-500 disabled:shadow-none disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {isLoading && (
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                )}
+                {isLoading ? '...' : (isLoginView ? t('login') : t('create_account'))}
+              </button>
+            </form>
+          )}
 
           {/* High-Tech Terminal Diagnostics Logger */}
           <div className="mt-8 p-3 bg-black/40 border border-slate-900/60 rounded-2xl font-mono text-[10px] text-[#FBBF24]/80 shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)] select-none pointer-events-none">
@@ -577,16 +763,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
                 <div className="animate-pulse text-slate-600">_</div>
               )}
             </div>
-          </div>
-
-          <div className="text-center mt-8">
-            <button
-              onClick={skipAuth}
-              disabled={isLoading}
-              className="text-slate-400 hover:text-[#FBBF24] font-semibold text-sm transition-colors disabled:opacity-50 cursor-pointer"
-            >
-              {t('skip_for_now')}
-            </button>
           </div>
         </div>
       </div>
