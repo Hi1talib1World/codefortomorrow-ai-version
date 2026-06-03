@@ -665,10 +665,13 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
           </div>
 
           {/* Map canvas containing tiers */}
-          <div 
+          <div
             ref={containerRef}
-            className="relative overflow-x-auto pb-6 pt-2 scrollbar-hidden flex gap-8 min-h-[600px] select-none snap-x"
+            className="relative w-full max-w-full pb-6 pt-2 scrollbar-hidden select-none"
+            style={{ boxSizing: 'border-box', overflowX: 'auto' }}
           >
+            {/* Inner flex row — min-width lets it scroll horizontally without clipping */}
+            <div className="flex gap-8 min-h-[600px] snap-x" style={{ minWidth: 'max-content' }}>
             {/* SVG Connecting Paths inside Map background */}
             <div className="absolute inset-0 pointer-events-none min-w-[1200px]" style={{ zIndex: 0 }}>
               <svg className="w-full h-full" viewBox="0 0 1200 600" fill="none">
@@ -798,6 +801,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
                 </div>
               );
             })}
+            </div>{/* end inner flex */}
           </div>
         </div>
       )}
@@ -857,7 +861,16 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '1.5rem',
+                maxWidth: '100%',
+                boxSizing: 'border-box',
+                width: '100%',
+              }}
+            >
               {filteredMissions.map((mission) => {
                 const isLocked = mission.status === 'locked';
                 const isCompleted = mission.status === 'completed';
