@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Bot, User as UserIcon, Lightbulb, Activity, BookOpen, Sparkles, Cpu, Clock, Terminal, AlertCircle } from 'lucide-react';
+import { Send, Bot, User as UserIcon, Lightbulb, Activity, BookOpen, Sparkles, Cpu, Clock, Terminal, AlertCircle, Play, Pause } from 'lucide-react';
 
 export type AgentStatus = 'Idle' | 'Working' | 'Offline';
 
@@ -18,12 +18,14 @@ export type AgentState = {
   activeTask: string | null;
   lastUpdated: string;
   processedJobs: number;
+  isPaused: boolean;
 };
 
 interface AgentPanelProps {
   agent: AgentState;
   logs: AgentLogEntry[];
   onCommand: (agentId: string, command: string) => Promise<void>;
+  onTogglePause: (agentId: string, isPaused: boolean) => Promise<void>;
 }
 
 const statusStyles: Record<AgentStatus, string> = {
@@ -51,9 +53,10 @@ const getAgentIcon = (agentId: string, className = "w-5 h-5") => {
   }
 };
 
-const AgentPanel: React.FC<AgentPanelProps> = ({ agent, logs, onCommand }) => {
+const AgentPanel: React.FC<AgentPanelProps> = ({ agent, logs, onCommand, onTogglePause }) => {
   const [command, setCommand] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [isToggling, setIsToggling] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e?: React.FormEvent) => {
@@ -65,6 +68,16 @@ const AgentPanel: React.FC<AgentPanelProps> = ({ agent, logs, onCommand }) => {
       setCommand('');
     } finally {
       setIsSending(false);
+    }
+  };
+
+  const handlePauseClick = async () => {
+    if (isToggling) return;
+    setIsToggling(true);
+    try {
+      await onTogglePause(agent.id, agent.isPaused);
+    } finally {
+      setIsToggling(false);
     }
   };
 
@@ -134,7 +147,21 @@ const AgentPanel: React.FC<AgentPanelProps> = ({ agent, logs, onCommand }) => {
             <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">{agent.description}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          {/* Pause / Resume button */}
+          <button
+            onClick={handlePauseClick}
+            disabled={isToggling || agent.status === 'Offline'}
+            className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed ${
+              agent.isPaused
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30'
+                : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 dark:hover:bg-slate-700'
+            }`}
+          >
+            {agent.isPaused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
+            {agent.isPaused ? 'Resume' : 'Pause'}
+          </button>
+          
           <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${statusStyles[agent.status]}`}>
             {agent.status === 'Working' && (
               <span className="relative flex h-1.5 w-1.5 mr-1">
@@ -165,6 +192,14 @@ const AgentPanel: React.FC<AgentPanelProps> = ({ agent, logs, onCommand }) => {
 
       {/* Chat Conversation Stream */}
       <div className="flex-1 overflow-y-auto bg-slate-50/30 dark:bg-slate-900/10 px-6 py-4 space-y-4">
+        {/* Execution Paused Alert Banner */}
+        {agent.isPaused && (
+          <div className="flex items-center justify-center gap-2 rounded-2xl bg-amber-50/50 border border-amber-100 dark:bg-amber-950/10 dark:border-amber-900/20 px-4 py-3 text-xs text-amber-700 dark:text-amber-400 my-1 shadow-sm">
+            <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
+            <span><span className="font-bold">Execution Paused</span>: Automated background jobs are suspended.</span>
+          </div>
+        )}
+
         {chatMessages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center p-8">
             <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 mb-3">
