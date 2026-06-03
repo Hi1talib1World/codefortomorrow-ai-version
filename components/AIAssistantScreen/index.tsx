@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Send, Sparkles, Bot, User, Copy, Check, ShieldAlert } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
+import api from '../../services/api';
 
 interface Message {
   text: string;
@@ -16,54 +16,6 @@ interface AIAssistantScreenProps {
     role?: string;
   };
 }
-
-const getSimulationResponse = (prompt: string): string => {
-  const lower = prompt.toLowerCase();
-  if (lower.includes('loop')) {
-    return `Here is an explanation of loops in **Python**! 
-A loop lets you repeat a block of code multiple times.
-
-\`\`\`python
-# A simple for loop to print numbers from 1 to 5
-for i in range(1, 6):
-    print(f"Iteration: {i}")
-\`\`\`
-
-* **\`for\`**: tells Python we want to start a loop.
-* **\`range(1, 6)\`**: defines the start (1) and stop (6, which is exclusive) values.
-* **\`print\`**: repeats for each iteration.
-
-Let me know if you want me to explain \`while\` loops or another topic!`;
-  }
-  if (lower.includes('recursion') || lower.includes('recursive')) {
-    return `**Recursion** is when a function calls itself to solve a smaller version of the same problem! 
-
-Here is a classic example: calculating the factorial of a number in **JavaScript**.
-
-\`\`\`javascript
-function factorial(n) {
-  // 1. Base case: stop the recursion when n is 1 or 0
-  if (n <= 1) return 1;
-  
-  // 2. Recursive case: call the function with a smaller number
-  return n * factorial(n - 1);
-}
-
-console.log(factorial(5)); // Output: 120
-\`\`\`
-
-Think of it like a set of Russian nesting dolls; you keep opening smaller dolls until you find the tiniest one (the base case)!`;
-  }
-  return `I am currently running in **Simulation Mode** because your Gemini API Key is not set in the environment variables.
-
-To enable full AI chat powers:
-1. Add \`GEMINI_API_KEY=your_key_here\` to your \`.env\` file.
-2. Restart the development server.
-
-Here is what you wrote: *"${prompt}"*
-
-Let me know if you would like to learn about **loops**, **recursion**, or basic coding syntax!`;
-};
 
 const CodeBlock = ({ className, children }: { className?: string; children: React.ReactNode }) => {
   const match = /language-(\w+)/.exec(className || '');
@@ -113,16 +65,20 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser }) =>
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSimulation, setIsSimulation] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY || '';
-  const isSimulation = !apiKey || apiKey === 'your-gemini-api-key-here';
-
-  // Initialize Gemini AI
-  const aiRef = useRef<any>(null);
-  if (!aiRef.current && !isSimulation) {
-    aiRef.current = new GoogleGenAI({ apiKey });
-  }
+  useEffect(() => {
+    const checkAIStatus = async () => {
+      try {
+        const status = await api.getAIStatus();
+        setIsSimulation(status.isSimulation);
+      } catch (e) {
+        console.error('Failed to fetch AI status:', e);
+      }
+    };
+    checkAIStatus();
+  }, []);
 
   useEffect(() => {
     // Initial welcome message from AI
@@ -152,24 +108,13 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser }) =>
     setIsLoading(true);
 
     try {
-      let reply = '';
-      if (isSimulation) {
-        // Slow down simulation slightly to feel real
-        await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 400));
-        reply = getSimulationResponse(text);
-      } else {
-        const chatHistory = messages.map(msg => ({
-          role: msg.sender === 'user' ? 'user' : 'model',
-          parts: [{ text: msg.text }],
-        }));
+      const chatHistory = messages.map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.text }],
+      }));
 
-        const response = await aiRef.current.models.generateContent({
-          model: 'gemini-3-flash-preview',
-          contents: [...chatHistory, { role: 'user', parts: [{ text }] }],
-        });
-
-        reply = response.text || "I'm not sure what to say.";
-      }
+      const res = await api.chatWithAssistant(text, chatHistory);
+      const reply = res.text;
 
       setMessages(prev => [...prev, { text: reply, sender: 'ai', timestamp: new Date() }]);
     } catch (err) {
