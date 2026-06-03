@@ -14,6 +14,7 @@ export interface IUser extends Document {
   progress: mongoose.Types.ObjectId; // This will store the ObjectId of the user's progress document
   savedRepos?: string[];
   savedPosts?: string[];
+  emailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -52,6 +53,10 @@ const userSchema: Schema = new Schema({
   },
   savedRepos: [{ type: String }],
   savedPosts: [{ type: String }],
+  emailVerified: {
+    type: Boolean,
+    default: false,
+  },
   classroomCode: { type: String, required: false },
   progress: {
     type: Schema.Types.ObjectId,
