@@ -206,3 +206,35 @@ export const searchUsers = async (req: Request, res: Response, next: NextFunctio
         next(error);
     }
 };
+
+/**
+ * @desc    Get top users ranked by XP
+ * @route   GET /api/users/leaderboard
+ * @access  Private
+ */
+export const getLeaderboard = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const isDbConnected = mongoose.connection.readyState === 1;
+        if (!isDbConnected) {
+            console.warn("⚠️ MongoDB is not connected. Returning empty leaderboard.");
+            return res.json([]);
+        }
+
+        // Query all users that have a progress document
+        const users = await User.find({ progress: { $exists: true, $ne: null } })
+            .populate('progress')
+            .select('name profilePictureUrl role bio progress')
+            .lean();
+
+        // Sort in memory by progress.xp descending and limit to top 100
+        const sortedUsers = users
+            .filter((u: any) => u.progress && typeof u.progress.xp === 'number')
+            .sort((a: any, b: any) => b.progress.xp - a.progress.xp)
+            .slice(0, 100);
+
+        return res.json(sortedUsers);
+    } catch (error) {
+        next(error);
+    }
+};
+
