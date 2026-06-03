@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { randomUUID } from 'crypto';
+import { AIEngine } from './aiEngine';
 
 export type AgentStatus = 'Idle' | 'Working' | 'Offline';
 
@@ -338,34 +339,43 @@ function triggerAgentCommand(agentId: string, command: string) {
     throw new Error(`Unknown agent ${agentId}`);
   }
 
-  updateAgentStatus(agentId, 'Working', `Manual: ${command}`);
-  appendAgentLog(agentId, `Manual trigger received: "${command}". Initializing sequence...`, 'info');
+  const activeTaskName = command.length > 30 ? `${command.substring(0, 30)}...` : command;
+  updateAgentStatus(agentId, 'Working', activeTaskName);
+  appendAgentLog(agentId, `Message received: "${command}". Processing...`, 'info');
 
-  const steps = [
-    { message: `Manual task: Validating requirements for "${command}"...`, severity: 'info', delayMs: 1500 },
-    { message: `Manual task: Executing process instructions...`, severity: 'info', delayMs: 2000 },
-    { message: `Manual task: Verifying system telemetry state...`, severity: 'success', delayMs: 1500 },
-  ];
+  // Trigger the asynchronous Gemini chat call
+  (async () => {
+    try {
+      const result = await AIEngine.chatWithAgent(agentId, command);
+      
+      // We will print the thoughts/steps sequentially with a 1.2s delay
+      let delay = 1000;
+      result.thoughts.forEach((thought) => {
+        setTimeout(() => {
+          const current = agentStateMap.get(agentId);
+          if (current && current.status === 'Working' && current.activeTask === activeTaskName) {
+            appendAgentLog(agentId, `[Analysis] ${thought}`, 'info');
+          }
+        }, delay);
+        delay += 1200;
+      });
 
-  let currentDelay = 1000;
-  steps.forEach((step) => {
-    setTimeout(() => {
-      const current = agentStateMap.get(agentId);
-      if (current && current.status === 'Working' && current.activeTask === `Manual: ${command}`) {
-        appendAgentLog(agentId, step.message, step.severity as any);
-      }
-    }, currentDelay);
-    currentDelay += step.delayMs;
-  });
-
-  setTimeout(() => {
-    const current = agentStateMap.get(agentId);
-    if (current && current.status === 'Working' && current.activeTask === `Manual: ${command}`) {
-      current.processedJobs += 1;
+      // Finally print the agent's reply
+      setTimeout(() => {
+        const current = agentStateMap.get(agentId);
+        if (current && current.status === 'Working' && current.activeTask === activeTaskName) {
+          current.processedJobs += 1;
+          updateAgentStatus(agentId, 'Idle', null);
+          appendAgentLog(agentId, `${result.response}`, 'success');
+        }
+      }, delay);
+      
+    } catch (err: any) {
+      console.error('Agent chat sequence failed:', err.message);
       updateAgentStatus(agentId, 'Idle', null);
-      appendAgentLog(agentId, `Manual command completed successfully: "${command}".`, 'success');
+      appendAgentLog(agentId, `Error processing message: ${err.message}`, 'error');
     }
-  }, currentDelay);
+  })();
 
   return state;
 }

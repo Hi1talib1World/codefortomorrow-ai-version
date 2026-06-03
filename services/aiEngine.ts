@@ -261,6 +261,67 @@ export class AIEngine {
     return guide;
   }
 
+  /**
+   * Chats with a specific agent persona
+   */
+  static async chatWithAgent(agentId: string, message: string): Promise<{ thoughts: string[]; response: string }> {
+    let systemInstruction = "";
+    if (agentId === 'student-analytics') {
+      systemInstruction = `You are the Student Analytics AI Agent for the Code for Tomorrow platform. 
+Your role is to analyze learning data, identify students who are falling behind, detect system bugs/bottlenecks, and recommend interventions. 
+Keep your response short, highly analytical, and technical.
+First, output 2 internal analysis steps or thoughts you perform (e.g. "Querying completion speeds...", "Checking error rate variance...") as an array of strings in the 'thoughts' field. 
+Then, output your actual final reply to the administrator in the 'response' field.`;
+    } else if (agentId === 'curriculum-factory') {
+      systemInstruction = `You are the Curriculum Factory AI Agent for the Code for Tomorrow platform. 
+Your role is to generate lesson structures, design challenges, translate assets, and tailor syllabi based on school requirements. 
+Keep your response short, instructional, and practical.
+First, output 2 internal curriculum construction steps or thoughts you perform (e.g. "Drafting challenge specifications...", "Translating module schema...") as an array of strings in the 'thoughts' field. 
+Then, output your actual final reply to the administrator in the 'response' field.`;
+    } else if (agentId === 'b2b-sales') {
+      systemInstruction = `You are the B2B Sales AI Agent for the Code for Tomorrow platform. 
+Your role is to analyze leads, score opportunities, draft enterprise proposals, and assist deployment planners. 
+Keep your response short, business-oriented, and strategic.
+First, output 2 internal sales logic steps or thoughts you perform (e.g. "Evaluating lead budget signals...", "Structuring pricing tiered matrix...") as an array of strings in the 'thoughts' field. 
+Then, output your actual final reply to the administrator in the 'response' field.`;
+    } else {
+      systemInstruction = `You are an AI assistant helping the administrator.`;
+    }
+
+    const contents = `User Message: "${message}"`;
+
+    try {
+      const response = await getAi().models.generateContent({
+        model: this.model,
+        contents: contents,
+        config: {
+          systemInstruction: systemInstruction,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              thoughts: { type: Type.ARRAY, items: { type: Type.STRING } },
+              response: { type: Type.STRING }
+            },
+            required: ["thoughts", "response"]
+          }
+        }
+      });
+
+      const parsed = JSON.parse(response.text || '{}');
+      return {
+        thoughts: parsed.thoughts || ["Analyzing context...", "Processing request..."],
+        response: parsed.response || "I have processed your command."
+      };
+    } catch (error) {
+      console.error("Agent Chat Gemini Error:", error);
+      return {
+        thoughts: ["Encountered an issue connecting to Gemini...", "Processing command in fallback mode..."],
+        response: `Fallback: I received your message "${message}" but failed to connect to my brain. Please check your GEMINI_API_KEY.`
+      };
+    }
+  }
+
   private static getFallbackRecommendation() {
     return {
       recommendation: "Keep practicing your core skills to build a strong foundation!",

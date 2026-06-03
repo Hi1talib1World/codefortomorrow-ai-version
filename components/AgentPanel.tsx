@@ -78,7 +78,7 @@ const AgentPanel: React.FC<AgentPanelProps> = ({ agent, logs, onCommand }) => {
         <input
           value={command}
           onChange={(event) => setCommand(event.target.value)}
-          placeholder="Run manual job (e.g. refresh model)"
+          placeholder="Ask this agent a question or run a task..."
           className="min-w-0 flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
         />
         <button
@@ -86,7 +86,7 @@ const AgentPanel: React.FC<AgentPanelProps> = ({ agent, logs, onCommand }) => {
           disabled={isSending}
           className="rounded-2xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500"
         >
-          {isSending ? 'Sending...' : 'Trigger'}
+          {isSending ? 'Sending...' : 'Send'}
         </button>
       </div>
 
