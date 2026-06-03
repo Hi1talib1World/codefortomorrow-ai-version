@@ -20,6 +20,7 @@ import adminRoutes from './routes/admin.routes';
 import missionsRoutes from './routes/missions.routes';
 import learningEventsRoutes from './routes/learningEvents.routes';
 import agentsRoutes from './routes/agents.routes';
+import aiRoutes from './routes/ai.routes';
 import { errorHandler } from './middleware/error.middleware';
 
 // Load environment variables from .env file
@@ -167,6 +168,7 @@ async function startServer() {
   app.use('/api', missionsRoutes);
   app.use('/api', learningEventsRoutes);
   app.use('/api/agents', agentsRoutes);
+  app.use('/api/ai', aiRoutes);
 
   const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:5001';
   app.use(
