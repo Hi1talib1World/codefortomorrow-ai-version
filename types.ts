@@ -206,4 +206,9 @@ export interface User {
   savedPosts?: string[];
   createdAt: string;
   lastLogin: string;
+  githubUrl?: string;
+  linkedinUrl?: string;
+  websiteUrl?: string;
+  professionalTitle?: string;
+  skills?: string[];
 }
