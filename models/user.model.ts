@@ -17,6 +17,14 @@ export interface IUser extends Document {
   emailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
+  bio?: string;
+  coverPictureUrl?: string;
+  currentPath?: string | null;
+  githubUrl?: string;
+  linkedinUrl?: string;
+  websiteUrl?: string;
+  professionalTitle?: string;
+  skills?: string[];
 }
 
 const userSchema: Schema = new Schema({
@@ -58,6 +66,37 @@ const userSchema: Schema = new Schema({
     default: false,
   },
   classroomCode: { type: String, required: false },
+  bio: {
+    type: String,
+    default: '',
+  },
+  coverPictureUrl: {
+    type: String,
+    default: '',
+  },
+  currentPath: {
+    type: String,
+    default: null,
+  },
+  githubUrl: {
+    type: String,
+    default: '',
+  },
+  linkedinUrl: {
+    type: String,
+    default: '',
+  },
+  websiteUrl: {
+    type: String,
+    default: '',
+  },
+  professionalTitle: {
+    type: String,
+    default: '',
+  },
+  skills: [{
+    type: String,
+  }],
   progress: {
     type: Schema.Types.ObjectId,
     ref: 'Progress', // This creates the link to the Progress model
