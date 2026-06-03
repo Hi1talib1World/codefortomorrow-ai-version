@@ -475,6 +475,43 @@ const api = {
       throw new Error(data.message || 'Failed to fetch missions.');
     }
     return data;
+  },
+
+  getAIStatus: async (): Promise<{ isSimulation: boolean }> => {
+    const response = await customFetch(`${API_BASE_URL}/ai/status`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch AI status.');
+    }
+    return data;
+  },
+
+  chatWithAssistant: async (message: string, history: any[]): Promise<{ text: string }> => {
+    const response = await customFetch(`${API_BASE_URL}/ai/chat`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ message, history }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to chat with AI assistant.');
+    }
+    return data;
+  },
+
+  generateHint: async (titleKey: string, expectedOutput: string, failedCode: string): Promise<{ hint: string }> => {
+    const response = await customFetch(`${API_BASE_URL}/ai/generate-hint`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ titleKey, expectedOutput, failedCode }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to generate AI hint.');
+    }
+    return data;
   }
 };
 
