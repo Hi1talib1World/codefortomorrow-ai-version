@@ -73,13 +73,13 @@ const getCardStyles = (missionId: string, status: string) => {
 
   if (isLocked) {
     return {
-      cardBg: 'bg-[#13192b] border-[#1e2942]/60 text-slate-500',
-      textTitle: 'text-slate-400',
-      textDesc: 'text-slate-650',
-      progressBarBg: 'bg-[#0b0f19] border-[#1e2942]/30',
-      progressFill: 'bg-slate-800',
+      cardBg: 'bg-slate-100/50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/80 text-slate-400 dark:text-slate-600',
+      textTitle: 'text-slate-450 dark:text-slate-500',
+      textDesc: 'text-slate-500 dark:text-slate-600',
+      progressBarBg: 'bg-slate-200/50 dark:bg-slate-950 border-slate-350/20 dark:border-slate-850',
+      progressFill: 'bg-slate-300 dark:bg-slate-800',
       glowShadow: '',
-      iconContainer: 'bg-[#0f1422] border-[#1e2942]/30 text-slate-600',
+      iconContainer: 'bg-slate-200/45 dark:bg-slate-800/30 border-slate-300/30 dark:border-slate-700/20 text-slate-400 dark:text-slate-600',
     };
   }
 
@@ -87,55 +87,55 @@ const getCardStyles = (missionId: string, status: string) => {
   if (tier === 1) {
     return {
       cardBg: isCompleted 
-        ? 'bg-[#111c18] border-emerald-500/30' 
-        : 'bg-[#111827] border-slate-800 hover:border-slate-700',
-      textTitle: 'text-white group-hover:text-emerald-400 font-extrabold',
-      textDesc: 'text-slate-400 group-hover:text-slate-300',
-      progressBarBg: 'bg-slate-950 border-slate-900',
+        ? 'bg-emerald-50/20 dark:bg-emerald-950/10 border-emerald-500/20 dark:border-emerald-500/30 shadow-sm' 
+        : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-850/80 hover:border-emerald-500/40 dark:hover:border-emerald-500/40 shadow-sm',
+      textTitle: 'text-slate-800 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 font-black',
+      textDesc: 'text-slate-600 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300',
+      progressBarBg: 'bg-slate-100 dark:bg-slate-950 border-slate-200/50 dark:border-slate-900',
       progressFill: 'bg-emerald-500',
       glowShadow: '',
-      iconContainer: 'bg-emerald-500/10 border-emerald-500/10 text-emerald-400',
+      iconContainer: 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-100 dark:border-emerald-900/30 text-emerald-600 dark:text-emerald-450',
     };
   }
   // Cyan theme for Tier 2
   if (tier === 2) {
     return {
       cardBg: isCompleted 
-        ? 'bg-[#101d24] border-cyan-500/30' 
-        : 'bg-[#111827] border-slate-800 hover:border-slate-700',
-      textTitle: 'text-white group-hover:text-cyan-400 font-extrabold',
-      textDesc: 'text-slate-400 group-hover:text-slate-300',
-      progressBarBg: 'bg-slate-950 border-slate-900',
+        ? 'bg-cyan-50/20 dark:bg-cyan-950/10 border-cyan-500/20 dark:border-cyan-500/30 shadow-sm' 
+        : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-850/80 hover:border-cyan-500/40 dark:hover:border-cyan-500/40 shadow-sm',
+      textTitle: 'text-slate-800 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 font-black',
+      textDesc: 'text-slate-600 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300',
+      progressBarBg: 'bg-slate-100 dark:bg-slate-950 border-slate-200/50 dark:border-slate-900',
       progressFill: 'bg-cyan-500',
       glowShadow: '',
-      iconContainer: 'bg-cyan-500/10 border-cyan-500/10 text-cyan-400',
+      iconContainer: 'bg-cyan-50 dark:bg-cyan-950/40 border-cyan-100 dark:border-cyan-900/30 text-cyan-600 dark:text-cyan-450',
     };
   }
   // Purple theme for Tier 3
   if (tier === 3) {
     return {
       cardBg: isCompleted 
-        ? 'bg-[#151426] border-purple-500/30' 
-        : 'bg-[#111827] border-slate-800 hover:border-slate-700',
-      textTitle: 'text-white group-hover:text-purple-400 font-extrabold',
-      textDesc: 'text-slate-400 group-hover:text-slate-300',
-      progressBarBg: 'bg-slate-950 border-slate-900',
+        ? 'bg-purple-50/20 dark:bg-purple-950/10 border-purple-500/20 dark:border-purple-500/30 shadow-sm' 
+        : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-850/80 hover:border-purple-500/40 dark:hover:border-purple-500/40 shadow-sm',
+      textTitle: 'text-slate-800 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 font-black',
+      textDesc: 'text-slate-600 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300',
+      progressBarBg: 'bg-slate-100 dark:bg-slate-950 border-slate-200/50 dark:border-slate-900',
       progressFill: 'bg-purple-500',
       glowShadow: '',
-      iconContainer: 'bg-purple-500/10 border-purple-500/10 text-purple-400',
+      iconContainer: 'bg-purple-50 dark:bg-purple-950/40 border-purple-100 dark:border-purple-900/30 text-purple-600 dark:text-purple-450',
     };
   }
   // Rose theme for Tier 4
   return {
     cardBg: isCompleted 
-      ? 'bg-[#1d131a] border-rose-500/30' 
-      : 'bg-[#111827] border-slate-800 hover:border-slate-700',
-    textTitle: 'text-white group-hover:text-rose-400 font-extrabold',
-    textDesc: 'text-slate-400 group-hover:text-slate-300',
-    progressBarBg: 'bg-slate-950 border-slate-900',
+      ? 'bg-rose-50/20 dark:bg-rose-950/10 border-rose-500/20 dark:border-rose-500/30 shadow-sm' 
+      : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-850/80 hover:border-rose-500/40 dark:hover:border-rose-500/40 shadow-sm',
+    textTitle: 'text-slate-800 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 font-black',
+    textDesc: 'text-slate-600 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300',
+    progressBarBg: 'bg-slate-100 dark:bg-slate-950 border-slate-200/50 dark:border-slate-900',
     progressFill: 'bg-rose-500',
     glowShadow: '',
-    iconContainer: 'bg-rose-500/10 border-rose-500/10 text-rose-400',
+    iconContainer: 'bg-rose-50 dark:bg-rose-950/40 border-rose-100 dark:border-rose-900/30 text-rose-600 dark:text-rose-450',
   };
 };
 
@@ -509,7 +509,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
   }
 
   return (
-    <div className="space-y-8 select-none text-slate-100 bg-slate-950/20 p-1 rounded-3xl">
+    <div className="space-y-8 select-none text-slate-800 dark:text-slate-100 p-1 rounded-3xl">
       <style>{`
         @keyframes pulse-subtle {
           0%, 100% { opacity: 1; transform: scale(1); }
@@ -560,22 +560,22 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
         }
       `}</style>
 
-      {/* Cyberpunk Telemetry HUD Header */}
-      <div className="relative overflow-hidden custom-glass rounded-3xl p-6 md:p-8 shadow-2xl animated-bg-radial border border-slate-800/80">
+      {/* Telemetry HUD Header */}
+      <div className="relative overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 md:p-8 shadow-sm animated-bg-radial transition-colors">
         {/* Subtle grid lines background */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.005)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.005)_1px,transparent_1px)] bg-[size:30px_30px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.015)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.003)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.003)_1px,transparent_1px)] bg-[size:30px_30px] pointer-events-none" />
         
         <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="relative p-4 bg-gradient-to-br from-cyan-900/30 to-indigo-950/30 rounded-2xl border border-cyan-500/30 flex-shrink-0 shadow-lg shadow-cyan-950/20">
-              <Compass className="w-8 h-8 text-cyan-400 animate-pulse-subtle" />
-              <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-cyan-400 border-2 border-[#0f172a] animate-ping" />
+            <div className="relative p-4 bg-gradient-to-br from-cyan-50 to-cyan-100/50 dark:from-cyan-950/30 dark:to-indigo-950/30 rounded-2xl border border-cyan-500/20 dark:border-cyan-500/30 flex-shrink-0 shadow-sm">
+              <Compass className="w-8 h-8 text-cyan-500 dark:text-cyan-400 animate-pulse-subtle" />
+              <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-cyan-500 border-2 border-white dark:border-[#0f172a] animate-ping" />
             </div>
             <div className="space-y-1">
-              <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white flex items-center gap-2">
-                MISSION COMPASS <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 tracking-normal uppercase">Quest Terminal</span>
+              <h2 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                MISSION COMPASS <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 tracking-normal uppercase">Quest Terminal</span>
               </h2>
-              <p className="text-xs md:text-sm text-slate-300 font-medium max-w-md leading-relaxed">
+              <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-semibold max-w-md leading-relaxed">
                 Interact with the visual path map below to track prerequisites, view concept diagnostic data, and access specialized learning paths.
               </p>
             </div>
@@ -584,11 +584,11 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
           {/* HUD Progress & Telemetry Cards */}
           <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-3 md:gap-4">
             {/* Total progress visual gauge */}
-            <div className="px-5 py-4 bg-slate-950/70 border border-slate-800/80 rounded-2xl flex items-center gap-4 min-w-[130px] hover:border-slate-700/60 transition-all">
+            <div className="px-5 py-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center gap-4 min-w-[130px] hover:border-slate-300 dark:hover:border-slate-700/60 transition-all">
               <div className="relative w-12 h-12 flex-shrink-0">
                 {/* Background Ring */}
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                  <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="3.5" />
+                  <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(148, 163, 184, 0.12)" strokeWidth="3.5" />
                   <circle cx="18" cy="18" r="16" fill="none" stroke="#06b6d4" strokeWidth="3.5" 
                     strokeDasharray="100" 
                     strokeDashoffset={100 - overallProgressPercent} 
@@ -597,38 +597,38 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-xs font-black text-white font-mono">{overallProgressPercent}%</span>
+                  <span className="text-xs font-black text-slate-800 dark:text-white font-mono">{overallProgressPercent}%</span>
                 </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Campaign</span>
-                <span className="text-sm font-black text-slate-200">{completedCount} <span className="text-xs font-medium text-slate-500">/ {totalCount} CLR</span></span>
+              <div className="flex flex-col text-left">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Campaign</span>
+                <span className="text-sm font-black text-slate-800 dark:text-slate-200 leading-tight mt-0.5">{completedCount} <span className="text-xs font-medium text-slate-400">/ {totalCount} CLR</span></span>
               </div>
             </div>
 
             {/* Score XP */}
-            <div className="px-5 py-4 bg-slate-950/70 border border-slate-800/80 rounded-2xl flex items-center gap-3.5 min-w-[120px] hover:border-slate-700/60 transition-all">
-              <div className="p-2.5 bg-amber-500/10 rounded-xl border border-amber-500/20 text-amber-400">
-                <Flame className="w-5 h-5 fill-amber-500/10 text-amber-400 animate-pulse" />
+            <div className="px-5 py-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center gap-3.5 min-w-[120px] hover:border-slate-300 dark:hover:border-slate-700/60 transition-all">
+              <div className="p-2 bg-amber-500/10 rounded-xl border border-amber-500/20 text-amber-500 dark:text-amber-400">
+                <Flame className="w-5 h-5 fill-amber-500/10 text-amber-500 dark:text-amber-400 animate-pulse" />
               </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Telemetry XP</span>
-                <span className="text-lg font-black text-amber-400 font-mono">{xpGained}</span>
+              <div className="flex flex-col text-left">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Telemetry XP</span>
+                <span className="text-lg font-black text-amber-600 dark:text-amber-400 font-mono mt-0.5">{xpGained}</span>
               </div>
             </div>
 
             {/* View switcher and Polling toggle */}
             <div className="col-span-2 sm:col-span-1 flex gap-2">
-              <div className="p-1.5 bg-slate-950/70 border border-slate-800/80 rounded-2xl flex items-center">
+              <div className="p-1 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center">
                 <button
                   onClick={() => setViewMode('map')}
-                  className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'map' ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-900/30' : 'text-slate-400 hover:text-slate-200'}`}
+                  className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'map' ? 'bg-[#0a66c2] text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
                 >
                   <Map className="w-3.5 h-3.5" /> Map
                 </button>
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'grid' ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-900/30' : 'text-slate-400 hover:text-slate-200'}`}
+                  className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'grid' ? 'bg-[#0a66c2] text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
                 >
                   <Grid className="w-3.5 h-3.5" /> Grid
                 </button>
@@ -636,15 +636,15 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
 
               <button 
                 onClick={() => setPollingActive(!pollingActive)}
-                className="px-4 py-3 bg-slate-950/70 hover:bg-slate-900 border border-slate-800/80 hover:border-slate-700 rounded-2xl flex items-center gap-2 cursor-pointer transition-all active:scale-95 group flex-grow sm:flex-grow-0"
+                className="px-4 py-3 bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center gap-2 cursor-pointer transition-all active:scale-95 group flex-grow sm:flex-grow-0"
               >
-                <span className="relative flex h-2.5 w-2.5">
+                <span className="relative flex h-2 w-2">
                   <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${pollingActive ? 'bg-emerald-400' : 'bg-rose-400'}`}></span>
-                  <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${pollingActive ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+                  <span className={`relative inline-flex rounded-full h-2 w-2 ${pollingActive ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
                 </span>
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1">
                   {pollingActive ? 'Syncing' : 'Paused'}
-                  <RefreshCw className={`w-3.5 h-3.5 text-slate-500 transition-transform ${pollingActive ? 'animate-spin-slow' : 'group-hover:rotate-45'}`} />
+                  <RefreshCw className={`w-3.5 h-3.5 text-slate-400 dark:text-slate-500 transition-transform ${pollingActive ? 'animate-spin-slow' : 'group-hover:rotate-45'}`} />
                 </span>
               </button>
             </div>
@@ -656,12 +656,12 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
       {viewMode === 'map' && (
         <div className="space-y-6">
           {/* Legend HUD */}
-          <div className="flex flex-wrap items-center gap-4 bg-slate-900/20 border border-slate-850/80 px-4 py-3 rounded-2xl text-xs text-slate-300">
-            <span className="font-extrabold text-white">SKILL TIERS:</span>
-            <span className="flex items-center gap-1.5 font-semibold"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Tier 1: Foundations</span>
-            <span className="flex items-center gap-1.5 font-semibold"><span className="w-2.5 h-2.5 rounded-full bg-cyan-500" /> Tier 2: Core Coding</span>
-            <span className="flex items-center gap-1.5 font-semibold"><span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> Tier 3: Web & Engine</span>
-            <span className="flex items-center gap-1.5 font-semibold"><span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Tier 4: Advanced Systems</span>
+          <div className="flex flex-wrap items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-3 rounded-2xl text-xs text-slate-600 dark:text-slate-300 shadow-sm transition-colors">
+            <span className="font-black text-slate-900 dark:text-white uppercase tracking-wider">Skill Tiers:</span>
+            <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Tier 1: Foundations</span>
+            <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded-full bg-cyan-500" /> Tier 2: Core Coding</span>
+            <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> Tier 3: Web & Engine</span>
+            <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Tier 4: Advanced Systems</span>
           </div>
 
           {/* Map canvas containing tiers */}
@@ -698,17 +698,17 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
               return (
                 <div 
                   key={tierKey}
-                  className="flex-shrink-0 w-[290px] md:w-[330px] flex flex-col gap-6 snap-start relative z-10"
+                  className="flex-shrink-0 w-[290px] md:w-[330px] flex flex-col gap-6 snap-start relative z-10 animate-fade-in"
                 >
                   {/* Column Header */}
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-800/80 px-2">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 px-2">
                     <span 
-                      className="text-xs font-black uppercase tracking-wider"
+                      className="text-xs font-black uppercase tracking-wider animate-pulse-subtle"
                       style={{ color: tierData.info.color }}
                     >
                       {tierData.info.name}
                     </span>
-                    <span className="text-[10px] text-slate-300 bg-slate-900 border border-slate-800/60 px-2.5 py-0.5 rounded-full font-bold">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/60 px-2.5 py-0.5 rounded-full font-black uppercase tracking-wider select-none shrink-0">
                       {tierData.list.length} Missions
                     </span>
                   </div>
@@ -733,13 +733,13 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
                               setSelectedMission(mission);
                             }
                           }}
-                          className={`relative overflow-hidden group border rounded-3xl p-5 transition-all duration-300 ${
+                          className={`relative overflow-hidden group border rounded-3xl p-5 transition-all duration-350 shadow-sm hover:shadow-md ${
                             cardStyle.cardBg
                           } ${
                             isLocked 
                               ? 'cursor-not-allowed' 
-                              : 'cursor-pointer hover:bg-slate-800/20'
-                          } ${isNodeFocused && !isLocked ? 'border-cyan-500/80' : ''}`}
+                              : 'cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/20 hover:-translate-y-0.5'
+                          } ${isNodeFocused && !isLocked ? 'border-cyan-500/80 dark:border-cyan-500/80' : ''}`}
                         >
 
                           <div className="flex justify-between items-start mb-4">
@@ -753,10 +753,10 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
                             </div>
                           </div>
 
-                          <div className="space-y-1.5 mb-5">
+                          <div className="space-y-1.5 mb-5 text-left">
                             <h4 className={`text-md tracking-tight flex items-center gap-1 ${cardStyle.textTitle}`}>
                               {mission.title}
-                              {!isLocked && <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors group-hover:translate-x-0.5" />}
+                              {!isLocked && <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors group-hover:translate-x-0.5" />}
                             </h4>
                             <p className={`text-[11px] font-semibold leading-relaxed ${cardStyle.textDesc}`}>
                               {isLocked 
@@ -768,8 +768,8 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
                           {/* Futuristic progress indicator */}
                           <div className="space-y-2">
                             <div className="flex justify-between text-[10px] font-bold tracking-wide">
-                              <span className="text-slate-400 uppercase">Proficiency</span>
-                              <span className={isCompleted ? 'text-emerald-400' : 'text-cyan-400 font-extrabold'}>{mission.progress}%</span>
+                              <span className="text-slate-400 dark:text-slate-500 uppercase">Proficiency</span>
+                              <span className={isCompleted ? 'text-emerald-500 dark:text-emerald-400 font-extrabold' : 'text-cyan-500 dark:text-cyan-400 font-extrabold'}>{mission.progress}%</span>
                             </div>
                             <div className={`w-full h-2.5 rounded-full overflow-hidden p-[1.5px] border ${cardStyle.progressBarBg}`}>
                               <div
@@ -781,12 +781,12 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
 
                           {/* Sealed Lock screen with high-contrast readable text */}
                           {isLocked && (
-                            <div className="absolute inset-0 bg-[#070b13]/92 backdrop-blur-[3px] flex flex-col items-center justify-center p-3 text-center transition-all border border-slate-900">
-                              <div className="p-2.5 bg-slate-900 border border-slate-800 rounded-full mb-2.5 shadow-lg">
-                                <Lock className="w-5 h-5 text-slate-400" />
+                            <div className="absolute inset-0 bg-white/95 dark:bg-slate-950/95 backdrop-blur-[2px] flex flex-col items-center justify-center p-4 text-center transition-all border border-slate-200 dark:border-slate-900">
+                              <div className="p-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full mb-2.5 shadow-sm">
+                                <Lock className="w-5 h-5 text-slate-400 dark:text-slate-500" />
                               </div>
-                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Locked Block</span>
-                              <p className="text-[11px] text-slate-200 font-bold px-4 leading-normal">
+                              <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Locked Block</span>
+                              <p className="text-[11px] text-slate-700 dark:text-slate-200 font-bold px-4 leading-normal">
                                 {mission.telemetry.prerequisiteText || 'Complete previous requirements.'}
                               </p>
                             </div>
