@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Header from '../Header';
+import api from '../../services/api';
 import BottomNav from '../BottomNav';
 import LearnScreen from '../ProgressMap';
 import ProfileScreen from '../ProfileScreen';
@@ -51,6 +52,24 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
   const navigate = useNavigate();
   const location = useLocation();
   const { view, pathId } = useParams<{ view?: string; pathId?: string }>();
+  const [unreadMessagesCount, setUnreadMessagesCount] = React.useState(0);
+
+  // Poll for unread message counts in the background
+  React.useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const conversations = await api.getConversations();
+        const totalUnread = conversations.reduce((sum, conv) => sum + (conv.unreadCount || 0), 0);
+        setUnreadMessagesCount(totalUnread);
+      } catch (error) {
+        console.error('Error fetching unread messages count:', error);
+      }
+    };
+
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 10000);
+    return () => clearInterval(interval);
+  }, [location.pathname]);
 
   // Derive the active view from the URL
   const activeView: DashboardView = (() => {
@@ -159,13 +178,14 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
           onLogout={onLogout}
           onSwitchPath={(pId) => navigate(`/dashboard/learn/${pId}`)}
           onStartLesson={onStartLesson}
+          unreadMessagesCount={unreadMessagesCount}
         />
         <main className={`flex-grow overflow-y-auto ${mainContentBg} pb-24 md:pb-12 transition-colors`}>
           <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-6 md:py-10">
             {renderActiveView()}
           </div>
         </main>
-        <BottomNav activeView={activeView} setActiveView={setActiveView} />
+        <BottomNav activeView={activeView} setActiveView={setActiveView} unreadMessagesCount={unreadMessagesCount} />
       </div>
     </div>
   );
