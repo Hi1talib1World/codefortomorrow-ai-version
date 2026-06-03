@@ -13,6 +13,11 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClo
     const [bio, setBio] = useState(user.bio || '');
     const [profilePictureUrl, setProfilePictureUrl] = useState(user.profilePictureUrl);
     const [coverPictureUrl, setCoverPictureUrl] = useState(user.coverPictureUrl || '');
+    const [professionalTitle, setProfessionalTitle] = useState(user.professionalTitle || '');
+    const [githubUrl, setGithubUrl] = useState(user.githubUrl || '');
+    const [linkedinUrl, setLinkedinUrl] = useState(user.linkedinUrl || '');
+    const [websiteUrl, setWebsiteUrl] = useState(user.websiteUrl || '');
+    const [skillsInput, setSkillsInput] = useState(user.skills ? user.skills.join(', ') : '');
     
     const fileInputRef = useRef<HTMLInputElement>(null);
     const coverInputRef = useRef<HTMLInputElement>(null);
@@ -41,12 +46,20 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClo
 
     const handleSave = async () => {
         try {
+            const skillsArray = skillsInput
+                ? skillsInput.split(',').map(s => s.trim()).filter(s => s.length > 0)
+                : [];
             await onSave({
                 name,
                 email,
                 bio,
                 profilePictureUrl,
-                coverPictureUrl
+                coverPictureUrl,
+                professionalTitle,
+                githubUrl,
+                linkedinUrl,
+                websiteUrl,
+                skills: skillsArray
             });
         } catch (error) {
             console.error('Failed to save profile details:', error);
@@ -145,8 +158,63 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onSave, onClo
                             id="bio"
                             value={bio}
                             onChange={(e) => setBio(e.target.value)}
-                            rows={3}
+                            rows={2}
                             className="w-full px-4 py-2 text-sm rounded-xl border-2 border-slate-100 dark:border-slate-750 bg-transparent dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors font-bold"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="professionalTitle" className="block text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-1">Professional Title</label>
+                        <input
+                            type="text"
+                            id="professionalTitle"
+                            value={professionalTitle}
+                            placeholder="e.g. Front-End Apprentice, Student Developer"
+                            onChange={(e) => setProfessionalTitle(e.target.value)}
+                            className="w-full px-4 py-2 text-sm rounded-xl border-2 border-slate-100 dark:border-slate-750 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors font-bold"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="githubUrl" className="block text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-1">GitHub Profile URL</label>
+                        <input
+                            type="url"
+                            id="githubUrl"
+                            value={githubUrl}
+                            placeholder="https://github.com/username"
+                            onChange={(e) => setGithubUrl(e.target.value)}
+                            className="w-full px-4 py-2 text-sm rounded-xl border-2 border-slate-100 dark:border-slate-750 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors font-bold"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="linkedinUrl" className="block text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-1">LinkedIn Profile URL</label>
+                        <input
+                            type="url"
+                            id="linkedinUrl"
+                            value={linkedinUrl}
+                            placeholder="https://linkedin.com/in/username"
+                            onChange={(e) => setLinkedinUrl(e.target.value)}
+                            className="w-full px-4 py-2 text-sm rounded-xl border-2 border-slate-100 dark:border-slate-750 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors font-bold"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="websiteUrl" className="block text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-1">Personal Website URL</label>
+                        <input
+                            type="url"
+                            id="websiteUrl"
+                            value={websiteUrl}
+                            placeholder="https://example.com"
+                            onChange={(e) => setWebsiteUrl(e.target.value)}
+                            className="w-full px-4 py-2 text-sm rounded-xl border-2 border-slate-100 dark:border-slate-750 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors font-bold"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="skillsInput" className="block text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-1">Skills (comma-separated)</label>
+                        <input
+                            type="text"
+                            id="skillsInput"
+                            value={skillsInput}
+                            placeholder="e.g. Python, React, JavaScript, HTML5"
+                            onChange={(e) => setSkillsInput(e.target.value)}
+                            className="w-full px-4 py-2 text-sm rounded-xl border-2 border-slate-100 dark:border-slate-750 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors font-bold"
                         />
                     </div>
                 </div>
