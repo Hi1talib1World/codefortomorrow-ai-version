@@ -184,6 +184,7 @@ const AgentsPage: React.FC = () => {
                   agent={agent} 
                   logs={logsByAgent[agent.id] || []} 
                   onCommand={handleCommand} 
+                  onTogglePause={handleTogglePause}
                 />
               ))
           )}
