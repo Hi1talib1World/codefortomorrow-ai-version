@@ -254,55 +254,66 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
 
           {/* Primary Navigation - Desktop Only */}
           {setActiveView && (
-            <nav className="hidden lg:flex items-center gap-3">
-              {primaryNavItems.map((item) => {
+            <nav className="hidden lg:flex items-center gap-2">
+              {primaryNavItems.map((item, index) => {
                 const isActive = activeView === item.id;
-                if (item.id === 'home' || item.id === 'learn') {
-                  const isHovered = item.id === 'home' ? isHomeHovered : isLearnHovered;
-                  const setHovered = item.id === 'home' ? setIsHomeHovered : setIsLearnHovered;
-                  return (
-                    <div
-                      key={item.id}
-                      className="relative"
-                      onMouseEnter={() => setHovered(true)}
-                      onMouseLeave={() => setHovered(false)}
-                    >
-                      <button
-                        onClick={() => setActiveView(item.id as DashboardView)}
-                        className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-sm transition-all ${
-                          isActive
-                            ? 'text-white font-black'
-                            : 'text-slate-300 hover:text-white hover:bg-white/10 dark:hover:bg-slate-800'
-                        }`}
+                const buttonContent = (() => {
+                  if (item.id === 'home' || item.id === 'learn') {
+                    const isHovered = item.id === 'home' ? isHomeHovered : isLearnHovered;
+                    const setHovered = item.id === 'home' ? setIsHomeHovered : setIsLearnHovered;
+                    return (
+                      <div
+                        className="relative"
+                        onMouseEnter={() => setHovered(true)}
+                        onMouseLeave={() => setHovered(false)}
                       >
-                        {item.icon}
-                        <span>{item.label}</span>
-                      </button>
-                      {/* Visual pointing triangle centered under the tab */}
-                      <div 
-                        className={`absolute top-full mt-3 left-1/2 -translate-x-1/2 w-3 h-3 bg-white dark:bg-slate-800 border-t border-l border-[#1f2937] dark:border-slate-700 rotate-45 z-[21] transition-all duration-300 pointer-events-none ${
-                          isHovered ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-1 scale-95'
-                        }`} 
-                      />
-                    </div>
+                        <button
+                          onClick={() => setActiveView(item.id as DashboardView)}
+                          className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-sm transition-all ${
+                            isActive
+                              ? 'text-white font-black'
+                              : 'text-slate-300 hover:text-white hover:bg-white/10 dark:hover:bg-slate-800'
+                          }`}
+                        >
+                          {item.icon}
+                          <span>{item.label}</span>
+                        </button>
+                        <div 
+                          className={`absolute top-full mt-3 left-1/2 -translate-x-1/2 w-3 h-3 bg-white dark:bg-slate-800 border-t border-l border-[#1f2937] dark:border-slate-700 rotate-45 z-[21] transition-all duration-300 pointer-events-none ${
+                            isHovered ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-1 scale-95'
+                          }`} 
+                        />
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <button
+                      onClick={() => setActiveView(item.id as DashboardView)}
+                      className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-sm transition-all ${
+                        isActive
+                          ? 'text-white font-black'
+                          : 'text-slate-300 hover:text-white hover:bg-white/10 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </button>
                   );
-                }
+                })();
 
                 return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveView(item.id as DashboardView)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-sm transition-all ${
-                      isActive
-                        ? 'text-white font-black'
-                        : 'text-slate-300 hover:text-white hover:bg-white/10 dark:hover:bg-slate-800'
-                    }`}
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </button>
+                  <React.Fragment key={item.id}>
+                    {index > 0 && (
+                      <div className="w-[1px] h-4 bg-slate-700/60 dark:bg-slate-700/40 self-center" />
+                    )}
+                    {buttonContent}
+                  </React.Fragment>
                 );
               })}
+
+              {/* Divider before "More" */}
+              <div className="w-[1px] h-4 bg-slate-700/60 dark:bg-slate-700/40 self-center" />
 
               {/* Secondary Navigation Dropdown */}
               <div className="relative" ref={moreMenuRef}>
