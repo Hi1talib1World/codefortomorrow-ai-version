@@ -64,7 +64,7 @@ async function startServer() {
   // Global rate limiter to protect the server from abuse (150 requests per 15 minutes per IP)
   const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 150,
+    max: process.env.NODE_ENV === 'production' ? 150 : 10000, // relaxed limit in development
     standardHeaders: true,
     legacyHeaders: false,
     message: { message: 'Too many requests from this IP, please try again after 15 minutes' },
