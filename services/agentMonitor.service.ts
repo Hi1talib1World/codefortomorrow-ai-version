@@ -18,6 +18,7 @@ type AgentState = {
   activeTask: string | null;
   lastUpdated: string;
   processedJobs: number;
+  isPaused: boolean;
 };
 
 type AgentLogEntry = {
@@ -168,6 +169,7 @@ function buildInitialAgentState(def: AgentDefinition): AgentState {
     activeTask: null,
     lastUpdated: new Date().toISOString(),
     processedJobs: 0,
+    isPaused: false,
   };
 }
 
@@ -306,7 +308,7 @@ function initAgentMonitor() {
 
   // Run the job scheduler loop (check every 8 seconds)
   setInterval(() => {
-    const idleAgents = Array.from(agentStateMap.values()).filter(a => a.status === 'Idle');
+    const idleAgents = Array.from(agentStateMap.values()).filter(a => a.status === 'Idle' && !a.isPaused);
     if (idleAgents.length > 0) {
       const randomAgent = idleAgents[Math.floor(Math.random() * idleAgents.length)];
       const templates = agentJobTemplates[randomAgent.id];
