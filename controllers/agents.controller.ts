@@ -3,6 +3,8 @@ import {
   createSseClient,
   getAgentDashboard,
   triggerAgentCommand,
+  pauseAgent as pauseAgentService,
+  resumeAgent as resumeAgentService,
 } from '../services/agentMonitor.service';
 
 export const getAgentsStatus = (_req: Request, res: Response) => {
@@ -32,3 +34,23 @@ export const postAgentCommand = async (req: Request, res: Response) => {
 };
 export const getActiveAgents = getAgentsStatus;
 export const sendMessageToAgent = postAgentCommand;
+
+export const pauseAgent = async (req: Request, res: Response) => {
+  try {
+    const agentId = req.params.id;
+    const agent = pauseAgentService(agentId);
+    return res.status(200).json({ message: 'Agent paused', agent });
+  } catch (error) {
+    return res.status(400).json({ message: (error as Error).message });
+  }
+};
+
+export const resumeAgent = async (req: Request, res: Response) => {
+  try {
+    const agentId = req.params.id;
+    const agent = resumeAgentService(agentId);
+    return res.status(200).json({ message: 'Agent resumed', agent });
+  } catch (error) {
+    return res.status(400).json({ message: (error as Error).message });
+  }
+};
