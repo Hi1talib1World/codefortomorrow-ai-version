@@ -32,13 +32,16 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeView, setActiveView, unread
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 z-20 md:hidden transition-colors">
       <div className="container mx-auto flex justify-around max-w-lg px-2">
-        {navItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => setActiveView(item.id as DashboardView)}
-            className={`flex-1 flex flex-col items-center justify-center pt-4 pb-4 transition-all transform active:scale-95 ${activeView === item.id ? 'text-[#111827] dark:text-[#FBBF24]' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
-              }`}
-          >
+        {navItems.map((item, index) => (
+          <React.Fragment key={item.id}>
+            {index > 0 && (
+              <div className="w-[1px] h-6 bg-slate-200/60 dark:bg-slate-700/40 self-center shrink-0" />
+            )}
+            <button
+              onClick={() => setActiveView(item.id as DashboardView)}
+              className={`flex-1 flex flex-col items-center justify-center pt-4 pb-4 transition-all transform active:scale-95 ${activeView === item.id ? 'text-[#111827] dark:text-[#FBBF24]' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
+                }`}
+            >
             <div className={`relative mb-1 transition-all ${activeView === item.id ? 'scale-110' : 'opacity-70 hover:opacity-100'}`}>
               {item.icon}
               {item.id === 'messages' && unreadMessagesCount && unreadMessagesCount > 0 ? (
@@ -52,7 +55,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeView, setActiveView, unread
               <div className="w-8 h-1 bg-[#FBBF24] rounded-full mt-1.5"></div>
             )}
           </button>
-        ))}
+        </React.Fragment>
+      ))}
       </div>
     </nav>
   );
