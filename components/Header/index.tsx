@@ -9,6 +9,7 @@ import DbSetupGuide from '../DbSetupGuide';
 import { useSync } from '../../contexts/SyncContext';
 import { DashboardView } from '../Dashboard';
 import { Bell, BookOpen, Compass, Trophy, Play, Home, Target, Sparkles, Folder, Award, ShoppingBag, FileText, MessageSquare, Settings, ChevronDown, ExternalLink, LogOut } from 'lucide-react';
+import api from '../../services/api';
 
 interface HeaderProps {
   currentUser: User;
@@ -17,9 +18,10 @@ interface HeaderProps {
   onStartLesson?: (lesson: Lesson) => void;
   activeView?: DashboardView;
   setActiveView?: (view: DashboardView) => void;
+  unreadMessagesCount?: number;
 }
 
-const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, onStartLesson, activeView, setActiveView }) => {
+const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, onStartLesson, activeView, setActiveView, unreadMessagesCount = 0 }) => {
   const { language, setLanguage, t } = useLanguage();
   const { isOnline, syncPending, triggerSync } = useSync();
   const { theme, toggleTheme } = useTheme();
@@ -192,7 +194,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
     { id: 'goals', label: t('goals'), icon: <Award className="w-4 h-4" /> },
     { id: 'store', label: t('store'), icon: <ShoppingBag className="w-4 h-4" /> },
     { id: 'docs', label: 'Docs', icon: <FileText className="w-4 h-4" /> },
-    { id: 'messages', label: 'Support', icon: <MessageSquare className="w-4 h-4" /> },
+    { id: 'messages', label: 'Messages', icon: <MessageSquare className="w-4 h-4" /> },
     { id: 'settings', label: t('settings'), icon: <Settings className="w-4 h-4" /> },
     { id: 'logout', label: t('logout') || 'Logout', icon: <LogOut className="w-4 h-4" /> },
   ];
@@ -246,7 +248,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
       <div className="container mx-auto flex justify-between items-center max-w-7xl">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveView && setActiveView('home')}>
-            <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-12 w-auto hidden md:block" />
+            <img src="/assets/images/cftos_logo.jpg" alt="Code for Tomorrow" className="h-12 w-auto hidden md:block" />
             <h1 className="text-2xl md:hidden font-bold text-white dark:text-white leading-none tracking-tight">C4T</h1>
           </div>
 
@@ -411,6 +413,25 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 9H3m3.343-5.657l.707.707m12.728 12.728l.707.707M6.343 17.657l-.707.707M17.657 6.343l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
+            )}
+          </button>
+
+          {/* Messaging Shortcut Icon */}
+          <button
+            onClick={() => setActiveView && setActiveView('messages')}
+            className={`relative w-10 h-10 rounded-full transition-all flex items-center justify-center border cursor-pointer shrink-0 aspect-square ${
+              activeView === 'messages'
+                ? 'bg-[#FBBF24] text-slate-900 border-[#FBBF24]'
+                : 'bg-white/10 text-slate-200 hover:bg-white/20 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600 border-white/10 dark:border-slate-600'
+            }`}
+            aria-label="Messages"
+            title="Messages"
+          >
+            <MessageSquare className="h-5 w-5" />
+            {unreadMessagesCount > 0 && (
+              <span className="absolute -top-1 -right-1.5 min-w-5 h-5 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-[#111827] dark:border-slate-900 px-1 animate-pulse">
+                {unreadMessagesCount}
+              </span>
             )}
           </button>
 
