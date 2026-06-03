@@ -6,7 +6,7 @@ import { BADGES_BY_PATH } from '../../constants';
 import { useLanguage } from '../../contexts/LanguageContext';
 import EditProfileModal from '../EditProfileModal';
 import api from '../../services/api';
-import { Sparkles, Target, Zap, Brain, Plus, Pencil, Award, BookOpen, Shield, Bot, BarChart3 } from 'lucide-react';
+import { Sparkles, Target, Zap, Brain, Plus, Pencil, Award, BookOpen, Shield, Bot, BarChart3, Github, Linkedin, Globe } from 'lucide-react';
 import AnimatedCounter from '../AnimatedCounter';
 import { AvatarPreview } from '../StoreScreen';
 
@@ -193,6 +193,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
 
           <div className="text-center mb-12">
             <h1 className="text-5xl font-black tracking-tighter uppercase">{currentUser.name}</h1>
+            {currentUser.professionalTitle && (
+              <h2 className="text-lg font-black text-brand-600 dark:text-brand-400 uppercase tracking-widest mt-1.5">{currentUser.professionalTitle}</h2>
+            )}
             <div className="flex flex-col items-center justify-center mt-2.5 gap-1.5 font-bold text-slate-400 dark:text-slate-500 text-sm">
               <span className="flex items-center gap-1.5">
                 ✉️ {currentUser.email}
@@ -229,6 +232,43 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
               <span className="text-slate-200 dark:text-slate-800">|</span>
               <span className="hover:text-brand-500 transition-colors cursor-pointer">0 {t('followers')}</span>
             </div>
+            {(currentUser.githubUrl || currentUser.linkedinUrl || currentUser.websiteUrl) && (
+              <div className="mt-6 flex items-center justify-center gap-3 flex-wrap">
+                {currentUser.githubUrl && (
+                  <a
+                    href={currentUser.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-bold transition-all border border-slate-200/50 dark:border-slate-700/50 hover:scale-105 duration-200 shadow-sm"
+                  >
+                    <Github className="w-4 h-4" />
+                    <span>GitHub</span>
+                  </a>
+                )}
+                {currentUser.linkedinUrl && (
+                  <a
+                    href={currentUser.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-bold transition-all border border-slate-200/50 dark:border-slate-700/50 hover:scale-105 duration-200 shadow-sm"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                    <span>LinkedIn</span>
+                  </a>
+                )}
+                {currentUser.websiteUrl && (
+                  <a
+                    href={currentUser.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-bold transition-all border border-slate-200/50 dark:border-slate-700/50 hover:scale-105 duration-200 shadow-sm"
+                  >
+                    <Globe className="w-4 h-4" />
+                    <span>Website</span>
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* AI Learning Profile Section */}
@@ -323,6 +363,42 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
               <LeagueIcon className="w-10 h-10 text-[#34A853] mb-2 drop-shadow-sm" />
               <p className="font-black text-2xl leading-none uppercase tracking-tight">{mockLeague}</p>
               <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-2">{t('league_label')}</p>
+            </div>
+          </div>
+
+          {/* Technical Skills & Portfolio Section */}
+          <div className="mb-12 animate-fade-in">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">Tech Stack & Skills</h2>
+              <div className="flex items-center space-x-2 bg-green-50 dark:bg-green-900/30 px-3 py-1 rounded-full border border-green-200/50 dark:border-green-800/30">
+                <Award className="w-4 h-4 text-green-600 dark:text-green-400" />
+                <span className="text-[10px] font-black text-green-700 dark:text-green-300 uppercase tracking-wider">Credentials</span>
+              </div>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm transition-colors">
+              {currentUser.skills && currentUser.skills.length > 0 ? (
+                <div className="flex flex-wrap gap-3">
+                  {currentUser.skills.map((skill, idx) => (
+                    <div 
+                      key={idx}
+                      className="flex items-center gap-2 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-850 border border-slate-200 dark:border-slate-700/80 px-4 py-2.5 rounded-2xl shadow-sm hover:scale-[1.03] transition-all duration-200"
+                    >
+                      <div className="w-2.5 h-2.5 rounded-full bg-brand-500 shrink-0" />
+                      <span className="text-xs font-black text-slate-700 dark:text-slate-200 uppercase tracking-wider">{skill}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6">
+                  <p className="text-slate-400 font-bold text-sm mb-4">No technical skills added to your portfolio yet.</p>
+                  <button 
+                    onClick={() => setIsEditModalOpen(true)}
+                    className="bg-[#2E2FCE] hover:bg-[#1E1FB5] text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg uppercase tracking-wider cursor-pointer border border-[#2E2FCE]/50"
+                  >
+                    Add Skills & Tools
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
