@@ -58,108 +58,6 @@ const agentStateMap = new Map<string, AgentState>();
 const agentLogs = new Map<string, AgentLogEntry[]>();
 const sseClients = new Set<Response>();
 
-// Simulation structures
-interface JobStep {
-  message: string;
-  severity: 'info' | 'success' | 'warning' | 'error';
-  delayMs: number;
-}
-
-interface JobTemplate {
-  taskName: string;
-  steps: JobStep[];
-}
-
-const studentAnalyticsJobs: JobTemplate[] = [
-  {
-    taskName: 'Analyzing learning bottleneck',
-    steps: [
-      { message: 'Querying user progress database for daily learning metrics...', severity: 'info', delayMs: 1500 },
-      { message: 'Aggregating session duration and completion rates for 42 active students.', severity: 'info', delayMs: 2000 },
-      { message: 'Anomaly detected: 3 users experienced high error rates on "Loops & Iterations".', severity: 'warning', delayMs: 2500 },
-      { message: 'Generated student anomaly report #AR-904 and queued for review.', severity: 'success', delayMs: 1500 },
-    ],
-  },
-  {
-    taskName: 'Recalculating student mastery profiles',
-    steps: [
-      { message: 'Ingesting raw interaction events stream from frontend...', severity: 'info', delayMs: 1000 },
-      { message: 'Parsing event logs for student ID range [1040-1080].', severity: 'info', delayMs: 1500 },
-      { message: 'Updating skill mastery models in student profiles database.', severity: 'info', delayMs: 2000 },
-      { message: 'Successfully updated student engagement index (mean increase: +4.2%).', severity: 'success', delayMs: 1000 },
-    ],
-  },
-  {
-    taskName: 'Running predictive drop-out model',
-    steps: [
-      { message: 'Running regression model to predict course drop-out risk...', severity: 'info', delayMs: 2000 },
-      { message: 'Failed to retrieve classification weights from cache. Rebuilding model...', severity: 'warning', delayMs: 2000 },
-      { message: 'Successfully re-trained predictor model (accuracy: 94.2%).', severity: 'success', delayMs: 1500 },
-    ],
-  },
-];
-
-const curriculumFactoryJobs: JobTemplate[] = [
-  {
-    taskName: 'Generating Next.js learning module',
-    steps: [
-      { message: 'Scanning syllabus database for pending curriculum requests...', severity: 'info', delayMs: 1500 },
-      { message: 'Synthesizing lesson patch for "Introduction to Next.js routing" (Level: Intermediate).', severity: 'info', delayMs: 2500 },
-      { message: 'Generating 5 interactive challenges with associated Jest unit tests.', severity: 'info', delayMs: 2000 },
-      { message: 'Successfully compiled and verified JSX code blocks for curriculum patch.', severity: 'success', delayMs: 1500 },
-    ],
-  },
-  {
-    taskName: 'Refining database courses using feedback',
-    steps: [
-      { message: 'Parsing curriculum feedback submitted by active educators...', severity: 'info', delayMs: 1000 },
-      { message: 'Refining quiz answers for "Introduction to SQL" to remove ambiguous choices.', severity: 'info', delayMs: 2000 },
-      { message: 'Published updated SQL syllabus patch #CF-202 to production.', severity: 'success', delayMs: 1500 },
-    ],
-  },
-  {
-    taskName: 'Translating course assets',
-    steps: [
-      { message: 'Translating "Python Data Types" module into Spanish and French...', severity: 'info', delayMs: 1500 },
-      { message: 'Translating course resources... Language API rate limit reached! Retrying in 2s...', severity: 'warning', delayMs: 2000 },
-      { message: 'Translation completed successfully. 12 localized files generated.', severity: 'success', delayMs: 1500 },
-    ],
-  },
-];
-
-const b2bSalesJobs: JobTemplate[] = [
-  {
-    taskName: 'Analyzing inbound pipelines',
-    steps: [
-      { message: 'Fetching new leads from HubSpot/Salesforce integration pipeline...', severity: 'info', delayMs: 1500 },
-      { message: 'Scoring 18 inbound organization leads using value prediction model.', severity: 'info', delayMs: 2000 },
-      { message: 'Identified high-value opportunity: "Global Tech Academy" (est. contract: $45k/yr).', severity: 'success', delayMs: 1500 },
-    ],
-  },
-  {
-    taskName: 'Generating enterprise proposals',
-    steps: [
-      { message: 'Drafting automated follow-up proposal for "Boston School District"...', severity: 'info', delayMs: 1500 },
-      { message: 'Customizing platform white-label pricing sheet for 500+ licenses.', severity: 'info', delayMs: 2000 },
-      { message: 'Proposal generated and emailed to lead contact (j.smith@boston.edu).', severity: 'success', delayMs: 1500 },
-    ],
-  },
-  {
-    taskName: 'Compiling competitive market analysis',
-    steps: [
-      { message: 'Analyzing competitive intelligence feeds for K-12 coding curriculum.', severity: 'info', delayMs: 2000 },
-      { message: 'Unable to retrieve price points for competitor "LearnCode". Utilizing historical estimation.', severity: 'warning', delayMs: 2000 },
-      { message: 'Completed market report. Updated sales pitch decks in shared repository.', severity: 'success', delayMs: 1500 },
-    ],
-  },
-];
-
-const agentJobTemplates: Record<string, JobTemplate[]> = {
-  'student-analytics': studentAnalyticsJobs,
-  'curriculum-factory': curriculumFactoryJobs,
-  'b2b-sales': b2bSalesJobs,
-};
-
 function buildInitialAgentState(def: AgentDefinition): AgentState {
   return {
     id: def.id,
@@ -228,96 +126,11 @@ function getAgentDashboard() {
   };
 }
 
-// Simulated job runner
-function runSimulatedJob(agentId: string, template: JobTemplate) {
-  const state = agentStateMap.get(agentId);
-  if (!state || state.status === 'Working') return;
-
-  updateAgentStatus(agentId, 'Working', template.taskName);
-  appendAgentLog(agentId, `Initializing: ${template.taskName}...`, 'info');
-
-  let currentDelay = 1000;
-
-  template.steps.forEach((step) => {
-    setTimeout(() => {
-      const current = agentStateMap.get(agentId);
-      if (current && current.status === 'Working' && current.activeTask === template.taskName) {
-        appendAgentLog(agentId, step.message, step.severity);
-      }
-    }, currentDelay);
-    currentDelay += step.delayMs;
-  });
-
-  setTimeout(() => {
-    const current = agentStateMap.get(agentId);
-    if (current && current.status === 'Working' && current.activeTask === template.taskName) {
-      current.processedJobs += 1;
-      updateAgentStatus(agentId, 'Idle', null);
-      appendAgentLog(agentId, `Task completed successfully: ${template.taskName}.`, 'success');
-    }
-  }, currentDelay);
-}
-
-// Seed previous logs for nicer visual presentation on load
-function preSeedLogs() {
-  const now = Date.now();
-  for (const agentId of agentStateMap.keys()) {
-    const state = agentStateMap.get(agentId);
-    if (!state) continue;
-
-    const templates = agentJobTemplates[agentId];
-    if (templates && templates.length > 0) {
-      const template = templates[0];
-      const timeOffset = 5 * 60 * 1000; // 5 mins ago
-      
-      const seedLogs: AgentLogEntry[] = [
-        {
-          id: randomUUID(),
-          timestamp: new Date(now - timeOffset).toISOString(),
-          message: `Initializing: ${template.taskName}...`,
-          severity: 'info',
-        },
-        {
-          id: randomUUID(),
-          timestamp: new Date(now - timeOffset + 2000).toISOString(),
-          message: template.steps[0].message,
-          severity: template.steps[0].severity,
-        },
-        {
-          id: randomUUID(),
-          timestamp: new Date(now - timeOffset + 4000).toISOString(),
-          message: `Task completed successfully: ${template.taskName}.`,
-          severity: 'success',
-        },
-      ];
-
-      agentLogs.set(agentId, seedLogs);
-      state.processedJobs = 1;
-      agentStateMap.set(agentId, state);
-    }
-  }
-}
-
 function initAgentMonitor() {
   for (const def of agentDefinitions) {
     agentStateMap.set(def.id, buildInitialAgentState(def));
     agentLogs.set(def.id, []);
   }
-
-  preSeedLogs();
-
-  // Run the job scheduler loop (check every 8 seconds)
-  setInterval(() => {
-    const idleAgents = Array.from(agentStateMap.values()).filter(a => a.status === 'Idle' && !a.isPaused);
-    if (idleAgents.length > 0) {
-      const randomAgent = idleAgents[Math.floor(Math.random() * idleAgents.length)];
-      const templates = agentJobTemplates[randomAgent.id];
-      if (templates && templates.length > 0) {
-        const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
-        runSimulatedJob(randomAgent.id, randomTemplate);
-      }
-    }
-  }, 8000);
 }
 
 function createSseClient(res: Response) {
@@ -345,6 +158,9 @@ function triggerAgentCommand(agentId: string, command: string) {
   const state = agentStateMap.get(agentId);
   if (!state) {
     throw new Error(`Unknown agent ${agentId}`);
+  }
+  if (state.isPaused) {
+    throw new Error(`Agent ${state.name} is paused. Please resume the agent before sending commands.`);
   }
 
   const activeTaskName = command.length > 30 ? `${command.substring(0, 30)}...` : command;
