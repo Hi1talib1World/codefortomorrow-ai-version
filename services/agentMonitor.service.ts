@@ -326,6 +326,9 @@ function createSseClient(res: Response) {
     'X-Accel-Buffering': 'no',
   });
   res.write(': connected\n\n');
+  if (typeof (res as any).flush === 'function') {
+    (res as any).flush();
+  }
 
   sseClients.add(res);
   res.on('close', () => {
