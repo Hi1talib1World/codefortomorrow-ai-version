@@ -14,6 +14,11 @@ const getAi = () => {
   return aiInstance;
 };
 
+const hasValidGeminiKey = (): boolean => {
+  const key = process.env.GEMINI_API_KEY;
+  return !!(key && key.trim() !== '' && key !== 'your-gemini-api-key-here' && !key.startsWith('your-'));
+};
+
 export interface AIContext {
   studentName: string;
   currentPath: string;
@@ -91,6 +96,9 @@ export class AIEngine {
     `;
 
     try {
+      if (!hasValidGeminiKey()) {
+        throw new Error("No valid Gemini API key configured.");
+      }
       const response = await getAi().models.generateContent({
         model: this.model,
         contents: prompt,
@@ -128,6 +136,9 @@ export class AIEngine {
     `;
 
     try {
+      if (!hasValidGeminiKey()) {
+        throw new Error("No valid Gemini API key configured.");
+      }
       const response = await getAi().models.generateContent({
         model: this.model,
         contents: prompt
@@ -164,6 +175,9 @@ export class AIEngine {
     `;
 
     try {
+      if (!hasValidGeminiKey()) {
+        throw new Error("No valid Gemini API key configured.");
+      }
       const response = await getAi().models.generateContent({
         model: this.model,
         contents: prompt
@@ -343,6 +357,9 @@ You MUST use the provided 'Real-Time Platform Context' data (which contains actu
 User Message: "${message}"`;
 
     try {
+      if (!hasValidGeminiKey()) {
+        throw new Error("No valid Gemini API key configured.");
+      }
       const response = await getAi().models.generateContent({
         model: this.model,
         contents: contents,
