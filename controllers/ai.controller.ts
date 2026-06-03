@@ -111,3 +111,39 @@ export const logTokenUsage = async (req: Request, res: Response) => {
   // Placeholder for token logging logic
   res.json({ status: 'logged' });
 };
+
+export const chatWithAssistant = async (req: Request, res: Response) => {
+  try {
+    const { message, history } = req.body;
+    if (!message) {
+      return res.status(400).json({ message: 'Message is required.' });
+    }
+
+    const responseText = await AIEngine.chatWithAssistant(message, history || [], (req as any).user);
+    res.json({ text: responseText });
+  } catch (error) {
+    console.error("AI Assistant Chat Error:", error);
+    res.status(500).json({ message: (error as Error).message || 'Error processing chat' });
+  }
+};
+
+export const generateHint = async (req: Request, res: Response) => {
+  try {
+    const { titleKey, expectedOutput, failedCode } = req.body;
+    if (!titleKey || !expectedOutput || !failedCode) {
+      return res.status(400).json({ message: 'titleKey, expectedOutput, and failedCode are required.' });
+    }
+
+    const hint = await AIEngine.generateHint(titleKey, expectedOutput, failedCode);
+    res.json({ hint });
+  } catch (error) {
+    console.error("AI Hint Generation Error:", error);
+    res.status(500).json({ message: (error as Error).message || 'Error generating hint' });
+  }
+};
+
+export const getAIStatus = async (_req: Request, res: Response) => {
+  const apiKey = process.env.GEMINI_API_KEY || '';
+  const isSimulation = !apiKey || apiKey === 'your-gemini-api-key-here' || apiKey.startsWith('your-');
+  res.json({ isSimulation });
+};
