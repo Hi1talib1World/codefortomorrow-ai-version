@@ -16,7 +16,7 @@ export const streamAgentEvents = (_req: Request, res: Response) => {
 
 export const postAgentCommand = async (req: Request, res: Response) => {
   try {
-    const agentId = req.params.agentId;
+    const agentId = req.params.id;
     const { command } = req.body;
 
     if (!command || typeof command !== 'string') {
@@ -30,3 +30,5 @@ export const postAgentCommand = async (req: Request, res: Response) => {
     return res.status(400).json({ message: (error as Error).message });
   }
 };
+export const getActiveAgents = getAgentsStatus;
+export const sendMessageToAgent = postAgentCommand;
