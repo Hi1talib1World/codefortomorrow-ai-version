@@ -198,7 +198,7 @@ export interface User {
   coverPictureUrl?: string;
   password?: string; // Optional for OAuth users
   provider: 'google' | 'email';
-  role: 'teacher' | 'student';
+  role: 'teacher' | 'student' | 'admin';
   classroomCode?: string; // Optional code provided by teacher for class enrollment
   progress: UserProgress;
   currentPath: ProgrammingPath['id'] | null;
