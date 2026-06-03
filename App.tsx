@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, Suspense, lazy } from 'react';
-import { Routes, Route, useNavigate, Navigate, useParams } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate, useParams, useLocation } from 'react-router-dom';
+import { usePostHog } from 'posthog-js/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { RepoProvider } from './contexts/RepoContext';
@@ -100,7 +101,7 @@ const LessonOverlay: React.FC<LessonOverlayProps> = ({
 interface DashboardRouteProps {
   currentUser: User;
   activeLesson: Lesson | null;
-  onUpdateUser: (data: Partial<User>) => void;
+  onUpdateUser: (data: Partial<User>) => Promise<void>;
   onStartLesson: (lesson: Lesson) => void;
   onLogout: () => void;
   onSwitchPath: (pathId: ProgrammingPath['id']) => void;
@@ -169,6 +170,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ currentUser, children }
   }
   return <>{children}</>;
 };
+
+// ─── POSTHOG PAGE VIEW TRACKER ───────────────────────────────────────────────
+function PostHogPageView() {
+  const location = useLocation();
+  const posthog = usePostHog();
+  useEffect(() => {
+    posthog?.capture('$pageview', { $current_url: window.location.href });
+  }, [location, posthog]);
+  return null;
+}
 
 // ─── APP ─────────────────────────────────────────────────────────────────────
 
@@ -637,6 +648,7 @@ export default function App() {
         <ThemeProvider>
           <ToastProvider>
             <div className="min-h-screen text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
+              <PostHogPageView />
               <PageTransitionLoader />
               <ConfettiCelebration isActive={showConfetti} onComplete={() => setShowConfetti(false)} />
               {renderContent()}
