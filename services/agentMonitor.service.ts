@@ -177,6 +177,9 @@ function broadcastSse(event: SseEventPayload) {
     try {
       client.write(`event: agentEvent\n`);
       client.write(`data: ${payload}\n\n`);
+      if (typeof (client as any).flush === 'function') {
+        (client as any).flush();
+      }
     } catch (error) {
       sseClients.delete(client);
     }
