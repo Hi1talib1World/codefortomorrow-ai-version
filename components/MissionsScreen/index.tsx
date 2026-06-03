@@ -14,8 +14,6 @@ import {
   BookOpen,
   Sparkles,
   RefreshCw,
-  Map,
-  Grid,
   Trophy,
   Filter,
   ArrowRight,
@@ -474,20 +472,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
   const overallProgressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
   const xpGained = missions.reduce((sum, m) => sum + (m.progress * 2), 0);
 
-  // Group by Tiers for the Interactive Map View
-  const groupedTiers: { [key: number]: { info: { name: string; color: string }; list: Mission[] } } = {
-    1: { info: { name: 'Tier 1: Foundations', color: '#10b981' }, list: [] },
-    2: { info: { name: 'Tier 2: Core Coding', color: '#06b6d4' }, list: [] },
-    3: { info: { name: 'Tier 3: Web & Engine', color: '#a855f7' }, list: [] },
-    4: { info: { name: 'Tier 4: Advanced Systems', color: '#f43f5e' }, list: [] }
-  };
 
-  missions.forEach(m => {
-    const mapping = TIER_MAPPING[m.mission_id] || { tier: 2, name: 'Tier 2: Core Coding', color: '#06b6d4' };
-    if (groupedTiers[mapping.tier]) {
-      groupedTiers[mapping.tier].list.push(m);
-    }
-  });
 
   if (loading && missions.length === 0) {
     return (
@@ -634,163 +619,9 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
         </div>
       </div>
 
-      {/* Interactive Map View */}
-      {viewMode === 'map' && (
-        <div className="space-y-6">
-          {/* Legend HUD */}
-          <div className="flex flex-wrap items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-3 rounded-2xl text-xs text-slate-600 dark:text-slate-300 shadow-sm transition-colors">
-            <span className="font-black text-slate-900 dark:text-white uppercase tracking-wider">Skill Tiers:</span>
-            <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Tier 1: Foundations</span>
-            <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded-full bg-cyan-500" /> Tier 2: Core Coding</span>
-            <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> Tier 3: Web & Engine</span>
-            <span className="flex items-center gap-1.5 font-bold"><span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Tier 4: Advanced Systems</span>
-          </div>
 
-          {/* Map canvas containing tiers */}
-          <div
-            ref={containerRef}
-            className="relative w-full max-w-full pb-6 pt-2 scrollbar-hidden select-none"
-            style={{ boxSizing: 'border-box', overflowX: 'auto' }}
-          >
-            {/* Inner flex row — min-width lets it scroll horizontally without clipping */}
-            <div className="flex gap-8 min-h-[600px] snap-x" style={{ minWidth: 'max-content' }}>
-            {/* SVG Connecting Paths inside Map background */}
-            <div className="absolute inset-0 pointer-events-none min-w-[1200px]" style={{ zIndex: 0 }}>
-              <svg className="w-full h-full" viewBox="0 0 1200 600" fill="none">
-                {/* Tier 1 -> Tier 2 Connections */}
-                <path d="M220 180 C 300 180, 300 180, 380 180" stroke={missions.find(m => m.mission_id === 'block_coding')?.progress && (missions.find(m => m.mission_id === 'block_coding')?.progress || 0) >= 30 ? '#10b981' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
-                <path d="M220 180 C 300 180, 300 320, 380 320" stroke={missions.find(m => m.mission_id === 'block_coding')?.progress && (missions.find(m => m.mission_id === 'block_coding')?.progress || 0) >= 30 ? '#10b981' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
-                
-                {/* Tier 2 -> Tier 3 Connections */}
-                <path d="M580 320 C 650 320, 650 200, 740 200" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 30 ? '#06b6d4' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
-                <path d="M580 320 C 650 320, 650 340, 740 340" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 30 ? '#06b6d4' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
-                <path d="M580 320 C 650 320, 650 480, 740 480" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 30 ? '#06b6d4' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
-                
-                {/* Tier 2 -> Tier 4 Connections */}
-                <path d="M580 320 C 680 320, 800 120, 1080 120" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 40 ? '#f43f5e' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
-                <path d="M580 320 C 680 320, 800 240, 1080 240" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 40 ? '#f43f5e' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
-                <path d="M580 320 C 680 320, 800 360, 1080 360" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 40 ? '#f43f5e' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
-                <path d="M580 320 C 680 320, 800 480, 1080 480" stroke={missions.find(m => m.mission_id === 'javascript')?.progress && (missions.find(m => m.mission_id === 'javascript')?.progress || 0) >= 40 ? '#f43f5e' : 'rgba(148, 163, 184, 0.12)'} strokeWidth="3" className="dashed-svg-path" />
-              </svg>
-            </div>
-
-            {/* Render Tier Columns */}
-            {Object.keys(groupedTiers).map((tierKeyStr) => {
-              const tierKey = parseInt(tierKeyStr);
-              const tierData = groupedTiers[tierKey];
-              if (tierData.list.length === 0) return null;
-
-              return (
-                <div 
-                  key={tierKey}
-                  className="flex-shrink-0 w-[290px] md:w-[330px] flex flex-col gap-6 snap-start relative z-10 animate-fade-in"
-                >
-                  {/* Column Header */}
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 px-2">
-                    <span 
-                      className="text-xs font-black uppercase tracking-wider animate-pulse-subtle"
-                      style={{ color: tierData.info.color }}
-                    >
-                      {tierData.info.name}
-                    </span>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/60 px-2.5 py-0.5 rounded-full font-black uppercase tracking-wider select-none shrink-0">
-                      {tierData.list.length} Missions
-                    </span>
-                  </div>
-
-                  {/* List of items inside Tier lane */}
-                  <div className="flex flex-col gap-5">
-                    {tierData.list.map((mission) => {
-                      const isLocked = mission.status === 'locked';
-                      const isCompleted = mission.status === 'completed';
-                      const isNodeFocused = hoveredMissionId === mission.mission_id;
-                      
-                      // Fetch high fidelity styling configs
-                      const cardStyle = getCardStyles(mission.mission_id, mission.status);
-
-                      return (
-                        <div
-                          key={mission.mission_id}
-                          onMouseEnter={() => setHoveredMissionId(mission.mission_id)}
-                          onMouseLeave={() => setHoveredMissionId(null)}
-                          onClick={() => {
-                            if (!isLocked) {
-                              setSelectedMission(mission);
-                            }
-                          }}
-                          className={`relative overflow-hidden group border rounded-3xl p-5 transition-all duration-350 shadow-sm hover:shadow-md ${
-                            cardStyle.cardBg
-                          } ${
-                            isLocked 
-                              ? 'cursor-not-allowed' 
-                              : 'cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/20 hover:-translate-y-0.5'
-                          } ${isNodeFocused && !isLocked ? 'border-cyan-500/80 dark:border-cyan-500/80' : ''}`}
-                        >
-
-                          <div className="flex justify-between items-start mb-4">
-                            <div className={`p-3 rounded-2xl border transition-all ${cardStyle.iconContainer}`}>
-                              {renderConceptArt(mission.skill, mission.status, "w-12 h-12")}
-                            </div>
-
-                            <div className="flex flex-col items-end gap-1.5">
-                              {getStatusBadge(mission.status)}
-                              {getDifficultyBadge(mission.difficulty)}
-                            </div>
-                          </div>
-
-                          <div className="space-y-1.5 mb-5 text-left">
-                            <h4 className={`text-md tracking-tight flex items-center gap-1 ${cardStyle.textTitle}`}>
-                              {mission.title}
-                              {!isLocked && <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors group-hover:translate-x-0.5" />}
-                            </h4>
-                            <p className={`text-[11px] font-semibold leading-relaxed ${cardStyle.textDesc}`}>
-                              {isLocked 
-                                ? mission.telemetry.prerequisiteText || 'Prerequisite locked.'
-                                : `Progress through roadmap level quests to claim telemetry badges.`}
-                            </p>
-                          </div>
-
-                          {/* Futuristic progress indicator */}
-                          <div className="space-y-2">
-                            <div className="flex justify-between text-[10px] font-bold tracking-wide">
-                              <span className="text-slate-400 dark:text-slate-500 uppercase">Proficiency</span>
-                              <span className={isCompleted ? 'text-emerald-500 dark:text-emerald-400 font-extrabold' : 'text-cyan-500 dark:text-cyan-400 font-extrabold'}>{mission.progress}%</span>
-                            </div>
-                            <div className={`w-full h-2.5 rounded-full overflow-hidden p-[1.5px] border ${cardStyle.progressBarBg}`}>
-                              <div
-                                className={`h-full rounded-full transition-all duration-1000 ${cardStyle.progressFill}`}
-                                style={{ width: `${isLocked ? 0 : mission.progress}%` }}
-                              ></div>
-                            </div>
-                          </div>
-
-                          {/* Sealed Lock screen with high-contrast readable text */}
-                          {isLocked && (
-                            <div className="absolute inset-0 bg-white/95 dark:bg-slate-950/95 backdrop-blur-[2px] flex flex-col items-center justify-center p-4 text-center transition-all border border-slate-200 dark:border-slate-900">
-                              <div className="p-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full mb-2.5 shadow-sm">
-                                <Lock className="w-5 h-5 text-slate-400 dark:text-slate-500" />
-                              </div>
-                              <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Locked Block</span>
-                              <p className="text-[11px] text-slate-700 dark:text-slate-200 font-bold px-4 leading-normal">
-                                {mission.telemetry.prerequisiteText || 'Complete previous requirements.'}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-            </div>{/* end inner flex */}
-          </div>
-        </div>
-      )}
-
-      {/* Grid Dashboard View (Available as filterable listing fallback) */}
-      {viewMode === 'grid' && (
-        <div className="space-y-6">
+      {/* Grid Dashboard View */}
+      <div className="space-y-6">
           {/* Advanced Sorting & Filter Toolbar */}
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
             <div className="flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400 font-bold self-start sm:self-center">
@@ -1020,7 +851,6 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
             </button>
           </div>
         </div>
-      )}
     </div>
   );
 };
