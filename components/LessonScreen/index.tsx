@@ -11,7 +11,6 @@ import {
     Trash2, Copy, ChevronDown, Check, X, Eye, EyeOff,
     Cpu, Layers, Activity
 } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
 
 const LazyAvatarCanvas = React.lazy(() => import('../AvatarCanvas'));
 
@@ -265,75 +264,10 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
     const runMagicScanner = async (failedCode: string) => {
         setIsScanning(true);
         setAiHint(null);
-        
-        const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
-        const isSimulation = !apiKey || apiKey === 'your-gemini-api-key-here';
 
         try {
-            if (isSimulation) {
-                // Let's run a smart local regex diagnostics rule set
-                await new Promise(resolve => setTimeout(resolve, 800)); // simulation delay
-                
-                const lower = failedCode.toLowerCase();
-                
-                // 1. Check brackets mismatch
-                const openCurly = (failedCode.match(/\{/g) || []).length;
-                const closeCurly = (failedCode.match(/\}/g) || []).length;
-                if (openCurly !== closeCurly) {
-                    setAiHint(`It looks like you have a bracket mismatch! You have ${openCurly} open curly braces '{' and ${closeCurly} closing braces '}'. Double check that every block is closed properly! 🧩`);
-                    return;
-                }
-                
-                // 2. Check parenthesis mismatch
-                const openParen = (failedCode.match(/\(/g) || []).length;
-                const closeParen = (failedCode.match(/\)/g) || []).length;
-                if (openParen !== closeParen) {
-                    setAiHint(`Parenthesis mismatch detected! Make sure every open '(' has a matching closing ')' in your code. 🔍`);
-                    return;
-                }
-
-                // 3. Check for quotes mismatch
-                const singleQuotes = (failedCode.match(/'/g) || []).length;
-                const doubleQuotes = (failedCode.match(/"/g) || []).length;
-                if (singleQuotes % 2 !== 0 || doubleQuotes % 2 !== 0) {
-                    setAiHint(`You have an unclosed string value! Check your quotation marks ('' or "") to ensure strings are fully closed. 💬`);
-                    return;
-                }
-
-                // 4. Check for print statement in Python
-                if (path === 'python' && !failedCode.includes('print(')) {
-                    setAiHint(`In Python, you need to output results using print(). Example:\n\`print("your_output")\`\nMake sure you are calling the print function! 🔁`);
-                    return;
-                }
-
-                // 5. Check for console.log in JavaScript
-                if (path === 'javascript' && !failedCode.includes('console.log(')) {
-                    setAiHint(`In JavaScript, you need to output results using console.log(). Example:\n\`console.log(your_result);\`\nMake sure to call console.log! ⚡`);
-                    return;
-                }
-
-                // Generic fallback
-                setAiHint(`The output did not match "${lesson.expectedOutput}". Double-check your logic to make sure you are calculating and printing the correct result! 💡`);
-            } else {
-                // Call Google GenAI directly
-                const ai = new GoogleGenAI({ apiKey });
-                const promptText = `You are a helpful and encouraging coding teacher for children (ages 8-15) on the "Code for Tomorrow" platform. 
-The student is working on a lesson about: "${lesson.titleKey}".
-Their goal is to write code that outputs EXACTLY: "${lesson.expectedOutput}".
-They wrote the following code which failed:
-\`\`\`
-${failedCode}
-\`\`\`
-Provide a concise, encouraging hint (1-2 sentences) of what is wrong and how they can fix it.
-Do not give them the complete solution code directly. Focus on guidance and debug clues.`;
-
-                const response = await ai.models.generateContent({
-                    model: 'gemini-3-flash-preview',
-                    contents: [{ role: 'user', parts: [{ text: promptText }] }],
-                });
-                
-                setAiHint(response.text || "Let's review the code logic together! 💡");
-            }
+            const res = await api.generateHint(lesson.titleKey, lesson.expectedOutput, failedCode);
+            setAiHint(res.hint);
         } catch (e) {
             console.error('Magic Scanner Error:', e);
             setAiHint("Let's review the code logic together! 💡");
