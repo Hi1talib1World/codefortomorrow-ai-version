@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { User } from '../../types';
 import { BADGES_BY_PATH } from '../../constants';
 import { useLanguage } from '../../contexts/LanguageContext';
 import EditProfileModal from '../EditProfileModal';
 import api from '../../services/api';
-import { Sparkles, Target, Zap, Brain, Plus, Pencil, Award, BookOpen } from 'lucide-react';
+import { Sparkles, Target, Zap, Brain, Plus, Pencil, Award, BookOpen, Shield, Bot } from 'lucide-react';
 import AnimatedCounter from '../AnimatedCounter';
 import { AvatarPreview } from '../StoreScreen';
 
@@ -34,6 +35,7 @@ interface ProfileScreenProps {
 }
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser }) => {
+  const navigate = useNavigate();
   const { progress: userProgress, currentPath } = currentUser;
   const { t } = useLanguage();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -196,8 +198,24 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                 ✉️ {currentUser.email}
               </span>
               <span className="text-[10px] uppercase tracking-widest font-black bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full text-slate-500/80 dark:text-slate-400/80 mt-1 flex items-center gap-1 border border-slate-200/50 dark:border-slate-700/50">
-                👤 {currentUser.role === 'teacher' ? 'Instructor' : 'Student'}
+                👤 {currentUser.role === 'admin' ? 'Admin' : currentUser.role === 'teacher' ? 'Instructor' : 'Student'}
               </span>
+              {currentUser.role === 'admin' && (
+                <div className="flex justify-center gap-3 mt-4">
+                  <button
+                    onClick={() => navigate('/admin')}
+                    className="flex items-center gap-2 bg-[#2E2FCE] hover:bg-[#1E1FB5] text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg uppercase tracking-wider cursor-pointer border border-[#2E2FCE]/50"
+                  >
+                    <Shield className="w-3.5 h-3.5" /> Admin Panel
+                  </button>
+                  <button
+                    onClick={() => navigate('/admin/agents')}
+                    className="flex items-center gap-2 bg-[#FBBF24] hover:bg-[#D9A406] text-slate-900 font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg uppercase tracking-wider cursor-pointer border border-[#FBBF24]/50"
+                  >
+                    <Bot className="w-3.5 h-3.5" /> Agents Dashboard
+                  </button>
+                </div>
+              )}
             </div>
             <p className="text-slate-500 dark:text-slate-400 font-bold text-xl mt-4 max-w-xl mx-auto">{currentUser.bio || t('no_bio')}</p>
             <div className="mt-6 flex items-center justify-center space-x-6 text-lg font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
