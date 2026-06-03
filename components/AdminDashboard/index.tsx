@@ -3,12 +3,14 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   LayoutDashboard, FileText, BarChart3, Settings,
-  PlusCircle, LogOut, ChevronRight, Menu, X, Shield
+  PlusCircle, LogOut, ChevronRight, ChevronLeft, Menu, X, Shield, Bot, Terminal
 } from 'lucide-react';
 import ContentTable from './ContentTable';
 import ContentEditor from './ContentEditor';
 import AnalyticsPanel from './AnalyticsPanel';
 import { AdminPanel as OpenSourceAdmin } from '../OpenSourceScreen/AdminPanel';
+import AgentsPage from '../AgentsPage';
+import DiagnosticsPanel from './DiagnosticsPanel';
 
 interface AdminDashboardProps {
   currentUser: { name: string; email: string; profilePictureUrl: string } | null;
@@ -19,6 +21,7 @@ const NAV_ITEMS = [
   { id: 'content', label: 'Content', icon: FileText, path: '/admin' },
   { id: 'opensource', label: 'Open Source', icon: Settings, path: '/admin/opensource' },
   { id: 'analytics', label: 'Analytics', icon: BarChart3, path: '/admin/analytics' },
+  { id: 'agents', label: 'Agents', icon: Bot, path: '/admin/agents' },
   { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings' },
 ];
 
@@ -138,6 +141,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
             <button onClick={() => setIsSidebarOpen(true)} className="md:hidden text-slate-400 hover:text-white">
               <Menu className="w-5 h-5" />
             </button>
+            {location.pathname !== '/admin' && location.pathname !== '/admin/' && (
+              <button onClick={() => navigate(-1)} className="text-slate-400 hover:text-white mr-2">
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+            )}
             <div className="flex items-center gap-2 text-xs text-slate-500 font-mono">
               <span className="text-[#facc15]">CFTOS</span>
               <ChevronRight className="w-3 h-3" />
@@ -148,6 +156,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
                   ? 'Analytics'
                   : location.pathname.includes('/opensource')
                   ? 'Open Source'
+                  : location.pathname.includes('/agents')
+                  ? 'Agents'
                   : location.pathname.includes('/new')
                   ? 'New Post'
                   : location.pathname.includes('/edit')
@@ -180,6 +190,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
                 <Route path="/edit/:id" element={<ContentEditor />} />
                 <Route path="/analytics" element={<AnalyticsPanel />} />
                 <Route path="/opensource" element={<OpenSourceAdmin />} />
+                <Route path="/agents" element={<AgentsPage />} />
                 <Route path="/settings" element={
                   <div className="text-slate-400 font-mono text-sm p-8 text-center">
                     Settings panel coming soon.
