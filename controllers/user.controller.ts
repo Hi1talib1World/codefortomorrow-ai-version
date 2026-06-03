@@ -169,9 +169,6 @@ export const toggleSaveItem = async (req: Request, res: Response, next: NextFunc
 export const searchUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const query = (req.query.q as string) || '';
-        if (!query.trim()) {
-            return res.json([]);
-        }
 
         const isDbConnected = mongoose.connection.readyState === 1;
         if (!isDbConnected) {
@@ -181,11 +178,23 @@ export const searchUsers = async (req: Request, res: Response, next: NextFunctio
 
         // @ts-ignore
         const currentUserId = req.user?.id || req.user?._id;
-        const users = await User.find({
-            name: { $regex: query, $options: 'i' },
-            _id: { $ne: currentUserId }
-        }).select('name profilePictureUrl role bio').limit(15);
+        // @ts-ignore
+        const currentUserRole = req.user?.role || 'student';
 
+        let queryObj: any = { _id: { $ne: currentUserId } };
+
+        if (!query.trim()) {
+            if (currentUserRole === 'student') {
+                queryObj.role = { $in: ['teacher', 'admin'] };
+            }
+        } else {
+            queryObj.name = { $regex: query, $options: 'i' };
+            if (currentUserRole === 'student') {
+                queryObj.role = { $in: ['teacher', 'admin'] };
+            }
+        }
+
+        const users = await User.find(queryObj).select('name profilePictureUrl role bio').limit(50);
         res.json(users);
     } catch (error) {
         next(error);
