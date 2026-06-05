@@ -4,6 +4,7 @@ import { z } from 'zod';
 import Content from '../models/Content';
 import ApiError from '../utils/ApiError';
 import User from '../models/user.model';
+import { getLearningAnalytics } from '../services/analytics.service';
 
 // ─── Cloudinary Config ────────────────────────────────────────────────────────
 cloudinary.config({
@@ -200,6 +201,8 @@ export const uploadImage = async (req: Request, res: Response, next: NextFunctio
  */
 export const getAnalytics = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const forceRefresh = req.query.refresh === 'true';
+    const learningAnalytics = await getLearningAnalytics(forceRefresh);
     const apiKey = process.env.POSTHOG_PERSONAL_API_KEY;
     const projectId = process.env.POSTHOG_PROJECT_ID;
     const now = new Date();
@@ -306,6 +309,7 @@ export const getAnalytics = async (req: Request, res: Response, next: NextFuncti
         prevWeekSignups,
         growthTimeline,
         recentlyActive,
+        learningAnalytics,
       });
     }
 
@@ -431,6 +435,7 @@ export const getAnalytics = async (req: Request, res: Response, next: NextFuncti
           visitors: prevVisitors,
           avgSession: prevAvgSession,
         },
+        learningAnalytics,
       },
     });
   } catch (error) {
