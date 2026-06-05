@@ -366,7 +366,9 @@ export default function App() {
       // Calculate Streak Multiplier
       const streak = progress.streak || 0;
       const multiplier = streak >= 5 ? 1.5 : (streak >= 3 ? 1.2 : 1.0);
-      const finalXpGained = isAlreadyCompleted ? 5 : Math.round(xpGained * multiplier);
+      const isQuiz = activeLesson?.type === 'quiz' || activeLesson?.nodeType === 'quiz';
+      const baseReward = isQuiz ? 5 : 10;
+      const finalXpGained = isAlreadyCompleted ? 5 : Math.round(baseReward * multiplier);
       const baseNewXp = progress.xp + finalXpGained;
 
       const newScores = { ...progress.scores };
@@ -623,6 +625,11 @@ export default function App() {
             </ProtectedRoute>
           } />
           <Route path="/cftos/:category/:slug" element={
+            <ProtectedRoute currentUser={currentUser}>
+              <RepoArticlePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/cftos/post/:slug" element={
             <ProtectedRoute currentUser={currentUser}>
               <RepoArticlePage />
             </ProtectedRoute>
