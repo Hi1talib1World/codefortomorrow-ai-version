@@ -504,9 +504,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
             className="appearance-none bg-slate-900/60 text-slate-300 rounded-full py-2 pl-9 pr-8 font-semibold border border-slate-700/40 focus:outline-none focus:ring-2 focus:ring-[#FBBF24]/40 transition-all text-sm cursor-pointer hover:bg-slate-800/80 backdrop-blur-md"
             aria-label="Select language"
           >
-            <option value={Language.EN} className="bg-slate-900 text-slate-300">🇬🇧 EN</option>
-            <option value={Language.FR} className="bg-slate-900 text-slate-300">🇫🇷 FR</option>
-            <option value={Language.AR} className="bg-slate-900 text-slate-300">🇲🇦 AR</option>
+            <option value={Language.EN} className="bg-slate-900 text-slate-300">EN</option>
+            <option value={Language.FR} className="bg-slate-900 text-slate-300">FR</option>
+            <option value={Language.AR} className="bg-slate-900 text-slate-300">AR</option>
           </select>
         </div>
       </div>
