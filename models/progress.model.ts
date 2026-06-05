@@ -17,6 +17,7 @@ export interface IProgress extends Document {
   };
   skillGraph: any; // Store skill graph data
   lastLessonCompletedDate: Date | null;
+  lastLeaderboardRank?: number;
 }
 
 const progressSchema: Schema = new Schema({
@@ -63,6 +64,10 @@ const progressSchema: Schema = new Schema({
   lastLessonCompletedDate: {
     type: Date,
     default: null,
+  },
+  lastLeaderboardRank: {
+    type: Number,
+    default: 0,
   },
 });
 
