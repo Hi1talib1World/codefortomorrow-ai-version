@@ -12,8 +12,25 @@ export default function RepoArticlePage() {
   const { showToast } = useToast();
   const [isShareModalOpen, setIsShareModalOpen] = React.useState(false);
 
-  const allRepos = category === 'ai' ? AI_REPOS_DATA : category === 'hack' ? HACK_REPOS_DATA : [];
-  const repo = allRepos.find(r => r.slug === slug);
+  let repo = null;
+  let resolvedCategory = category;
+
+  if (category === 'ai') {
+    repo = AI_REPOS_DATA.find(r => r.slug === slug);
+  } else if (category === 'hack') {
+    repo = HACK_REPOS_DATA.find(r => r.slug === slug);
+  } else {
+    // Search both
+    repo = AI_REPOS_DATA.find(r => r.slug === slug);
+    if (repo) {
+      resolvedCategory = 'ai';
+    } else {
+      repo = HACK_REPOS_DATA.find(r => r.slug === slug);
+      if (repo) {
+        resolvedCategory = 'hack';
+      }
+    }
+  }
 
   if (!repo) {
     return (
@@ -27,7 +44,7 @@ export default function RepoArticlePage() {
     );
   }
 
-  const accent = category === 'ai'
+  const accent = resolvedCategory === 'ai'
     ? { bg: 'bg-purple-500', bgLight: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400', textBright: 'text-purple-300', icon: Sparkles }
     : { bg: 'bg-[#111827]', bgLight: 'bg-[#111827]/10', border: 'border-[#111827]/20', text: 'text-emerald-400', textBright: 'text-emerald-300', icon: Shield };
 
@@ -83,7 +100,7 @@ export default function RepoArticlePage() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className={`px-2.5 py-1 ${accent.bgLight} border ${accent.border} ${accent.text} text-[10px] font-bold rounded-md uppercase tracking-wider`}>
-                    {category === 'ai' ? 'AI' : 'Security'} • {repo.category}
+                    {resolvedCategory === 'ai' ? 'AI' : 'Security'} • {repo.category}
                   </span>
                 </div>
                 <h1 className="text-3xl md:text-4xl font-black tracking-tight leading-tight mb-3">{repo.article.title}</h1>
