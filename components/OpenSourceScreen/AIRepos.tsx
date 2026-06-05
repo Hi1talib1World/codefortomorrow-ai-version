@@ -85,7 +85,13 @@ export const AIRepos: React.FC = () => {
           {filtered.map((repo: any) => {
             const IconComp = repo.icon || (() => null);
             return (
-              <motion.div onClick={() => window.open(repo.html_url || repo.url, '_blank', 'noopener')} key={repo.id || repo.full_name} variants={itemVariants}
+              <motion.div onClick={() => {
+                if (repo.slug) {
+                  navigate(`/cftos/post/${repo.slug}`);
+                } else {
+                  window.open(repo.html_url || repo.url, '_blank', 'noopener');
+                }
+              }} key={repo.id || repo.full_name} variants={itemVariants}
                 className="bg-[#121212] rounded-2xl border border-slate-800/60 hover:border-purple-500/30 p-6 flex flex-col transition-all group cursor-pointer hover:shadow-lg hover:shadow-purple-500/5">
                 <div className="flex items-start gap-4 mb-4">
                   <img src={repo.owner.avatar_url} alt={repo.name} className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800"
