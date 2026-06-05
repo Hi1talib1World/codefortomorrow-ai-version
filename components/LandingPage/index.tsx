@@ -143,7 +143,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       )}
 
       {/* 2. Premium Hero Section with Built-in Portal Grid */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 bg-[#0a0f1d] text-white overflow-hidden">
+      <section className="relative pt-20 pb-12 md:pt-24 md:pb-16 bg-[#0a0f1d] text-white overflow-hidden">
         {/* Glows */}
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#111827] rounded-full blur-[120px] pointer-events-none"></div>
         <div className="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-[#FBBF24]/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -160,7 +160,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               <br />
               <span className="text-[#FBBF24]">Ecosystem for Tomorrow.</span>
             </h1>
-            <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl leading-relaxed mb-16 font-medium">
+            <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl leading-relaxed mb-8 font-medium">
               An all-in-one platform for interactive learning, open-source collaboration, and advanced technical documentation.
             </p>
 
@@ -198,7 +198,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       </section>
 
       {/* 3. Two-Column Solution Split */}
-      <section className="py-24 bg-white border-b border-slate-100">
+      <section className="py-12 bg-white border-b border-slate-100">
         <AnimatedSection className="container mx-auto px-6 max-w-6xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Column */}
@@ -237,7 +237,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       </section>
 
       {/* 4. Clean Interactive Code Block */}
-      <section className="py-24 bg-slate-50">
+      <section className="py-12 bg-slate-50">
         <AnimatedSection className="container mx-auto px-6 max-w-6xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="order-2 lg:order-1">
@@ -281,13 +281,13 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       </section>
 
       {/* 5. Premium Social Proof & Stats */}
-      <section className="py-24 bg-white">
+      <section className="py-12 bg-white">
         <AnimatedSection className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-extrabold text-[#111827] tracking-tight">{statsTranslations[language as 'en' | 'fr' | 'ar']?.title || statsTranslations.en.title}</h2>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
             {[
               { val: statsTranslations[language as 'en' | 'fr' | 'ar']?.studentsVal || statsTranslations.en.studentsVal, label: statsTranslations[language as 'en' | 'fr' | 'ar']?.studentsSub || statsTranslations.en.studentsSub },
               { val: statsTranslations[language as 'en' | 'fr' | 'ar']?.viewsVal || statsTranslations.en.viewsVal, label: statsTranslations[language as 'en' | 'fr' | 'ar']?.viewsSub || statsTranslations.en.viewsSub },
@@ -323,7 +323,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       </section>
 
       {/* 6. Final Action Module (CTA Block) */}
-      <section className="py-32 bg-slate-50 border-t border-slate-200 text-center">
+      <section className="py-16 bg-slate-50 border-t border-slate-200 text-center">
         <AnimatedSection className="container mx-auto px-6">
           <h2 className="text-4xl md:text-6xl font-black text-[#111827] mb-8">Ready to build the future?</h2>
           <p className="text-xl text-slate-600 mb-12 max-w-2xl mx-auto">Join thousands of students, educators, and developers in the most comprehensive tech ecosystem.</p>
@@ -337,7 +337,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       <footer className="bg-[#0a0f1d] text-slate-400 border-t border-white/5">
         {/* Top CTA Banner */}
         <div className="border-b border-white/5">
-          <div className="container mx-auto px-6 py-16 flex flex-col md:flex-row items-center justify-between gap-8 max-w-6xl">
+          <div className="container mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-8 max-w-6xl">
             <div>
               <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Ready to start your journey?</h3>
               <p className="text-slate-400 text-lg">Join thousands of learners building the future of technology.</p>
@@ -349,7 +349,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
         </div>
 
         {/* Main Footer Grid */}
-        <div className="container mx-auto px-6 py-16 max-w-6xl">
+        <div className="container mx-auto px-6 py-8 max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
 
             {/* Column 1: Brand */}
