@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import User from '../models/user.model';
 import Progress from '../models/progress.model';
 import ApiError from '../utils/ApiError';
+import eventBus, { EVENTS } from '../services/eventBus';
 
 /**
  * @desc    Update user profile
@@ -55,7 +56,27 @@ export const updateUserProfile = async (req: Request, res: Response, next: NextF
  * @route   PUT /api/user/progress
  * @access  Private
  */
-// Fix: Use Request, Response, NextFunction types from express to resolve property errors.
+// Helper to count total completed lessons across all pathways
+const countTotalCompleted = (completedLessons: any) => {
+    let total = 0;
+    if (!completedLessons) return 0;
+    if (typeof completedLessons.entries === 'function') {
+        for (const [_, list] of completedLessons.entries()) {
+            if (Array.isArray(list)) {
+                total += list.length;
+            }
+        }
+    } else {
+        for (const key of Object.keys(completedLessons)) {
+            const list = completedLessons[key];
+            if (Array.isArray(list)) {
+                total += list.length;
+            }
+        }
+    }
+    return total;
+};
+
 export const updateUserProgress = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // @ts-ignore
@@ -68,6 +89,15 @@ export const updateUserProgress = async (req: Request, res: Response, next: Next
         const progress = await Progress.findById(user.progress);
         
         if (progress) {
+            // Save state snapshot for event comparison
+            const xpOld = progress.xp;
+            const streakOld = progress.streak;
+            const completedBefore = countTotalCompleted(progress.completedLessons);
+            
+            const oldCompletedLessons = JSON.parse(JSON.stringify(progress.completedLessons));
+            const oldSkillMastery = JSON.parse(JSON.stringify(progress.skillMastery));
+
+            // Apply updates
             progress.xp = req.body.xp ?? progress.xp;
             progress.streak = req.body.streak ?? progress.streak;
             progress.completedLessons = req.body.completedLessons ?? progress.completedLessons;
@@ -83,12 +113,25 @@ export const updateUserProgress = async (req: Request, res: Response, next: Next
                 });
             }
 
-            // Gamification: Auto-unlock badges based on XP or mastery
-            if (progress.xp > 1000 && !progress.badgesEarned.has('XP_MASTER')) {
-                // Logic to add badge
-            }
-            
             const updatedProgress = await progress.save();
+            const completedAfter = countTotalCompleted(progress.completedLessons);
+
+            // Decouple triggers: Emit lesson completion events asynchronously
+            eventBus.emit(EVENTS.LESSON_COMPLETED, {
+                userId: user._id.toString(),
+                progressId: progress._id.toString(),
+                xpOld,
+                xpNew: progress.xp,
+                streakOld,
+                streakNew: progress.streak,
+                completedBefore,
+                completedAfter,
+                oldCompletedLessons,
+                oldSkillMastery,
+                newCompletedLessons: req.body.completedLessons ?? progress.completedLessons,
+                newSkillMastery: req.body.skillMastery ?? progress.skillMastery,
+            });
+
             res.json(updatedProgress);
         } else {
              throw new ApiError(404, 'Progress data not found for this user');
