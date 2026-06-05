@@ -7,7 +7,6 @@ import BottomNav from '../BottomNav';
 import LearnScreen from '../ProgressMap';
 import ProfileScreen from '../ProfileScreen';
 import CreationsScreen from '../CreationsScreen';
-import GoalsScreen from '../GoalsScreen';
 import LeaderboardScreen from '../LeaderboardScreen';
 import StoreScreen from '../StoreScreen';
 import SettingsScreen from '../SettingsScreen';
@@ -21,14 +20,13 @@ import HowToLearnScreen from '../HowToLearnScreen';
 import PrivacyPolicyScreen from '../PrivacyPolicyScreen';
 import { User, Lesson, ProgrammingPath } from '../../types';
 
-export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'goals' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions' | 'how-to-learn' | 'privacy-policy';
+export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions' | 'how-to-learn' | 'privacy-policy';
 
 // Map URL :view param → DashboardView enum
 const VIEW_MAP: Record<string, DashboardView> = {
   learn: 'learn',
   profile: 'profile',
   creations: 'creations',
-  goals: 'goals',
   leaderboard: 'leaderboard',
   store: 'store',
   settings: 'settings',
@@ -122,8 +120,6 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
         return <ProfileScreen currentUser={currentUser} onUpdateUser={onUpdateUser} />;
       case 'creations':
         return <CreationsScreen />;
-      case 'goals':
-        return <GoalsScreen />;
       case 'leaderboard':
         return <LeaderboardScreen currentUser={currentUser} />;
       case 'store':
