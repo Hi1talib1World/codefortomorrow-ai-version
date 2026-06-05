@@ -1,5 +1,5 @@
 
-import { User, UserProgress } from '../types';
+import { User, UserProgress, AppNotification } from '../types';
 
 // ========================================================================================
 // REAL BACKEND API SERVICE
@@ -524,6 +524,65 @@ const api = {
       throw new Error(data.message || 'Failed to generate AI hint.');
     }
     return data;
+  },
+
+  // --- Notifications Endpoints ---
+  getNotifications: async (): Promise<AppNotification[]> => {
+    const response = await customFetch(`${API_BASE_URL}/notifications`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch notifications.');
+    }
+    return data;
+  },
+
+  createNotification: async (notification: Omit<AppNotification, '_id' | 'read' | 'createdAt'>): Promise<AppNotification> => {
+    const response = await customFetch(`${API_BASE_URL}/notifications`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(notification),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to create notification.');
+    }
+    return data;
+  },
+
+  markNotificationRead: async (id: string): Promise<AppNotification> => {
+    const response = await customFetch(`${API_BASE_URL}/notifications/${id}/read`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to mark notification as read.');
+    }
+    return data;
+  },
+
+  markAllNotificationsRead: async (): Promise<void> => {
+    const response = await customFetch(`${API_BASE_URL}/notifications/read-all`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || 'Failed to mark all notifications as read.');
+    }
+  },
+
+  deleteNotification: async (id: string): Promise<void> => {
+    const response = await customFetch(`${API_BASE_URL}/notifications/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || 'Failed to delete notification.');
+    }
   }
 };
 
