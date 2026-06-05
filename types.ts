@@ -140,6 +140,7 @@ export interface UserProgress {
     [pathId: string]: string[]; // e.g., { block_coding: ['bc_badge1'], python: ['py_badge1'] }
   };
   lastLessonCompletedDate: string | null;
+  lastLeaderboardRank?: number;
   skillMastery?: {
     [concept: string]: number;
   };
@@ -212,3 +213,58 @@ export interface User {
   professionalTitle?: string;
   skills?: string[];
 }
+
+export interface DBCourse {
+  _id: string;
+  title: string;
+  description?: string;
+  lessons: string[]; // Lesson IDs
+  owner: string; // User ID
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DBLesson {
+  _id: string;
+  course: string; // Course ID
+  title: string;
+  description?: string;
+  exercises: string[]; // Exercise IDs
+  xp: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DBExercise {
+  _id: string;
+  lesson: string; // Lesson ID
+  instruction: string;
+  starterCode?: string;
+  solutionCode?: string;
+  expectedOutput?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DBSubmission {
+  _id: string;
+  user: string; // User ID
+  exercise: string; // Exercise ID
+  submittedCode: string;
+  score?: number;
+  status: 'passed' | 'failed' | 'pending';
+  output?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AppNotification {
+  _id: string;
+  userId: string;
+  title: string;
+  message: string;
+  type: 'lesson_completed' | 'streak_at_risk' | 'leaderboard_rank_change' | 'course_unlocked' | 'general';
+  read: boolean;
+  createdAt: string;
+}
+
