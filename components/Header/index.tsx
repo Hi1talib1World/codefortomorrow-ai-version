@@ -1,15 +1,16 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Language, ProgrammingPath, Lesson } from '../../types';
+import { User, Language, ProgrammingPath, Lesson, AppNotification } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { PATHS, MODULES_BY_PATH, LESSONS_BY_PATH } from '../../constants';
 import DbSetupGuide from '../DbSetupGuide';
 import { useSync } from '../../contexts/SyncContext';
 import { DashboardView } from '../Dashboard';
-import { Bell, BookOpen, Compass, Trophy, Play, Home, Target, Sparkles, Folder, Award, ShoppingBag, FileText, MessageSquare, Settings, ChevronDown, ExternalLink, LogOut } from 'lucide-react';
+import { Bell, BookOpen, Compass, Trophy, Play, Home, Target, Sparkles, Folder, Award, ShoppingBag, FileText, MessageSquare, Settings, ChevronDown, ExternalLink, LogOut, Flame, Unlock, Trash2, CheckCircle } from 'lucide-react';
 import api from '../../services/api';
+import { useToast } from '../ToastNotification';
 
 interface HeaderProps {
   currentUser: User;
@@ -33,9 +34,101 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
+  const { showToast } = useToast();
+
+  const fetchNotifications = async () => {
+    try {
+      const data = await api.getNotifications();
+      setNotifications(data);
+    } catch (error) {
+      console.error('Failed to load notifications:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchNotifications();
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (isNotificationOpen) {
+      fetchNotifications();
+    }
+  }, [isNotificationOpen]);
+
+  // Real-Time Notification Stream Hookup via SSE
+  useEffect(() => {
+    if (!currentUser || !currentUser._id || currentUser._id.startsWith('guest_')) return;
+
+    const token = localStorage.getItem('authToken') || '';
+    if (!token) return;
+
+    const streamUrl = `/api/notifications/stream?token=${encodeURIComponent(token)}`;
+    const eventSource = new EventSource(streamUrl, { withCredentials: true });
+
+    eventSource.onmessage = (event) => {
+      try {
+        const newNotif: AppNotification = JSON.parse(event.data);
+        console.log('🔔 SSE: Received new notification:', newNotif);
+        
+        // Append to notifications state
+        setNotifications(prev => {
+          if (prev.some(n => n._id === newNotif._id)) return prev;
+          return [newNotif, ...prev];
+        });
+
+        // Trigger dynamic toast popup
+        showToast(newNotif.message, 'success');
+      } catch (err) {
+        console.error('Error parsing SSE notification:', err);
+      }
+    };
+
+    eventSource.onerror = (err) => {
+      console.error('🔔 SSE connection error, browser will auto-retry:', err);
+    };
+
+    return () => {
+      console.log('🔔 SSE: Closing stream connection');
+      eventSource.close();
+    };
+  }, [currentUser, showToast]);
+
+  const handleMarkAsRead = async (id: string) => {
+    try {
+      await api.markNotificationRead(id);
+      fetchNotifications();
+    } catch (error) {
+      console.error('Failed to mark read:', error);
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      await api.markAllNotificationsRead();
+      fetchNotifications();
+    } catch (error) {
+      console.error('Failed to mark all read:', error);
+    }
+  };
+
+  const handleDeleteNotification = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await api.deleteNotification(id);
+      fetchNotifications();
+    } catch (error) {
+      console.error('Failed to delete notification:', error);
+    }
+  };
+
+  const unreadCount = notifications.filter(n => !n.read).length;
   const moreMenuRef = useRef<HTMLDivElement>(null);
   const [isHomeHovered, setIsHomeHovered] = useState(false);
   const [isLearnHovered, setIsLearnHovered] = useState(false);
+  const [isMissionsHovered, setIsMissionsHovered] = useState(false);
   const [showAllLanguagesGrid, setShowAllLanguagesGrid] = useState(false);
 
   useEffect(() => {
@@ -181,47 +274,88 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
     };
   }, []);
 
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case 'lesson_completed':
+        return <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />;
+      case 'streak_at_risk':
+        return <Flame className="w-4 h-4 text-orange-500 shrink-0 animate-bounce" />;
+      case 'leaderboard_rank_change':
+        return <Trophy className="w-4 h-4 text-amber-500 shrink-0" />;
+      case 'course_unlocked':
+        return <Unlock className="w-4 h-4 text-indigo-500 shrink-0" />;
+      default:
+        return <Bell className="w-4 h-4 text-slate-500 shrink-0" />;
+    }
+  };
+
+  const formatNotificationDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMin = Math.round(diffMs / (1000 * 60));
+    const diffHr = Math.round(diffMs / (1000 * 60 * 60));
+    
+    if (diffMin < 1) return 'Just now';
+    if (diffMin < 60) return `${diffMin}m ago`;
+    if (diffHr < 24) return `${diffHr}h ago`;
+    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  };
+
   const primaryNavItems = [
     { id: 'home', label: t('home'), icon: <Home className="w-4 h-4" /> },
     { id: 'learn', label: t('learn'), icon: <BookOpen className="w-4 h-4" /> },
     { id: 'creations', label: t('creations'), icon: <Folder className="w-4 h-4" /> },
     { id: 'missions', label: t('missions') || 'Missions', icon: <Target className="w-4 h-4" /> },
-    { id: 'leaderboard', label: t('leaderboard'), icon: <Trophy className="w-4 h-4" /> },
     { id: 'ai-assistant', label: t('ai_assistant') || 'AI Assistant', icon: <Sparkles className="w-4 h-4" /> },
   ];
 
   const secondaryNavItems = [
-    { id: 'goals', label: t('goals'), icon: <Award className="w-4 h-4" /> },
     { id: 'store', label: t('store'), icon: <ShoppingBag className="w-4 h-4" /> },
     { id: 'docs', label: 'Docs', icon: <FileText className="w-4 h-4" /> },
     { id: 'messages', label: 'Messages', icon: <MessageSquare className="w-4 h-4" /> },
     { id: 'settings', label: t('settings'), icon: <Settings className="w-4 h-4" /> },
     { id: 'logout', label: t('logout') || 'Logout', icon: <LogOut className="w-4 h-4" /> },
   ];
-
   const subNavTranslations = {
     en: [
-      { label: "How do I learn?", href: "how-to-learn", isExternal: false, hasCaret: true },
-      { label: "Follow Us", href: "https://wa.me/212600000000", isExternal: true, hasCaret: true },
-      { label: "Encyclopedia", href: "https://wiki.hsoub.com", isExternal: true }
+      { label: "How do I learn?", href: "how-to-learn", isExternal: false, icon: <Compass className="w-3.5 h-3.5 text-indigo-500" /> },
+      { label: "What are missions?", href: "missions", isExternal: false, icon: <Target className="w-3.5 h-3.5 text-emerald-500" /> },
+      { label: "Who is leading?", href: "leaderboard", isExternal: false, icon: <Trophy className="w-3.5 h-3.5 text-cyan-500" /> },
+      { label: "Follow Us", href: "https://wa.me/212600000000", isExternal: true, icon: <MessageSquare className="w-3.5 h-3.5 text-rose-500" /> }
     ],
     fr: [
-      { label: "Comment apprendre ?", href: "how-to-learn", isExternal: false, hasCaret: true },
-      { label: "Suivez-nous", href: "https://wa.me/212600000000", isExternal: true, hasCaret: true },
-      { label: "Encyclopédie", href: "https://wiki.hsoub.com", isExternal: true }
+      { label: "Comment apprendre ?", href: "how-to-learn", isExternal: false, icon: <Compass className="w-3.5 h-3.5 text-indigo-500" /> },
+      { label: "Qu'est-ce que les missions ?", href: "missions", isExternal: false, icon: <Target className="w-3.5 h-3.5 text-emerald-500" /> },
+      { label: "Qui est en tête ?", href: "leaderboard", isExternal: false, icon: <Trophy className="w-3.5 h-3.5 text-cyan-500" /> },
+      { label: "Suivez-nous", href: "https://wa.me/212600000000", isExternal: true, icon: <MessageSquare className="w-3.5 h-3.5 text-rose-500" /> }
     ],
     ar: [
-      { label: "كيف أتعلم؟", href: "how-to-learn", isExternal: false, hasCaret: true },
-      { label: "تابعنا", href: "https://wa.me/212600000000", isExternal: true, hasCaret: true },
-      { label: "موسوعة حسوب", href: "https://wiki.hsoub.com", isExternal: true }
+      { label: "كيف أتعلم؟", href: "how-to-learn", isExternal: false, icon: <Compass className="w-3.5 h-3.5 text-indigo-500" /> },
+      { label: "ما هي المهام؟", href: "missions", isExternal: false, icon: <Target className="w-3.5 h-3.5 text-emerald-500" /> },
+      { label: "من في الصدارة؟", href: "leaderboard", isExternal: false, icon: <Trophy className="w-3.5 h-3.5 text-cyan-500" /> },
+      { label: "تابعنا", href: "https://wa.me/212600000000", isExternal: true, icon: <MessageSquare className="w-3.5 h-3.5 text-rose-500" /> }
+    ]
+  };
+
+  const missionsSubNavTranslations = {
+    en: [
+      { label: "Leadership", href: "leaderboard", icon: <Trophy className="w-3.5 h-3.5 text-cyan-500" /> }
+    ],
+    fr: [
+      { label: "Classement", href: "leaderboard", icon: <Trophy className="w-3.5 h-3.5 text-cyan-500" /> }
+    ],
+    ar: [
+      { label: "لوحة الصدارة", href: "leaderboard", icon: <Trophy className="w-3.5 h-3.5 text-cyan-500" /> }
     ]
   };
 
   const handleSubItemClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href === 'how-to-learn') {
+    const internalViews = ['how-to-learn', 'missions', 'leaderboard'];
+    if (internalViews.includes(href)) {
       e.preventDefault();
       if (setActiveView) {
-        setActiveView('how-to-learn');
+        setActiveView(href as DashboardView);
       }
     } else if (href.startsWith('#')) {
       e.preventDefault();
@@ -248,8 +382,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
       <div className="container mx-auto flex justify-between items-center max-w-7xl">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveView && setActiveView('home')}>
-            <img src="/assets/images/cftos_logo.jpg" alt="Code for Tomorrow" className="h-12 w-auto hidden md:block" />
-            <h1 className="text-2xl md:hidden font-bold text-white dark:text-white leading-none tracking-tight">C4T</h1>
+            <h1 className="text-2xl font-bold text-white dark:text-white leading-none tracking-tight">C4T</h1>
           </div>
 
           {/* Primary Navigation - Desktop Only */}
@@ -258,9 +391,9 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
               {primaryNavItems.map((item, index) => {
                 const isActive = activeView === item.id;
                 const buttonContent = (() => {
-                  if (item.id === 'home' || item.id === 'learn') {
-                    const isHovered = item.id === 'home' ? isHomeHovered : isLearnHovered;
-                    const setHovered = item.id === 'home' ? setIsHomeHovered : setIsLearnHovered;
+                  if (item.id === 'home' || item.id === 'learn' || item.id === 'missions') {
+                    const isHovered = item.id === 'home' ? isHomeHovered : item.id === 'learn' ? isLearnHovered : isMissionsHovered;
+                    const setHovered = item.id === 'home' ? setIsHomeHovered : item.id === 'learn' ? setIsLearnHovered : setIsMissionsHovered;
                     return (
                       <div
                         className="relative"
@@ -498,8 +631,10 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
               title={texts.notifications}
             >
               <Bell className="h-5 w-5" />
-              {(!hasSelectedPath || !!nextLesson) && (
-                <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border border-white dark:border-slate-800 animate-pulse" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-5 h-5 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-[#111827] dark:border-slate-900 px-1 animate-pulse">
+                  {unreadCount}
+                </span>
               )}
             </button>
 
@@ -508,112 +643,142 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                 <div className="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
                   <h3 className="font-extrabold text-slate-800 dark:text-white tracking-wide text-sm flex items-center gap-2">
                     <Bell className="w-4 h-4 text-[#111827] dark:text-indigo-300" />
-                    <span>{texts.nextSteps}</span>
+                    <span>{texts.notifications}</span>
                   </h3>
-                  {(!hasSelectedPath || !!nextLesson) && (
-                    <span className="bg-[#FBBF24]/20 text-[#111827] dark:text-[#FBBF24] text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full">
-                      1 New
-                    </span>
+                  {unreadCount > 0 && (
+                    <button
+                      onClick={handleMarkAllRead}
+                      className="text-[10px] font-black text-[#0a66c2] hover:text-blue-700 dark:text-[#70b5f9] dark:hover:text-blue-400 uppercase tracking-wider cursor-pointer"
+                    >
+                      Mark all read
+                    </button>
                   )}
                 </div>
 
-                <div className="p-4">
-                  {/* Scenario 1: No Path Selected */}
-                  {!hasSelectedPath && (
-                    <div className="text-center py-2">
-                      <div className="w-12 h-12 bg-[#111827]/10 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <Compass className="w-6 h-6 text-[#111827] dark:text-indigo-300" />
-                      </div>
-                      <h4 className="font-bold text-slate-800 dark:text-white text-sm mb-1">{texts.choosePathTitle}</h4>
-                      <p className="text-slate-500 dark:text-slate-400 text-xs mb-4 leading-relaxed">{texts.choosePathDesc}</p>
-                      <button
-                        onClick={() => {
-                          setIsNotificationOpen(false);
-                          navigate('/dashboard/learn');
-                        }}
-                        className="w-full bg-[#111827] hover:bg-[#1f2937] text-white text-xs font-black uppercase tracking-widest py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 cursor-pointer animate-[pulse_2s_infinite]"
+                <div className="max-h-64 overflow-y-auto divide-y divide-slate-150 dark:divide-slate-700/50">
+                  {notifications.length > 0 ? (
+                    notifications.map((n) => (
+                      <div
+                        key={n._id}
+                        onClick={() => handleMarkAsRead(n._id)}
+                        className={`p-3.5 flex gap-3 items-start transition-all hover:bg-slate-50/80 dark:hover:bg-slate-700/40 cursor-pointer relative group ${!n.read ? 'bg-blue-50/15 dark:bg-blue-950/10' : ''}`}
                       >
-                        <Compass className="w-3.5 h-3.5" />
-                        <span>{texts.choosePathBtn}</span>
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Scenario 2: Path Completed */}
-                  {hasSelectedPath && isPathCompleted && (
-                    <div className="text-center py-2">
-                      <div className="w-12 h-12 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <Trophy className="w-6 h-6 text-amber-500" />
-                      </div>
-                      <h4 className="font-bold text-slate-800 dark:text-white text-sm mb-1">{texts.congratsTitle}</h4>
-                      <p className="text-slate-500 dark:text-slate-400 text-xs mb-4 leading-relaxed">{texts.congratsDesc}</p>
-                      <button
-                        onClick={() => {
-                          setIsNotificationOpen(false);
-                          navigate('/dashboard/learn');
-                        }}
-                        className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-black uppercase tracking-widest py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 cursor-pointer"
-                      >
-                        <Compass className="w-3.5 h-3.5" />
-                        <span>{texts.explorePathsBtn}</span>
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Scenario 3: Next Lesson Available */}
-                  {hasSelectedPath && nextLesson && (
-                    <div className="space-y-3">
-                      <div className="p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl border border-slate-100 dark:border-slate-700/60 relative overflow-hidden group">
-                        <div className="absolute right-0 top-0 w-24 h-24 bg-[#111827]/5 rounded-full blur-xl pointer-events-none" />
+                        {/* Unread indicator dot */}
+                        {!n.read && (
+                          <span className="absolute left-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-[#0a66c2] dark:bg-[#70b5f9] rounded-full" />
+                        )}
                         
-                        <div className="flex items-start gap-3">
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-gradient-to-br from-[#111827] to-[#111827] dark:from-slate-900 dark:to-slate-900 shadow-md shadow-slate-900/20 mt-0.5">
-                            <BookOpen className="w-4 h-4" />
-                          </div>
-                          
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[10px] font-black uppercase tracking-wider text-[#111827] dark:text-[#FBBF24] mb-0.5">{texts.nextUpTitle}</p>
-                            <h4 className="font-bold text-slate-800 dark:text-white text-sm truncate">
-                              {t(nextLesson.titleKey as any)}
-                            </h4>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                              <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 bg-slate-200/50 dark:bg-slate-700 px-1.5 py-0.5 rounded">
-                                ⭐ +{nextLesson.xp} XP
-                              </span>
-                              <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 bg-slate-200/50 dark:bg-slate-700 px-1.5 py-0.5 rounded">
-                                ⏱️ {nextLesson.estimatedMinutes || 10} {texts.minutes}
-                              </span>
-                              {nextLesson.difficulty && (
-                                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                                  nextLesson.difficulty === 'Beginner' ? 'text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/30' :
-                                  nextLesson.difficulty === 'Intermediate' ? 'text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30' :
-                                  'text-rose-600 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/30'
-                                }`}>
-                                  {nextLesson.difficulty === 'Beginner' ? texts.beginner :
-                                   nextLesson.difficulty === 'Intermediate' ? texts.intermediate :
-                                   nextLesson.difficulty === 'Advanced' ? texts.advanced : texts.expert}
-                                </span>
-                              )}
+                        <div className="mt-0.5 shrink-0">
+                          {getNotificationIcon(n.type)}
+                        </div>
+
+                        <div className="flex-1 min-w-0 pr-2">
+                          <h4 className={`text-xs font-bold text-slate-850 dark:text-white leading-tight ${!n.read ? 'font-extrabold' : ''}`}>
+                            {n.title}
+                          </h4>
+                          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold leading-relaxed mt-0.5 whitespace-pre-wrap">
+                            {n.message}
+                          </p>
+                          <span className="text-[9px] text-slate-400 dark:text-slate-500 font-bold block mt-1">
+                            {formatNotificationDate(n.createdAt)}
+                          </span>
+                        </div>
+
+                        <button
+                          onClick={(e) => handleDeleteNotification(n._id, e)}
+                          className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-all rounded cursor-pointer shrink-0"
+                          title="Delete notification"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-4 text-center text-xs text-slate-450 dark:text-slate-500 font-semibold select-none">
+                      {texts.noNotifications}
+                    </div>
+                  )}
+                </div>
+
+                {/* Recommendations fallback if notifications are empty */}
+                {notifications.length === 0 && (
+                  <div className="p-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50/30 dark:bg-slate-800/20">
+                    {/* Scenario 1: No Path Selected */}
+                    {!hasSelectedPath && (
+                      <div className="text-center">
+                        <div className="w-10 h-10 bg-[#111827]/10 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-2">
+                          <Compass className="w-5 h-5 text-[#111827] dark:text-indigo-300" />
+                        </div>
+                        <h4 className="font-bold text-slate-850 dark:text-white text-xs mb-0.5">{texts.choosePathTitle}</h4>
+                        <p className="text-slate-500 dark:text-slate-400 text-[10px] mb-3 leading-relaxed">{texts.choosePathDesc}</p>
+                        <button
+                          onClick={() => {
+                            setIsNotificationOpen(false);
+                            navigate('/dashboard/learn');
+                          }}
+                          className="w-full bg-[#111827] hover:bg-[#1f2937] text-white text-[10px] font-black uppercase tracking-widest py-2 px-3 rounded-lg transition-all shadow-sm flex items-center justify-center gap-1 cursor-pointer animate-[pulse_2s_infinite]"
+                        >
+                          <Compass className="w-3.5 h-3.5" />
+                          <span>{texts.choosePathBtn}</span>
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Scenario 2: Path Completed */}
+                    {hasSelectedPath && isPathCompleted && (
+                      <div className="text-center">
+                        <div className="w-10 h-10 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                          <Trophy className="w-5 h-5 text-amber-500" />
+                        </div>
+                        <h4 className="font-bold text-slate-850 dark:text-white text-xs mb-0.5">{texts.congratsTitle}</h4>
+                        <p className="text-slate-500 dark:text-slate-400 text-[10px] mb-3 leading-relaxed">{texts.congratsDesc}</p>
+                        <button
+                          onClick={() => {
+                            setIsNotificationOpen(false);
+                            navigate('/dashboard/learn');
+                          }}
+                          className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-[10px] font-black uppercase tracking-widest py-2 px-3 rounded-lg transition-all shadow-sm flex items-center justify-center gap-1 cursor-pointer"
+                        >
+                          <Compass className="w-3.5 h-3.5" />
+                          <span>{texts.explorePathsBtn}</span>
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Scenario 3: Next Lesson Available */}
+                    {hasSelectedPath && nextLesson && (
+                      <div className="space-y-2.5">
+                        <div className="p-2.5 bg-slate-50 dark:bg-slate-700/40 rounded-lg border border-slate-100 dark:border-slate-700/60 relative overflow-hidden group">
+                          <div className="flex items-start gap-2.5">
+                            <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white bg-gradient-to-br from-[#111827] to-[#111827] dark:from-slate-900 dark:to-slate-900 shadow mt-0.5">
+                              <BookOpen className="w-3.5 h-3.5" />
+                            </div>
+                            
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[8px] font-black uppercase tracking-wider text-[#111827] dark:text-[#FBBF24] mb-0.5">{texts.nextUpTitle}</p>
+                              <h4 className="font-bold text-slate-800 dark:text-white text-xs truncate">
+                                {t(nextLesson.titleKey as any)}
+                              </h4>
                             </div>
                           </div>
                         </div>
-                      </div>
 
-                      <button
-                        onClick={() => {
-                          setIsNotificationOpen(false);
-                          if (onStartLesson) {
-                            onStartLesson(nextLesson);
-                          }
-                        }}
-                        className="w-full bg-[#111827] hover:bg-[#1f2937] text-white text-xs font-black uppercase tracking-widest py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 cursor-pointer"
-                      >
-                        <Play className="w-3 h-3 fill-current" />
-                        <span>{texts.resumeBtn}</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
+                        <button
+                          onClick={() => {
+                            setIsNotificationOpen(false);
+                            if (onStartLesson) {
+                              onStartLesson(nextLesson);
+                            }
+                          }}
+                          className="w-full bg-[#111827] hover:bg-[#1f2937] text-white text-[10px] font-black uppercase tracking-widest py-2 px-3 rounded-lg transition-all shadow-sm flex items-center justify-center gap-1 cursor-pointer"
+                        >
+                          <Play className="w-2.5 h-2.5 fill-current" />
+                          <span>{texts.resumeBtn}</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -673,9 +838,9 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
         <div className="container mx-auto max-w-7xl flex items-center justify-start gap-6 text-xs font-bold text-slate-500 dark:text-slate-400">
           {(subNavTranslations[language as 'en' | 'fr' | 'ar'] || subNavTranslations.en).map((subItem: any, idx: number) => {
             const linkContent = (
-              <span className="flex items-center gap-1 group/item select-none cursor-pointer">
+              <span className="flex items-center gap-1.5 group/item select-none cursor-pointer">
+                {subItem.icon}
                 <span className="group-hover/item:underline underline-offset-4 decoration-1 decoration-slate-300 dark:decoration-slate-600 transition-all">{subItem.label}</span>
-                {subItem.hasCaret && <ChevronDown className="w-3 h-3 text-slate-400 group-hover/item:text-slate-600 dark:text-slate-500 dark:group-hover/item:text-slate-300 transition-colors" />}
                 {subItem.isExternal && <ExternalLink className="w-3 h-3 text-slate-400 group-hover/item:text-slate-600 dark:text-slate-500 dark:group-hover/item:text-slate-300 transition-colors" />}
               </span>
             );
@@ -813,6 +978,39 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
             </button>
           </div>
         )}
+      </div>
+
+      {/* Horizontal Sub-Navbar for Missions in standard layout flow */}
+      <div 
+        onMouseEnter={() => setIsMissionsHovered(true)}
+        onMouseLeave={() => setIsMissionsHovered(false)}
+        className={`bg-white dark:bg-slate-800 transition-all duration-300 ease-in-out overflow-hidden z-10 before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3 relative ${
+          isMissionsHovered 
+            ? 'max-h-12 opacity-100 border-t border-[#1f2937] dark:border-slate-700 py-2.5 px-6' 
+            : 'max-h-0 opacity-0 border-t-0 py-0 px-6'
+        }`}
+      >
+        <div className="container mx-auto max-w-7xl flex items-center justify-start gap-6 text-xs font-bold text-slate-500 dark:text-slate-400">
+          {(missionsSubNavTranslations[language as 'en' | 'fr' | 'ar'] || missionsSubNavTranslations.en).map((subItem: any, idx: number) => {
+            const linkContent = (
+              <span className="flex items-center gap-1.5 group/item select-none cursor-pointer">
+                {subItem.icon}
+                <span className="group-hover/item:underline underline-offset-4 decoration-1 decoration-slate-300 dark:decoration-slate-600 transition-all">{subItem.label}</span>
+              </span>
+            );
+
+            return (
+              <a
+                key={idx}
+                href={subItem.href}
+                onClick={(e) => handleSubItemClick(e, subItem.href)}
+                className="text-slate-500 hover:text-[#111827] dark:text-slate-400 dark:hover:text-[#FBBF24] font-semibold text-xs tracking-wide transition-colors duration-200"
+              >
+                {linkContent}
+              </a>
+            );
+          })}
+        </div>
       </div>
     </header>
   );
