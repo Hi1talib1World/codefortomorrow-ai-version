@@ -40,7 +40,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
             step3_title: "Solve Daily Missions",
             step3_desc: "Complete your 3 daily quests: do a lesson, earn 30 XP, and complete 1 quiz to unlock the treasure.",
             step4_title: "Unlock Rewards",
-            step4_desc: "Open the Moroccan Chest to claim your +50 XP stars bonus and unlock streak freeze items!",
+            step4_desc: "Complete your missions to claim your +50 XP stars bonus and unlock streak freeze items!",
         },
         fr: {
             title: "Comment apprendre ?",
@@ -50,9 +50,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
             step2_title: "Complétez les leçons",
             step2_desc: "Lisez les fiches d'explications théoriques, résolvez des exercices de codage interactifs ou passez des quiz.",
             step3_title: "Missions quotidiennes",
-            step3_desc: "Terminez vos 3 quêtes quotidiennes : faites une leçon, gagnez 30 XP et complétez 1 quiz pour débloquer le trésor.",
+            step3_desc: "Terminez vos 3 quêtes quotidiennes : faites une leçon, gagnez 30 XP et complétez 1 quiz pour débloquer les récompenses.",
             step4_title: "Débloquez les récompenses",
-            step4_desc: "Ouvrez le coffre marocain pour réclamer votre bonus de +50 étoiles XP et débloquer des gel-streaks !",
+            step4_desc: "Terminez les missions pour réclamer votre bonus de +50 étoiles XP et débloquer des gel-streaks !",
         },
         ar: {
             title: "كيف أتعلم؟",
@@ -62,19 +62,14 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
             step2_title: "أكمل الدروس",
             step2_desc: "اقرأ بطاقات الشرح النظري، وحل مهام البرمجة التفاعلية في المحرر المباشر، أو اجتز الاختبارات القصيرة.",
             step3_title: "حل المهام اليومية",
-            step3_desc: "أكمل مهامك اليومية الثلاث: درس واحد، واكسب 30 نقطة خبرة، واجتز اختبارًا واحدًا لفتح الكنز.",
+            step3_desc: "أكمل مهامك اليومية الثلاث: درس واحد، واكسب 30 نقطة خبرة، واجتز اختبارًا واحدًا لفتح المكافآت.",
             step4_title: "افتح المكافآت",
-            step4_desc: "افتح الصندوق المغربي للحصول على مكافأة +50 نجمة خبرة وفك تجميد الحماس!",
+            step4_desc: "أكمل المهام للحصول على مكافأة +50 نجمة خبرة وفك تجميد الحماس!",
         }
     };
 
     const guideTexts = howToLearnTexts[language as 'en' | 'fr' | 'ar'] || howToLearnTexts.en;
 
-
-    // Chest Opening Animation States
-    const [chestState, setChestState] = useState<'closed' | 'shaking' | 'opening' | 'opened'>('closed');
-    const [showRewardModal, setShowRewardModal] = useState(false);
-    const [particles, setParticles] = useState<Array<{ id: number; tx: number; ty: number; char: string }>>([]);
 
     const progress = currentUser.progress;
     const skillGraph = progress.skillGraph || {};
@@ -120,73 +115,6 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
             }).catch(err => console.error('Failed to init daily quests:', err));
         }
     }, [dailyQuestsDate, dailyQuests.length, todayStr]);
-
-    const allQuestsCompleted = dailyQuests.length > 0 && dailyQuests.every((q: any) => q.currentValue >= q.targetValue);
-
-    const handleOpenChest = async () => {
-        if (!allQuestsCompleted) {
-            showToast('Complete all 3 Daily Quests to unlock the Moroccan Treasure Chest! 🐪');
-            return;
-        }
-        if (chestOpenedToday) {
-            showToast('You have already opened today\'s chest! Come back tomorrow! 🌟');
-            return;
-        }
-
-        // Start shaking!
-        setChestState('shaking');
-        
-        // Generate random particle angles and offsets
-        const burstParticles = Array.from({ length: 12 }).map((_, i) => {
-            const angle = (i * 30 * Math.PI) / 180;
-            const distance = 80 + Math.random() * 60;
-            return {
-                id: i,
-                tx: Math.cos(angle) * distance,
-                ty: Math.sin(angle) * distance,
-                char: ['✨', '⭐', '🪙', '🍬'][Math.floor(Math.random() * 4)]
-            };
-        });
-        setParticles(burstParticles);
-        
-        // Shake for 1.2s, then transition to opening!
-        setTimeout(() => {
-            setChestState('opening');
-            
-            // Wait 1.5s for opening sparks to display, then show reward card
-            setTimeout(() => {
-                setChestState('opened');
-                setShowRewardModal(true);
-                
-                // Save reward results to DB: +50 XP and unlock Streak Freeze (ID 4)
-                const unlocked = skillGraph.unlockedAvatarItems || [];
-                const newUnlocked = unlocked.includes(4) ? unlocked : [...unlocked, 4];
-                
-                const updatedProgress = {
-                    ...progress,
-                    xp: progress.xp + 50,
-                    skillGraph: {
-                        ...skillGraph,
-                        unlockedAvatarItems: newUnlocked,
-                        chestOpenedToday: true,
-                        dailyQuests,
-                        dailyQuestsDate
-                    }
-                };
-
-                // SQLite Edge Sync: Updates user XP stars (+50) and equipped items locally.
-                // Serialized as a client progress state transaction, this event is recorded by the edge system
-                // and synced back to MongoDB and our central GCP database for processing by the Gemini AI Agents.
-                api.updateUserProgress(updatedProgress).then(() => {
-                    onUpdateUser({
-                        ...currentUser,
-                        progress: updatedProgress
-                    });
-                }).catch(err => console.error('Failed to claim chest rewards:', err));
-
-            }, 1500);
-        }, 1200);
-    };
 
     const goToLearn = () => {
         if (currentPath) {
@@ -244,54 +172,6 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 </div>
                             );
                         })}
-                    </div>
-                </div>
-
-                {/* Moroccan Chest */}
-                <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-700/50 flex flex-col items-center relative">
-                    <div 
-                        id="moroccan-chest-hud"
-                        data-agent-track="treasure_chest_click"
-                        data-sync-metric="chest_opening"
-                        className={`relative cursor-pointer select-none group w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-tr from-[#FBBF24]/5 to-[#FBBF24]/10 hover:from-[#FBBF24]/10 hover:to-[#FBBF24]/20 border border-[#FBBF24]/25 shadow-inner ${
-                            chestState === 'shaking' ? 'animate-chest-shake' : 
-                            chestState === 'opening' ? 'scale-110 opacity-75' : 
-                            chestState === 'opened' ? 'scale-105' : 'hover:scale-105'
-                        }`}
-                        onClick={handleOpenChest}
-                    >
-                        {/* Golden/emerald aura behind chest */}
-                        {allQuestsCompleted && !chestOpenedToday && chestState !== 'opened' && (
-                            <div className="absolute inset-0 bg-[#FBBF24]/25 rounded-2xl blur-lg animate-pulse z-0"></div>
-                        )}
-                        
-                        {/* Chest Emoji */}
-                        <div className="text-5xl drop-shadow-md select-none transition-transform z-10">
-                            {chestOpenedToday || chestState === 'opened' ? '🔓' : '🎁'}
-                        </div>
-
-                        {/* Particle sparks burst overlay */}
-                        {chestState === 'opening' && particles.map(p => (
-                            <div 
-                                key={p.id}
-                                className="absolute text-sm animate-particle-fade z-20 pointer-events-none select-none"
-                                style={{
-                                    '--tx': `${p.tx}px`,
-                                    '--ty': `${p.ty}px`
-                                } as React.CSSProperties}
-                            >
-                                {p.char}
-                            </div>
-                        ))}
-                    </div>
-                    
-                    <div className="mt-3">
-                        <p className="text-xs font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider">
-                            {chestOpenedToday ? 'Chest Claimed Today!' : (allQuestsCompleted ? 'Treasure Chest Unlocked!' : 'Moroccan Treasure Chest')}
-                        </p>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold mt-1 max-w-[220px] mx-auto leading-normal">
-                            {chestOpenedToday ? 'Completed all daily missions! Great job!' : (allQuestsCompleted ? 'Click the chest to open your daily rewards!' : 'Solve all 3 daily quests to claim chest!')}
-                        </p>
                     </div>
                 </div>
             </div>
@@ -441,14 +321,17 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
     if (role === 'student') {
         return (
-            <div className="min-h-full w-full bg-transparent overflow-x-hidden relative p-4 md:p-8">
-                <div className="max-w-6xl mx-auto space-y-10 relative z-10">
+            <div className="min-h-full w-full bg-transparent overflow-x-hidden relative p-3 md:p-6">
+                <div className="max-w-6xl mx-auto space-y-6 relative z-10">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
                         <div className="flex flex-col gap-2.5 text-left">
                             <div className="flex flex-wrap items-center gap-4">
                                 <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-16 w-auto" />
-                                <h1 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight flex items-center gap-2">
+                                <h1 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight flex items-center flex-wrap gap-2">
                                     <span>👋</span> Hello, {userName}!
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black bg-brand-500/10 text-brand-600 dark:bg-indigo-950/40 dark:text-indigo-300 border border-brand-500/20 select-none">
+                                        Level {Math.floor(xp / 100) + 1}
+                                    </span>
                                 </h1>
                             </div>
                             {streak >= 3 && (
@@ -459,6 +342,19 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     </p>
                                 </div>
                             )}
+                            {/* Level Progress Bar */}
+                            <div className="w-64 mt-1">
+                                <div className="flex justify-between items-center text-[10px] font-black text-slate-450 dark:text-slate-500 mb-1 select-none">
+                                    <span>Level {Math.floor(xp / 100) + 1} Progress</span>
+                                    <span>{xp % 100} / 100 XP</span>
+                                </div>
+                                <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200/40 dark:border-slate-700/40">
+                                    <div 
+                                        className="h-full bg-gradient-to-r from-brand-500 to-indigo-600 transition-all duration-500 rounded-full" 
+                                        style={{ width: `${xp % 100}%` }}
+                                    />
+                                </div>
+                            </div>
                         </div>
                         
                         {/* Streak & Points display on Home Page */}
@@ -482,9 +378,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                     {renderLastCourseVisited()}
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Brain Training Section */}
-                        <div className="lg:col-span-2 space-y-8">
+                        <div className="lg:col-span-2 space-y-6">
                             <div className="space-y-4">
                                 <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">{t('brain_training')}</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -529,7 +425,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         </div>
 
                         {/* MentalUP & Daily Quests Right Sidebar Section */}
-                        <div className="space-y-8">
+                        <div className="space-y-6">
                             {/* Profile Card */}
                             <div className="space-y-4">
                                 <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">My Profile</h2>
@@ -785,56 +681,13 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     </div>
                 </div>
 
-                {/* Reward Reveal Modal Container */}
-                {showRewardModal && (
-                    <div className="fixed inset-0 bg-black/75 flex items-center justify-center z-[100] p-4 animate-fade-in backdrop-blur-xl">
-                        <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 text-center max-w-sm w-full relative overflow-hidden animate-pop-in border-b-8 border-[#FBBF24] shadow-2xl">
-                            <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#FBBF24] via-amber-500 to-[#FBBF24]"></div>
-                            <div className="text-6xl my-4 animate-bounce">🎁✨</div>
-                            <h2 className="text-2xl font-black text-[#FBBF24] dark:text-[#FBBF24] mb-2 uppercase tracking-tighter">Moroccan Reward!</h2>
-                            <p className="text-slate-500 dark:text-slate-400 font-bold text-sm mb-6 leading-relaxed">
-                                You completed today's daily adventure and unlocked the treasure chest:
-                            </p>
-                            
-                            <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-950 mb-6 text-left space-y-3">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-xl">⭐</span>
-                                    <div className="text-left">
-                                        <p className="text-xs font-black text-slate-800 dark:text-slate-200 uppercase leading-none">+50 XP Stars</p>
-                                        <p className="text-[10px] text-slate-500 mt-1">Added to your main balance</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <span className="text-xl">💧</span>
-                                    <div className="text-left">
-                                        <p className="text-xs font-black text-slate-800 dark:text-slate-200 uppercase leading-none">Streak Freeze Booster</p>
-                                        <p className="text-[10px] text-slate-500 mt-1">Unlocked in the bank booster store</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button
-                                id="btn-claim-rewards"
-                                data-agent-track="claim_rewards_click"
-                                data-sync-metric="modal_dismiss"
-                                onClick={() => {
-                                    setShowRewardModal(false);
-                                    setChestState('closed');
-                                }}
-                                className="w-full bg-[#FBBF24] text-white font-black py-3.5 px-6 rounded-xl text-base uppercase border-b-4 border-yellow-700 hover:bg-[#FBBF24] active:border-b-2 active:translate-y-1 transition-all shadow-xl bubbly-btn cursor-pointer"
-                            >
-                                CLAIM REWARDS
-                            </button>
-                        </div>
-                    </div>
-                )}
             </div>
         );
     }
 
     return (
         <div className="min-h-full w-full bg-transparent overflow-x-hidden relative">
-            <div className="max-w-5xl mx-auto space-y-12 relative z-10 p-4 md:p-8">
+            <div className="max-w-5xl mx-auto space-y-6 relative z-10 p-3 md:p-6">
 
                 {/* Hero Greeting Section */}
                 <div className="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-10">
@@ -874,7 +727,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 {renderLastCourseVisited()}
 
                 {/* Adventure Path Selection */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
                     {/* Learn Card */}
                     <button
                         id="card-guest-learn"
@@ -952,7 +805,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 </div>
 
                 {/* Quests and Tip Footer Panel */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 items-stretch">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 items-stretch">
                     {renderDailyQuestsHUD()}
                     
                     <div className="flex flex-col justify-between gap-6">
@@ -966,7 +819,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 </div>
 
                 {/* How to Learn Section */}
-                <div id="how-to-learn" className="space-y-6 pt-10 border-t border-slate-200 dark:border-slate-800 scroll-mt-24">
+                <div id="how-to-learn" className="space-y-4 pt-6 border-t border-slate-200 dark:border-slate-800 scroll-mt-24">
                     <div className="text-left space-y-2">
                         <h2 className="text-2xl font-black text-[#111827] dark:text-indigo-200 uppercase tracking-tight flex items-center gap-2">
                             <span>📖</span> {guideTexts.title}
@@ -976,7 +829,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-left">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-left">
                         {/* Step 1 */}
                         <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-sm relative overflow-hidden group hover:border-[#111827]/30 dark:hover:border-[#FBBF24]/40 hover:shadow-md transition-all">
                             <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-indigo-500/10 to-transparent rounded-full blur-md"></div>
@@ -1028,46 +881,6 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 </div>
             </div>
 
-            {/* Reward Reveal Modal Container */}
-            {showRewardModal && (
-                <div className="fixed inset-0 bg-black/75 flex items-center justify-center z-[100] p-4 animate-fade-in backdrop-blur-xl">
-                    <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 text-center max-w-sm w-full relative overflow-hidden animate-pop-in border-b-8 border-[#FBBF24] shadow-2xl">
-                        <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#FBBF24] via-amber-500 to-[#FBBF24]"></div>
-                        <div className="text-6xl my-4 animate-bounce">🎁✨</div>
-                        <h2 className="text-2xl font-black text-[#FBBF24] dark:text-[#FBBF24] mb-2 uppercase tracking-tighter">Moroccan Reward!</h2>
-                        <p className="text-slate-500 dark:text-slate-400 font-bold text-sm mb-6 leading-relaxed">
-                            You completed today's daily adventure and unlocked the treasure chest:
-                        </p>
-                        
-                        <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-950 mb-6 text-left space-y-3">
-                            <div className="flex items-center gap-3">
-                                <span className="text-xl">⭐</span>
-                                <div className="text-left">
-                                    <p className="text-xs font-black text-slate-800 dark:text-slate-200 uppercase leading-none">+50 XP Stars</p>
-                                    <p className="text-[10px] text-slate-500 mt-1">Added to your main balance</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <span className="text-xl">💧</span>
-                                <div className="text-left">
-                                    <p className="text-xs font-black text-slate-800 dark:text-slate-200 uppercase leading-none">Streak Freeze Booster</p>
-                                    <p className="text-[10px] text-slate-500 mt-1">Unlocked in the bank booster store</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={() => {
-                                setShowRewardModal(false);
-                                setChestState('closed');
-                            }}
-                            className="w-full bg-[#FBBF24] text-white font-black py-3.5 px-6 rounded-xl text-base uppercase border-b-4 border-yellow-700 hover:bg-[#FBBF24] active:border-b-2 active:translate-y-1 transition-all shadow-xl bubbly-btn cursor-pointer"
-                        >
-                            CLAIM REWARDS
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
