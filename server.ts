@@ -21,7 +21,9 @@ import missionsRoutes from './routes/missions.routes';
 import learningEventsRoutes from './routes/learningEvents.routes';
 import agentsRoutes from './routes/agents.routes';
 import aiRoutes from './routes/ai.routes';
+import notificationRoutes from './routes/notification.routes';
 import { errorHandler } from './middleware/error.middleware';
+import { initEventListeners } from './services/eventListeners';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -33,6 +35,9 @@ const _dirname = path.dirname(_filename);
 async function startServer() {
   // Connect to the MongoDB database and block startup if the database cannot be reached.
   await connectDB();
+
+  // Initialize Event Bus listeners
+  initEventListeners();
 
   // Initialize the Express application
   const app: express.Application = express();
@@ -99,7 +104,7 @@ async function startServer() {
       "script-src-elem 'self' 'unsafe-inline' https://*.posthog.com https://pagead2.googlesyndication.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' data: https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https://*.googleusercontent.com https://*.posthog.com https://*.cloudinary.com https://pagead2.googlesyndication.com",
+      "img-src 'self' data: blob: https://*.googleusercontent.com https://*.posthog.com https://*.cloudinary.com https://pagead2.googlesyndication.com https://ui-avatars.com https://via.placeholder.com",
       "connect-src 'self' ws: wss: https://*.googleapis.com https://*.firebaseio.com https://*.posthog.com https://*.heygen.com wss://*.heygen.com https://ep1.adtrafficquality.google",
       "frame-src 'self' https://accounts.google.com https://*.firebaseapp.com https://*.heygen.com https://googleads.g.doubleclick.net",
       "media-src 'self' blob: data: https://*.heygen.com https://*.cloudinary.com",
@@ -169,6 +174,7 @@ async function startServer() {
   app.use('/api', learningEventsRoutes);
   app.use('/api/agents', agentsRoutes);
   app.use('/api/ai', aiRoutes);
+  app.use('/api/notifications', notificationRoutes);
 
   const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:5001';
   app.use(
@@ -190,6 +196,7 @@ async function startServer() {
       server: { middlewareMode: true },
       appType: 'spa',
       configFile: false, // Explicitly tell Vite NOT to load the config file dynamically
+      publicDir: path.resolve(_dirname, 'public'),
       plugins: [
         (await import('@vitejs/plugin-react')).default(),
         (await import('@tailwindcss/vite')).default(),
