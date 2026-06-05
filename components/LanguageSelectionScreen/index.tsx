@@ -15,9 +15,9 @@ const LanguageSelectionScreen: React.FC = () => {
     };
 
     const languages = [
-        { code: Language.EN, name: 'English', flag: '🇬🇧', welcomeMsg: 'Welcome to' },
-        { code: Language.FR, name: 'Français', flag: '🇫🇷', welcomeMsg: 'Bienvenue à' },
-        { code: Language.AR, name: 'العربية', flag: '🇲🇦', welcomeMsg: 'مرحباً بكم في' }
+        { code: Language.EN, name: 'English', welcomeMsg: 'Welcome to' },
+        { code: Language.FR, name: 'Français', welcomeMsg: 'Bienvenue à' },
+        { code: Language.AR, name: 'العربية', welcomeMsg: 'مرحباً بكم في' }
     ];
 
     return (
@@ -42,7 +42,6 @@ const LanguageSelectionScreen: React.FC = () => {
                             className="w-full flex items-center justify-between p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-all duration-300 group shadow-sm hover:shadow active:scale-95"
                         >
                             <div className="flex items-center gap-4">
-                                <span className="text-2xl">{lang.flag}</span>
                                 <span className="font-bold text-lg text-slate-700 dark:text-slate-200 group-hover:text-brand-600 dark:group-hover:text-brand-400">{lang.name}</span>
                             </div>
                             <ChevronRight className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-brand-500 transition-colors" />
