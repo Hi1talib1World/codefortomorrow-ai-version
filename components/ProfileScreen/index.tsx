@@ -217,9 +217,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
             <div className="px-6 sm:px-8 pb-6">
               <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4">
                 <div className="max-w-xl">
-                  <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white leading-tight">
-                    {currentUser.name}
-                  </h1>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white leading-tight">
+                      {currentUser.name}
+                    </h1>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#0a66c2]/10 text-[#0a66c2] dark:bg-[#70b5f9]/15 dark:text-[#70b5f9] border border-blue-500/20 select-none">
+                      Level {Math.floor((userProgress?.xp || 0) / 100) + 1}
+                    </span>
+                  </div>
                   <p className="text-sm sm:text-base text-slate-800 dark:text-slate-350 mt-1 leading-normal">
                     {currentUser.professionalTitle || "Student at Code for Tomorrow Academy"}
                   </p>
@@ -363,6 +368,23 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                   <p className="text-[11px] text-slate-500 mt-0.5 leading-normal">Average Quiz Mastery</p>
                 </div>
               </div>
+            </div>
+
+            {/* Level Progress Bar */}
+            <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between items-center text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 select-none">
+                <span>Level {Math.floor((userProgress?.xp || 0) / 100) + 1} Progress</span>
+                <span>{(userProgress?.xp || 0) % 100} / 100 XP</span>
+              </div>
+              <div className="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200/50 dark:border-slate-700/50">
+                <div 
+                  className="h-full bg-gradient-to-r from-[#0a66c2] to-[#0077b5] dark:from-[#38bdf8] dark:to-[#0284c7] transition-all duration-500 rounded-full" 
+                  style={{ width: `${(userProgress?.xp || 0) % 100}%` }}
+                />
+              </div>
+              <p className="text-[10px] text-slate-400 dark:text-slate-550 font-bold mt-1.5 select-none leading-none">
+                Gaining {100 - ((userProgress?.xp || 0) % 100)} more XP will advance you to Level {Math.floor((userProgress?.xp || 0) / 100) + 2}!
+              </p>
             </div>
 
             {/* AI Coaching Suggestion Panel */}
