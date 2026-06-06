@@ -1,6 +1,6 @@
-import Progress from '../models/progress.model';
-import EventLog from '../models/eventLog.model';
-import AnalyticsCache from '../models/analyticsCache.model';
+import Progress from '../../../src/models/progress.model';
+import EventLog from '../../../src/models/eventLog.model';
+import AnalyticsCache from '../../../src/models/analyticsCache.model';
 
 export interface ILearningAnalytics {
   xpEconomy: {
