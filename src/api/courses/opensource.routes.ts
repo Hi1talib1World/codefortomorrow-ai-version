@@ -1,7 +1,7 @@
 import express from 'express';
-import { getLeaderboard, getCuratedRepos, addCuratedRepo, getTrendingRepos, getRepoReadme, getRepoSetupGuide, searchRepos, searchIssues, getReposById } from '../controllers/opensource.controller';
-import { protect } from '../middleware/auth.middleware';
-import { adminOnly } from '../middleware/admin.middleware';
+import { getLeaderboard, getCuratedRepos, addCuratedRepo, getTrendingRepos, getRepoReadme, getRepoSetupGuide, searchRepos, searchIssues, getReposById } from './opensource.controller';
+import { protect } from '../../../src/core/permissions/auth.middleware';
+import { adminOnly } from '../../../src/core/permissions/admin.middleware';
 
 const router = express.Router();
 
