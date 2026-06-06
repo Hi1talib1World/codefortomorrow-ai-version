@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import { z } from 'zod';
-import Content from '../models/Content';
-import ApiError from '../utils/ApiError';
-import User from '../models/user.model';
-import { getLearningAnalytics } from '../services/analytics.service';
+import Content from '../../../src/models/Content';
+import ApiError from '../../../utils/ApiError';
+import User from '../../../src/models/user.model';
+import { getLearningAnalytics } from '../../../src/core/analytics/analytics.service';
 
 // ─── Cloudinary Config ────────────────────────────────────────────────────────
 cloudinary.config({
