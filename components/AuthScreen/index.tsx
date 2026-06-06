@@ -3,7 +3,7 @@ import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { User, Language } from '../../types';
 import api from '../../services/api';
-import { auth, firebaseService, handleGoogleRedirectResult, isFirebaseConfigured } from '../../services/firebase';
+import { auth, firebaseService, handleGoogleRedirectResult, isFirebaseConfigured } from '../../src/services/external/firebase';
 import { Mail, Lock, User as UserIcon, Globe } from 'lucide-react';
 import { sendEmailVerification, signOut } from 'firebase/auth';
 
