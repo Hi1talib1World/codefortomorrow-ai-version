@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
-import User from '../models/user.model';
-import Progress from '../models/progress.model';
-import SkillState from '../models/skillState.model';
-import ApiError from '../utils/ApiError';
-import { PATHS, LESSONS_BY_PATH } from '../constants';
+import User from '../../models/user.model';
+import Progress from '../../models/progress.model';
+import SkillState from '../../models/skillState.model';
+import ApiError from '../../../utils/ApiError';
+import { PATHS, LESSONS_BY_PATH } from '../../../constants';
 
 /** Helper to check database connectivity status */
 const isDbConnected = () => mongoose.connection.readyState === 1;
