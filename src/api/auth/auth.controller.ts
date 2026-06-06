@@ -4,10 +4,10 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import admin from 'firebase-admin';
-import User from '../models/user.model';
-import Progress from '../models/progress.model';
-import { generateToken } from '../services/token.service';
-import ApiError from '../utils/ApiError';
+import User from '../../../src/models/user.model';
+import Progress from '../../../src/models/progress.model';
+import { generateToken } from '../../../src/services/token/token.service';
+import ApiError from '../../../utils/ApiError';
 
 const initializeFirebaseAdmin = () => {
   if (admin.apps.length > 0) {
