@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/user.model';
+import User from '../../../src/models/user.model';
 
 // Augment Express Request type to include our user payload
 declare global {
