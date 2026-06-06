@@ -1,6 +1,6 @@
 import express from 'express';
-import { getStudentProgress, getSkillStates, getMissions } from '../controllers/missions.controller';
-import { protect } from '../middleware/auth.middleware';
+import { getStudentProgress, getSkillStates, getMissions } from './missions.controller';
+import { protect } from '../../../src/core/permissions/auth.middleware';
 
 const router = express.Router();
 
