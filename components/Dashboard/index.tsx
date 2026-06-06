@@ -18,12 +18,14 @@ import AIAssistantScreen from '../AIAssistantScreen';
 import MissionsScreen from '../MissionsScreen';
 import HowToLearnScreen from '../HowToLearnScreen';
 import PrivacyPolicyScreen from '../PrivacyPolicyScreen';
+import FeedScreen from '../FeedScreen';
 import { User, Lesson, ProgrammingPath } from '../../types';
 
-export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions' | 'how-to-learn' | 'privacy-policy';
+export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions' | 'how-to-learn' | 'privacy-policy' | 'feed';
 
 // Map URL :view param → DashboardView enum
 const VIEW_MAP: Record<string, DashboardView> = {
+  feed: 'feed',
   learn: 'learn',
   profile: 'profile',
   creations: 'creations',
@@ -116,6 +118,8 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
             onSwitchPath={(pId) => navigate(`/dashboard/learn/${pId}`)}
           />
         );
+      case 'feed':
+        return <FeedScreen currentUser={currentUser} onUpdateUser={onUpdateUser} />;
       case 'profile':
         return <ProfileScreen currentUser={currentUser} onUpdateUser={onUpdateUser} />;
       case 'creations':
