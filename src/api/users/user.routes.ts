@@ -1,7 +1,7 @@
 
 import express from 'express';
-import { updateUserProfile, updateUserProgress, getTeachers, toggleSaveItem, searchUsers, getLeaderboard } from '../users/user.controller';
-import { getMe } from './auth.controller';
+import { updateUserProfile, updateUserProgress, getTeachers, toggleSaveItem, searchUsers, getLeaderboard } from './user.controller';
+import { getMe } from '../auth/auth.controller';
 import { protect } from '../../../src/core/permissions/auth.middleware';
 
 const router = express.Router();
