@@ -1,6 +1,6 @@
 import express from 'express';
-import { protect } from '../middleware/auth.middleware';
-import { adminOnly } from '../middleware/admin.middleware';
+import { protect } from '../../../src/core/permissions/auth.middleware';
+import { adminOnly } from '../../../src/core/permissions/admin.middleware';
 import {
   listContent,
   getContent,
@@ -10,7 +10,7 @@ import {
   toggleStatus,
   uploadImage,
   getAnalytics,
-} from '../controllers/admin.controller';
+} from '../admin/admin.controller';
 
 const router = express.Router();
 
