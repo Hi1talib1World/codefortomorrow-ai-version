@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/user.model';
-import ApiError from '../utils/ApiError';
+import User from '../../../src/models/user.model';
+import ApiError from '../../../utils/ApiError';
 
 /**
  * @desc  Middleware that verifies the authenticated user is an admin.
