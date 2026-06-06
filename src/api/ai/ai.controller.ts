@@ -1,8 +1,8 @@
 
 import { Request, Response } from 'express';
-import { AIEngine } from '../services/aiEngine';
-import User from '../models/user.model';
-import Progress from '../models/progress.model';
+import { AIEngine } from '../../../src/core/ai-coach/aiEngine';
+import User from '../../../src/models/user.model';
+import Progress from '../../../src/models/progress.model';
 import { GoogleGenAI } from '@google/genai';
 
 export const getLearningProfile = async (req: Request, res: Response) => {
