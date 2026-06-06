@@ -556,6 +556,48 @@ export const seedMockData = async () => {
       createdAt: new Date(Date.now() - 3600000 * 0.9)
     });
 
+    // Student Kenza <-> Admin
+    await Message.create({
+      sender: studentKenza._id,
+      receiver: adminUser._id,
+      content: 'Hey Hicham, the Figma mockup for the new Academy dashboard is ready! Let me know if you have any feedback on the colors.',
+      createdAt: new Date(Date.now() - 3600000 * 0.8)
+    });
+    await Message.create({
+      sender: adminUser._id,
+      receiver: studentKenza._id,
+      content: 'Awesome work Kenza! The brand teal color looks perfect on the cards. Let\'s start coding the HTML structure for it.',
+      createdAt: new Date(Date.now() - 3600000 * 0.7)
+    });
+
+    // Student Karim <-> Admin
+    await Message.create({
+      sender: studentKarim._id,
+      receiver: adminUser._id,
+      content: 'Hello Hicham, does Python support switch statements? I was looking at the conditional branches.',
+      createdAt: new Date(Date.now() - 3600000 * 0.6)
+    });
+    await Message.create({
+      sender: adminUser._id,
+      receiver: studentKarim._id,
+      content: 'Hey Karim! Yes, from Python 3.10 onwards, you can use the \'match\' statement, which works just like a switch statement. Let\'s review this in our next Python session.',
+      createdAt: new Date(Date.now() - 3600000 * 0.5)
+    });
+
+    // Student Fatima <-> Admin
+    await Message.create({
+      sender: studentFatima._id,
+      receiver: adminUser._id,
+      content: 'Hi Hicham, I completed my very first block coding maze today! It was so much fun.',
+      createdAt: new Date(Date.now() - 3600000 * 0.4)
+    });
+    await Message.create({
+      sender: adminUser._id,
+      receiver: studentFatima._id,
+      content: 'That is fantastic, Fatima! Keep going, the Python tracks are next and you are doing great.',
+      createdAt: new Date(Date.now() - 3600000 * 0.3)
+    });
+
     // 10. Create Notifications for Admin User
     await Notification.create({
       userId: adminUser._id.toString(),
