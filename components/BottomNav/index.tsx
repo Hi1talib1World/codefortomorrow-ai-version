@@ -8,7 +8,8 @@ import {
   Folder, 
   MessageSquare, 
   ShoppingBag, 
-  User 
+  User,
+  Share2
 } from 'lucide-react';
 
 interface BottomNavProps {
@@ -18,11 +19,12 @@ interface BottomNavProps {
 }
 
 const BottomNav: React.FC<BottomNavProps> = ({ activeView, setActiveView, unreadMessagesCount }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const navItems = [
     { id: 'home', label: t('home'), icon: <Home className="w-6 h-6" /> },
     { id: 'learn', label: t('learn'), icon: <BookOpen className="w-6 h-6" /> },
+    { id: 'feed', label: language === 'fr' ? 'Communauté' : language === 'ar' ? 'الموجز' : 'Feed', icon: <Share2 className="w-6 h-6" /> },
     { id: 'creations', label: t('creations'), icon: <Folder className="w-6 h-6" /> },
     { id: 'messages', label: 'Chat', icon: <MessageSquare className="w-6 h-6" /> },
     { id: 'store', label: t('store'), icon: <ShoppingBag className="w-6 h-6" /> },
