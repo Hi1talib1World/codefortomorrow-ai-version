@@ -1,8 +1,8 @@
-import eventBus, { EVENTS } from './eventBus';
-import { handleLeaderboardRankCheck } from './leaderboard.service';
-import { checkPathUnlocks } from './unlock.service';
-import { createNotification } from './notification.service';
-import { updateEventLogStatus } from './eventLog.service';
+import eventBus, { EVENTS } from '../eventBus';
+import { handleLeaderboardRankCheck } from '../../core/gamification/leaderboard.service';
+import { checkPathUnlocks } from '../../core/learning/unlock.service';
+import { createNotification } from '../../realtime/sse';
+import { updateEventLogStatus } from '../processors/eventLog.processor';
 import { withRetry } from '../../../utils/retry';
 
 /**
