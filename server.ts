@@ -22,6 +22,7 @@ import learningEventsRoutes from './src/api/courses/learningEvents.routes';
 import agentsRoutes from './src/api/ai/agents.routes';
 import aiRoutes from './src/api/ai/ai.routes';
 import notificationRoutes from './src/api/notifications/notification.routes';
+import postRoutes from './src/api/posts/post.routes';
 import { errorHandler } from './src/core/permissions/error.middleware';
 import { initEventListeners } from './src/events/listeners/eventListeners';
 
@@ -175,6 +176,7 @@ async function startServer() {
   app.use('/api/agents', agentsRoutes);
   app.use('/api/ai', aiRoutes);
   app.use('/api/notifications', notificationRoutes);
+  app.use('/api/posts', postRoutes);
 
   const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:5001';
   app.use(
