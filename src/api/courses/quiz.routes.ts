@@ -1,6 +1,6 @@
 import express from 'express';
-import { createQuiz, getTeacherQuizzes, getClassQuizzes, deleteQuiz } from '../controllers/quiz.controller';
-import { protect } from '../middleware/auth.middleware';
+import { createQuiz, getTeacherQuizzes, getClassQuizzes, deleteQuiz } from './quiz.controller';
+import { protect } from '../../../src/core/permissions/auth.middleware';
 
 const router = express.Router();
 
