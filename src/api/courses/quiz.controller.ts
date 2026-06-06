@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Quiz from '../models/Quiz';
+import Quiz from '../../models/Quiz';
 
 /**
  * @desc    Create a new quiz
