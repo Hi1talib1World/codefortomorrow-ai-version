@@ -9,6 +9,7 @@ import Quiz from '../../models/Quiz';
 import Activity from '../../models/Activity';
 import Message from '../../models/Message';
 import Notification from '../../models/notification.model';
+import Post from '../../models/post.model';
 import bcrypt from 'bcryptjs';
 
 export const seedMockData = async () => {
@@ -622,6 +623,63 @@ export const seedMockData = async () => {
       type: 'lesson_completed',
       read: false
     });
+
+    // 11. Create Community Feed Posts
+    await Post.deleteMany({});
+    
+    await Post.create([
+      {
+        author: studentYassine._id,
+        content: 'Just hit a 15-day learning streak! 🔥 I finished my block logic maze and now I am moving into JavaScript tracks. Super excited for what is next!',
+        milestone: {
+          type: 'streak',
+          title: '15-Day Streak Reached!',
+          value: 15
+        },
+        likes: [adminUser._id, studentSofia._id],
+        comments: [
+          {
+            author: studentSofia._id,
+            content: 'Awesome job Yassine! Keep it up! 🚀',
+            createdAt: new Date(Date.now() - 3600000 * 1.5)
+          },
+          {
+            author: teacherMohamed._id,
+            content: 'Great dedication, Yassine! Block logic is the perfect foundation. Keep pushing forward.',
+            createdAt: new Date(Date.now() - 3600000 * 1.2)
+          }
+        ]
+      },
+      {
+        author: studentSofia._id,
+        content: 'Just completed the Variables and Constants lesson in the JavaScript track! 💻 Block scopes (let vs const) make so much sense now.',
+        milestone: {
+          type: 'lesson',
+          title: 'Completed Variables and Constants',
+          value: 'JavaScript'
+        },
+        likes: [studentYassine._id, teacherAmina._id],
+        comments: [
+          {
+            author: teacherAmina._id,
+            content: 'Excellent work, Sofia. Block scoping is a fundamental JS concept. Keep learning!',
+            createdAt: new Date(Date.now() - 3600000 * 1.1)
+          }
+        ]
+      },
+      {
+        author: teacherAmina._id,
+        content: 'Welcome to the Code for Tomorrow community feed! 🎓🌟 Use this space to share your coding progress, streaks, achievements, and ask questions. Let\'s build a supportive learning community together!',
+        likes: [studentYassine._id, studentSofia._id, adminUser._id],
+        comments: [
+          {
+            author: adminUser._id,
+            content: 'This is a fantastic space to celebrate our student achievements! 🚀',
+            createdAt: new Date(Date.now() - 3600000 * 3)
+          }
+        ]
+      }
+    ]);
 
     console.log('🌱 Mock data seeding completed successfully!');
   } catch (error) {
