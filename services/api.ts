@@ -583,6 +583,56 @@ const api = {
       const data = await response.json();
       throw new Error(data.message || 'Failed to delete notification.');
     }
+  },
+
+  // --- Feed Endpoints ---
+  getPosts: async (): Promise<any[]> => {
+    const response = await customFetch(`${API_BASE_URL}/posts`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch posts.');
+    }
+    return data;
+  },
+
+  createPost: async (content: string, milestone?: any): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/posts`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ content, milestone }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to create post.');
+    }
+    return data;
+  },
+
+  likePost: async (postId: string): Promise<{ likes: string[] }> => {
+    const response = await customFetch(`${API_BASE_URL}/posts/${postId}/like`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to like post.');
+    }
+    return data;
+  },
+
+  commentPost: async (postId: string, content: string): Promise<any[]> => {
+    const response = await customFetch(`${API_BASE_URL}/posts/${postId}/comment`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ content }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to add comment.');
+    }
+    return data;
   }
 };
 
