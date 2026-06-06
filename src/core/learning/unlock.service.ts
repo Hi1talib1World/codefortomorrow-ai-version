@@ -1,4 +1,4 @@
-import { createNotification } from './notification.service';
+import { createNotification } from '../../realtime/sse';
 
 const totalMap: Record<string, number> = {
   block_coding: 15,
