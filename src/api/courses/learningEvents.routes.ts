@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { protect } from '../middleware/auth.middleware';
+import { protect } from '../../../src/core/permissions/auth.middleware';
 import {
   createLearningEvent,
   getStudentProgress,
   getSkillStates,
-} from '../controllers/learningEvent.controller';
+} from './learningEvent.controller';
 
 const router = Router();
 
