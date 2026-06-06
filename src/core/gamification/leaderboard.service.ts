@@ -1,5 +1,5 @@
-import User from '../models/user.model';
-import Progress from '../models/progress.model';
+import User from '../../../src/models/user.model';
+import Progress from '../../../src/models/progress.model';
 import { createNotification } from './notification.service';
 
 /**
