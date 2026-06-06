@@ -5,9 +5,9 @@ import {
   markAsRead,
   markAllAsRead,
   deleteNotification,
-} from '../controllers/notification.controller';
-import { protect } from '../middleware/auth.middleware';
-import { registerSseClient } from '../services/notification.service';
+} from '../notifications/notification.controller';
+import { protect } from '../../../src/core/permissions/auth.middleware';
+import { registerSseClient } from '../../../src/realtime/sse';
 
 const router = express.Router();
 
