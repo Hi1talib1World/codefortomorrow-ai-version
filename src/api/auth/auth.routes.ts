@@ -1,8 +1,8 @@
 
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { register, login, getMe, googleLogin, firebaseLogin, logout } from '../controllers/auth.controller';
-import { protect } from '../middleware/auth.middleware';
+import { register, login, getMe, googleLogin, firebaseLogin, logout } from './auth.controller';
+import { protect } from '../../../src/core/permissions/auth.middleware';
 
 // Stricter rate limiter for authentication routes (15 attempts per 15 minutes per IP)
 const authLimiter = rateLimit({
