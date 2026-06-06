@@ -8,8 +8,8 @@ import {
   chatWithAssistant,
   generateHint,
   getAIStatus
-} from '../controllers/ai.controller';
-import { protect } from '../middleware/auth.middleware';
+} from '../ai/ai.controller';
+import { protect } from '../../../src/core/permissions/auth.middleware';
 import rateLimit from 'express-rate-limit';
 
 const router = Router();
