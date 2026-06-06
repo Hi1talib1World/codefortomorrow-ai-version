@@ -1,4 +1,4 @@
-import EventLog from '../models/eventLog.model';
+import EventLog from '../../../src/models/eventLog.model';
 
 /**
  * Creates a new event log entry in the database.
