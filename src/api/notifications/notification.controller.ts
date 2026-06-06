@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import Notification from '../models/notification.model';
-import User from '../models/user.model';
-import Progress from '../models/progress.model';
-import ApiError from '../utils/ApiError';
+import Notification from '../../../src/models/notification.model';
+import User from '../../../src/models/user.model';
+import Progress from '../../../src/models/progress.model';
+import ApiError from '../../../utils/ApiError';
 
 /**
  * @desc    Get all notifications for current user (auto-triggers streak warnings if appropriate)
