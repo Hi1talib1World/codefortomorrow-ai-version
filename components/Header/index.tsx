@@ -8,7 +8,7 @@ import { PATHS, MODULES_BY_PATH, LESSONS_BY_PATH } from '../../constants';
 import DbSetupGuide from '../DbSetupGuide';
 import { useSync } from '../../contexts/SyncContext';
 import { DashboardView } from '../Dashboard';
-import { Bell, BookOpen, Compass, Trophy, Play, Home, Target, Sparkles, Folder, Award, ShoppingBag, FileText, MessageSquare, Settings, ChevronDown, ExternalLink, LogOut, Flame, Unlock, Trash2, CheckCircle } from 'lucide-react';
+import { Bell, BookOpen, Compass, Trophy, Play, Home, Target, Sparkles, Folder, Award, ShoppingBag, FileText, MessageSquare, Settings, ChevronDown, ExternalLink, LogOut, Flame, Unlock, Trash2, CheckCircle, Share2 } from 'lucide-react';
 import api from '../../services/api';
 import { useToast } from '../ToastNotification';
 
@@ -305,6 +305,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
   const primaryNavItems = [
     { id: 'home', label: t('home'), icon: <Home className="w-4 h-4" /> },
     { id: 'learn', label: t('learn'), icon: <BookOpen className="w-4 h-4" /> },
+    { id: 'feed', label: language === 'fr' ? 'Communauté' : language === 'ar' ? 'الموجز' : 'Feed', icon: <Share2 className="w-4 h-4" /> },
     { id: 'creations', label: t('creations'), icon: <Folder className="w-4 h-4" /> },
     { id: 'missions', label: t('missions') || 'Missions', icon: <Target className="w-4 h-4" /> },
     { id: 'ai-assistant', label: t('ai_assistant') || 'AI Assistant', icon: <Sparkles className="w-4 h-4" /> },
