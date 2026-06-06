@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import Course from '../models/course.model';
+import Course from '../../models/course.model';
 import mongoose from 'mongoose';
-import ApiError from '../utils/ApiError';
+import ApiError from '../../../utils/ApiError';
 
 /**
  * @desc    Create a new course (teacher only)
