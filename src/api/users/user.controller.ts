@@ -1,10 +1,10 @@
 
 import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
-import User from '../models/user.model';
-import Progress from '../models/progress.model';
-import ApiError from '../utils/ApiError';
-import eventBus, { EVENTS } from '../services/eventBus';
+import User from '../../../src/models/user.model';
+import Progress from '../../../src/models/progress.model';
+import ApiError from '../../../utils/ApiError';
+import eventBus, { EVENTS } from '../../../src/events/eventBus';
 
 /**
  * @desc    Update user profile
