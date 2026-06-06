@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import { AIEngine } from '../services/aiEngine';
-import User from '../models/user.model';
-import connectDB from '../config/db';
+import { AIEngine } from '../src/core/ai-coach/aiEngine';
+import User from '../src/models/user.model';
+import connectDB from '../src/services/db/db';
 
 dotenv.config();
 
