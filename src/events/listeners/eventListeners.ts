@@ -3,7 +3,7 @@ import { handleLeaderboardRankCheck } from './leaderboard.service';
 import { checkPathUnlocks } from './unlock.service';
 import { createNotification } from './notification.service';
 import { updateEventLogStatus } from './eventLog.service';
-import { withRetry } from '../utils/retry';
+import { withRetry } from '../../../utils/retry';
 
 /**
  * Registers global event handlers for decoupled, asynchronous operations
