@@ -1,6 +1,6 @@
 import User from '../../../src/models/user.model';
 import Progress from '../../../src/models/progress.model';
-import { createNotification } from './notification.service';
+import { createNotification } from '../../realtime/sse';
 
 /**
  * Checks for leaderboard ranking updates and triggers Climb or Drop notifications.
