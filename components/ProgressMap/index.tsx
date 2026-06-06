@@ -15,6 +15,7 @@ import { motion } from 'motion/react';
 import { MODULES_BY_PATH, LESSONS_BY_PATH, PATHS } from '../../constants';
 import { Lesson, ProgrammingPath } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import LessonNode from '../LessonNode';
 import { Search, X, Lock, ChevronRight, ArrowLeftRight } from 'lucide-react';
 
@@ -124,8 +125,10 @@ const ProgressHeader: React.FC<{
 
 const LearnScreen: React.FC<LearnScreenProps> = ({ completedLessons, onStartLesson, path, onSwitchPath }) => {
   const { t } = useLanguage();
+  const { theme } = useTheme();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const isDark = theme === 'dark';
 
   const modules = MODULES_BY_PATH[path] || [];
   const sections = LESSONS_BY_PATH[path] || [];
@@ -180,7 +183,56 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ completedLessons, onStartLess
 
   // ── Render the Duolingo-style snake path ───────────────────────────────────
   const renderSnakePath = (lessons: Lesson[], sectionIsLocked = false, globalOffset = 0) => (
-    <div className="relative flex flex-col items-center py-2">
+    <div className="relative w-full" style={{ height: `${lessons.length * 120}px` }}>
+      {/* ─── Duolingo-style Winding Road/Line Connectors ─── */}
+      {lessons.map((lesson, i) => {
+        if (i === 0) return null;
+        const o1 = getSnakeOffset(globalOffset + i - 1);
+        const o2 = getSnakeOffset(globalOffset + i);
+        // A segment is unlocked if the target node (i) is unlocked or completed
+        const isSegmentUnlocked = !sectionIsLocked && (lesson.id === allLessons[0]?.id || completedLessons.includes(lesson.id - 1));
+
+        // Duolingo colors: vibrant green with dark green 3D shadow vs slate gray with dark slate shadow
+        const shadowColor = isSegmentUnlocked 
+          ? '#46a302' 
+          : (isDark ? '#1e293b' : '#cbd5e1');
+        const strokeColor = isSegmentUnlocked 
+          ? '#58cc02' 
+          : (isDark ? '#334155' : '#e2e8f0');
+
+        return (
+          <svg
+            key={`line-${lesson.id}`}
+            className="absolute left-1/2 -translate-x-1/2 pointer-events-none z-0"
+            style={{
+              top: `${(i - 1) * 120 + 60}px`,
+              height: '120px',
+              width: '200px',
+            }}
+            viewBox="0 0 200 120"
+          >
+            {/* 3D Shadow curve (offset vertically by 4px) */}
+            <path
+              d={`M ${100 + o1} 0 C ${100 + o1} 60 ${100 + o2} 60 ${100 + o2} 120`}
+              fill="none"
+              stroke={shadowColor}
+              strokeWidth="16"
+              strokeLinecap="round"
+              transform="translate(0, 4)"
+            />
+            {/* Main top curve */}
+            <path
+              d={`M ${100 + o1} 0 C ${100 + o1} 60 ${100 + o2} 60 ${100 + o2} 120`}
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth="16"
+              strokeLinecap="round"
+            />
+          </svg>
+        );
+      })}
+
+      {/* ─── Lesson Nodes absolute positioned ─── */}
       {lessons.map((lesson, i) => {
         const isCompleted = completedLessons.includes(lesson.id);
         const isUnlocked = !sectionIsLocked && (lesson.id === allLessons[0]?.id || completedLessons.includes(lesson.id - 1));
@@ -188,13 +240,11 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ completedLessons, onStartLess
         const offset = getSnakeOffset(globalOffset + i);
 
         return (
-          <div key={lesson.id} className="flex flex-col items-center">
-            {/* Dotted connector line to this node (skip for first) */}
-            {i > 0 && (
-              <div className="h-4 w-0 border-l-[3px] border-dashed border-slate-200 dark:border-slate-600" />
-            )}
-
-            {/* Node with horizontal offset */}
+          <div
+            key={lesson.id}
+            className="absolute left-0 right-0 flex justify-center items-center z-10"
+            style={{ top: `${i * 120}px`, height: '120px' }}
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.5, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
