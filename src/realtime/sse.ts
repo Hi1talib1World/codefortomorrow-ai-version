@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import Notification from '../models/notification.model';
+import Notification from '../../src/models/notification.model';
 
 // Map of active Server-Sent Events (SSE) connections indexed by User ID
 const sseClients = new Map<string, Response[]>();
