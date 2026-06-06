@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import crypto from 'crypto';
-import User from '../models/user.model';
-import SkillState from '../models/skillState.model';
-import LearningEvent from '../models/learningEvent.model';
+import User from '../../models/user.model';
+import SkillState from '../../models/skillState.model';
+import LearningEvent from '../../models/learningEvent.model';
 
 export const createLearningEvent = async (req: Request, res: Response) => {
   try {
