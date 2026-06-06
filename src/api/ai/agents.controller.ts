@@ -5,7 +5,7 @@ import {
   triggerAgentCommand,
   pauseAgent as pauseAgentService,
   resumeAgent as resumeAgentService,
-} from '../services/agentMonitor.service';
+} from '../../../src/core/ai-coach/agentMonitor.service';
 
 export const getAgentsStatus = (_req: Request, res: Response) => {
   const dashboard = getAgentDashboard();
