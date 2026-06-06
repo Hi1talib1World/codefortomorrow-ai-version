@@ -258,22 +258,65 @@ export const searchUsers = async (req: Request, res: Response, next: NextFunctio
 export const getLeaderboard = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const isDbConnected = mongoose.connection.readyState === 1;
-        if (!isDbConnected) {
-            console.warn("⚠️ MongoDB is not connected. Returning empty leaderboard.");
-            return res.json([]);
+        
+        let dbUsers: any[] = [];
+        if (isDbConnected) {
+            dbUsers = await User.find({ progress: { $exists: true, $ne: null } })
+                .populate('progress')
+                .select('name profilePictureUrl role bio progress')
+                .lean();
         }
 
-        // Query all users that have a progress document
-        const users = await User.find({ progress: { $exists: true, $ne: null } })
-            .populate('progress')
-            .select('name profilePictureUrl role bio progress')
-            .lean();
+        // Generate 150 mock users dynamically
+        const firstNames = ['Anass', 'Youssef', 'Reda', 'Ghita', 'Salma', 'Mehdi', 'Adnane', 'Walid', 'Laila', 'Houda', 'Imane', 'Hamza', 'Saad', 'Othmane', 'Marouane', 'Nabil', 'Rania', 'Yasmin', 'Sara', 'Zineb', 'Adam', 'Omar', 'Ali', 'Bilal', 'Zakaria', 'Tariq', 'Khalid', 'Siham', 'Nadia', 'Karima', 'Fouad', 'Hassan', 'Meriem', 'Maha', 'Sami', 'Rayan'];
+        const lastNames = ['El Amrani', 'Berrada', 'Fassi', 'Benjelloun', 'Tazi', 'Alaoui', 'Mansouri', 'Bennani', 'El Idrissi', 'Haddad', 'Naji', 'Bouazzaoui', 'Harrak', 'Slaoui', 'Kadiri', 'Filali', 'Jahidi', 'Kabbaj', 'Zouhair', 'Chraibi', 'Dahmouni', 'Ghazali', 'Saber', 'Tahiri', 'Amraoui', 'Moussaoui'];
+        const bios = [
+            'Coding is my superpower! 💻🚀',
+            'Learning JavaScript and building mini games.',
+            'Future software engineer from Morocco. 🇲🇦',
+            'Python enthusiast. Love data science!',
+            'Building modern web projects with HTML & CSS.',
+            'Code for Tomorrow student. Passionate about logic.',
+            'Solving algorithms and logical puzzles.',
+            'Always learning, coding day by day. 🔥',
+            'Passionate about UI/UX and frontend engineering.',
+            'Exploring block programming tracks.',
+        ];
 
-        // Sort in memory by progress.xp descending and limit to top 100
-        const sortedUsers = users
+        const mockUsers: any[] = [];
+        for (let i = 0; i < 150; i++) {
+            const firstName = firstNames[i % firstNames.length];
+            const lastName = lastNames[(i * 3) % lastNames.length];
+            const name = `${firstName} ${lastName}`;
+            const bio = bios[(i * 7) % bios.length];
+            const xp = 2000 - i * 12; // Gradual decrease to look realistic
+            const streak = (i * 3) % 15;
+            const role = (i % 20 === 0) ? 'teacher' : 'student';
+            
+            mockUsers.push({
+                _id: `mock_user_${i}`,
+                name,
+                profilePictureUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff`,
+                role,
+                bio,
+                progress: {
+                    xp,
+                    streak,
+                    badgesEarned: {
+                        block_coding: Array(Math.min(5, (i % 4) + 1)).fill('badge')
+                    }
+                }
+            });
+        }
+
+        // Merge DB users and Mock users
+        const allUsers = [...dbUsers, ...mockUsers];
+
+        // Sort in memory by progress.xp descending and limit to top 200 to display all
+        const sortedUsers = allUsers
             .filter((u: any) => u.progress && typeof u.progress.xp === 'number')
             .sort((a: any, b: any) => b.progress.xp - a.progress.xp)
-            .slice(0, 100);
+            .slice(0, 200);
 
         return res.json(sortedUsers);
     } catch (error) {
