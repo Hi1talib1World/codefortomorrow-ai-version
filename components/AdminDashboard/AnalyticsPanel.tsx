@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { analytics } from '../../services/firebase';
+import { analytics } from '../../src/services/external/firebase';
 import { logEvent } from 'firebase/analytics';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'motion/react';
