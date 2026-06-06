@@ -1,7 +1,5 @@
-
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { seedMockData } from './seeder';
 
 let mongoUri = process.env.MONGO_URI;
 // If no URI or pointing to localhost, fall back to in‑memory MongoDB
@@ -41,9 +39,6 @@ const connectDB = async () => {
       bufferCommands: false, // Don't buffer operations when disconnected — fail fast
     });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-    
-    // Seed mock data if database is empty
-    await seedMockData();
   } catch (error) {
     const errorMessage = (error as Error).message;
     console.error(`❌ Error connecting to MongoDB: ${errorMessage}`);
