@@ -1,6 +1,6 @@
 import express from 'express';
-import { createActivity, getTeacherActivities, getActivityById, deleteActivity } from '../controllers/activity.controller';
-import { protect } from '../middleware/auth.middleware';
+import { createActivity, getTeacherActivities, getActivityById, deleteActivity } from './activity.controller';
+import { protect } from '../../../src/core/permissions/auth.middleware';
 
 const router = express.Router();
 
