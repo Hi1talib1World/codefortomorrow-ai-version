@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import Message from '../models/Message';
-import User from '../models/user.model';
+import Message from '../../models/Message';
+import User from '../../models/user.model';
 
 /**
  * @desc    Send a message
