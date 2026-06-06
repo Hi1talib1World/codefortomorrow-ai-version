@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { recordEventEmission } from './eventLog.service';
+import { recordEventEmission } from './processors/eventLog.processor';
 
 /**
  * Compile-time safe constants for all system events.
