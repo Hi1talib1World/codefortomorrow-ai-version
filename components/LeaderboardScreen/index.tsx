@@ -43,13 +43,105 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
       try {
         setLoading(true);
         const data: LeaderboardEntry[] = await api.getLeaderboard();
-        const sorted = data
+        let sorted = data
           .filter((u) => u.progress)
           .sort((a, b) => (b.progress?.xp || 0) - (a.progress?.xp || 0));
+
+        // Client-side fallback: ensure there are at least 150 mock users for the leaderboard
+        if (sorted.length < 150) {
+          const firstNames = ['Anass', 'Youssef', 'Reda', 'Ghita', 'Salma', 'Mehdi', 'Adnane', 'Walid', 'Laila', 'Houda', 'Imane', 'Hamza', 'Saad', 'Othmane', 'Marouane', 'Nabil', 'Rania', 'Yasmin', 'Sara', 'Zineb', 'Adam', 'Omar', 'Ali', 'Bilal', 'Zakaria', 'Tariq', 'Khalid', 'Siham', 'Nadia', 'Karima', 'Fouad', 'Hassan', 'Meriem', 'Maha', 'Sami', 'Rayan'];
+          const lastNames = ['El Amrani', 'Berrada', 'Fassi', 'Benjelloun', 'Tazi', 'Alaoui', 'Mansouri', 'Bennani', 'El Idrissi', 'Haddad', 'Naji', 'Bouazzaoui', 'Harrak', 'Slaoui', 'Kadiri', 'Filali', 'Jahidi', 'Kabbaj', 'Zouhair', 'Chraibi', 'Dahmouni', 'Ghazali', 'Saber', 'Tahiri', 'Amraoui', 'Moussaoui'];
+          const bios = [
+            'Coding is my superpower! 💻🚀',
+            'Learning JavaScript and building mini games.',
+            'Future software engineer from Morocco. 🇲🇦',
+            'Python enthusiast. Love data science!',
+            'Building modern web projects with HTML & CSS.',
+            'Code for Tomorrow student. Passionate about logic.',
+            'Solving algorithms and logical puzzles.',
+            'Always learning, coding day by day. 🔥',
+            'Passionate about UI/UX and frontend engineering.',
+            'Exploring block programming tracks.',
+          ];
+
+          const needed = 150 - sorted.length;
+          // Determine the starting XP for the mock padding so they rank below real users or follow a nice curve
+          const startXp = sorted.length > 0 ? (sorted[sorted.length - 1].progress?.xp || 500) - 10 : 2000;
+
+          const padUsers: LeaderboardEntry[] = [];
+          for (let i = 0; i < needed; i++) {
+            const firstName = firstNames[i % firstNames.length];
+            const lastName = lastNames[(i * 3) % lastNames.length];
+            const name = `${firstName} ${lastName}`;
+            const bio = bios[(i * 7) % bios.length];
+            const xp = Math.max(10, startXp - i * 12);
+            const streak = (i * 3) % 15;
+            const role = (i % 20 === 0) ? 'teacher' : 'student';
+
+            padUsers.push({
+              _id: `mock_client_user_${i}`,
+              name,
+              profilePictureUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff`,
+              role,
+              bio,
+              progress: {
+                xp,
+                streak,
+                badgesEarned: {
+                  block_coding: Array(Math.min(5, (i % 4) + 1)).fill('badge')
+                }
+              }
+            });
+          }
+
+          sorted = [...sorted, ...padUsers].sort((a, b) => (b.progress?.xp || 0) - (a.progress?.xp || 0));
+        }
+
         setUsers(sorted);
       } catch (err) {
         console.error('Failed to fetch leaderboard:', err);
-        setUsers([]);
+        // Fallback: generate 150 mock users entirely
+        const firstNames = ['Anass', 'Youssef', 'Reda', 'Ghita', 'Salma', 'Mehdi', 'Adnane', 'Walid', 'Laila', 'Houda', 'Imane', 'Hamza', 'Saad', 'Othmane', 'Marouane', 'Nabil', 'Rania', 'Yasmin', 'Sara', 'Zineb', 'Adam', 'Omar', 'Ali', 'Bilal', 'Zakaria', 'Tariq', 'Khalid', 'Siham', 'Nadia', 'Karima', 'Fouad', 'Hassan', 'Meriem', 'Maha', 'Sami', 'Rayan'];
+        const lastNames = ['El Amrani', 'Berrada', 'Fassi', 'Benjelloun', 'Tazi', 'Alaoui', 'Mansouri', 'Bennani', 'El Idrissi', 'Haddad', 'Naji', 'Bouazzaoui', 'Harrak', 'Slaoui', 'Kadiri', 'Filali', 'Jahidi', 'Kabbaj', 'Zouhair', 'Chraibi', 'Dahmouni', 'Ghazali', 'Saber', 'Tahiri', 'Amraoui', 'Moussaoui'];
+        const bios = [
+          'Coding is my superpower! 💻🚀',
+          'Learning JavaScript and building mini games.',
+          'Future software engineer from Morocco. 🇲🇦',
+          'Python enthusiast. Love data science!',
+          'Building modern web projects with HTML & CSS.',
+          'Code for Tomorrow student. Passionate about logic.',
+          'Solving algorithms and logical puzzles.',
+          'Always learning, coding day by day. 🔥',
+          'Passionate about UI/UX and frontend engineering.',
+          'Exploring block programming tracks.',
+        ];
+
+        const fallbackUsers: LeaderboardEntry[] = [];
+        for (let i = 0; i < 150; i++) {
+          const firstName = firstNames[i % firstNames.length];
+          const lastName = lastNames[(i * 3) % lastNames.length];
+          const name = `${firstName} ${lastName}`;
+          const bio = bios[(i * 7) % bios.length];
+          const xp = 2000 - i * 12;
+          const streak = (i * 3) % 15;
+          const role = (i % 20 === 0) ? 'teacher' : 'student';
+
+          fallbackUsers.push({
+            _id: `mock_client_fallback_${i}`,
+            name,
+            profilePictureUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff`,
+            role,
+            bio,
+            progress: {
+              xp,
+              streak,
+              badgesEarned: {
+                block_coding: Array(Math.min(5, (i % 4) + 1)).fill('badge')
+              }
+            }
+          });
+        }
+        setUsers(fallbackUsers);
       } finally {
         setLoading(false);
       }
