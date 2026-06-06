@@ -52,6 +52,108 @@ interface Post {
   updatedAt: string;
 }
 
+const generateMockPosts = (): Post[] => {
+  const mockAuthors: PostAuthor[] = [
+    { _id: 'mock_author_1', name: 'Youssef El Amrani', profilePictureUrl: 'https://ui-avatars.com/api/?name=Youssef+El+Amrani&background=0284c7&color=fff', role: 'student', professionalTitle: 'Student Coder' },
+    { _id: 'mock_author_2', name: 'Ghita Berrada', profilePictureUrl: 'https://ui-avatars.com/api/?name=Ghita+Berrada&background=10b981&color=fff', role: 'student', professionalTitle: 'Student Coder' },
+    { _id: 'mock_author_3', name: 'Dr. Amina Bennani', profilePictureUrl: 'https://ui-avatars.com/api/?name=Amina+Bennani&background=8b5cf6&color=fff', role: 'teacher', professionalTitle: 'Computer Science Professor' },
+    { _id: 'mock_author_4', name: 'Reda Fassi', profilePictureUrl: 'https://ui-avatars.com/api/?name=Reda+Fassi&background=f59e0b&color=fff', role: 'student', professionalTitle: 'Student Front-End Developer' },
+    { _id: 'mock_author_5', name: 'Mohamed El Fassi', profilePictureUrl: 'https://ui-avatars.com/api/?name=Mohamed+El+Fassi&background=ec4899&color=fff', role: 'teacher', professionalTitle: 'Lead Scratch Mentor' },
+    { _id: 'mock_author_6', name: 'Salma Benjelloun', profilePictureUrl: 'https://ui-avatars.com/api/?name=Salma+Benjelloun&background=3b82f6&color=fff', role: 'student', professionalTitle: 'Student Coder' },
+    { _id: 'mock_author_7', name: 'Mehdi Tazi', profilePictureUrl: 'https://ui-avatars.com/api/?name=Mehdi+Tazi&background=ef4444&color=fff', role: 'student', professionalTitle: 'Student Python Developer' }
+  ];
+
+  const postsData = [
+    {
+      author: mockAuthors[0],
+      content: 'Just solved the recursive Fibonacci challenge in Javascript! 🤯 It took me 2 hours, but seeing the call stack visually made it click. Next stop: Dynamic Programming!',
+      milestone: {
+        type: 'xp' as const,
+        title: 'Reached 1200 Total XP!',
+        value: 1200
+      },
+      likes: ['mock_author_2', 'mock_author_3'],
+      comments: [
+        {
+          author: mockAuthors[2],
+          content: 'Excellent, Youssef! Recursion is tough but fundamental. Try to think about the time complexity of the naive recursion vs memoization next.',
+          createdAt: new Date(Date.now() - 3600000 * 2).toISOString()
+        }
+      ],
+      createdAt: new Date(Date.now() - 3600000 * 3).toISOString()
+    },
+    {
+      author: mockAuthors[1],
+      content: 'Loving the Block Coding tracks! 🚀 Just built a mini maze solver script using repeat-until loops. It feels so cool to see the robot navigate automatically.',
+      milestone: {
+        type: 'streak' as const,
+        title: 'Hit a 10-Day Streak!',
+        value: 10
+      },
+      likes: ['mock_author_4', 'mock_author_5'],
+      comments: [
+        {
+          author: mockAuthors[4],
+          content: 'Keep up the amazing work Ghita! You are ready to start exploring Javascript soon!',
+          createdAt: new Date(Date.now() - 3600000 * 4).toISOString()
+        }
+      ],
+      createdAt: new Date(Date.now() - 3600000 * 5).toISOString()
+    },
+    {
+      author: mockAuthors[3],
+      content: 'Hey everyone, does anyone know the difference between CSS Flexbox and Grid? When should I use one over the other? 🤔',
+      likes: ['mock_author_0', 'mock_author_6'],
+      comments: [
+        {
+          author: mockAuthors[5],
+          content: 'Grid is great for two-dimensional layouts (rows AND columns), whereas Flexbox is best for one-dimensional layouts (either rows OR columns). I usually use Flexbox for navbar items and Grid for page structure!',
+          createdAt: new Date(Date.now() - 3600000 * 7).toISOString()
+        }
+      ],
+      createdAt: new Date(Date.now() - 3600000 * 8).toISOString()
+    },
+    {
+      author: mockAuthors[4],
+      content: 'Had a wonderful block programming session with the middle school class today. They built interactive storyboards using conditional events. Teaching logic is so rewarding! 🎨🤖',
+      likes: ['mock_author_2', 'mock_author_3', 'mock_author_0'],
+      comments: [],
+      createdAt: new Date(Date.now() - 3600000 * 12).toISOString()
+    },
+    {
+      author: mockAuthors[5],
+      content: 'Just reached Level 4 in the Web Development pathway! 💻 Built a simple responsive personal portfolio page. Styling with CSS variables is super clean.',
+      milestone: {
+        type: 'level' as const,
+        title: 'Reached Level 4!',
+        value: 4
+      },
+      likes: ['mock_author_1', 'mock_author_3'],
+      comments: [],
+      createdAt: new Date(Date.now() - 3600000 * 18).toISOString()
+    },
+    {
+      author: mockAuthors[6],
+      content: 'Python is amazing! 🐍 I just wrote a script to automate downloading my favorite music playlists. Combining logic and real-world tools is satisfying.',
+      likes: ['mock_author_0', 'mock_author_4'],
+      comments: [
+        {
+          author: mockAuthors[0],
+          content: 'That sounds awesome! Are you using the pytube library?',
+          createdAt: new Date(Date.now() - 3600000 * 20).toISOString()
+        }
+      ],
+      createdAt: new Date(Date.now() - 3600000 * 24).toISOString()
+    }
+  ];
+
+  return postsData.map((post, idx) => ({
+    _id: `mock_post_client_${idx}`,
+    ...post,
+    updatedAt: post.createdAt
+  }));
+};
+
 const FeedScreen: React.FC<FeedScreenProps> = ({ currentUser }) => {
   const { language } = useLanguage();
   const { showToast } = useToast();
@@ -147,10 +249,16 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ currentUser }) => {
     try {
       setLoading(true);
       const data = await api.getPosts();
-      setPosts(data);
+      const mockPosts = generateMockPosts();
+      
+      // Merge backend posts and frontend mock posts, sorting by newest first
+      const allPosts = [...data, ...mockPosts].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      setPosts(allPosts);
     } catch (error) {
       console.error('Failed to load posts:', error);
-      showToast(texts.errorMessage, 'error');
+      setPosts(generateMockPosts());
     } finally {
       setLoading(false);
     }
