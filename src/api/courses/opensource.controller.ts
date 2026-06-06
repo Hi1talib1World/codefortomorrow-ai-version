@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { AIEngine } from '../services/aiEngine';
+import { AIEngine } from '../../core/ai-coach/aiEngine';
 import { JSDOM } from 'jsdom';
 
 // Simple TTL cache implementation
