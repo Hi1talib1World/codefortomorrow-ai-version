@@ -49,7 +49,7 @@ export const seedMockData = async () => {
         lastAIUpdate: new Date()
       },
       lastLessonCompletedDate: new Date(Date.now() - 3600000 * 4), // 4 hours ago
-      lastLeaderboardRank: 2
+      lastLeaderboardRank: 3
     });
 
     // Student 1: Yassine Benslimane (XP: 1500, rank 1)
@@ -74,7 +74,7 @@ export const seedMockData = async () => {
       lastLeaderboardRank: 1
     });
 
-    // Student 2: Sofia Alami (XP: 1100, rank 3)
+    // Student 2: Sofia Alami (XP: 1100, rank 2)
     const sofiaProgress = await Progress.create({
       xp: 1100,
       streak: 7,
@@ -93,10 +93,32 @@ export const seedMockData = async () => {
         lastAIUpdate: new Date()
       },
       lastLessonCompletedDate: new Date(Date.now() - 3600000 * 18), // 18 hours ago
-      lastLeaderboardRank: 3
+      lastLeaderboardRank: 2
     });
 
-    // Student 3: Amine Kadiri (XP: 800)
+    // Student 3: Kenza Alaoui (XP: 950)
+    const kenzaProgress = await Progress.create({
+      xp: 950,
+      streak: 6,
+      completedLessons: new Map([
+        ['block_coding', [1, 2, 3, 4, 5]],
+        ['javascript', [1]]
+      ]),
+      skillMastery: new Map([
+        ['block_coding', 75],
+        ['javascript', 25]
+      ]),
+      learningProfile: {
+        strengths: ['HTML Structure', 'Inline Styles'],
+        weaknesses: ['JavaScript Loops'],
+        recommendations: ['Solve the repeat loops challenges in block coding', 'Practice CSS Grid layouts'],
+        lastAIUpdate: new Date()
+      },
+      lastLessonCompletedDate: new Date(Date.now() - 3600000 * 5), // 5 hours ago
+      lastLeaderboardRank: 4
+    });
+
+    // Student 4: Amine Kadiri (XP: 800)
     const amineProgress = await Progress.create({
       xp: 800,
       streak: 4,
@@ -113,10 +135,30 @@ export const seedMockData = async () => {
         lastAIUpdate: new Date()
       },
       lastLessonCompletedDate: new Date(Date.now() - 3600000 * 25), // 25 hours ago
-      lastLeaderboardRank: 4
+      lastLeaderboardRank: 5
     });
 
-    // Student 4: Lina Tagma (XP: 450)
+    // Student 5: Karim Tazi (XP: 620)
+    const karimProgress = await Progress.create({
+      xp: 620,
+      streak: 3,
+      completedLessons: new Map([
+        ['block_coding', [1, 2, 3]]
+      ]),
+      skillMastery: new Map([
+        ['block_coding', 55]
+      ]),
+      learningProfile: {
+        strengths: ['Variable Declarations'],
+        weaknesses: ['Function Scopes'],
+        recommendations: ['Review the block scope vs function scope Javascript lesson'],
+        lastAIUpdate: new Date()
+      },
+      lastLessonCompletedDate: new Date(Date.now() - 3600000 * 30), // 30 hours ago
+      lastLeaderboardRank: 6
+    });
+
+    // Student 6: Lina Tagma (XP: 450)
     const linaProgress = await Progress.create({
       xp: 450,
       streak: 2,
@@ -133,12 +175,34 @@ export const seedMockData = async () => {
         lastAIUpdate: new Date()
       },
       lastLessonCompletedDate: new Date(Date.now() - 3600000 * 12), // 12 hours ago
-      lastLeaderboardRank: 5
+      lastLeaderboardRank: 7
+    });
+
+    // Student 7: Fatima Zahra (XP: 300)
+    const fatimaProgress = await Progress.create({
+      xp: 300,
+      streak: 1,
+      completedLessons: new Map([
+        ['block_coding', [1]]
+      ]),
+      skillMastery: new Map([
+        ['block_coding', 30]
+      ]),
+      learningProfile: {
+        strengths: ['Drag-and-drop sequencing'],
+        weaknesses: ['Logic operators'],
+        recommendations: ['Try the conditional maze levels'],
+        lastAIUpdate: new Date()
+      },
+      lastLessonCompletedDate: new Date(Date.now() - 3600000 * 48), // 48 hours ago
+      lastLeaderboardRank: 8
     });
 
     // Empty Progress documents for Teachers
     const aminaProg = await Progress.create({ xp: 0, streak: 0 });
     const mohamedProg = await Progress.create({ xp: 0, streak: 0 });
+    const tarikProg = await Progress.create({ xp: 0, streak: 0 });
+    const leilaProg = await Progress.create({ xp: 0, streak: 0 });
 
     // 4. Create Users
     
@@ -183,6 +247,32 @@ export const seedMockData = async () => {
       emailVerified: true
     });
 
+    const teacherTarik = await User.create({
+      name: 'Dr. Tarik Mansouri',
+      email: 'tarik@cft.org',
+      password: passwordHash,
+      role: 'teacher',
+      profilePictureUrl: 'https://ui-avatars.com/api/?name=Tarik+Mansouri&background=3b82f6&color=fff',
+      progress: tarikProg._id,
+      bio: 'Data Science researcher at UM6P. Passionate about teaching Python, data visualization, and machine learning to young minds.',
+      professionalTitle: 'Data Science Mentor',
+      skills: ['Python', 'Data Science', 'Machine Learning', 'Pandas', 'SQL'],
+      emailVerified: true
+    });
+
+    const teacherLeila = await User.create({
+      name: 'Leila Haddad',
+      email: 'leila@cft.org',
+      password: passwordHash,
+      role: 'teacher',
+      profilePictureUrl: 'https://ui-avatars.com/api/?name=Leila+Haddad&background=ec4899&color=fff',
+      progress: leilaProg._id,
+      bio: 'Full-Stack Developer and bootcamp instructor. Guiding students in building responsive websites with HTML, CSS, and modern JavaScript.',
+      professionalTitle: 'Web Development Mentor',
+      skills: ['JavaScript', 'React', 'CSS Flexbox/Grid', 'Git', 'UX/UI'],
+      emailVerified: true
+    });
+
     // Students
     const studentYassine = await User.create({
       name: 'Yassine Benslimane',
@@ -210,6 +300,19 @@ export const seedMockData = async () => {
       emailVerified: true
     });
 
+    const studentKenza = await User.create({
+      name: 'Kenza Alaoui',
+      email: 'kenza@cft.org',
+      password: passwordHash,
+      role: 'student',
+      profilePictureUrl: 'https://ui-avatars.com/api/?name=Kenza+Alaoui&background=14b8a6&color=fff',
+      progress: kenzaProgress._id,
+      bio: 'Love creating responsive web interfaces and styling pages.',
+      professionalTitle: 'Student Front-End Developer',
+      skills: ['HTML', 'CSS', 'Figma'],
+      emailVerified: true
+    });
+
     const studentAmine = await User.create({
       name: 'Amine Kadiri',
       email: 'amine@cft.org',
@@ -223,6 +326,19 @@ export const seedMockData = async () => {
       emailVerified: true
     });
 
+    const studentKarim = await User.create({
+      name: 'Karim Tazi',
+      email: 'karim@cft.org',
+      password: passwordHash,
+      role: 'student',
+      profilePictureUrl: 'https://ui-avatars.com/api/?name=Karim+Tazi&background=6366f1&color=fff',
+      progress: karimProgress._id,
+      bio: 'Passionate about building logic games and algorithms.',
+      professionalTitle: 'Student Python Developer',
+      skills: ['Python', 'Block Coding'],
+      emailVerified: true
+    });
+
     const studentLina = await User.create({
       name: 'Lina Tagma',
       email: 'lina@cft.org',
@@ -233,6 +349,19 @@ export const seedMockData = async () => {
       bio: 'Exploring block programming concepts.',
       professionalTitle: 'Student Coder',
       skills: ['Scratch'],
+      emailVerified: true
+    });
+
+    const studentFatima = await User.create({
+      name: 'Fatima Zahra',
+      email: 'fatima@cft.org',
+      password: passwordHash,
+      role: 'student',
+      profilePictureUrl: 'https://ui-avatars.com/api/?name=Fatima+Zra&background=f43f5e&color=fff',
+      progress: fatimaProgress._id,
+      bio: 'Beginning coder. Excited to start the block coding pathways!',
+      professionalTitle: 'Beginning Coder',
+      skills: ['Block Coding'],
       emailVerified: true
     });
 
@@ -261,8 +390,11 @@ export const seedMockData = async () => {
     await makeSkillStates(adminUser._id.toString(), { block_coding: 85, javascript: 60, python: 45 });
     await makeSkillStates(studentYassine._id.toString(), { block_coding: 95, javascript: 75 });
     await makeSkillStates(studentSofia._id.toString(), { block_coding: 80, javascript: 50 });
+    await makeSkillStates(studentKenza._id.toString(), { block_coding: 75, javascript: 25 });
     await makeSkillStates(studentAmine._id.toString(), { block_coding: 70 });
+    await makeSkillStates(studentKarim._id.toString(), { block_coding: 55 });
     await makeSkillStates(studentLina._id.toString(), { block_coding: 40 });
+    await makeSkillStates(studentFatima._id.toString(), { block_coding: 30 });
 
     // 6. Create Courses, Lessons, and Exercises
     
@@ -428,7 +560,7 @@ export const seedMockData = async () => {
     await Notification.create({
       userId: adminUser._id.toString(),
       title: 'Rank Up! 🏆',
-      message: 'Congratulations! You climbed to Rank #2 on the global leaderboard.',
+      message: 'Congratulations! You climbed to Rank #3 on the global leaderboard.',
       type: 'leaderboard_rank_change',
       read: false
     });
