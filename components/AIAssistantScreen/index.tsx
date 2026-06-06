@@ -358,7 +358,7 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser }) =>
           {messages.map((msg, i) => (
             <div key={i} className={`flex gap-3 max-w-[85%] ${msg.sender === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.sender === 'user' ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-cyan-400'}`}>
-                {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
+                {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
               </div>
               <div>
                 <div className={`p-4 rounded-3xl text-sm ${
@@ -390,7 +390,7 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser }) =>
           {isLoading && (
             <div className="flex gap-3 max-w-[85%] mr-auto">
               <div className="w-8 h-8 rounded-full bg-slate-700 text-cyan-400 flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-4 h-4" />
+                <Bot className="w-4 h-4" />
               </div>
               <div className="p-4 rounded-3xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-tl-none shadow-sm flex items-center justify-center">
                 <div className="flex items-center space-x-1 px-2 py-0.5">
