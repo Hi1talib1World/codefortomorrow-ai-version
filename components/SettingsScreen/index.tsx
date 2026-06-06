@@ -11,7 +11,7 @@ import {
   Volume2, 
   VolumeX, 
   Bell, 
-  Sparkles, 
+  Brain, 
   Trash2, 
   ShieldAlert, 
   MessageSquare,
@@ -264,7 +264,7 @@ const SettingsScreen: React.FC = () => {
             <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-850">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-[#111827]/5 dark:bg-[#FBBF24]/15 rounded-xl text-slate-700 dark:text-amber-400">
-                  <Sparkles className="w-6 h-6" />
+                  <Brain className="w-6 h-6" />
                 </div>
                 <div>
                   <h4 className="font-extrabold text-base text-slate-800 dark:text-slate-200">AI Coach Insights</h4>
