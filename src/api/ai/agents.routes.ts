@@ -1,7 +1,7 @@
 import express from 'express';
-import { getActiveAgents, sendMessageToAgent, streamAgentEvents, pauseAgent, resumeAgent } from '../controllers/agents.controller';
-import { protect } from '../middleware/auth.middleware';
-import { adminOnly } from '../middleware/admin.middleware';
+import { getActiveAgents, sendMessageToAgent, streamAgentEvents, pauseAgent, resumeAgent } from '../ai/agents.controller';
+import { protect } from '../../../src/core/permissions/auth.middleware';
+import { adminOnly } from '../../../src/core/permissions/admin.middleware';
 
 const router = express.Router();
 
