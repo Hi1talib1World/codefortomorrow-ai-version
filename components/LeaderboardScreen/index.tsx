@@ -11,6 +11,7 @@ import {
   Crown,
   Sparkles,
   TrendingUp,
+  Award,
 } from 'lucide-react';
 
 interface LeaderboardScreenProps {
@@ -120,7 +121,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
             >
               {tab === 'all' && <Users className="w-4 h-4" />}
               {tab === 'student' && <GraduationCap className="w-4 h-4" />}
-              {tab === 'teacher' && <Sparkles className="w-4 h-4" />}
+              {tab === 'teacher' && <Award className="w-4 h-4" />}
               {tab === 'all' ? 'All' : tab === 'student' ? 'Students' : 'Teachers'}
             </button>
           ))}
