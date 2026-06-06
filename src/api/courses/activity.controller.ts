@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Activity from '../models/Activity';
+import Activity from '../../models/Activity';
 
 /**
  * @desc    Create a new classroom activity
