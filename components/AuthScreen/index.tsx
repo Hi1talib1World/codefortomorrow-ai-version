@@ -392,6 +392,24 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
     }
   };
 
+  // Anonymous login handler
+  const handleAnonymousLogin = async () => {
+    setError('');
+    setIsLoading(true);
+    try {
+      const token = await firebaseService.loginAnonymously();
+      console.log('Anonymous login token:', token);
+      const user = await api.loginWithFirebase(token);
+      onAuthSuccess(user);
+    } catch (err) {
+      console.error('Anonymous login error:', err);
+      setError(err instanceof Error ? err.message : 'Anonymous login failed.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value as Language);
   };
@@ -719,7 +737,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
                     <a href="/dashboard/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#FBBF24] hover:underline font-semibold">
                       Privacy Policy
                     </a>
-                  </span>
+              </span>
                 </label>
               )}
 
@@ -742,6 +760,16 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
                   </svg>
                 )}
                 {isLoading ? '...' : (isLoginView ? t('login') : t('create_account'))}
+              </button>
+
+              {/* Anonymous login button */}
+              <button
+                type="button"
+                onClick={handleAnonymousLogin}
+                disabled={isLoading}
+                className="mt-4 w-full py-3 rounded-full bg-[#333] hover:bg-[#555] text-white font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? '...' : 'Continue as Guest'}
               </button>
             </form>
           )}

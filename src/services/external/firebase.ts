@@ -7,7 +7,7 @@ import {
   signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
-  GoogleAuthProvider
+  GoogleAuthProvider, signInAnonymously
 } from 'firebase/auth';
 
 // Helper to read environment variables safely in both Vite and Node environments without compiler errors.
@@ -108,6 +108,12 @@ export const firebaseService = {
   // New method for redirect flow
   loginWithGoogleRedirect: async (): Promise<void> => {
     await signInWithRedirect(auth, googleProvider);
+  },
+  // Anonymous sign-in method
+  loginAnonymously: async (): Promise<string> => {
+    const userCredential = await signInAnonymously(auth);
+    const idToken = await userCredential.user.getIdToken();
+    return idToken;
   },
 };
 
