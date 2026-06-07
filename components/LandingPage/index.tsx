@@ -19,33 +19,6 @@ const AnimatedSection: React.FC<{ children: React.ReactNode, className?: string 
   return <motion.div ref={ref} initial={{ opacity: 0, y: 50 }} animate={controls} className={className}>{children}</motion.div>;
 };
 
-const statsTranslations = {
-  en: {
-    title: "Key Achievements",
-    studentsVal: "17", studentsSub: "students connected from 7 am to 9 pm after change to 0 students to 7 am", studentsDesc: "Active students learning on our platforms right now",
-    viewsVal: "10M", viewsSub: "Views", viewsDesc: "Across our digital platforms",
-    expsVal: "400", expsSub: "Experiments", expsDesc: "Produced and filmed by Science Street",
-    festsVal: "22+", festsSub: "Science Festivals", festsDesc: "Across the Middle East and North Africa",
-    showsVal: "50", showsSub: "Science Shows", showsDesc: "Presented to all ages and students in a fun, interactive way"
-  },
-  fr: {
-    title: "Principales Réalisations",
-    studentsVal: "17", studentsSub: "étudiants connectés de 7h à 21h après passage à 0 étudiant à 7h", studentsDesc: "étantiants connectés en direct sur nos plateformes",
-    viewsVal: "10M", viewsSub: "de vues", viewsDesc: "Sur nos plateformes numériques",
-    expsVal: "400", expsSub: "Expériences", expsDesc: "Produites et filmées par Science Street",
-    festsVal: "22+", festsSub: "Festivals de sciences", festsDesc: "À travers le Moyen-Orient et l'Afrique du Nord",
-    showsVal: "50", showsSub: "Spectacles scientifiques", showsDesc: "Présentés à tous les âges et aux étudiants de manière interactive"
-  },
-  ar: {
-    title: "أهم الإنجازات",
-    studentsVal: "17", studentsSub: "طالب متصلين من 7 صباحاً إلى 9 مساءً بعد التغيير إلى 0 طالب حتى 7 صباحاً", studentsDesc: "طالب يتعلمون الآن عبر الإنترنت على منصاتنا",
-    viewsVal: "10 مليون", viewsSub: "مشاهدة", viewsDesc: "عبر منصاتنا الرقمية",
-    expsVal: "400", expsSub: "تجربة", expsDesc: "تم انتاجها وتصويرها من شارع العلوم",
-    festsVal: "22+", festsSub: "مهرجانات علمية", festsDesc: "في جميع أنحاء الشرق الأوسط وشمال أفريقيا",
-    showsVal: "50", showsSub: "عروض علمية", showsDesc: "مقدم لجميع الأعمار والطلاب بأسلوب تفاعلي ممتع"
-  }
-};
-
 const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void }> = ({ currentUser, onGetStarted }) => {
   const { language } = useLanguage();
   const port = window.location.port ? `:${window.location.port}` : '';
@@ -280,46 +253,6 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
         </AnimatedSection>
       </section>
 
-      {/* 5. Premium Social Proof & Stats */}
-      <section className="py-12 bg-white">
-        <AnimatedSection className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-extrabold text-[#111827] tracking-tight">{statsTranslations[language as 'en' | 'fr' | 'ar']?.title || statsTranslations.en.title}</h2>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            {[
-              { val: statsTranslations[language as 'en' | 'fr' | 'ar']?.studentsVal || statsTranslations.en.studentsVal, label: statsTranslations[language as 'en' | 'fr' | 'ar']?.studentsSub || statsTranslations.en.studentsSub },
-              { val: statsTranslations[language as 'en' | 'fr' | 'ar']?.viewsVal || statsTranslations.en.viewsVal, label: statsTranslations[language as 'en' | 'fr' | 'ar']?.viewsSub || statsTranslations.en.viewsSub },
-              { val: statsTranslations[language as 'en' | 'fr' | 'ar']?.expsVal || statsTranslations.en.expsVal, label: statsTranslations[language as 'en' | 'fr' | 'ar']?.expsSub || statsTranslations.en.expsSub },
-              { val: statsTranslations[language as 'en' | 'fr' | 'ar']?.festsVal || statsTranslations.en.festsVal, label: statsTranslations[language as 'en' | 'fr' | 'ar']?.festsSub || statsTranslations.en.festsSub }
-            ].map((stat, i) => (
-              <div key={i} className="text-center p-8 rounded-2xl border border-slate-200">
-                <div className="text-4xl font-black text-[#111827] mb-2">{stat.val}</div>
-                <div className="text-sm font-bold text-slate-500 uppercase tracking-widest">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { name: "Fatima Z.", role: "Parent", quote: "The curriculum is perfectly paced. My daughter went from zero coding knowledge to building her first game in weeks." },
-              { name: "Omar, Age 9", role: "Student", quote: "I love how the mascot explains things. It doesn't feel like school at all, it feels like I'm on a mission!" },
-              { name: "Mr. Ahmed", role: "STEM Educator", quote: "Finally, a platform that bridges the gap between block-based coding and real-world logic effectively." }
-            ].map(t => (
-              <div key={t.name} className="p-8 rounded-2xl border border-[#111827]/10 bg-white">
-                <div className="flex mt-2 mb-6 text-[#FBBF24] gap-1">
-                  {[...Array(5)].map((_, i) => <Star key={i} fill="currentColor" className="w-5 h-5" />)}
-                </div>
-                <p className="text-[#111827] text-lg leading-relaxed font-medium mb-8">"{t.quote}"</p>
-                <div>
-                  <h4 className="font-bold text-[#111827]">{t.name}</h4>
-                  <p className="text-slate-500 text-sm">{t.role}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </AnimatedSection>
       </section>
 
       {/* 6. Final Action Module (CTA Block) */}
