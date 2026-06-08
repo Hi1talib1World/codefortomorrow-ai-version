@@ -253,7 +253,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
         </AnimatedSection>
       </section>
 
-      </section>
+
 
       {/* 6. Final Action Module (CTA Block) */}
       <section className="py-16 bg-slate-50 border-t border-slate-200 text-center">
