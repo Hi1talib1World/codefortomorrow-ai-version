@@ -356,8 +356,8 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
         const emailVerified = decodedToken.email_verified ?? decodedToken.emailVerified;
         const isPasswordProvider = decodedToken.firebase?.sign_in_provider === 'password';
 
-        const email = decodedToken.email;
         const googleId = decodedToken.uid || decodedToken.sub;
+        const email = decodedToken.email || `guest_${googleId}@codefortomorrow.com`;
 
         // Query the database for the user to determine if they are an existing account
         const existingUser = await User.findOne({ 
@@ -380,7 +380,7 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
           picture: decodedToken.picture,
         });
 
-        const name = decodedToken.name || (email ? email.split('@')[0] : 'User');
+        const name = decodedToken.name || (decodedToken.email ? decodedToken.email.split('@')[0] : 'Guest User');
         const picture = decodedToken.picture || `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`;
 
         const isDbConnected = mongoose.connection.readyState === 1;
