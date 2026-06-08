@@ -71,7 +71,7 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
       {/* "START" static badge above next lesson */}
       {isNext && (
         <div
-          className="mb-1 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black px-3 py-1 rounded-lg shadow-md border border-slate-100 dark:border-slate-700 uppercase tracking-widest flex items-center gap-1"
+          className="absolute -top-7 left-1/2 -translate-x-1/2 z-20 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black px-3 py-1 rounded-lg shadow-md border border-slate-100 dark:border-slate-700 uppercase tracking-widest flex items-center gap-1 whitespace-nowrap animate-bounce"
         >
           START ⭐
         </div>
@@ -130,7 +130,7 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
 
       {/* XP stars below completed nodes */}
       {isCompleted && (
-        <div className="flex gap-0.5 mt-1">
+        <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 flex gap-0.5 z-20">
           <span className="text-yellow-400 text-[10px]">★</span>
           <span className="text-yellow-400 text-[10px]">★</span>
         </div>

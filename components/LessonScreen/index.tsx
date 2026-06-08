@@ -11,6 +11,7 @@ import {
     Trash2, Copy, ChevronDown, Check, X, Eye, EyeOff,
     Cpu, Layers, Activity
 } from 'lucide-react';
+import { useToast } from '../ToastNotification';
 
 const LazyAvatarCanvas = React.lazy(() => import('../AvatarCanvas'));
 
@@ -123,11 +124,13 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
     const [code, setCode] = useState("");
     const [output, setOutput] = useState('');
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+    const { showToast } = useToast();
     const [isRunning, setIsRunning] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
     const [aiHint, setAiHint] = useState<string | null>(null);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showHint, setShowHint] = useState(false);
+    const [showHintModal, setShowHintModal] = useState(false);
     const [mascotMood, setMascotMood] = useState('idle');
     const [aiContext, setAiContext] = useState<any>(null);
     const [outputHistory, setOutputHistory] = useState<{ id: number, text: string, type: 'info' | 'error' | 'success' }[]>([]);
@@ -663,18 +666,27 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
 
                     {/* Hint Display */}
                     {showHint && (
-                        <div className="bg-amber-950/20 p-3 rounded-xl border border-amber-500/20 space-y-2">
+                        <div className="bg-amber-950/20 p-3.5 rounded-xl border border-amber-500/20 space-y-3">
                             {lesson.hintKey && (
                                 <p className="text-amber-400 text-xs font-semibold">
                                     {t(lesson.hintKey as any)}
                                 </p>
                             )}
                             {lesson.solutionCode && (
-                                <div className="mt-2">
+                                <div className="space-y-2">
                                     <p className="text-[8px] font-black text-amber-500 uppercase mb-1">Expected Solution Blueprint:</p>
                                     <div className="bg-slate-950/80 p-2 rounded-lg font-mono text-[10px] text-slate-300 border border-slate-800 overflow-x-auto whitespace-pre">
                                         {lesson.solutionCode}
                                     </div>
+                                    <button
+                                        onClick={() => {
+                                            handleCodeChange(lesson.solutionCode);
+                                            showToast('Sample blueprint inserted! 💻', 'success');
+                                        }}
+                                        className="w-full py-2 bg-amber-500 hover:bg-amber-600 active:translate-y-0.5 border-b-4 border-amber-700 text-slate-950 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                                    >
+                                        <span>📋</span> Use Sample Blueprint
+                                    </button>
                                 </div>
                             )}
                         </div>
@@ -795,6 +807,16 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
 
                         {/* Right Header Toolbar Items */}
                         <div className="flex items-center gap-3">
+                            {/* Hint Button */}
+                            <button 
+                                onClick={() => setShowHintModal(true)}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-all cursor-pointer shadow-sm active:translate-y-0.5"
+                                title="Show Sample Hint"
+                            >
+                                <span>💡</span>
+                                <span>Hint</span>
+                            </button>
+
                             {/* Autocomplete active dot */}
                             <button 
                                 onClick={() => setIsAutocompleteEnabled(!isAutocompleteEnabled)}
@@ -1097,6 +1119,74 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                     </div>
                 </aside>
             </div>
+
+            {/* Hint Modal Overlay */}
+            {showHintModal && (
+                <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-[110] p-4">
+                    <div className="bg-slate-900 border-2 border-amber-500/40 rounded-3xl p-6 max-w-md w-full shadow-2xl relative space-y-6 text-left animate-pop-in">
+                        <button
+                            onClick={() => setShowHintModal(false)}
+                            className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer border-0 bg-transparent"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+
+                        <div className="flex items-center gap-2.5">
+                            <span className="text-3xl">💡</span>
+                            <div>
+                                <h3 className="text-lg font-black text-white uppercase tracking-tight">Lesson Hint & Sample</h3>
+                                <p className="text-xs text-slate-400 font-semibold mt-0.5">Need a hand? Here is a sample code pattern to help you solve this lesson!</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            {/* Instruction recap */}
+                            <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-850">
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Challenge Instruction</h4>
+                                <p className="text-xs text-slate-350 font-semibold leading-relaxed">
+                                    {t(lesson.challengeDescriptionKey as any)}
+                                </p>
+                            </div>
+
+                            {/* Dynamic AI / DB Hint */}
+                            {(lesson.hintKey || aiHint) && (
+                                <div className="bg-amber-950/20 p-3.5 rounded-xl border border-amber-500/10">
+                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-amber-400 mb-1">Coach Tip</h4>
+                                    <p className="text-xs text-amber-300 font-semibold leading-relaxed">
+                                        {aiHint || t(lesson.hintKey as any)}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* solutionCode blueprint */}
+                            {lesson.solutionCode && (
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Sample Code Blueprint</h4>
+                                        <span className="text-[9px] text-amber-500 font-bold uppercase">Ready to use</span>
+                                    </div>
+                                    <div className="bg-slate-950 p-3 rounded-xl font-mono text-xs text-slate-350 border border-slate-850 overflow-x-auto whitespace-pre max-h-48 scrollbar-thin">
+                                        {lesson.solutionCode}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {lesson.solutionCode && (
+                            <button
+                                onClick={() => {
+                                    handleCodeChange(lesson.solutionCode);
+                                    setShowHintModal(false);
+                                    showToast('Sample blueprint inserted! 💻', 'success');
+                                }}
+                                className="w-full py-3.5 bg-amber-500 hover:bg-amber-600 active:translate-y-0.5 border-b-4 border-amber-700 text-slate-950 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-lg"
+                            >
+                                <span>📋</span> Insert Sample into Editor
+                            </button>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
