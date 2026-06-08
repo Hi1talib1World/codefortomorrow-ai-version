@@ -7,7 +7,7 @@ import {
   signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
-  GoogleAuthProvider
+  GoogleAuthProvider, signInAnonymously
 } from 'firebase/auth';
 
 // Helper to read environment variables safely in both Vite and Node environments without compiler errors.
@@ -33,6 +33,19 @@ const firebaseConfig = {
   appId: getEnv('VITE_FIREBASE_APP_ID') || "1:141729201523:web:cedf520729cb9afb351906",
   measurementId: getEnv('VITE_FIREBASE_MEASUREMENT_ID') || "G-0B3EPSV742"
 };
+
+// Debug: output config (safe for public keys) to verify that env vars are loaded correctly
+if (process.env.NODE_ENV !== 'production') {
+  console.log('🔥 Firebase config loaded:', firebaseConfig);
+}
+
+// Warn if any placeholder values are still in use (helps catch missing env vars)
+const placeholderCheck = Object.entries(firebaseConfig).some(([, v]) =>
+  typeof v === 'string' && /placeholder|dummy|AIzaSy/.test(v)
+);
+if (placeholderCheck) {
+  console.warn('⚠️ Firebase config contains placeholder values – ensure Netlify env vars are set correctly.');
+}
 
 // Initialize Firebase App
 const app = initializeApp(firebaseConfig);
@@ -95,6 +108,12 @@ export const firebaseService = {
   // New method for redirect flow
   loginWithGoogleRedirect: async (): Promise<void> => {
     await signInWithRedirect(auth, googleProvider);
+  },
+  // Anonymous sign-in method
+  loginAnonymously: async (): Promise<string> => {
+    const userCredential = await signInAnonymously(auth);
+    const idToken = await userCredential.user.getIdToken();
+    return idToken;
   },
 };
 
