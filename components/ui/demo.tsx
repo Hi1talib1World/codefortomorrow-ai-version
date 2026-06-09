@@ -41,7 +41,7 @@ const timelineData = [
 
 export function RadialOrbitalTimelineDemo() {
   return (
-    <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative bg-black">
+    <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative">
       <RadialOrbitalTimeline timelineData={timelineData} />
     </div>
   );
