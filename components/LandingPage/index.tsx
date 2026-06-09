@@ -4,6 +4,8 @@ import { motion, useInView, useAnimation } from 'motion/react';
 import { Terminal, Play, CheckCircle, Menu, X, ArrowRight, BookOpen, Layers, Users, Star, MessageSquare, ChevronUp } from 'lucide-react';
 import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { RadialOrbitalTimelineDemo } from '@/components/ui/demo';
+
 
 const AnimatedSection: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
   const ref = useRef(null);
@@ -253,7 +255,24 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
         </AnimatedSection>
       </section>
 
+      {/* AI Agents Presentation */}
+      <section className="py-20 bg-[#060814] text-white overflow-hidden relative border-t border-[#111827]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.05)_0%,transparent_70%)] pointer-events-none" />
+        <div className="container mx-auto px-6 max-w-6xl relative z-10">
+          <AnimatedSection className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black mb-6">
+              Powered by <span className="text-[#FBBF24]">3 Specialized AI Agents</span>
+            </h2>
+            <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl leading-relaxed">
+              Explore how our autonomous multi-agent mesh optimizes every step of the learning, content synthesis, and school partnering process.
+            </p>
+          </AnimatedSection>
 
+          <AnimatedSection className="w-full">
+            <RadialOrbitalTimelineDemo />
+          </AnimatedSection>
+        </div>
+      </section>
 
       {/* 6. Final Action Module (CTA Block) */}
       <section className="py-16 bg-slate-50 border-t border-slate-200 text-center">
