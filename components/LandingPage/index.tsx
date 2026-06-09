@@ -256,10 +256,10 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
       </section>
 
       {/* AI Agents Presentation */}
-      <section className="py-20 bg-[#060814] text-white overflow-hidden relative border-t border-[#111827]">
+      <section className="pt-16 pb-8 bg-[#060814] text-white overflow-hidden relative border-t border-[#111827]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.05)_0%,transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-6 max-w-6xl relative z-10">
-          <AnimatedSection className="text-center mb-16">
+          <AnimatedSection className="text-center mb-6">
             <h2 className="text-4xl md:text-5xl font-black mb-6">
               Powered by <span className="text-[#FBBF24]">3 Specialized AI Agents</span>
             </h2>
