@@ -5,6 +5,7 @@ import { Terminal, Play, CheckCircle, Menu, X, ArrowRight, BookOpen, Layers, Use
 import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { RadialOrbitalTimelineDemo } from '@/components/ui/demo';
+import { GlowCard } from '@/components/ui/spotlight-card';
 
 
 const AnimatedSection: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
@@ -141,31 +142,43 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
 
             {/* Built-in Portal Grid */}
             <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto text-left">
-              <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="group flex flex-col h-full p-8 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-[#FBBF24]/50 hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(251,191,36,0.15)] transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#111827] border border-white/10 flex items-center justify-center overflow-hidden mb-6">
-                  <img src="/assets/images/logo.png" alt="CFT Academy" className="w-full h-full object-cover" />
-                </div>
-                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-[#FBBF24] transition-colors">CFT Academy</h3>
-                <p className="text-slate-400 leading-relaxed mb-6 flex-grow">Interactive coding adventures, gamified lessons, and curriculum builders tailored for all skill levels.</p>
-                <span className="inline-flex items-center text-[#FBBF24] font-bold text-sm">Enter Academy <ArrowRight className="w-4 h-4 ml-1" /></span>
+              <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="group flex flex-col h-full hover:-translate-y-1.5 transition-all duration-300">
+                <GlowCard glowColor="orange" customSize={true} className="p-8 h-full flex flex-col justify-between">
+                  <div className="flex-grow">
+                    <div className="w-12 h-12 rounded-xl bg-[#111827] border border-white/10 flex items-center justify-center overflow-hidden mb-6">
+                      <img src="/assets/images/logo.png" alt="CFT Academy" className="w-full h-full object-cover" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-[#FBBF24] transition-colors">CFT Academy</h3>
+                    <p className="text-slate-400 leading-relaxed mb-6">Interactive coding adventures, gamified lessons, and curriculum builders tailored for all skill levels.</p>
+                  </div>
+                  <span className="inline-flex items-center text-[#FBBF24] font-bold text-sm">Enter Academy <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" /></span>
+                </GlowCard>
               </a>
 
-              <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="group flex flex-col h-full p-8 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-[#FBBF24]/50 hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(251,191,36,0.15)] transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#111827] border border-white/10 flex items-center justify-center overflow-hidden mb-6">
-                  <img src="/assets/images/cftos_logo.jpg" alt="CFTOS" className="w-full h-full object-cover" />
-                </div>
-                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-[#FBBF24] transition-colors">CFTOS</h3>
-                <p className="text-slate-400 leading-relaxed mb-6 flex-grow">A collaborative environment for building autonomous AI agents and contributing to open-source software.</p>
-                <span className="inline-flex items-center text-[#FBBF24] font-bold text-sm">Open Platform <ArrowRight className="w-4 h-4 ml-1" /></span>
+              <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="group flex flex-col h-full hover:-translate-y-1.5 transition-all duration-300">
+                <GlowCard glowColor="purple" customSize={true} className="p-8 h-full flex flex-col justify-between">
+                  <div className="flex-grow">
+                    <div className="w-12 h-12 rounded-xl bg-[#111827] border border-white/10 flex items-center justify-center overflow-hidden mb-6">
+                      <img src="/assets/images/cftos_logo.jpg" alt="CFTOS" className="w-full h-full object-cover" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-[#FBBF24] transition-colors">CFTOS</h3>
+                    <p className="text-slate-400 leading-relaxed mb-6">A collaborative environment for building autonomous AI agents and contributing to open-source software.</p>
+                  </div>
+                  <span className="inline-flex items-center text-[#FBBF24] font-bold text-sm">Open Platform <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" /></span>
+                </GlowCard>
               </a>
 
-              <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="group flex flex-col h-full p-8 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-[#FBBF24]/50 hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(251,191,36,0.15)] transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#111827] border border-white/10 flex items-center justify-center text-[#FBBF24] mb-6">
-                  <Terminal className="w-6 h-6" />
-                </div>
-                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-[#FBBF24] transition-colors">Docs & Blog</h3>
-                <p className="text-slate-400 leading-relaxed mb-6 flex-grow">In-depth technical guides, tutorials, and insights authored by our community of engineers.</p>
-                <span className="inline-flex items-center text-[#FBBF24] font-bold text-sm">Read Docs <ArrowRight className="w-4 h-4 ml-1" /></span>
+              <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="group flex flex-col h-full hover:-translate-y-1.5 transition-all duration-300">
+                <GlowCard glowColor="blue" customSize={true} className="p-8 h-full flex flex-col justify-between">
+                  <div className="flex-grow">
+                    <div className="w-12 h-12 rounded-xl bg-[#111827] border border-white/10 flex items-center justify-center text-[#FBBF24] mb-6">
+                      <Terminal className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-[#FBBF24] transition-colors">Docs & Blog</h3>
+                    <p className="text-slate-400 leading-relaxed mb-6">In-depth technical guides, tutorials, and insights authored by our community of engineers.</p>
+                  </div>
+                  <span className="inline-flex items-center text-[#FBBF24] font-bold text-sm">Read Docs <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" /></span>
+                </GlowCard>
               </a>
             </div>
           </AnimatedSection>
