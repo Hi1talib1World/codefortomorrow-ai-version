@@ -43,23 +43,23 @@ const getPathStyle = (pathId: string) => {
 
 const getEnrolledCount = (pathId: string) => {
   const counts: Record<string, number> = {
-    block_coding: 14820,
-    python: 25430,
-    javascript: 21980,
-    web_dev: 18340,
-    sql: 11290,
-    java: 9450,
-    'c++': 8920,
-    c_sharp: 7650,
-    typescript: 12140,
-    rust: 6540,
-    go: 5980,
-    swift: 4870,
-    kotlin: 3950,
-    lua: 2640,
-    dart: 4120,
+    python: 284,
+    javascript: 256,
+    block_coding: 210,
+    web_dev: 195,
+    sql: 148,
+    typescript: 115,
+    java: 98,
+    'c++': 85,
+    c_sharp: 72,
+    rust: 64,
+    go: 58,
+    swift: 42,
+    kotlin: 36,
+    lua: 24,
+    dart: 18,
   };
-  const count = counts[pathId] || (Math.abs(pathId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 5000 + 1500);
+  const count = counts[pathId] || (Math.abs(pathId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 80 + 15);
   return count.toLocaleString();
 };
 
