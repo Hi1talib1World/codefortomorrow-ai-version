@@ -4,18 +4,28 @@ import path from 'path';
 
 async function run() {
   const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  // Create browser context
+  const context = await browser.newContext({
+    viewport: { width: 1440, height: 900 }
+  });
+  const page = await context.newPage();
   
-  // Set viewport to a high desktop resolution
-  await page.setViewportSize({ width: 1440, height: 900 });
+  console.log("Navigating to http://localhost:3000/ to set localStorage...");
+  await page.goto("http://localhost:3000/");
+  
+  // Set localStorage parameters so we skip language selection screen
+  await page.evaluate(() => {
+    localStorage.setItem('appLanguageSelected', 'true');
+    localStorage.setItem('appLanguage', 'en');
+  });
 
   console.log("Navigating to http://localhost:3000/role-selection...");
   await page.goto("http://localhost:3000/role-selection");
 
   console.log("Selecting student role...");
   // Wait for student button and click it
-  await page.waitForSelector('button:has-text("student")');
-  await page.click('button:has-text("student")');
+  await page.waitForSelector('button:has-text("I\'m a student")');
+  await page.click('button:has-text("I\'m a student")');
 
   console.log("Waiting for auth screen...");
   await page.waitForURL('**/auth');
@@ -29,7 +39,7 @@ async function run() {
   await page.waitForURL('**/dashboard');
   
   // Wait for some time to let layout settle and any queries finish
-  await page.waitForTimeout(5000);
+  await page.waitForTimeout(6000);
 
   // Take the screenshot
   const screenshotPath = path.resolve('public/assets/images/dashboard-screenshot.png');
