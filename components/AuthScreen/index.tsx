@@ -297,72 +297,79 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
     setIsLoading(true);
 
     try {
-      if (!isFirebaseConfigured) {
-        setError('Firebase is not configured. Please check your environment settings.');
-        setIsLoading(false);
-        return;
-      }
+      let user: User;
 
-      let token: string;
-      if (isLoginView) {
-        console.log('Logging in via Firebase Auth...');
-        token = await firebaseService.loginWithEmail(email, password);
-        console.log('Firebase ID token:', token);
-        console.log('Firebase current user email:', auth.currentUser?.email);
+      if (isFirebaseConfigured) {
+        try {
+          let token: string;
+          if (isLoginView) {
+            console.log('Logging in via Firebase Auth...');
+            token = await firebaseService.loginWithEmail(email, password);
+            console.log('Firebase ID token acquired.');
+          } else {
+            console.log('Registering via Firebase Auth...');
+            token = await firebaseService.registerWithEmail(email, password);
+            console.log('Firebase registration successful.');
+            if (auth.currentUser) {
+              try {
+                const { updateProfile } = await import('firebase/auth');
+                await updateProfile(auth.currentUser, { displayName: name });
+              } catch (profileErr) {
+                console.error('Failed to update display name in Firebase:', profileErr);
+              }
+
+              try {
+                await sendEmailVerification(auth.currentUser);
+                setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification email dispatched.']);
+              } catch (verifErr) {
+                console.error('Failed to send verification email on register:', verifErr);
+              }
+              setNeedsVerification(true);
+              setIsLoading(false);
+              return;
+            }
+          }
+          console.log('Syncing session with database...');
+          user = await api.loginWithFirebase(token);
+        } catch (fbErr: any) {
+          console.warn('Firebase authentication failed, falling back to local database auth:', fbErr);
+          const errMsg = fbErr instanceof Error ? fbErr.message : String(fbErr);
+          
+          if (errMsg.includes('verify your email')) {
+            if (auth.currentUser) {
+              try {
+                await sendEmailVerification(auth.currentUser);
+                setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification email dispatched.']);
+              } catch (verifErr) {
+                console.error('Failed to send verification email:', verifErr);
+              }
+            }
+            setNeedsVerification(true);
+            setIsLoading(false);
+            return;
+          }
+
+          // Fallback to local DB endpoints
+          if (isLoginView) {
+            user = await api.login(email, password);
+          } else {
+            user = await api.register(name, email, password, role || 'student');
+          }
+        }
       } else {
-        console.log('Registering via Firebase Auth...');
-        token = await firebaseService.registerWithEmail(email, password);
-        console.log('Firebase ID token:', token);
-        console.log('Firebase current user email:', auth.currentUser?.email);
-        if (auth.currentUser) {
-          try {
-            const { updateProfile } = await import('firebase/auth');
-            await updateProfile(auth.currentUser, { displayName: name });
-          } catch (profileErr) {
-            console.error('Failed to update display name in Firebase:', profileErr);
-          }
-
-          try {
-            await sendEmailVerification(auth.currentUser);
-            setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification email dispatched.']);
-          } catch (verifErr) {
-            console.error('Failed to send verification email on register:', verifErr);
-          }
-          setNeedsVerification(true);
-          setIsLoading(false);
-          return;
+        console.log('Firebase is not configured. Logging in via local database auth...');
+        if (isLoginView) {
+          user = await api.login(email, password);
+        } else {
+          user = await api.register(name, email, password, role || 'student');
         }
       }
-      console.log('Firebase token acquired, syncing session with database...');
-      const user = await api.loginWithFirebase(token);
+
       onAuthSuccess(user);
     } catch (err: any) {
       console.error('Auth Submit Error:', err);
-      if (err?.code || err?.message) {
-        console.error('Firebase login error:', err.code);
-        console.error('Firebase login message:', err.message);
-      }
-      const errMsg = err?.code && err?.message ? `${err.code}: ${err.message}` : err instanceof Error ? err.message : 'An unknown error occurred.';
-      
-      if (errMsg.includes('verify your email')) {
-        if (auth.currentUser) {
-          try {
-            await sendEmailVerification(auth.currentUser);
-            setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification email dispatched.']);
-          } catch (verifErr) {
-            console.error('Failed to send verification email during login:', verifErr);
-          }
-        }
-        setNeedsVerification(true);
-        setIsLoading(false);
-        return;
-      }
-
-      if (errMsg.includes('auth/operation-not-allowed')) {
-        setError('Error: Email/Password provider is disabled in Firebase Console. Please enable it under Authentication > Sign-in method.');
-      } else {
-        setError(errMsg);
-      }
+      const errMsg = err instanceof Error ? err.message : 'An unknown authentication error occurred.';
+      setError(errMsg);
     } finally {
       setIsLoading(false);
     }
