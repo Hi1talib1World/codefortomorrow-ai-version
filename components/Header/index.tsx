@@ -386,124 +386,134 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
         isRetrying={dbStatus === 'loading'}
       />
       <div className="container mx-auto flex justify-between items-center max-w-7xl">
-        <div className="flex items-center gap-6">
+        {/* Left Side: App Launcher, Logo, Explore Dropdown, My Learning */}
+        <div className="flex items-center gap-4">
+          {/* App Launcher (Bento/Grid Menu icon) */}
+          <button className="p-2 hover:bg-white/10 dark:hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer hidden sm:block">
+            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M4 4h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 16h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4z" />
+            </svg>
+          </button>
+
+          {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveView && setActiveView('home')}>
             <h1 className="text-2xl font-bold text-white dark:text-white leading-none tracking-tight">C4T</h1>
           </div>
 
-          {/* Primary Navigation - Desktop Only */}
+          {/* Explore Dropdown */}
           {setActiveView && (
-            <nav className="hidden lg:flex items-center gap-2">
-              {primaryNavItems.map((item, index) => {
-                const isActive = activeView === item.id;
-                const buttonContent = (() => {
-                  if (item.id === 'home' || item.id === 'learn' || item.id === 'missions') {
-                    const isHovered = item.id === 'home' ? isHomeHovered : item.id === 'learn' ? isLearnHovered : isMissionsHovered;
-                    const setHovered = item.id === 'home' ? setIsHomeHovered : item.id === 'learn' ? setIsLearnHovered : setIsMissionsHovered;
-                    return (
-                      <div
-                        className="relative"
-                        onMouseEnter={() => setHovered(true)}
-                        onMouseLeave={() => setHovered(false)}
-                      >
-                        <button
-                          onClick={() => setActiveView(item.id as DashboardView)}
-                          className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-sm transition-all ${
-                            isActive
-                              ? 'text-white font-black'
-                              : 'text-slate-300 hover:text-white hover:bg-white/10 dark:hover:bg-slate-800'
-                          }`}
-                        >
-                          {item.icon}
-                          <span>{item.label}</span>
-                        </button>
-                        <div 
-                          className={`absolute top-full mt-3 left-1/2 -translate-x-1/2 w-3 h-3 bg-white dark:bg-slate-800 border-t border-l border-[#1f2937] dark:border-slate-700 rotate-45 z-[21] transition-all duration-300 pointer-events-none ${
-                            isHovered ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-1 scale-95'
-                          }`} 
-                        />
-                      </div>
-                    );
-                  }
+            <div className="relative" ref={exploreRef}>
+              <button
+                onClick={() => setIsExploreOpen(!isExploreOpen)}
+                className="flex items-center gap-1.5 px-4 py-2 bg-[#0056D2] hover:bg-[#00419e] text-white rounded-lg font-bold text-sm transition-all cursor-pointer shadow-sm active:scale-95"
+              >
+                <span>Explore</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isExploreOpen ? 'rotate-180' : ''}`} />
+              </button>
 
-                  return (
-                    <button
-                      onClick={() => setActiveView(item.id as DashboardView)}
-                      className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-sm transition-all ${
-                        isActive
-                          ? 'text-white font-black'
-                          : 'text-slate-300 hover:text-white hover:bg-white/10 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      {item.icon}
-                      <span>{item.label}</span>
-                    </button>
-                  );
-                })();
-
-                return (
-                  <React.Fragment key={item.id}>
-                    {index > 0 && (
-                      <div className="w-[1px] h-4 bg-slate-700/60 dark:bg-slate-700/40 self-center" />
-                    )}
-                    {buttonContent}
-                  </React.Fragment>
-                );
-              })}
-
-              {/* Divider before "More" */}
-              <div className="w-[1px] h-4 bg-slate-700/60 dark:bg-slate-700/40 self-center" />
-
-              {/* Secondary Navigation Dropdown */}
-              <div className="relative" ref={moreMenuRef}>
-                <button
-                  onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-sm transition-all ${
-                    secondaryNavItems.some(item => item.id === activeView)
-                      ? 'text-white font-black'
-                      : 'text-slate-300 hover:text-white hover:bg-white/10 dark:hover:bg-slate-800'
-                  }`}
-                >
-                  <span>More</span>
-                  <ChevronDown className="w-4 h-4" />
-                </button>
-                {isMoreMenuOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-2 z-50">
-                    {secondaryNavItems.map((item) => {
-                      const isActive = activeView === item.id;
-                      const isLogout = item.id === 'logout';
-                      return (
-                        <button
-                          key={item.id}
-                          onClick={() => {
-                            if (isLogout) {
-                              onLogout();
-                            } else {
-                              setActiveView && setActiveView(item.id as DashboardView);
-                            }
-                            setIsMoreMenuOpen(false);
-                          }}
-                          className={`w-full flex items-center gap-2 px-4 py-2 text-sm font-bold transition-colors ${
-                            isActive
-                              ? 'bg-slate-50 dark:bg-slate-700/50 text-[#FBBF24]'
-                              : isLogout
-                                ? 'text-red-500 hover:bg-red-50/50 dark:hover:bg-red-950/20'
-                                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
-                          }`}
-                        >
-                          <span className={isActive ? 'text-[#FBBF24]' : isLogout ? 'text-red-400' : 'text-slate-400'}>{item.icon}</span>
-                          <span>{item.label}</span>
-                        </button>
-                      );
-                    })}
+              {isExploreOpen && (
+                <div className="absolute top-full left-0 mt-3 w-[460px] bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 z-50 grid grid-cols-2 gap-6 animate-[fade-in_0.2s_ease-out]">
+                  {/* Column 1: Ecosystem Portals */}
+                  <div className="flex flex-col gap-3">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 border-b border-slate-800 pb-2">
+                      Portals
+                    </h3>
+                    <div className="flex flex-col gap-1">
+                      {primaryNavItems.map((item) => {
+                        const isActive = activeView === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => {
+                              setActiveView(item.id as DashboardView);
+                              setIsExploreOpen(false);
+                            }}
+                            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-left text-sm font-bold transition-all w-full cursor-pointer hover:bg-slate-800/80 ${
+                              isActive
+                                ? 'text-blue-400 bg-slate-850'
+                                : 'text-slate-300 hover:text-white'
+                            }`}
+                          >
+                            <span className={isActive ? 'text-blue-400' : 'text-slate-450'}>{item.icon}</span>
+                            <span>{item.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                )}
-              </div>
-            </nav>
+
+                  {/* Column 2: Platform & Settings */}
+                  <div className="flex flex-col gap-3">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 border-b border-slate-800 pb-2">
+                      Resources & More
+                    </h3>
+                    <div className="flex flex-col gap-1">
+                      {secondaryNavItems.map((item) => {
+                        const isActive = activeView === item.id;
+                        const isLogout = item.id === 'logout';
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => {
+                              if (isLogout) {
+                                onLogout();
+                              } else {
+                                setActiveView(item.id as DashboardView);
+                              }
+                              setIsExploreOpen(false);
+                            }}
+                            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-left text-sm font-bold transition-all w-full cursor-pointer hover:bg-slate-800/80 ${
+                              isActive
+                                ? 'text-blue-400 bg-slate-850'
+                                : isLogout
+                                  ? 'text-red-400 hover:bg-red-950/20'
+                                  : 'text-slate-305 hover:text-white'
+                            }`}
+                          >
+                            <span className={isActive ? 'text-blue-400' : isLogout ? 'text-red-400' : 'text-slate-450'}>{item.icon}</span>
+                            <span>{item.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* My Learning Link */}
+          {setActiveView && (
+            <button
+              onClick={() => setActiveView('learn')}
+              className={`px-3 py-2 rounded-lg font-bold text-sm transition-all cursor-pointer ${
+                activeView === 'learn'
+                  ? 'text-blue-450 font-extrabold'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10 dark:hover:bg-slate-800'
+              }`}
+            >
+              My Learning
+            </button>
           )}
         </div>
-        
-        <div className="flex-grow lg:hidden"></div>
+
+        {/* Center: Search Bar (Coursera Styled) */}
+        <div className="flex-1 max-w-md mx-6 hidden md:block">
+          <div className="relative flex items-center w-full bg-slate-950/60 border border-slate-800 rounded-full py-1.5 pl-4 pr-10 shadow-inner group focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-300">
+            <input
+              type="text"
+              placeholder="Search C4T courses, lessons and skills..."
+              className="w-full bg-transparent text-sm text-slate-100 placeholder-slate-500 focus:outline-none font-medium pr-2 border-none ring-0 outline-none"
+            />
+            <button className="absolute right-1 w-8 h-8 rounded-full bg-[#0056D2] hover:bg-[#00419e] text-white flex items-center justify-center transition-colors cursor-pointer shadow active:scale-95">
+              <svg className="w-3.5 h-3.5 stroke-current fill-none" viewBox="0 0 24 24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
         <div className="flex items-center space-x-3 sm:space-x-6 rtl:space-x-reverse">
 
           {/* Network / Sync Status Indicator */}
