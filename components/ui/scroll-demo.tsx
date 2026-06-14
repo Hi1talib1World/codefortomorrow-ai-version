@@ -9,9 +9,9 @@ export function HeroScrollDemo() {
         titleComponent={""}
       >
         <img
-          src="https://ui.aceternity.com/_next/image?url=%2Flinear.webp&w=3840&q=75"
-          alt="hero"
-          className="mx-auto rounded-2xl object-cover h-full object-left-top w-full select-none"
+          src="/assets/images/dashboard-screenshot.png"
+          alt="dashboard"
+          className="mx-auto rounded-2xl object-cover h-full object-left-top w-full select-none shadow-2xl"
           draggable={false}
         />
       </ContainerScroll>
