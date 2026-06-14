@@ -44,6 +44,7 @@
     "express-rate-limit": "^8.2.1",
     "firebase": "^12.14.0",
     "firebase-admin": "^10.3.0",
+    "framer-motion": "^12.40.0",
     "google-auth-library": "^10.6.1",
     "http-proxy-middleware": "^2.0.9",
     "jsonwebtoken": "^9.0.3",
