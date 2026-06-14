@@ -402,8 +402,12 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
       const user = await api.loginWithFirebase(token);
       onAuthSuccess(user);
     } catch (err) {
-      console.error('Anonymous login error:', err);
-      setError(err instanceof Error ? err.message : 'Anonymous login failed.');
+      console.error('Anonymous login error, falling back to local guest session:', err);
+      try {
+        skipAuth();
+      } catch (skipErr) {
+        setError(err instanceof Error ? err.message : 'Anonymous login failed.');
+      }
     } finally {
       setIsLoading(false);
     }
