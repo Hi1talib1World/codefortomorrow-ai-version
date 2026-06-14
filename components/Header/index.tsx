@@ -34,6 +34,8 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
+  const [isExploreOpen, setIsExploreOpen] = useState(false);
+  const exploreRef = useRef<HTMLDivElement>(null);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const { showToast } = useToast();
 
@@ -266,6 +268,9 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
       }
       if (moreMenuRef.current && !moreMenuRef.current.contains(event.target as Node)) {
         setIsMoreMenuOpen(false);
+      }
+      if (exploreRef.current && !exploreRef.current.contains(event.target as Node)) {
+        setIsExploreOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
