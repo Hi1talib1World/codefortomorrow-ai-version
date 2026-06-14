@@ -6,6 +6,7 @@ import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { RadialOrbitalTimelineDemo } from '@/components/ui/demo';
 import { GlowCard } from '@/components/ui/spotlight-card';
+import { HeroScrollDemo } from '@/components/ui/scroll-demo';
 
 
 const AnimatedSection: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
@@ -297,6 +298,9 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
           </button>
         </AnimatedSection>
       </section>
+
+      {/* Scroll Animation Showcase */}
+      <HeroScrollDemo />
 
       {/* Footer */}
       <footer className="bg-[#0a0f1d] text-slate-400 border-t border-white/5">
