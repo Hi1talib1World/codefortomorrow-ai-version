@@ -541,20 +541,10 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
       </div>
 
       <div className="max-w-sm w-full py-6 relative z-10">
-        {/* Glowing Pedestal for Mascot with Targeting Rings */}
+        {/* Mascot display */}
         <div className="flex justify-center mb-6">
-          <div className="relative group cursor-pointer">
-            {/* Concentric rotating targeting rings */}
-            <div className="absolute inset-[-15px] border border-dashed border-[#FBBF24]/20 rounded-full animate-rotate-cw pointer-events-none" />
-            <div className="absolute inset-[-25px] border border-dashed border-slate-800/10 rounded-full animate-rotate-ccw pointer-events-none" />
-
-            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#FBBF24]/20 to-slate-800/20 blur-md group-hover:scale-110 transition-transform duration-500" />
-            <div className="relative w-28 h-28 rounded-full border border-[#FBBF24]/30 bg-slate-950/80 p-2 flex items-center justify-center overflow-hidden shadow-[0_0_20px_rgba(6,182,212,0.15)]">
-              <div className="w-full h-full transform group-hover:scale-105 transition-transform duration-300 z-10">
-                <Mascot />
-              </div>
-              <div className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#FBBF24] to-transparent opacity-80 animate-scan-beam pointer-events-none" />
-            </div>
+          <div className="w-28 h-28 flex items-center justify-center">
+            <Mascot />
           </div>
         </div>
 
