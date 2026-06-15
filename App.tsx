@@ -190,7 +190,16 @@ export default function App() {
     if (savedRoute) {
       localStorage.removeItem('lastVisitedRoute');
       if (savedRoute.startsWith('http://') || savedRoute.startsWith('https://')) {
-        window.location.href = savedRoute;
+        try {
+          const urlObj = new URL(savedRoute);
+          if (urlObj.origin === window.location.origin) {
+            navigate(urlObj.pathname + urlObj.search + urlObj.hash);
+          } else {
+            window.location.href = savedRoute;
+          }
+        } catch (e) {
+          window.location.href = savedRoute;
+        }
       } else {
         navigate(savedRoute);
       }
@@ -228,9 +237,42 @@ export default function App() {
             user.progress.lastLessonCompletedDate = null;
           }
           setCurrentUser(user);
+        } else if (sessionStorage.getItem('isGuestSession') === 'true') {
+          const guestRole = sessionStorage.getItem('guestRole') || 'student';
+          const now = new Date().toISOString();
+          const guestUser: User = {
+            _id: `guest_session`,
+            name: 'Guest',
+            email: `guest_session@codefortomorrow.com`,
+            provider: 'email',
+            profilePictureUrl: `https://ui-avatars.com/api/?name=G&background=random&color=fff`,
+            progress: defaultProgress,
+            currentPath: null,
+            role: guestRole as 'student' | 'teacher',
+            createdAt: now,
+            lastLogin: now,
+          };
+          setCurrentUser(guestUser);
         }
       } catch (error) {
         console.error("Session check failed:", error);
+        if (sessionStorage.getItem('isGuestSession') === 'true') {
+          const guestRole = sessionStorage.getItem('guestRole') || 'student';
+          const now = new Date().toISOString();
+          const guestUser: User = {
+            _id: `guest_session`,
+            name: 'Guest',
+            email: `guest_session@codefortomorrow.com`,
+            provider: 'email',
+            profilePictureUrl: `https://ui-avatars.com/api/?name=G&background=random&color=fff`,
+            progress: defaultProgress,
+            currentPath: null,
+            role: guestRole as 'student' | 'teacher',
+            createdAt: now,
+            lastLogin: now,
+          };
+          setCurrentUser(guestUser);
+        }
       } finally {
         setIsSessionLoaded(true);
       }
@@ -258,36 +300,43 @@ export default function App() {
         console.error("Failed to save role to profile:", error);
       }
     }
-  }, [selectedRole, navigate]);
+  }, [selectedRole, navigateToSavedRoute]);
 
   const handleSkipAuth = useCallback(() => {
     const now = new Date().toISOString();
+    const guestRole = selectedRole || 'student';
     const guestUser: User = {
-      _id: `guest_${Date.now()}`,
+      _id: `guest_session`,
       name: 'Guest',
-      email: `guest_${Date.now()}@codefortomorrow.com`,
+      email: `guest_session@codefortomorrow.com`,
       provider: 'email',
       profilePictureUrl: `https://ui-avatars.com/api/?name=G&background=random&color=fff`,
       progress: defaultProgress,
       currentPath: null,
-      role: selectedRole || 'student',
+      role: guestRole,
       createdAt: now,
       lastLogin: now,
     };
+    sessionStorage.setItem('isGuestSession', 'true');
+    sessionStorage.setItem('guestRole', guestRole);
     setCurrentUser(guestUser);
 
     navigateToSavedRoute('/dashboard');
-  }, [selectedRole, navigate]);
+  }, [selectedRole, navigateToSavedRoute]);
 
   const handleLogout = useCallback(async () => {
     if (currentUser && currentUser.progress) {
       try {
         console.log("Saving user progress before logout...");
-        await api.updateUserProgress(currentUser.progress);
+        if (!currentUser._id.startsWith('guest_')) {
+          await api.updateUserProgress(currentUser.progress);
+        }
       } catch (error) {
         console.error("Failed to save progress on logout:", error);
       }
     }
+    sessionStorage.removeItem('isGuestSession');
+    sessionStorage.removeItem('guestRole');
     await api.logout();
     setCurrentUser(null);
     setActiveLesson(null);
