@@ -10,6 +10,9 @@ async function run() {
   });
   const page = await context.newPage();
   
+  page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+  page.on('pageerror', err => console.error('PAGE ERROR:', err.message));
+  
   try {
     console.log("Navigating to http://localhost:3000/ to set localStorage...");
     await page.goto("http://localhost:3000/");
