@@ -774,25 +774,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
               </button>
             </form>
           )}
-
-          {/* High-Tech Terminal Diagnostics Logger */}
-          <div className="mt-8 p-3 bg-black/40 border border-slate-900/60 rounded-2xl font-mono text-[10px] text-[#FBBF24]/80 shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)] select-none pointer-events-none">
-            <div className="flex items-center justify-between border-b border-slate-800/60 pb-1.5 mb-1.5">
-              <span className="text-slate-500 font-bold uppercase tracking-wider">DIAGNOSTIC_LOG</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FBBF24] animate-pulse" />
-            </div>
-            <div className="space-y-1 min-h-[56px] text-left">
-              {terminalLogs.map((log, i) => (
-                <div key={i} className="flex items-center gap-1.5">
-                  <span className="text-slate-300">&gt;</span>
-                  <span>{log}</span>
-                </div>
-              ))}
-              {terminalLogs.length < 4 && (
-                <div className="animate-pulse text-slate-600">_</div>
-              )}
-            </div>
-          </div>
         </div>
       </div>
     </div>
