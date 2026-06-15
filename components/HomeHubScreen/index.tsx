@@ -104,15 +104,19 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 }
             };
             
-            // SQLite Edge Sync: api.updateUserProgress maps directly to the Local Storage cache.
-            // When offline, this progress state is buffered locally and subsequently synchronized
-            // to our Google Cloud / central database as 'learning_events' when connectivity is restored.
-            api.updateUserProgress(updatedProgress).then(() => {
+            if (currentUser._id.startsWith('guest_')) {
                 onUpdateUser({
                     ...currentUser,
                     progress: updatedProgress
                 });
-            }).catch(err => console.error('Failed to init daily quests:', err));
+            } else {
+                api.updateUserProgress(updatedProgress).then(() => {
+                    onUpdateUser({
+                        ...currentUser,
+                        progress: updatedProgress
+                    });
+                }).catch(err => console.error('Failed to init daily quests:', err));
+            }
         }
     }, [dailyQuestsDate, dailyQuests.length, todayStr]);
 
