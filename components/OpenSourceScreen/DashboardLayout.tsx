@@ -26,7 +26,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
 
   const GENERAL_ITEMS = [
     { id: 'feed', icon: Home, label: t('nav.home') },
-    { id: 'yc-oss', icon: Zap, label: t('nav.aiRepos') },
     { id: 'gsoc', icon: Users, label: t('nav.hackRepos') },
     { id: 'trending', icon: TrendingUp, label: t('nav.hotNow') },
     { id: 'issues', icon: Search, label: t('nav.goodFirstIssues') },

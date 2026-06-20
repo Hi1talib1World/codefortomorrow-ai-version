@@ -5,7 +5,6 @@ import { Leaderboard } from './Leaderboard';
 import { ResourcesHub } from './ResourcesHub';
 import { AdminPanel } from './AdminPanel';
 import { MySaved } from './MySaved';
-import { AIRepos } from './AIRepos';
 import { HackRepos } from './HackRepos';
 import { GoodFirstIssues } from './GoodFirstIssues';
 import { BountiesHub } from './BountiesHub';
@@ -38,7 +37,6 @@ export default function OpenSourceScreen({ currentUser, updateUser, onLogout }: 
               transition={{ duration: 0.2 }}
             >
               {(activeTab === 'feed' || activeTab === 'trending') && <ProjectFeed currentUser={currentUser} updateUser={updateUser} />}
-              {activeTab === 'yc-oss' && <AIRepos />}
               {activeTab === 'gsoc' && <HackRepos />}
               {activeTab === 'leaderboard' && <Leaderboard />}
               {activeTab === 'issues' && <GoodFirstIssues />}
