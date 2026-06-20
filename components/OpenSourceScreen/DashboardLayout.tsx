@@ -4,7 +4,7 @@ import {
   Home, Zap, Users, TrendingUp, Search, 
   BookOpen, DollarSign, Bell, Star, 
   Twitter, Github, Mail, Menu, X, ChevronRight, CheckCircle2,
-  Globe
+  Globe, Share2
 } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useI18n } from './i18n';
@@ -32,6 +32,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
   ];
 
   const COMMUNITY_ITEMS = [
+    { id: 'community', icon: Share2, label: t('nav.community') },
     { id: 'leaderboard', icon: Users, label: t('nav.topContributors') },
     { id: 'resources', icon: BookOpen, label: t('nav.starterKits') },
     { id: 'bounties', icon: DollarSign, label: t('nav.earnAndCode') },

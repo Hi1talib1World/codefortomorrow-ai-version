@@ -11,6 +11,7 @@ import { BountiesHub } from './BountiesHub';
 import { motion, AnimatePresence } from 'motion/react';
 import { User } from '../../types';
 import { I18nProvider } from './i18n';
+import FeedScreen from '../FeedScreen';
 
 interface OpenSourceScreenProps {
   currentUser?: User | null;
@@ -43,6 +44,17 @@ export default function OpenSourceScreen({ currentUser, updateUser, onLogout }: 
               {activeTab === 'resources' && <ResourcesHub />}
               {activeTab === 'bounties' && <BountiesHub />}
               {activeTab === 'admin' && <MySaved />}
+              {activeTab === 'community' && (
+                currentUser ? (
+                  <div className="bg-[#09090b] text-[#111827] dark:text-white rounded-2xl p-2 md:p-6">
+                    <FeedScreen currentUser={currentUser} onUpdateUser={updateUser || (async () => {})} />
+                  </div>
+                ) : (
+                  <div className="text-center py-20 bg-[#121212] rounded-2xl border border-slate-800">
+                    <p className="text-slate-400 font-semibold">Please sign in to view the community feed.</p>
+                  </div>
+                )
+              )}
             </motion.div>
           </AnimatePresence>
         </DashboardLayout>
