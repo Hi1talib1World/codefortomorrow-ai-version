@@ -22,7 +22,7 @@ class CFTEventBus extends EventEmitter {
     }
 
     const payloadString = args[0] ? JSON.stringify(args[0]) : '';
-    console.log(`[EventBus] [${traceId}] 📣 EMIT event: "${String(eventName)}" | payload: ${payloadString}`);
+    console.log(`[EventBus] [${traceId}]  EMIT event: "${String(eventName)}" | payload: ${payloadString}`);
     
     // Asynchronously record event execution context for reliability & observability out-of-band
     setImmediate(() => {
@@ -33,7 +33,7 @@ class CFTEventBus extends EventEmitter {
     const result = super.emit(eventName, ...args);
     const duration = (performance.now() - start).toFixed(2);
     
-    console.log(`[EventBus] [${traceId}] 🏁 FINISHED synchronous event processing for: "${String(eventName)}" in ${duration}ms`);
+    console.log(`[EventBus] [${traceId}]  FINISHED synchronous event processing for: "${String(eventName)}" in ${duration}ms`);
     return result;
   }
 }

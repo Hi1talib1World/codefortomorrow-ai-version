@@ -69,9 +69,9 @@ export const Leaderboard: React.FC = () => {
   }, []);
 
   const getRankBadge = (index: number) => {
-    if (index === 0) return <span className="text-2xl" title="Rank 1">🥇</span>;
-    if (index === 1) return <span className="text-2xl" title="Rank 2">🥈</span>;
-    if (index === 2) return <span className="text-2xl" title="Rank 3">🥉</span>;
+    if (index === 0) return <span className="text-2xl" title="Rank 1"></span>;
+    if (index === 1) return <span className="text-2xl" title="Rank 2"></span>;
+    if (index === 2) return <span className="text-2xl" title="Rank 3"></span>;
     return <span className="text-lg font-mono text-slate-500 w-8 text-center">{index + 1}</span>;
   };
 
@@ -124,7 +124,7 @@ export const Leaderboard: React.FC = () => {
                     className={`w-full text-left px-3 py-1.5 rounded font-mono text-xs transition-colors
                       ${country === 'Global' ? 'bg-[#FBBF24]/20 text-[#FBBF24] font-bold' : 'text-slate-400 hover:bg-[#121212] hover:text-white'}`}
                   >
-                    🌍 Global
+                     Global
                   </button>
                 )}
 

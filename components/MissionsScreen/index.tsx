@@ -815,9 +815,9 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
                   {selectedMission.telemetry.trend === 'improving' ? (
                     <span className="text-emerald-500 dark:text-emerald-400 flex items-center gap-1 font-bold">IMPROVING <TrendingUp className="w-3.5 h-3.5" /></span>
                   ) : selectedMission.telemetry.trend === 'declining' ? (
-                    <span className="text-rose-500 dark:text-rose-450 flex items-center gap-1 font-bold">DECLINING 📉</span>
+                    <span className="text-rose-500 dark:text-rose-450 flex items-center gap-1 font-bold">DECLINING </span>
                   ) : (
-                    <span className="text-slate-400 dark:text-slate-500 flex items-center gap-1 font-bold">STABLE ➡️</span>
+                    <span className="text-slate-400 dark:text-slate-500 flex items-center gap-1 font-bold">STABLE ️</span>
                   )}
                 </span>
               </div>

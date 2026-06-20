@@ -36,7 +36,7 @@ const firebaseConfig = {
 
 // Debug: output config (safe for public keys) to verify that env vars are loaded correctly
 if (process.env.NODE_ENV !== 'production') {
-  console.log('🔥 Firebase config loaded:', firebaseConfig);
+  console.log(' Firebase config loaded:', firebaseConfig);
 }
 
 // Warn if any placeholder values are still in use (helps catch missing env vars)
@@ -44,7 +44,7 @@ const placeholderCheck = Object.entries(firebaseConfig).some(([, v]) =>
   typeof v === 'string' && /placeholder|dummy|AIzaSy/.test(v)
 );
 if (placeholderCheck) {
-  console.warn('⚠️ Firebase config contains placeholder values – ensure Netlify env vars are set correctly.');
+  console.warn('️ Firebase config contains placeholder values – ensure Netlify env vars are set correctly.');
 }
 
 // Initialize Firebase App

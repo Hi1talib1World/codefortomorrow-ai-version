@@ -9,7 +9,7 @@ import { withRetry } from '../../../utils/retry';
  * Registers global event handlers for decoupled, asynchronous operations
  */
 export const initEventListeners = () => {
-  console.log('⚡ Event Bus: Initializing event listeners...');
+  console.log(' Event Bus: Initializing event listeners...');
 
   eventBus.on(EVENTS.LESSON_COMPLETED, async (data: {
     userId: string;
@@ -31,7 +31,7 @@ export const initEventListeners = () => {
     // Process inside a separate asynchronous context (setImmediate)
     setImmediate(async () => {
       try {
-        console.log(`[EventBus] [${traceId}] ⚙️ Asynchronous handlers starting for "${EVENTS.LESSON_COMPLETED}" (user: ${data.userId})`);
+        console.log(`[EventBus] [${traceId}] ️ Asynchronous handlers starting for "${EVENTS.LESSON_COMPLETED}" (user: ${data.userId})`);
         const start = performance.now();
 
         const tasks: Promise<any>[] = [];
@@ -47,9 +47,9 @@ export const initEventListeners = () => {
                   message += ` You earned +${xpEarned} XP.`;
                 }
                 if (data.streakNew > data.streakOld) {
-                  message += ` Streak active: ${data.streakNew} days! 🔥`;
+                  message += ` Streak active: ${data.streakNew} days! `;
                 }
-                await createNotification(data.userId, 'Challenge Complete! 🎉', message, 'lesson_completed');
+                await createNotification(data.userId, 'Challenge Complete! ', message, 'lesson_completed');
               },
               3,
               1000,
@@ -92,14 +92,14 @@ export const initEventListeners = () => {
         const results = await Promise.allSettled(tasks);
         
         const duration = (performance.now() - start).toFixed(2);
-        console.log(`[EventBus] [${traceId}] ✅ Asynchronous handlers finished in ${duration}ms`);
+        console.log(`[EventBus] [${traceId}]  Asynchronous handlers finished in ${duration}ms`);
 
         // Check if any task failed
         const rejections = results.filter(r => r.status === 'rejected') as PromiseRejectedResult[];
         
         if (rejections.length > 0) {
           const errorsList = rejections.map((r, i) => `Task ${i+1}: ${r.reason?.message || String(r.reason)}`).join('; ');
-          console.error(`[EventBus] [${traceId}] ❌ ${rejections.length} tasks failed execution. Moving to Dead Letter Queue.`);
+          console.error(`[EventBus] [${traceId}]  ${rejections.length} tasks failed execution. Moving to Dead Letter Queue.`);
           
           // Update event log status to failed with aggregated errors (Dead-Letter state)
           await updateEventLogStatus(traceId, 'failed', 3, errorsList);
@@ -109,7 +109,7 @@ export const initEventListeners = () => {
         }
 
       } catch (error) {
-        console.error(`[EventBus] [${traceId}] ❌ Critical unhandled error in event listener for "${EVENTS.LESSON_COMPLETED}":`, error);
+        console.error(`[EventBus] [${traceId}]  Critical unhandled error in event listener for "${EVENTS.LESSON_COMPLETED}":`, error);
       }
     });
   });

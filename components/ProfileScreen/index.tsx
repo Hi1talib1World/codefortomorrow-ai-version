@@ -342,7 +342,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/80">
               <div className="flex gap-2.5 items-start">
-                <div className="text-2xl mt-0.5 select-none">🔥</div>
+                <div className="text-2xl mt-0.5 select-none"></div>
                 <div>
                   <h3 className="text-sm font-extrabold text-slate-900 dark:text-white leading-tight">
                     <AnimatedCounter value={userProgress?.streak || 0} /> Days
@@ -351,7 +351,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                 </div>
               </div>
               <div className="flex gap-2.5 items-start">
-                <div className="text-2xl mt-0.5 text-[#FBBC05] select-none">⭐</div>
+                <div className="text-2xl mt-0.5 text-[#FBBC05] select-none"></div>
                 <div>
                   <h3 className="text-sm font-extrabold text-slate-900 dark:text-white leading-tight">
                     <AnimatedCounter value={userProgress?.xp || 0} /> XP
@@ -360,7 +360,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                 </div>
               </div>
               <div className="flex gap-2.5 items-start">
-                <div className="text-2xl mt-0.5 select-none">🎓</div>
+                <div className="text-2xl mt-0.5 select-none"></div>
                 <div>
                   <h3 className="text-sm font-extrabold text-slate-900 dark:text-white leading-tight">
                     <AnimatedCounter value={avgScore} suffix="%" />
@@ -428,7 +428,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
               {currentPath ? (
                 <div className="flex gap-4 items-start">
                   <div className="w-12 h-12 rounded border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-xl shrink-0 select-none">
-                    🏆
+                    
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-slate-900 dark:text-white capitalize">

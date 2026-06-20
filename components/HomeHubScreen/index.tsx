@@ -135,7 +135,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 <div>
                     <div className="flex items-center justify-between mb-6">
                         <h3 className="text-sm font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wider flex items-center gap-2">
-                            <span>🎯</span> {t('daily_quests_title') || 'Daily Quests'}
+                            <span></span> {t('daily_quests_title') || 'Daily Quests'}
                         </h3>
                         <span className="text-[9px] bg-[#FBBF24]/20 text-[#111827] dark:text-[#FBBF24] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
                             Resets Daily
@@ -332,7 +332,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             <div className="flex flex-wrap items-center gap-4">
                                 <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-16 w-auto" />
                                 <h1 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight flex items-center flex-wrap gap-2">
-                                    <span>👋</span> Hello, {userName}!
+                                    <span></span> Hello, {userName}!
                                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black bg-brand-500/10 text-brand-600 dark:bg-indigo-950/40 dark:text-indigo-300 border border-brand-500/20 select-none">
                                         Level {Math.floor(xp / 100) + 1}
                                     </span>
@@ -340,7 +340,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             </div>
                             {streak >= 3 && (
                                 <div className="inline-flex items-center gap-1.5 self-start">
-                                    <span className="text-xs">🔥</span>
+                                    <span className="text-xs"></span>
                                     <p className="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest leading-none">
                                         Streak Multiplier: {streak >= 5 ? '1.5x XP Active!' : '1.2x XP Active!'}
                                     </p>
@@ -364,14 +364,14 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         {/* Streak & Points display on Home Page */}
                         <div className="flex items-center gap-3.5 self-start sm:self-auto">
                             <div className="flex items-center gap-2 text-red-500 dark:text-red-400 font-black text-sm bg-red-500/10 px-4 py-2 rounded-2xl border border-red-500/20 shadow-sm transition-transform hover:scale-105 duration-200">
-                                <span className="text-lg">🔥</span>
+                                <span className="text-lg"></span>
                                 <div className="text-left leading-none">
                                     <p className="text-sm font-black text-slate-800 dark:text-white">{streak}</p>
                                     <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mt-0.5">Day Streak</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2 text-amber-500 dark:text-amber-400 font-black text-sm bg-amber-500/10 px-4 py-2 rounded-2xl border border-amber-500/20 shadow-sm transition-transform hover:scale-105 duration-200">
-                                <span className="text-lg">⭐</span>
+                                <span className="text-lg"></span>
                                 <div className="text-left leading-none">
                                     <p className="text-sm font-black text-slate-800 dark:text-white">{xp}</p>
                                     <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mt-0.5">Total XP</p>
@@ -452,17 +452,17 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                                 {userName}
                                             </h3>
                                             <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1.5 flex items-center justify-center gap-1">
-                                                <span>👤</span> {currentUser.role === 'teacher' ? 'Instructor' : 'Student'}
+                                                <span></span> {currentUser.role === 'teacher' ? 'Instructor' : 'Student'}
                                             </p>
                                         </div>
                                         <div className="w-full grid grid-cols-2 gap-3 mt-1.5 pt-3.5 border-t border-slate-100 dark:border-slate-700/50 text-left">
                                             <div className="bg-slate-50 dark:bg-slate-900/50 p-2.5 rounded-xl border border-slate-100/50 dark:border-slate-850">
                                                 <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase leading-none">XP</p>
-                                                <p className="text-xs font-black text-slate-700 dark:text-slate-200 mt-1">⭐ {xp}</p>
+                                                <p className="text-xs font-black text-slate-700 dark:text-slate-200 mt-1"> {xp}</p>
                                             </div>
                                             <div className="bg-slate-50 dark:bg-slate-900/50 p-2.5 rounded-xl border border-slate-100/50 dark:border-slate-850">
                                                 <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase leading-none">Streak</p>
-                                                <p className="text-xs font-black text-slate-700 dark:text-slate-200 mt-1">🔥 {streak} days</p>
+                                                <p className="text-xs font-black text-slate-700 dark:text-slate-200 mt-1"> {streak} days</p>
                                             </div>
                                         </div>
                                         <span className="text-[10px] font-black text-[#111827] dark:text-[#FBBF24] uppercase tracking-wider mt-1 group-hover:underline flex items-center justify-center gap-1">
@@ -488,14 +488,14 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     <div className="aspect-[16/10] bg-[#2E2FCE] flex items-center justify-center p-8 relative overflow-hidden">
                                         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
                                         <div className="text-center space-y-4 relative z-10">
-                                            <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center text-3xl shadow-sm transform group-hover:-translate-y-1 transition-transform">🧠</div>
+                                            <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center text-3xl shadow-sm transform group-hover:-translate-y-1 transition-transform"></div>
                                             <p className="text-xl font-bold text-white tracking-widest uppercase">MENTALUP</p>
                                         </div>
                                     </div>
                                     <div className="p-4 flex items-center justify-between">
                                         <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Play MentalUP</p>
                                         <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#2E2FCE] group-hover:text-white group-hover:border-[#2E2FCE] transition-all shadow-sm">
-                                            <span className="text-sm">↗</span>
+                                            <span className="text-sm"></span>
                                         </div>
                                     </div>
                                 </button>
@@ -537,7 +537,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
                             >
                                 <div className="aspect-[16/10] bg-[#f8f9fa] dark:bg-slate-900/50 flex items-center justify-center">
-                                    <div className="text-6xl transform group-hover:-translate-y-1 transition-transform">🎮</div>
+                                    <div className="text-6xl transform group-hover:-translate-y-1 transition-transform"></div>
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
                                     <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Quick Play</p>
@@ -554,7 +554,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
                             >
                                 <div className="aspect-[16/10] bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center p-8">
-                                    <div className="text-6xl transform group-hover:scale-110 group-hover:rotate-12 transition-transform">🧮</div>
+                                    <div className="text-6xl transform group-hover:scale-110 group-hover:rotate-12 transition-transform"></div>
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
                                     <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Math Arena</p>
@@ -626,7 +626,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     <div id="how-to-learn" className="space-y-6 pt-10 border-t border-slate-200 dark:border-slate-800 scroll-mt-24">
                         <div className="text-left space-y-2">
                             <h2 className="text-2xl font-black text-[#111827] dark:text-indigo-200 uppercase tracking-tight flex items-center gap-2">
-                                <span>📖</span> {guideTexts.title}
+                                <span></span> {guideTexts.title}
                             </h2>
                             <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
                                 {guideTexts.desc}
@@ -712,7 +712,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             </p>
                             {streak >= 3 && (
                                 <div className="mt-4 inline-flex items-center gap-2 bg-gradient-to-r from-red-500/10 to-orange-500/10 dark:from-red-500/20 dark:to-orange-500/20 border border-orange-500/30 px-3 py-1 rounded-xl animate-pulse">
-                                    <span className="text-sm">🔥</span>
+                                    <span className="text-sm"></span>
                                     <p className="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest leading-none">
                                         Streak Multiplier: {streak >= 5 ? '1.5x XP Active!' : '1.2x XP Active!'}
                                     </p>
@@ -722,8 +722,8 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                         {/* Quick Stats Grid */}
                         <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto md:mx-0">
-                            <FloatingStat icon="🔥" value={`${streak} ${streak > 0 ? 'Days' : 'Day'}`} label={t('day_streak')} color="border-[#EA4335]" />
-                            <FloatingStat icon="⭐" value={xp.toLocaleString()} label={t('total_xp_label')} color="border-[#FBBC05]" />
+                            <FloatingStat icon="" value={`${streak} ${streak > 0 ? 'Days' : 'Day'}`} label={t('day_streak')} color="border-[#EA4335]" />
+                            <FloatingStat icon="" value={xp.toLocaleString()} label={t('total_xp_label')} color="border-[#FBBC05]" />
                         </div>
                     </div>
                 </div>
@@ -742,7 +742,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     >
                         <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
                         <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop-blur-sm border border-white/20 transition-transform group-hover:scale-110 shadow-sm relative z-10">
-                            <span className="text-3xl text-white">🚀</span>
+                            <span className="text-3xl text-white"></span>
                         </div>
                         <h2 className="text-xl md:text-2xl font-bold text-white mb-3 relative z-10">
                             {t('learn')}
@@ -764,7 +764,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         className="group relative bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 rounded-3xl p-8 text-center transition-all transform hover:-translate-y-2 hover:shadow-md overflow-hidden cursor-pointer"
                     >
                         <div className="w-16 h-16 bg-[#EA4335]/10 dark:bg-[#EA4335]/20 rounded-2xl flex items-center justify-center mx-auto mb-6 transition-transform group-hover:scale-110 relative z-10">
-                            <span className="text-3xl">🎨</span>
+                            <span className="text-3xl"></span>
                         </div>
                         <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white mb-3 relative z-10">
                             {t('creations')}
@@ -786,7 +786,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         className="group relative bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 rounded-3xl p-8 text-center transition-all transform hover:-translate-y-2 hover:shadow-md overflow-hidden cursor-pointer"
                     >
                         <div className="w-16 h-16 bg-[#34A853]/10 dark:bg-[#34A853]/20 rounded-2xl flex items-center justify-center mx-auto mb-6 transition-transform group-hover:scale-110 relative z-10">
-                            <span className="text-3xl">🧩</span>
+                            <span className="text-3xl"></span>
                         </div>
                         <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white mb-3 relative z-10">
                             {t('brain_training')}
@@ -814,7 +814,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     
                     <div className="flex flex-col justify-between gap-6">
                         <div className="bg-[#FBBC05]/10 dark:bg-[#FBBC05]/5 p-6 rounded-3xl border border-[#FBBC05]/20 flex items-center space-x-6 shadow-sm transition-all hover:shadow-md group h-full">
-                            <div className="bg-[#FBBC05] text-white w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-2xl shadow-sm group-hover:scale-105 transition-transform">💡</div>
+                            <div className="bg-[#FBBC05] text-white w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-2xl shadow-sm group-hover:scale-105 transition-transform"></div>
                             <p className="text-slate-700 dark:text-slate-300 font-medium text-sm leading-relaxed">
                                 "{t('did_you_know')} {t('code_fact')}"
                             </p>
@@ -826,7 +826,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 <div id="how-to-learn" className="space-y-4 pt-6 border-t border-slate-200 dark:border-slate-800 scroll-mt-24">
                     <div className="text-left space-y-2">
                         <h2 className="text-2xl font-black text-[#111827] dark:text-indigo-200 uppercase tracking-tight flex items-center gap-2">
-                            <span>📖</span> {guideTexts.title}
+                            <span></span> {guideTexts.title}
                         </h2>
                         <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
                             {guideTexts.desc}

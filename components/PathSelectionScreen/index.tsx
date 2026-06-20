@@ -105,7 +105,7 @@ const PathSelectionScreen: React.FC<PathSelectionScreenProps> = ({ onPathSelecte
               <div className="flex justify-between items-start w-full mb-6">
                 {path.isAvailable ? (
                   <span className={`text-[10px] font-extrabold px-3 py-1.5 rounded-full backdrop-blur-md border border-white/10 flex items-center gap-1 ${style.iconBg} ${style.textColor}`}>
-                    👥 {getEnrolledCount(path.id)} enrolled
+                     {getEnrolledCount(path.id)} enrolled
                   </span>
                 ) : (
                   <span className="text-[10px] font-extrabold px-3 py-1.5 rounded-full bg-slate-800/20 border border-slate-700/10 text-slate-400">

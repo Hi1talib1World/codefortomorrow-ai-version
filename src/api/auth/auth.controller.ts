@@ -93,7 +93,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
   try {
     const isDbConnected = mongoose.connection.readyState === 1;
     if (!isDbConnected) {
-      console.warn("⚠️ MongoDB is not connected. Registration cannot proceed.");
+      console.warn("️ MongoDB is not connected. Registration cannot proceed.");
       throw new ApiError(503, 'Service unavailable: database connection is required to register users.');
     }
 
@@ -153,7 +153,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const isDbConnected = mongoose.connection.readyState === 1;
     if (!isDbConnected) {
-      console.warn("⚠️ MongoDB is not connected. Login cannot proceed.");
+      console.warn("️ MongoDB is not connected. Login cannot proceed.");
       throw new ApiError(503, 'Service unavailable: database connection is required to authenticate users.');
     }
 
@@ -197,7 +197,7 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const isDbConnected = mongoose.connection.readyState === 1;
     if (!isDbConnected) {
-      console.warn("⚠️ MongoDB is not connected. User profile cannot be retrieved.");
+      console.warn("️ MongoDB is not connected. User profile cannot be retrieved.");
       throw new ApiError(503, 'Service unavailable: database connection is required to retrieve user profile.');
     }
 
@@ -248,7 +248,7 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
 
         const isDbConnected = mongoose.connection.readyState === 1;
         if (!isDbConnected) {
-            console.warn("⚠️ MongoDB is not connected. Google login cannot proceed.");
+            console.warn("️ MongoDB is not connected. Google login cannot proceed.");
             throw new ApiError(503, 'Service unavailable: database connection is required for Google authentication.');
         }
 
@@ -338,7 +338,7 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
         const hasAdminCredentials = !!(process.env.FIREBASE_SERVICE_ACCOUNT_KEY || process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
         if (!hasAdminCredentials) {
-            console.warn('⚠️ Firebase admin credentials are not configured. Decoding token without signature verification (Development Mode Only).');
+            console.warn('️ Firebase admin credentials are not configured. Decoding token without signature verification (Development Mode Only).');
             decodedToken = jwt.decode(token);
             if (!decodedToken) {
                 throw new ApiError(400, 'Invalid Firebase ID token format');
@@ -385,7 +385,7 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
 
         const isDbConnected = mongoose.connection.readyState === 1;
         if (!isDbConnected) {
-            console.warn("⚠️ MongoDB is not connected. Firebase login cannot proceed.");
+            console.warn("️ MongoDB is not connected. Firebase login cannot proceed.");
             throw new ApiError(503, 'Service unavailable: database connection is required for Firebase authentication.');
         }
 

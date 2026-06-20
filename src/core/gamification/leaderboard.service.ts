@@ -21,7 +21,7 @@ export const handleLeaderboardRankCheck = async (
     if (rankAfter < rankBefore) {
       await createNotification(
         userId,
-        'Rank Up! 🏆',
+        'Rank Up! ',
         `Congratulations! You climbed to Rank #${rankAfter} on the global leaderboard.`,
         'leaderboard_rank_change'
       );
@@ -44,7 +44,7 @@ export const handleLeaderboardRankCheck = async (
           
           await createNotification(
             passedUser._id.toString(),
-            'Leaderboard Update ⚠️',
+            'Leaderboard Update ️',
             `Another student just passed you! You are now Rank #${opponentNewRank}. Do a lesson to catch up!`,
             'leaderboard_rank_change'
           );

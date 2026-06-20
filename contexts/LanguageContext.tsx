@@ -174,7 +174,7 @@ const translations = {
     wip: '(WIP)',
     // Home Hub
     welcome_message: 'Ready for your next coding adventure?',
-    magic_found: "I've found some magic for you! 🪄",
+    magic_found: "I've found some magic for you! ",
     day_streak: 'Day Streak',
     total_xp_label: 'Total XP',
     learn_adventure_desc: 'Unlock new worlds and master magic code spells!',
@@ -445,7 +445,7 @@ const translations = {
     python_list_comprehensions: 'List Comprehensions',
     python_recursion: 'Recursion',
     python_modules: 'Modules & Imports',
-    python_final_project: '🏆 Python Final Project',
+    python_final_project: ' Python Final Project',
 
     // Python Chapter 3 — challenge descriptions
     py_challenge_9: 'Define a Dog class with a name attribute. Create an instance and print the dog\'s name.',
@@ -481,7 +481,7 @@ const translations = {
     js_classes: 'Classes & OOP',
     js_error_handling: 'Error Handling',
     js_string_methods: 'String Methods',
-    js_final_project: '🏆 JS Final Project',
+    js_final_project: ' JS Final Project',
 
     // JavaScript Chapter 3 — challenge descriptions
     js_challenge_9: 'Use the Array .map() method to double every number in an array.',
@@ -508,7 +508,7 @@ const translations = {
     web_semantic_html: 'Semantic HTML',
     web_media_queries: 'Media Queries',
     web_pseudo_selectors: 'Pseudo-Selectors',
-    web_final_project: '🏆 Web Final Project',
+    web_final_project: ' Web Final Project',
 
     // Web Dev Chapter 3 — challenge descriptions
     web_challenge_9: 'Log an HTML <input> form element with type and placeholder attributes.',
@@ -539,7 +539,7 @@ const translations = {
     python_file_io: 'File I/O',
     python_regex: 'Regular Expressions',
     python_testing: 'Unit Testing',
-    python_master_project: '🥇 Python Master Project',
+    python_master_project: ' Python Master Project',
 
     // Python Chapter 4 — challenges
     py_challenge_16: 'Write a Python generator that lazily yields values one at a time.',
@@ -563,7 +563,7 @@ const translations = {
     js_generators: 'Generators',
     js_regex: 'Regular Expressions',
     js_prototype: 'Prototype Chain',
-    js_master_project: '🥇 JS Master Project',
+    js_master_project: ' JS Master Project',
 
     // JavaScript Chapter 4 — challenges
     js_challenge_16: 'Use object destructuring to extract a property from an object.',
@@ -606,7 +606,7 @@ const translations = {
     web_accessibility: 'Accessibility (a11y)',
     web_local_storage: 'Local Storage',
     web_performance: 'Web Performance',
-    web_master_project: '🥇 Web Master Project',
+    web_master_project: ' Web Master Project',
 
     // Web Dev Chapter 4 — challenges
     web_challenge_16: 'Use CSS grid-template-areas to name grid regions for a page layout.',
@@ -986,7 +986,7 @@ const translations = {
     wip: '(En cours)',
     // Home Hub
     welcome_message: 'Prêt pour ta prochaine aventure ?',
-    magic_found: "J'ai trouvé de la magie pour toi ! 🪄",
+    magic_found: "J'ai trouvé de la magie pour toi ! ",
     day_streak: 'Série de Jours',
     total_xp_label: 'XP Total',
     learn_adventure_desc: 'Débloque de nouveaux mondes et maîtrise les sorts de code !',
@@ -1596,7 +1596,7 @@ const translations = {
     wip: '(قيد العمل)',
     // Home Hub
     welcome_message: 'مستعد لمغامرتك التالية؟',
-    magic_found: 'لقد وجدت بعض السحر لك! 🪄',
+    magic_found: 'لقد وجدت بعض السحر لك! ',
     day_streak: 'سلسلة الأيام',
     total_xp_label: 'مجموع النقاط',
     learn_adventure_desc: 'افتح عوالم جديدة وتعلم سحر الكود!',

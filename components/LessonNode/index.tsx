@@ -9,7 +9,7 @@
  *  - completed  → green circle with checkmark ✓ and full ring
  *  - next       → pulsing brand circle with "START" badge and partial ring
  *  - unlocked   → solid circle with lesson icon
- *  - locked     → grey circle with 🔒 icon
+ *  - locked     → grey circle with  icon
  */
 import React from 'react';
 import { Lesson } from '../../types';
@@ -26,22 +26,22 @@ interface LessonNodeProps {
 
 /** Map from lesson.icon key → emoji for the node center. */
 const EMOJI_MAP: Record<string, string> = {
-  brain: '🧠',
-  star: '⭐',
-  trophy: '🏆',
-  book: '📖',
-  code: '💻',
+  brain: '',
+  star: '',
+  trophy: '',
+  book: '',
+  code: '',
   math: '∑',
-  web: '🌐',
-  game: '🎮',
-  camel: '🐫',
-  tea: '🍵',
-  zellige: '🎨',
+  web: '',
+  game: '',
+  camel: '',
+  tea: '',
+  zellige: '',
 };
 
 const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked, isNext, onStartLesson }) => {
   const { t } = useLanguage();
-  const emoji = EMOJI_MAP[lesson.icon] ?? '📚';
+  const emoji = EMOJI_MAP[lesson.icon] ?? '';
 
   // Circle colors: only completed lessons are green (in color).
   // Next, unlocked, and locked are styled in clean gray/slate/neutral colors.
@@ -73,7 +73,7 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
         <div
           className="absolute -top-7 left-1/2 -translate-x-1/2 z-20 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black px-3 py-1 rounded-lg shadow-md border border-slate-100 dark:border-slate-700 uppercase tracking-widest flex items-center gap-1 whitespace-nowrap animate-bounce"
         >
-          START ⭐
+          START 
         </div>
       )}
 
@@ -115,8 +115,8 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
           {isCompleted ? (
             <span className="text-white text-3xl font-black drop-shadow-sm">✓</span>
           ) : !isUnlocked ? (
-            <span className="text-slate-400 text-2xl filter grayscale opacity-40">🔒</span>
-          ) : emoji === '🏆' ? (
+            <span className="text-slate-400 text-2xl filter grayscale opacity-40"></span>
+          ) : emoji === '' ? (
             <img 
               src="/assets/images/trophy.png" 
               alt="Trophy" 

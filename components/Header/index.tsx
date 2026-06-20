@@ -73,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
     eventSource.onmessage = (event) => {
       try {
         const newNotif: AppNotification = JSON.parse(event.data);
-        console.log('🔔 SSE: Received new notification:', newNotif);
+        console.log(' SSE: Received new notification:', newNotif);
         
         // Append to notifications state
         setNotifications(prev => {
@@ -89,11 +89,11 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
     };
 
     eventSource.onerror = (err) => {
-      console.error('🔔 SSE connection error, browser will auto-retry:', err);
+      console.error(' SSE connection error, browser will auto-retry:', err);
     };
 
     return () => {
-      console.log('🔔 SSE: Closing stream connection');
+      console.log(' SSE: Closing stream connection');
       eventSource.close();
     };
   }, [currentUser, showToast]);
@@ -173,7 +173,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
       choosePathTitle: "Choose a Learning Path",
       choosePathDesc: "Select a coding path (Python, JavaScript, etc.) to start your learning journey!",
       choosePathBtn: "Choose Path",
-      congratsTitle: "Path Completed! 🎉",
+      congratsTitle: "Path Completed! ",
       congratsDesc: `Congratulations! You have completed all lessons in ${currentPathData ? t(currentPathData.titleKey as any) : 'this path'}. Explore other paths to continue.`,
       explorePathsBtn: "Explore Paths",
       nextUpTitle: "Next Lesson",
@@ -192,7 +192,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
       choosePathTitle: "Choisir un Parcours",
       choosePathDesc: "Sélectionnez un parcours de code (Python, JavaScript, etc.) pour commencer votre apprentissage !",
       choosePathBtn: "Choisir un parcours",
-      congratsTitle: "Parcours Terminé ! 🎉",
+      congratsTitle: "Parcours Terminé ! ",
       congratsDesc: `Félicitations ! Vous avez terminé toutes les leçons de ${currentPathData ? t(currentPathData.titleKey as any) : 'ce parcours'}. Explorez d'autres parcours.`,
       explorePathsBtn: "Explorer les parcours",
       nextUpTitle: "Prochaine Leçon",
@@ -211,7 +211,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
       choosePathTitle: "اختر مسارًا تعليميًا",
       choosePathDesc: "اختر مسارًا للبرمجة (بايثون، جافا سكريبت، إلخ) لبدء رحلة التعلم الخاصة بك!",
       choosePathBtn: "اختر المسار",
-      congratsTitle: "تم إكمال المسار! 🎉",
+      congratsTitle: "تم إكمال المسار! ",
       congratsDesc: `تهانينا! لقد أكملت جميع الدروس في مسار ${currentPathData ? t(currentPathData.titleKey as any) : 'هذا المسار'}. استكشف مسارات أخرى للمتابعة.`,
       explorePathsBtn: "استكشف المسارات",
       nextUpTitle: "الدرس التالي",

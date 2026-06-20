@@ -27,7 +27,7 @@ const SuccessOverlay: React.FC<{ lesson: Lesson; onContinue: () => void }> = ({ 
             transition={{ type: 'spring', stiffness: 300, damping: 22 }}
             className="bg-white dark:bg-slate-800 rounded-3xl p-8 mx-4 max-w-sm w-full shadow-2xl flex flex-col items-center gap-4 text-center"
         >
-            <div className="text-7xl animate-bounce">🎉</div>
+            <div className="text-7xl animate-bounce"></div>
             <h2 className="text-2xl font-bold text-slate-800 dark:text-white uppercase tracking-tight">Great Job!</h2>
             <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">
                 You completed this lesson and earned <span className="text-[#FBBC05] font-bold">+{lesson.xp} XP</span>!
@@ -138,11 +138,11 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
             )}
             {lesson.estimatedMinutes && (
                 <span className="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold flex items-center gap-1 border border-slate-200 dark:border-slate-600">
-                    ⏱️ {lesson.estimatedMinutes} min
+                    ️ {lesson.estimatedMinutes} min
                 </span>
             )}
             <span className="px-2 py-1 rounded-md bg-[#FBBC05]/10 dark:bg-[#FBBC05]/20 text-[#F29900] dark:text-[#fde293] text-[10px] font-bold flex items-center gap-1 border border-[#FBBC05]/30">
-                ⭐ {lesson.xp} XP
+                 {lesson.xp} XP
             </span>
             {lesson.tags?.map(tag => (
                 <span key={tag} className="px-2 py-1 rounded-md bg-[#2E2FCE]/10 dark:bg-[#2E2FCE]/20 text-[#2E2FCE] dark:text-[#a3aaeb] text-[10px] font-bold tracking-wide border border-[#2E2FCE]/30">
@@ -164,7 +164,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
             {/* Concept */}
             {lesson.explanationKey && (
                 <div className="bg-[#2E2FCE]/5 dark:bg-[#2E2FCE]/10 p-6 rounded-3xl border border-[#2E2FCE]/20 dark:border-[#2E2FCE]/30 shadow-sm relative overflow-hidden group">
-                    <div className="absolute -right-4 -top-4 text-[#2E2FCE]/10 dark:text-[#2E2FCE]/20 text-7xl transform rotate-12 group-hover:scale-110 transition-transform">💡</div>
+                    <div className="absolute -right-4 -top-4 text-[#2E2FCE]/10 dark:text-[#2E2FCE]/20 text-7xl transform rotate-12 group-hover:scale-110 transition-transform"></div>
                     <div className="relative z-10">
                         <h3 className="text-xs font-bold text-[#2E2FCE] dark:text-[#a3aaeb] uppercase tracking-wide mb-3 flex items-center gap-2">
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -181,7 +181,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
             {lesson.objectivesKey && (
                 <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm">
                     <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-4 flex items-center gap-2">
-                        🎯 Learning Objectives
+                         Learning Objectives
                     </h3>
                     <ul className="space-y-3">
                         {((t(lesson.objectivesKey as any) as string) || '').split('|').map((obj, i) => (
@@ -215,7 +215,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                     onClick={handleStartQuiz}
                     className="w-full py-4 rounded-full bg-[#2E2FCE] hover:bg-[#2E2FCE] text-white font-bold text-sm tracking-wide shadow-sm transition-colors flex items-center justify-center gap-3 mt-4"
                 >
-                    <span>🎓</span> Take the Quiz!
+                    <span></span> Take the Quiz!
                 </motion.button>
             ) : (
                 <motion.button
@@ -224,7 +224,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                     onClick={() => onComplete(lesson.id, lesson.xp, 100)}
                     className="w-full py-4 rounded-2xl bg-green-500 hover:bg-green-600 text-white font-black text-base uppercase tracking-widest shadow-lg shadow-green-500/30 transition-colors flex items-center justify-center gap-3"
                 >
-                    <span>✅</span> Complete Lesson
+                    <span></span> Complete Lesson
                 </motion.button>
             )}
         </motion.div>
@@ -316,7 +316,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                             }`}
                     >
                         <p className={`text-sm font-bold mb-2 flex items-center gap-2 ${answerState === 'correct' ? 'text-[#2e9347] dark:text-[#a8dab5]' : 'text-[#c5221f] dark:text-[#f28b82]'}`}>
-                            {answerState === 'correct' ? <><span className="text-xl">🎉</span> Correct!</> : <><span className="text-xl">❌</span> Not quite!</>}
+                            {answerState === 'correct' ? <><span className="text-xl"></span> Correct!</> : <><span className="text-xl"></span> Not quite!</>}
                         </p>
                         <p className="text-sm font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
                             {t(currentQuestion.feedbackKey as any)}
@@ -334,7 +334,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                     onClick={handleNext}
                     className="w-full py-4 rounded-full bg-[#2E2FCE] hover:bg-[#2E2FCE] text-white font-bold text-sm tracking-wide shadow-sm transition-colors mt-4"
                 >
-                    {questionIndex < totalQuestions - 1 ? 'Next Question →' : '🎓 Finish Quiz!'}
+                    {questionIndex < totalQuestions - 1 ? 'Next Question →' : ' Finish Quiz!'}
                 </motion.button>
             )}
         </motion.div>
@@ -358,7 +358,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
 
                     <div className="flex flex-col items-center gap-1">
                         <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-                            {phase === 'reading' ? '📖 Read & Learn' : `Quiz · Q${questionIndex + 1}`}
+                            {phase === 'reading' ? ' Read & Learn' : `Quiz · Q${questionIndex + 1}`}
                         </span>
                         <span className="text-sm font-bold text-slate-800 dark:text-white tracking-tight">
                             {t(lesson.titleKey as any)}
@@ -366,7 +366,7 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
                     </div>
 
                     <div className="bg-[#FBBC05]/10 dark:bg-[#FBBC05]/20 px-3 py-1.5 rounded-full border border-[#FBBC05]/30 shadow-sm font-bold text-[#F29900] dark:text-[#fde293] text-sm flex items-center gap-1">
-                        ⭐ {currentUser?.progress?.xp || 0}
+                         {currentUser?.progress?.xp || 0}
                     </div>
                 </div>
             </header>

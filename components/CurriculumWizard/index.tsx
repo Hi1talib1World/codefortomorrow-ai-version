@@ -141,7 +141,7 @@ const OutcomesStep = ({ subject, formData, setFormData }: { subject: string, for
                     className={`w-full text-left p-4 border rounded-xl transition-all flex items-center justify-between ${formData.outcomes.includes(o) ? 'border-[#34A853] bg-[#34A853]/10 text-[#2e9347] dark:text-[#a8dab5] shadow-sm' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
                 >
                     <span className="font-bold">{o}</span>
-                    {formData.outcomes.includes(o) && <span className="text-[#34A853]">✅</span>}
+                    {formData.outcomes.includes(o) && <span className="text-[#34A853]"></span>}
                 </button>
             ))}
         </div>

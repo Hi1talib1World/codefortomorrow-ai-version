@@ -4,7 +4,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 let mongoUri = process.env.MONGO_URI;
 // If no URI or pointing to localhost, fall back to in‑memory MongoDB
 if (!mongoUri || mongoUri.includes('localhost') || mongoUri.includes('127.0.0.1')) {
-  console.warn('⚠️ Using MongoMemoryServer fallback (no external DB).');
+  console.warn('️ Using MongoMemoryServer fallback (no external DB).');
   const mongod = await MongoMemoryServer.create();
   mongoUri = mongod.getUri();
 }
@@ -24,7 +24,7 @@ const connectDB = async () => {
 
   if (!mongoUri) {
     const message = 'MONGO_URI is not defined in environment variables. Database connection cannot be established.';
-    console.error(`❌ ${message}`);
+    console.error(` ${message}`);
     throw new Error(message);
   }
 
@@ -38,13 +38,13 @@ const connectDB = async () => {
       socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
       bufferCommands: false, // Don't buffer operations when disconnected — fail fast
     });
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    console.log(` MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     const errorMessage = (error as Error).message;
-    console.error(`❌ Error connecting to MongoDB: ${errorMessage}`);
+    console.error(` Error connecting to MongoDB: ${errorMessage}`);
     if (errorMessage.includes('IP isn\'t whitelisted') || errorMessage.includes('Could not connect to any servers')) {
       console.log('\n' + '='.repeat(80));
-      console.log('🛠️  HOW TO FIX THIS ERROR:');
+      console.log('️  HOW TO FIX THIS ERROR:');
       console.log('1. Log in to your MongoDB Atlas dashboard (https://cloud.mongodb.com)');
       console.log('2. Go to "Network Access" in the left sidebar.');
       console.log('3. Click "Add IP Address".');

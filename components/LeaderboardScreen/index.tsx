@@ -52,14 +52,14 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
           const firstNames = ['Anass', 'Youssef', 'Reda', 'Ghita', 'Salma', 'Mehdi', 'Adnane', 'Walid', 'Laila', 'Houda', 'Imane', 'Hamza', 'Saad', 'Othmane', 'Marouane', 'Nabil', 'Rania', 'Yasmin', 'Sara', 'Zineb', 'Adam', 'Omar', 'Ali', 'Bilal', 'Zakaria', 'Tariq', 'Khalid', 'Siham', 'Nadia', 'Karima', 'Fouad', 'Hassan', 'Meriem', 'Maha', 'Sami', 'Rayan'];
           const lastNames = ['El Amrani', 'Berrada', 'Fassi', 'Benjelloun', 'Tazi', 'Alaoui', 'Mansouri', 'Bennani', 'El Idrissi', 'Haddad', 'Naji', 'Bouazzaoui', 'Harrak', 'Slaoui', 'Kadiri', 'Filali', 'Jahidi', 'Kabbaj', 'Zouhair', 'Chraibi', 'Dahmouni', 'Ghazali', 'Saber', 'Tahiri', 'Amraoui', 'Moussaoui'];
           const bios = [
-            'Coding is my superpower! 💻🚀',
+            'Coding is my superpower! ',
             'Learning JavaScript and building mini games.',
             'Future software engineer from Morocco. 🇲🇦',
             'Python enthusiast. Love data science!',
             'Building modern web projects with HTML & CSS.',
             'Code for Tomorrow student. Passionate about logic.',
             'Solving algorithms and logical puzzles.',
-            'Always learning, coding day by day. 🔥',
+            'Always learning, coding day by day. ',
             'Passionate about UI/UX and frontend engineering.',
             'Exploring block programming tracks.',
           ];
@@ -104,14 +104,14 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
         const firstNames = ['Anass', 'Youssef', 'Reda', 'Ghita', 'Salma', 'Mehdi', 'Adnane', 'Walid', 'Laila', 'Houda', 'Imane', 'Hamza', 'Saad', 'Othmane', 'Marouane', 'Nabil', 'Rania', 'Yasmin', 'Sara', 'Zineb', 'Adam', 'Omar', 'Ali', 'Bilal', 'Zakaria', 'Tariq', 'Khalid', 'Siham', 'Nadia', 'Karima', 'Fouad', 'Hassan', 'Meriem', 'Maha', 'Sami', 'Rayan'];
         const lastNames = ['El Amrani', 'Berrada', 'Fassi', 'Benjelloun', 'Tazi', 'Alaoui', 'Mansouri', 'Bennani', 'El Idrissi', 'Haddad', 'Naji', 'Bouazzaoui', 'Harrak', 'Slaoui', 'Kadiri', 'Filali', 'Jahidi', 'Kabbaj', 'Zouhair', 'Chraibi', 'Dahmouni', 'Ghazali', 'Saber', 'Tahiri', 'Amraoui', 'Moussaoui'];
         const bios = [
-          'Coding is my superpower! 💻🚀',
+          'Coding is my superpower! ',
           'Learning JavaScript and building mini games.',
           'Future software engineer from Morocco. 🇲🇦',
           'Python enthusiast. Love data science!',
           'Building modern web projects with HTML & CSS.',
           'Code for Tomorrow student. Passionate about logic.',
           'Solving algorithms and logical puzzles.',
-          'Always learning, coding day by day. 🔥',
+          'Always learning, coding day by day. ',
           'Passionate about UI/UX and frontend engineering.',
           'Exploring block programming tracks.',
         ];
@@ -233,7 +233,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
       {/* ─── Empty State ─── */}
       {filteredUsers.length === 0 && (
         <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-[3rem] border border-slate-200 dark:border-slate-700/80 shadow-md">
-          <span className="text-6xl block mb-4">🏆</span>
+          <span className="text-6xl block mb-4"></span>
           <h3 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">No Coders Yet</h3>
           <p className="text-slate-500 dark:text-slate-400 mt-2 font-bold max-w-sm mx-auto">
             {searchQuery.trim() ? 'No users match your search.' : 'Complete lessons to earn XP and appear on the leaderboard!'}
@@ -249,7 +249,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
           {podiumUsers[1] && (
             <div className="order-2 md:order-1 flex flex-col items-center bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-md transition-all hover:scale-[1.02] relative">
               <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-400 text-white font-black text-sm px-4 py-1.5 rounded-full shadow-md">
-                🥈 Rank 2
+                 Rank 2
               </div>
               <img
                 src={podiumUsers[1].profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(podiumUsers[1].name)}&background=random`}
@@ -264,7 +264,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
               </span>
               <div className="flex gap-2 w-full mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/80 justify-center">
                 <span className="px-3 py-1 bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-xl text-xs font-black">
-                  ⭐ {podiumUsers[1].progress?.xp || 0} XP
+                   {podiumUsers[1].progress?.xp || 0} XP
                 </span>
                 {(podiumUsers[1].progress?.streak || 0) > 0 && (
                   <span className="px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl text-xs font-black flex items-center gap-1">
@@ -282,7 +282,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
                 <Crown className="w-10 h-10 fill-yellow-500 text-yellow-500 drop-shadow-md" />
               </div>
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-white font-black text-sm px-5 py-1.5 rounded-full shadow-lg">
-                🥇 Champion
+                 Champion
               </div>
               <img
                 src={podiumUsers[0].profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(podiumUsers[0].name)}&background=random`}
@@ -298,7 +298,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
               </span>
               <div className="flex gap-2 w-full mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/80 justify-center">
                 <span className="px-4 py-1.5 bg-yellow-500 text-white rounded-xl text-sm font-black shadow-sm">
-                  ⭐ {podiumUsers[0].progress?.xp || 0} XP
+                   {podiumUsers[0].progress?.xp || 0} XP
                 </span>
                 {(podiumUsers[0].progress?.streak || 0) > 0 && (
                   <span className="px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl text-xs font-black flex items-center gap-1">
@@ -313,7 +313,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
           {podiumUsers[2] && (
             <div className="order-3 flex flex-col items-center bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-md transition-all hover:scale-[1.02] relative">
               <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-amber-700 text-white font-black text-sm px-4 py-1.5 rounded-full shadow-md">
-                🥉 Rank 3
+                 Rank 3
               </div>
               <img
                 src={podiumUsers[2].profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(podiumUsers[2].name)}&background=random`}
@@ -328,7 +328,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
               </span>
               <div className="flex gap-2 w-full mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/80 justify-center">
                 <span className="px-3 py-1 bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-xl text-xs font-black">
-                  ⭐ {podiumUsers[2].progress?.xp || 0} XP
+                   {podiumUsers[2].progress?.xp || 0} XP
                 </span>
                 {(podiumUsers[2].progress?.streak || 0) > 0 && (
                   <span className="px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl text-xs font-black flex items-center gap-1">
@@ -426,7 +426,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
                       <td className="px-6 py-4 text-center">
                         {getBadgeCount(user) > 0 ? (
                           <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-full text-xs font-bold">
-                            🏆 {getBadgeCount(user)}
+                             {getBadgeCount(user)}
                           </span>
                         ) : (
                           <span className="text-slate-300 dark:text-slate-600">-</span>

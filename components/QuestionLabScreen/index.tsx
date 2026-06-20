@@ -13,7 +13,7 @@ interface QuestionLabScreenProps {
 const FrenchIllustration = () => (
     <div className="w-full h-40 bg-gradient-to-br from-blue-500 via-white to-red-500 p-1 flex items-center justify-center rounded-lg transition-colors overflow-hidden relative shadow-inner">
         <div className="absolute inset-0 opacity-10 bg-white dark:bg-slate-900"></div>
-        <span className="text-6xl drop-shadow-lg relative z-10">🗼</span>
+        <span className="text-6xl drop-shadow-lg relative z-10"></span>
     </div>
 );
 

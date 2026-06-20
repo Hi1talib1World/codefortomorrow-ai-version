@@ -78,7 +78,7 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const queue = getQueue();
     if (queue.length === 0) return;
 
-    console.log(`📡 Offline Sync Manager: Syncing ${queue.length} buffered actions...`);
+    console.log(` Offline Sync Manager: Syncing ${queue.length} buffered actions...`);
     
     // Merge all buffered progress items to send a single consolidated update
     const consolidatedProgress: any = {};
@@ -116,10 +116,10 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       // Send consolidated progress updates to the server
       await api.updateUserProgress(consolidatedProgress);
-      console.log('📡 Offline Sync Manager: Synchronization successful!');
+      console.log(' Offline Sync Manager: Synchronization successful!');
       saveQueue([]); // Clear queue
     } catch (error) {
-      console.error('📡 Offline Sync Manager: Sync failed:', error);
+      console.error(' Offline Sync Manager: Sync failed:', error);
     }
   };
 

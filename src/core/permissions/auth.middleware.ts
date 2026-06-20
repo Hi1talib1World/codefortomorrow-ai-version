@@ -33,7 +33,7 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
 
     const isDbConnected = mongoose.connection.readyState === 1;
     if (!isDbConnected) {
-      console.warn('⚠️ MongoDB not connected. Authentication cannot proceed.');
+      console.warn('️ MongoDB not connected. Authentication cannot proceed.');
       return res.status(503).json({ error: 'Database unavailable' });
     }
 

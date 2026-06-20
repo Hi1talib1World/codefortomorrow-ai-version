@@ -61,10 +61,10 @@ const RecentContentDetails = ({ item, onOpen }: { item: Creation, onOpen: () => 
     const { t } = useLanguage();
 
     const detailRows = [
-        { icon: '📄', label: t('content_type'), value: t(item.contentType as any), detail: t('multiple_choice') },
-        { icon: '🎓', label: t('stage'), value: t(item.stageKey as any) },
-        { icon: '❓', label: t('question_count'), value: item.questionCount },
-        { icon: '🌍', label: t('language_label'), value: item.language },
+        { icon: '', label: t('content_type'), value: t(item.contentType as any), detail: t('multiple_choice') },
+        { icon: '', label: t('stage'), value: t(item.stageKey as any) },
+        { icon: '', label: t('question_count'), value: item.questionCount },
+        { icon: '', label: t('language_label'), value: item.language },
     ];
 
     return (
@@ -156,11 +156,11 @@ const CreationsScreen: React.FC = () => {
     };
 
     const creationTools = [
-        { id: 'game_studio', titleKey: 'game_studio', descriptionKey: 'game_studio_desc', buttonTextKey: 'create', color: 'purple', icon: '🎮', status: 'active' },
-        { id: 'question_lab', titleKey: 'question_lab', descriptionKey: 'question_lab_desc', buttonTextKey: 'generate', color: 'green', icon: '🧪', status: 'active' },
-        { id: 'smart_books', titleKey: 'smart_books', descriptionKey: 'smart_books_desc', buttonTextKey: 'open', color: 'pink', icon: '📚', status: 'active' },
-        { id: 'scientific_inquiry', titleKey: 'scientific_inquiry', descriptionKey: 'scientific_inquiry_desc', buttonTextKey: 'coming_soon', color: 'orange', icon: '🔬', status: 'coming_soon' },
-        { id: 'speaking_hub', titleKey: 'speaking_hub', descriptionKey: 'speaking_hub_desc', buttonTextKey: 'start_speaking', color: 'blue', icon: '🎤', status: 'active' },
+        { id: 'game_studio', titleKey: 'game_studio', descriptionKey: 'game_studio_desc', buttonTextKey: 'create', color: 'purple', icon: '', status: 'active' },
+        { id: 'question_lab', titleKey: 'question_lab', descriptionKey: 'question_lab_desc', buttonTextKey: 'generate', color: 'green', icon: '', status: 'active' },
+        { id: 'smart_books', titleKey: 'smart_books', descriptionKey: 'smart_books_desc', buttonTextKey: 'open', color: 'pink', icon: '', status: 'active' },
+        { id: 'scientific_inquiry', titleKey: 'scientific_inquiry', descriptionKey: 'scientific_inquiry_desc', buttonTextKey: 'coming_soon', color: 'orange', icon: '', status: 'coming_soon' },
+        { id: 'speaking_hub', titleKey: 'speaking_hub', descriptionKey: 'speaking_hub_desc', buttonTextKey: 'start_speaking', color: 'blue', icon: '', status: 'active' },
     ];
 
     const selectedCreation = creations.find(c => c.id === selectedCreationId) || creations[0];
@@ -213,7 +213,7 @@ const CreationsScreen: React.FC = () => {
                             />
                         ) : (
                             <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm p-12 border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center transition-colors h-full min-h-[350px]">
-                                <span className="text-5xl mb-6 opacity-40 filter grayscale">📂</span>
+                                <span className="text-5xl mb-6 opacity-40 filter grayscale"></span>
                                 <p className="text-slate-500 dark:text-slate-400 font-bold tracking-tight text-lg">{t('no_content_saved')}</p>
                             </div>
                         )}
@@ -231,7 +231,7 @@ const CreationsScreen: React.FC = () => {
                                             className="flex-grow text-left flex items-center space-x-5"
                                         >
                                             <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform shadow-sm">
-                                                {c.contentType === 'quiz' ? '🧪' : '📚'}
+                                                {c.contentType === 'quiz' ? '' : ''}
                                             </div>
                                             <div className="min-w-0">
                                                 <h4 className="font-bold text-slate-800 dark:text-white tracking-tight text-lg truncate leading-tight mb-1">{c.title}</h4>

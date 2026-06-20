@@ -52,7 +52,7 @@ export const getLearningAnalytics = async (forceRefresh = false): Promise<ILearn
     if (!forceRefresh) {
       const cached = await AnalyticsCache.findOne({ key: 'learning_analytics' });
       if (cached && (Date.now() - new Date(cached.updatedAt).getTime() < CACHE_TTL_MS)) {
-        console.log('⚡ [Analytics] Returning cached platform analytics (Cache Hit)');
+        console.log(' [Analytics] Returning cached platform analytics (Cache Hit)');
         return {
           ...cached.data,
           cachedAt: cached.updatedAt,
@@ -60,7 +60,7 @@ export const getLearningAnalytics = async (forceRefresh = false): Promise<ILearn
       }
     }
 
-    console.log('⚡ [Analytics] Cache expired or force refresh requested. Recomputing learning metrics...');
+    console.log(' [Analytics] Cache expired or force refresh requested. Recomputing learning metrics...');
     const start = performance.now();
     const progresses = await Progress.find();
     const totalStudents = progresses.length;
@@ -177,7 +177,7 @@ export const getLearningAnalytics = async (forceRefresh = false): Promise<ILearn
     }
 
     const duration = (performance.now() - start).toFixed(2);
-    console.log(`⚡ [Analytics] Successfully aggregated platform analytics in ${duration}ms`);
+    console.log(` [Analytics] Successfully aggregated platform analytics in ${duration}ms`);
 
     // Cache result in MongoDB
     const now = new Date();
@@ -192,12 +192,12 @@ export const getLearningAnalytics = async (forceRefresh = false): Promise<ILearn
       cachedAt: now,
     };
   } catch (error) {
-    console.error('❌ [Analytics] Failed to get or compute learning analytics:', error);
+    console.error(' [Analytics] Failed to get or compute learning analytics:', error);
     
     // Attempt to return expired cache if computation fails (fail-safe recovery)
     const cached = await AnalyticsCache.findOne({ key: 'learning_analytics' });
     if (cached) {
-      console.warn('⚠️ [Analytics] Returning expired cache as fallback due to aggregation failure');
+      console.warn('️ [Analytics] Returning expired cache as fallback due to aggregation failure');
       return {
         ...cached.data,
         cachedAt: cached.updatedAt,

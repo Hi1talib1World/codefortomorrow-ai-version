@@ -153,7 +153,7 @@ const HowToLearnScreen: React.FC = () => {
                 {/* Header Title Section */}
                 <div className="text-center space-y-4">
                     <div className="w-16 h-16 bg-[#FBBF24]/10 dark:bg-[#FBBF24]/20 rounded-3xl flex items-center justify-center mx-auto text-4xl shadow-sm border border-[#FBBF24]/30 animate-pulse">
-                        🚀
+                        
                     </div>
                     <h1 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase text-slate-800 dark:text-white">
                         {texts.title}
@@ -197,21 +197,21 @@ const HowToLearnScreen: React.FC = () => {
 
                             <div className="space-y-6">
                                 <div className="flex gap-4 items-start bg-slate-50 dark:bg-slate-900/50 p-4.5 rounded-2xl border border-slate-100 dark:border-slate-950">
-                                    <span className="text-3xl shrink-0 mt-0.5">📂</span>
+                                    <span className="text-3xl shrink-0 mt-0.5"></span>
                                     <div>
                                         <h3 className="font-extrabold text-slate-800 dark:text-white text-base leading-snug">{texts.roadmap_step1}</h3>
                                         <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed mt-1">{texts.roadmap_step1_detail}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4 items-start bg-slate-50 dark:bg-slate-900/50 p-4.5 rounded-2xl border border-slate-100 dark:border-slate-950">
-                                    <span className="text-3xl shrink-0 mt-0.5">🗺️</span>
+                                    <span className="text-3xl shrink-0 mt-0.5">️</span>
                                     <div>
                                         <h3 className="font-extrabold text-slate-800 dark:text-white text-base leading-snug">{texts.roadmap_step2}</h3>
                                         <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed mt-1">{texts.roadmap_step2_detail}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4 items-start bg-slate-50 dark:bg-slate-900/50 p-4.5 rounded-2xl border border-slate-100 dark:border-slate-950">
-                                    <span className="text-3xl shrink-0 mt-0.5">🔒</span>
+                                    <span className="text-3xl shrink-0 mt-0.5"></span>
                                     <div>
                                         <h3 className="font-extrabold text-slate-800 dark:text-white text-base leading-snug">{texts.roadmap_step3}</h3>
                                         <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed mt-1">{texts.roadmap_step3_detail}</p>
@@ -235,21 +235,21 @@ const HowToLearnScreen: React.FC = () => {
 
                             <div className="space-y-6">
                                 <div className="flex gap-4 items-start bg-slate-50 dark:bg-slate-900/50 p-4.5 rounded-2xl border border-slate-100 dark:border-slate-950">
-                                    <span className="text-3xl shrink-0 mt-0.5">📄</span>
+                                    <span className="text-3xl shrink-0 mt-0.5"></span>
                                     <div>
                                         <h3 className="font-extrabold text-slate-800 dark:text-white text-base leading-snug">{texts.lesson_theory}</h3>
                                         <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed mt-1">{texts.lesson_theory_detail}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4 items-start bg-slate-50 dark:bg-slate-900/50 p-4.5 rounded-2xl border border-slate-100 dark:border-slate-950">
-                                    <span className="text-3xl shrink-0 mt-0.5">💻</span>
+                                    <span className="text-3xl shrink-0 mt-0.5"></span>
                                     <div>
                                         <h3 className="font-extrabold text-slate-800 dark:text-white text-base leading-snug">{texts.lesson_editor}</h3>
                                         <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed mt-1">{texts.lesson_editor_detail}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4 items-start bg-slate-50 dark:bg-slate-900/50 p-4.5 rounded-2xl border border-slate-100 dark:border-slate-950">
-                                    <span className="text-3xl shrink-0 mt-0.5">🖥️</span>
+                                    <span className="text-3xl shrink-0 mt-0.5">️</span>
                                     <div>
                                         <h3 className="font-extrabold text-slate-800 dark:text-white text-base leading-snug">{texts.lesson_compiler}</h3>
                                         <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed mt-1">{texts.lesson_compiler_detail}</p>
@@ -273,21 +273,21 @@ const HowToLearnScreen: React.FC = () => {
 
                             <div className="space-y-6">
                                 <div className="flex gap-4 items-start bg-slate-50 dark:bg-slate-900/50 p-4.5 rounded-2xl border border-slate-100 dark:border-slate-950">
-                                    <span className="text-3xl shrink-0 mt-0.5">🎯</span>
+                                    <span className="text-3xl shrink-0 mt-0.5"></span>
                                     <div>
                                         <h3 className="font-extrabold text-slate-800 dark:text-white text-base leading-snug">{texts.quest_daily}</h3>
                                         <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed mt-1">{texts.quest_daily_detail}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4 items-start bg-slate-50 dark:bg-slate-900/50 p-4.5 rounded-2xl border border-slate-100 dark:border-slate-950">
-                                    <span className="text-3xl shrink-0 mt-0.5">🎁</span>
+                                    <span className="text-3xl shrink-0 mt-0.5"></span>
                                     <div>
                                         <h3 className="font-extrabold text-slate-800 dark:text-white text-base leading-snug">{texts.quest_chest}</h3>
                                         <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed mt-1">{texts.quest_chest_detail}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4 items-start bg-slate-50 dark:bg-slate-900/50 p-4.5 rounded-2xl border border-slate-100 dark:border-slate-950">
-                                    <span className="text-3xl shrink-0 mt-0.5">🔥</span>
+                                    <span className="text-3xl shrink-0 mt-0.5"></span>
                                     <div>
                                         <h3 className="font-extrabold text-slate-800 dark:text-white text-base leading-snug">{texts.quest_streak}</h3>
                                         <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed mt-1">{texts.quest_streak_detail}</p>

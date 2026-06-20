@@ -148,7 +148,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
               />
               <div className="hidden lg:flex flex-col text-left">
                 <span className="text-xs font-bold text-white leading-tight font-mono">{currentUser.name}</span>
-                <span className="text-[10px] text-slate-500 font-mono">⭐ {currentUser.progress?.xp || 0} XP</span>
+                <span className="text-[10px] text-slate-500 font-mono"> {currentUser.progress?.xp || 0} XP</span>
               </div>
               <button 
                 onClick={() => {
@@ -232,7 +232,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
                     />
                     <div className="flex flex-col text-left">
                       <span className="text-sm font-bold text-white leading-tight font-mono">{currentUser.name}</span>
-                      <span className="text-xs text-slate-500 font-mono">⭐ {currentUser.progress?.xp || 0} XP</span>
+                      <span className="text-xs text-slate-500 font-mono"> {currentUser.progress?.xp || 0} XP</span>
                     </div>
                   </div>
                   <button 

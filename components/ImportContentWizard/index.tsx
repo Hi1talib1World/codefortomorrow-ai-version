@@ -395,7 +395,7 @@ const GeneratingPreviewStep = ({ formData, onComplete }: { formData: any; onComp
     if (error) {
         return (
             <div className="flex flex-col items-center justify-center p-8 text-center h-64">
-                <div className="text-red-500 text-5xl mb-4">⚠️</div>
+                <div className="text-red-500 text-5xl mb-4">️</div>
                 <h3 className="text-xl font-bold text-gray-800 dark:text-white">Oops! Something went wrong.</h3>
                 <p className="text-gray-500 dark:text-slate-400 mt-2">{error}</p>
                 <button
@@ -472,7 +472,7 @@ const PreviewStep = ({ questions, onBack, onSave }: { questions: QuizQuestion[];
                                         return (
                                             <div key={i} className={`p-3 rounded-lg border-2 text-sm transition-colors ${isCorrect ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 font-bold' : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300'}`}>
                                                 {opt}
-                                                {isCorrect && <span className="ml-2">✅</span>}
+                                                {isCorrect && <span className="ml-2"></span>}
                                             </div>
                                         )
                                     })}

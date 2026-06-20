@@ -44,35 +44,35 @@ const SettingsScreen: React.FC = () => {
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value as Language);
-    showToast('Language updated successfully! 🌍');
+    showToast('Language updated successfully! ');
   };
 
   const toggleSound = () => {
     const next = !soundEffects;
     setSoundEffects(next);
     localStorage.setItem('setting_sound_effects', String(next));
-    showToast(next ? 'Sound effects enabled! 🔊' : 'Sound effects muted! 🔇');
+    showToast(next ? 'Sound effects enabled! ' : 'Sound effects muted! ');
   };
 
   const toggleMascot = () => {
     const next = !mascotVoice;
     setMascotVoice(next);
     localStorage.setItem('setting_mascot_voice', String(next));
-    showToast(next ? 'Mascot voiceovers enabled! 🦁' : 'Mascot voiceovers disabled! 🔇');
+    showToast(next ? 'Mascot voiceovers enabled! ' : 'Mascot voiceovers disabled! ');
   };
 
   const toggleAI = () => {
     const next = !aiCoach;
     setAiCoach(next);
     localStorage.setItem('setting_ai_coach', String(next));
-    showToast(next ? 'AI Coach Insights activated! 🧠' : 'AI Coach Insights deactivated! 💤');
+    showToast(next ? 'AI Coach Insights activated! ' : 'AI Coach Insights deactivated! ');
   };
 
   const toggleReminders = () => {
     const next = !studyReminders;
     setStudyReminders(next);
     localStorage.setItem('setting_study_reminders', String(next));
-    showToast(next ? 'Study reminders activated! ⏰' : 'Study reminders deactivated!');
+    showToast(next ? 'Study reminders activated! ' : 'Study reminders deactivated!');
   };
 
   const handleClearCache = () => {
@@ -85,7 +85,7 @@ const SettingsScreen: React.FC = () => {
     if (themeVal) localStorage.setItem('theme', themeVal);
     if (langVal) localStorage.setItem('language', langVal);
     
-    showToast('Local application cache cleared! 🧹');
+    showToast('Local application cache cleared! ');
     setTimeout(() => {
       window.location.reload();
     }, 1000);
@@ -93,7 +93,7 @@ const SettingsScreen: React.FC = () => {
 
   const handleResetProgress = () => {
     if (confirmText !== 'RESET') {
-      showToast('Please type RESET in capital letters to confirm! ⚠️');
+      showToast('Please type RESET in capital letters to confirm! ️');
       return;
     }
 
@@ -102,7 +102,7 @@ const SettingsScreen: React.FC = () => {
     // Clear user progress state trigger
     localStorage.removeItem('user_progress');
 
-    showToast('Learning progress reset successfully! 🔄');
+    showToast('Learning progress reset successfully! ');
     setShowResetConfirm(false);
     setConfirmText('');
     
@@ -319,7 +319,7 @@ const SettingsScreen: React.FC = () => {
         {showResetConfirm && (
           <div className="fixed inset-0 bg-black/75 flex items-center justify-center z-[100] p-4 backdrop-blur-md animate-fade-in">
             <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 max-w-md w-full relative border-b-8 border-red-500 shadow-2xl text-center space-y-6">
-              <div className="w-16 h-16 mx-auto bg-red-100 dark:bg-red-950/50 rounded-full flex items-center justify-center text-red-500 text-3xl">⚠️</div>
+              <div className="w-16 h-16 mx-auto bg-red-100 dark:bg-red-950/50 rounded-full flex items-center justify-center text-red-500 text-3xl">️</div>
               <div>
                 <h3 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Are you absolutely sure?</h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-2 leading-relaxed">

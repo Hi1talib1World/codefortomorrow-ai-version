@@ -25,12 +25,12 @@ export default function BrainTrainingScreen() {
     }));
 
     const features = [
-        { emoji: '💯', key: 'brain_training_unlimited_access' as const },
-        { emoji: '💪', key: 'brain_training_unlimited_workouts' as const },
-        { emoji: '📊', key: 'brain_training_strengths' as const },
-        { emoji: '🤖', key: 'brain_training_ai_tips' as const },
-        { emoji: '🎯', key: 'brain_training_new_puzzles' as const },
-        { emoji: '✨', key: 'brain_training_premium' as const },
+        { emoji: '', key: 'brain_training_unlimited_access' as const },
+        { emoji: '', key: 'brain_training_unlimited_workouts' as const },
+        { emoji: '', key: 'brain_training_strengths' as const },
+        { emoji: '', key: 'brain_training_ai_tips' as const },
+        { emoji: '', key: 'brain_training_new_puzzles' as const },
+        { emoji: '', key: 'brain_training_premium' as const },
     ];
 
     return (
@@ -57,7 +57,7 @@ export default function BrainTrainingScreen() {
                             {/* Challenges Card */}
                             <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-5 flex items-center gap-4 hover:bg-white/20 transition-colors cursor-pointer group">
                                 <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-3xl shrink-0 shadow-inner">
-                                    🏆
+                                    
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-white text-sm md:text-base leading-snug">
@@ -72,7 +72,7 @@ export default function BrainTrainingScreen() {
                             {/* Brain Workouts Card */}
                             <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-5 flex items-center gap-4 hover:bg-white/20 transition-colors cursor-pointer group">
                                 <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-3xl shrink-0 shadow-inner">
-                                    🧠
+                                    
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-white text-sm md:text-base leading-snug">

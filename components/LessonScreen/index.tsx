@@ -92,7 +92,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                     
                     {hasLog && !output && (
                         <div className="absolute -top-7 -right-8 bg-slate-950/90 border border-cyan-500/50 px-2 py-1 rounded text-[8px] font-mono text-cyan-400 font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(6,182,212,0.3)] animate-pulse">
-                            ⚡ CONNECTING...
+                             CONNECTING...
                         </div>
                     )}
                     
@@ -106,7 +106,7 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
                             
                             <p className="text-cyan-400 font-mono text-[8px] font-black tracking-widest text-center whitespace-pre-wrap flex items-center justify-center gap-1 uppercase border-b border-cyan-500/20 pb-1 mb-1">
                                 <span className={output.includes('Error') ? 'text-rose-455 font-bold' : 'text-cyan-400'}>
-                                    {output.includes('Error') ? '⚡ SYSTEM_ERR : ERROR' : '⚙️ RUN_STDOUT : SUCCESS'}
+                                    {output.includes('Error') ? ' SYSTEM_ERR : ERROR' : '️ RUN_STDOUT : SUCCESS'}
                                 </span>
                             </p>
                             <p className="text-slate-100 font-mono text-[11px] font-bold text-center mt-1 truncate max-w-[160px]">{output}</p>
@@ -177,7 +177,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
     const testCases = useMemo(() => {
         return [
             { id: 'modify', desc: 'Code is modified from template', status: code.trim() !== lesson.starterCode.trim() },
-            { id: 'syntax', desc: 'No compiler or syntax errors', status: isCorrect !== null ? isCorrect || output !== 'Error! 🛠️' : true },
+            { id: 'syntax', desc: 'No compiler or syntax errors', status: isCorrect !== null ? isCorrect || output !== 'Error! ️' : true },
             { id: 'correct', desc: `Console outputs: "${lesson.expectedOutput}"`, status: isCorrect === true }
         ];
     }, [code, lesson.starterCode, lesson.expectedOutput, isCorrect, output]);
@@ -273,7 +273,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
             setAiHint(res.hint);
         } catch (e) {
             console.error('Magic Scanner Error:', e);
-            setAiHint("Let's review the code logic together! 💡");
+            setAiHint("Let's review the code logic together! ");
         } finally {
             setIsScanning(false);
         }
@@ -309,7 +309,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
             try {
                 new Function(code)();
             } catch (e) {
-                capturedOutput = "Error! 🛠️";
+                capturedOutput = "Error! ️";
             } finally {
                 console.log = originalConsoleLog;
             }
@@ -323,7 +323,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
             const newHistoryItem = {
                 id: historyCounter + 2,
                 text: finalOutput || '(Empty Output)',
-                type: capturedOutput.includes('Error! 🛠️') ? 'error' as const : (correct ? 'success' as const : 'info' as const)
+                type: capturedOutput.includes('Error! ️') ? 'error' as const : (correct ? 'success' as const : 'info' as const)
             };
             setOutputHistory(prev => [...prev, newHistoryItem]);
             setHistoryCounter(prev => prev + 2);
@@ -544,11 +544,11 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         onMouseLeave={() => setIsXpHovered(false)}
                         className="relative bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 shadow-md font-bold text-yellow-500 text-xs flex items-center gap-1 cursor-pointer transition-all hover:scale-105 hover:border-yellow-500/20"
                     >
-                        <span>⭐</span> {currentUser?.progress?.xp || 0} XP
+                        <span></span> {currentUser?.progress?.xp || 0} XP
                         {isXpHovered && (
                             <>
-                                <span className="absolute -top-1 -right-1 text-xs animate-spark select-none pointer-events-none">✨</span>
-                                <span className="absolute -bottom-1 -left-1 text-[10px] animate-spark select-none pointer-events-none" style={{ animationDelay: '0.6s' }}>✨</span>
+                                <span className="absolute -top-1 -right-1 text-xs animate-spark select-none pointer-events-none"></span>
+                                <span className="absolute -bottom-1 -left-1 text-[10px] animate-spark select-none pointer-events-none" style={{ animationDelay: '0.6s' }}></span>
                             </>
                         )}
                     </div>
@@ -593,18 +593,18 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         )}
                         {lesson.estimatedMinutes && (
                             <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 text-[9px] font-bold flex items-center gap-1">
-                                ⏱️ {lesson.estimatedMinutes} min
+                                ️ {lesson.estimatedMinutes} min
                             </span>
                         )}
                         <span className="px-2 py-0.5 rounded bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-[9px] font-bold flex items-center gap-1">
-                            ⭐ {lesson.xp} XP
+                             {lesson.xp} XP
                         </span>
                     </div>
 
                     {/* Rich Theory / Explanation */}
                     {lesson.explanationKey && (
                         <div className="bg-slate-950/80 border border-slate-850 p-4 rounded-xl relative overflow-hidden group">
-                            <div className="absolute -right-4 -top-4 text-slate-800 text-5xl transform rotate-12 select-none pointer-events-none opacity-20">💡</div>
+                            <div className="absolute -right-4 -top-4 text-slate-800 text-5xl transform rotate-12 select-none pointer-events-none opacity-20"></div>
                             <div className="relative z-10 flex flex-col gap-2">
                                 <h3 className="text-[10px] font-black text-cyan-400 uppercase tracking-widest flex items-center gap-1">
                                     <Cpu className="w-3.5 h-3.5 text-cyan-400" /> Concept Guide
@@ -625,7 +625,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                     onClick={() => setShowHint(!showHint)}
                                     className={`text-[10px] font-black uppercase tracking-wider flex items-center gap-1 transition-colors ${showHint ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'}`}
                                 >
-                                    <span>💡</span>
+                                    <span></span>
                                     <span>{showHint ? t('hide_hint') : t('show_hint')}</span>
                                 </button>
                             )}
@@ -641,7 +641,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                             onClick={() => setIsTestCasesExpanded(!isTestCasesExpanded)}
                             className="w-full flex items-center justify-between p-3 bg-[#0b0f19] border-b border-slate-850 font-black text-[10px] text-slate-400 uppercase tracking-wider"
                         >
-                            <span className="flex items-center gap-1.5">🎯 Test Cases Checklist</span>
+                            <span className="flex items-center gap-1.5"> Test Cases Checklist</span>
                             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isTestCasesExpanded ? 'transform rotate-180' : ''}`} />
                         </button>
                         {isTestCasesExpanded && (
@@ -681,11 +681,11 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                     <button
                                         onClick={() => {
                                             handleCodeChange(lesson.solutionCode);
-                                            showToast('Sample blueprint inserted! 💻', 'success');
+                                            showToast('Sample blueprint inserted! ', 'success');
                                         }}
                                         className="w-full py-2 bg-amber-500 hover:bg-amber-600 active:translate-y-0.5 border-b-4 border-amber-700 text-slate-950 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
                                     >
-                                        <span>📋</span> Use Sample Blueprint
+                                        <span></span> Use Sample Blueprint
                                     </button>
                                 </div>
                             )}
@@ -743,18 +743,18 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 {isObjectivesExpanded && (
                                     <ul className="p-3 space-y-2.5">
                                         {((t(lesson.objectivesKey as any) as string) || '').split('|').map((objective, idx) => {
-                                            let icon = "⚙️"; // default
+                                            let icon = "️"; // default
                                             const lowercaseObj = objective.toLowerCase();
                                             if (lowercaseObj.includes('jvm') || lowercaseObj.includes('compile') || lowercaseObj.includes('run') || lowercaseObj.includes('execut')) {
-                                                icon = "⚙️";
+                                                icon = "️";
                                             } else if (lowercaseObj.includes('variable') || lowercaseObj.includes('data') || lowercaseObj.includes('type')) {
-                                                icon = "📦";
+                                                icon = "";
                                             } else if (lowercaseObj.includes('syntax') || lowercaseObj.includes('code') || lowercaseObj.includes('error') || lowercaseObj.includes('trace')) {
-                                                icon = "🔍";
+                                                icon = "";
                                             } else if (lowercaseObj.includes('class') || lowercaseObj.includes('method') || lowercaseObj.includes('object') || lowercaseObj.includes('main')) {
-                                                icon = "🎛️";
+                                                icon = "️";
                                             } else if (lowercaseObj.includes('print') || lowercaseObj.includes('output') || lowercaseObj.includes('console')) {
-                                                icon = "🖥️";
+                                                icon = "️";
                                             }
                                             return (
                                                 <li key={idx} className="flex items-start gap-2 text-xs text-slate-300">
@@ -813,7 +813,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-all cursor-pointer shadow-sm active:translate-y-0.5"
                                 title="Show Sample Hint"
                             >
-                                <span>💡</span>
+                                <span></span>
                                 <span>Hint</span>
                             </button>
 
@@ -828,7 +828,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 title="Toggle Autocomplete / IntelliSense"
                             >
                                 <span className={`w-1.5 h-1.5 rounded-full ${isAutocompleteEnabled ? 'bg-emerald-400 animate-pulse' : 'bg-slate-600'}`} />
-                                <span>⚡ Auto: {isAutocompleteEnabled ? 'On' : 'Off'}</span>
+                                <span> Auto: {isAutocompleteEnabled ? 'On' : 'Off'}</span>
                             </button>
 
                             {/* Preferences cog */}
@@ -1025,7 +1025,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 <button
                                     onClick={() => {
                                         navigator.clipboard.writeText(output);
-                                        setOutputHistory(prev => [...prev, { id: historyCounter + 1, text: '📋 Console output copied to clipboard.', type: 'info' }]);
+                                        setOutputHistory(prev => [...prev, { id: historyCounter + 1, text: ' Console output copied to clipboard.', type: 'info' }]);
                                         setHistoryCounter(prev => prev + 1);
                                     }}
                                     className="p-1 rounded bg-slate-900 border border-slate-850 text-slate-400 hover:text-white transition-colors"
@@ -1093,7 +1093,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 <span className="flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-cyan-500 animate-pulse" /> V8 Engine Status</span>
                                 <span className="font-bold text-slate-400 uppercase flex flex-wrap items-center gap-3">
                                     <span className="flex items-center gap-1.5">
-                                        ⏱️ Runtime: <strong className="text-cyan-400 font-mono font-black">{executionMetrics.time}ms</strong>
+                                        ️ Runtime: <strong className="text-cyan-400 font-mono font-black">{executionMetrics.time}ms</strong>
                                         <svg className="w-6 h-3 text-cyan-500/80" viewBox="0 0 24 12" fill="none">
                                             <rect x="1" y="8" width="3" height="4" fill="currentColor" opacity="0.3" />
                                             <rect x="5" y="6" width="3" height="6" fill="currentColor" opacity="0.5" />
@@ -1104,7 +1104,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                     </span>
                                     <span className="w-[1px] h-3 bg-slate-800" />
                                     <span className="flex items-center gap-1.5">
-                                        💾 RAM: <strong className="text-cyan-400 font-mono font-black">{executionMetrics.memory}MB</strong>
+                                         RAM: <strong className="text-cyan-400 font-mono font-black">{executionMetrics.memory}MB</strong>
                                         <svg className="w-6 h-3 text-cyan-500/80" viewBox="0 0 24 12" fill="none">
                                             <rect x="1" y="9" width="3" height="3" fill="currentColor" opacity="0.4" />
                                             <rect x="5" y="7" width="3" height="5" fill="currentColor" opacity="0.4" />
@@ -1132,7 +1132,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         </button>
 
                         <div className="flex items-center gap-2.5">
-                            <span className="text-3xl">💡</span>
+                            <span className="text-3xl"></span>
                             <div>
                                 <h3 className="text-lg font-black text-white uppercase tracking-tight">Lesson Hint & Sample</h3>
                                 <p className="text-xs text-slate-400 font-semibold mt-0.5">Need a hand? Here is a sample code pattern to help you solve this lesson!</p>
@@ -1177,11 +1177,11 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 onClick={() => {
                                     handleCodeChange(lesson.solutionCode);
                                     setShowHintModal(false);
-                                    showToast('Sample blueprint inserted! 💻', 'success');
+                                    showToast('Sample blueprint inserted! ', 'success');
                                 }}
                                 className="w-full py-3.5 bg-amber-500 hover:bg-amber-600 active:translate-y-0.5 border-b-4 border-amber-700 text-slate-950 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-lg"
                             >
-                                <span>📋</span> Insert Sample into Editor
+                                <span></span> Insert Sample into Editor
                             </button>
                         )}
                     </div>

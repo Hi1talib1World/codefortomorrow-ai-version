@@ -16,7 +16,7 @@ export const recordEventEmission = async (
       status: 'pending',
       attempts: 1,
     });
-    console.log(`[EventLog] [${traceId}] 💾 Saved event "${eventName}" to DB with status "pending"`);
+    console.log(`[EventLog] [${traceId}]  Saved event "${eventName}" to DB with status "pending"`);
   } catch (error) {
     console.error(`[EventLog] [${traceId}] Failed to save event log to DB:`, error);
   }
@@ -41,7 +41,7 @@ export const updateEventLogStatus = async (
       },
       { new: true }
     );
-    console.log(`[EventLog] [${traceId}] 💾 Updated event log in DB to status "${status}" (attempts: ${attempts})`);
+    console.log(`[EventLog] [${traceId}]  Updated event log in DB to status "${status}" (attempts: ${attempts})`);
   } catch (error) {
     console.error(`[EventLog] [${traceId}] Failed to update event log status:`, error);
   }

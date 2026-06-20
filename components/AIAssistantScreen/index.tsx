@@ -142,7 +142,7 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser }) =>
 
   const handleNewChat = useCallback(() => {
     const welcomeMsg: Message = {
-      text: `Hi ${currentUser.name}! 🤖 I'm your C4T AI Coding Assistant. Ask me anything about coding, algorithms, debugging, or programming concepts. How can I help you learn today?`,
+      text: `Hi ${currentUser.name}!  I'm your C4T AI Coding Assistant. Ask me anything about coding, algorithms, debugging, or programming concepts. How can I help you learn today?`,
       sender: 'ai',
       timestamp: new Date().toISOString(),
     };
@@ -237,10 +237,10 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser }) =>
   };
 
   const suggestedPrompts = [
-    { label: 'Explain recursion 💡', text: 'Explain the concept of recursion with an example.' },
-    { label: 'Python loops 🔁', text: 'How do loops work in Python? Give me a simple code snippet.' },
-    { label: 'Java debugging 🐛', text: 'I am getting a NullPointerException in Java. How do I debug it?' },
-    { label: 'How to build games 🎮', text: 'What are the basic steps to build a 2D game in code?' },
+    { label: 'Explain recursion ', text: 'Explain the concept of recursion with an example.' },
+    { label: 'Python loops ', text: 'How do loops work in Python? Give me a simple code snippet.' },
+    { label: 'Java debugging ', text: 'I am getting a NullPointerException in Java. How do I debug it?' },
+    { label: 'How to build games ', text: 'What are the basic steps to build a 2D game in code?' },
   ];
 
   const formatDate = (iso: string) => {

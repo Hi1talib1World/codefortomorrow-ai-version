@@ -179,9 +179,9 @@ function generateQuestions(challengeId: number): Question[] {
 
 /* ─── Category badge colors ─────────────────────────────────────── */
 const categoryStyleMap: Record<string, { bg: string; text: string; emoji: string; key: string }> = {
-    'math': { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-300', emoji: '🔢', key: 'brain_training_math' },
-    'logic': { bg: 'bg-cyan-100 dark:bg-cyan-900/30', text: 'text-cyan-700 dark:text-cyan-300', emoji: '🧩', key: 'brain_training_logic' },
-    'problem-solving': { bg: 'bg-rose-100 dark:bg-rose-900/30', text: 'text-rose-700 dark:text-rose-300', emoji: '💡', key: 'brain_training_problem_solving' },
+    'math': { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-300', emoji: '', key: 'brain_training_math' },
+    'logic': { bg: 'bg-cyan-100 dark:bg-cyan-900/30', text: 'text-cyan-700 dark:text-cyan-300', emoji: '', key: 'brain_training_logic' },
+    'problem-solving': { bg: 'bg-rose-100 dark:bg-rose-900/30', text: 'text-rose-700 dark:text-rose-300', emoji: '', key: 'brain_training_problem_solving' },
 };
 
 /* ─── Component ─────────────────────────────────────────────────── */

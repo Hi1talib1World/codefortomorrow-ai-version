@@ -14,7 +14,7 @@ interface EmptyStateProps {
  * Replaces blank space with a visual placeholder.
  */
 const EmptyState: React.FC<EmptyStateProps> = ({
-    icon = '📭',
+    icon = '',
     title,
     description,
     actionLabel,

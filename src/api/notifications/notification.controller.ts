@@ -40,7 +40,7 @@ export const getNotifications = async (req: Request, res: Response, next: NextFu
           if (!alreadyCreated) {
             await Notification.create({
               userId,
-              title: 'Streak at Risk! 🔥',
+              title: 'Streak at Risk! ',
               message: `Your ${progress.streak}-day learning streak is at risk. Solve a lesson today to keep your fire burning!`,
               type: 'streak_at_risk'
             });

@@ -133,7 +133,7 @@ const MathGameScreen: React.FC<MathGameScreenProps> = ({ lesson, onComplete, onE
                     </div>
 
                     <div className="bg-white dark:bg-slate-800 px-2 py-1 rounded-lg border-b-2 border-yellow-500 shadow-md font-black text-yellow-600 text-sm">
-                        ⭐ {currentUser?.progress?.xp || 0}
+                         {currentUser?.progress?.xp || 0}
                     </div>
                 </div>
             </header>

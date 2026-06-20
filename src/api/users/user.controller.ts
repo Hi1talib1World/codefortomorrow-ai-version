@@ -221,7 +221,7 @@ export const searchUsers = async (req: Request, res: Response, next: NextFunctio
 
         const isDbConnected = mongoose.connection.readyState === 1;
         if (!isDbConnected) {
-            console.warn("⚠️ MongoDB is not connected. User search cannot proceed.");
+            console.warn("️ MongoDB is not connected. User search cannot proceed.");
             throw new ApiError(503, 'Service unavailable: database connection is required to search users.');
         }
 
@@ -271,14 +271,14 @@ export const getLeaderboard = async (req: Request, res: Response, next: NextFunc
         const firstNames = ['Anass', 'Youssef', 'Reda', 'Ghita', 'Salma', 'Mehdi', 'Adnane', 'Walid', 'Laila', 'Houda', 'Imane', 'Hamza', 'Saad', 'Othmane', 'Marouane', 'Nabil', 'Rania', 'Yasmin', 'Sara', 'Zineb', 'Adam', 'Omar', 'Ali', 'Bilal', 'Zakaria', 'Tariq', 'Khalid', 'Siham', 'Nadia', 'Karima', 'Fouad', 'Hassan', 'Meriem', 'Maha', 'Sami', 'Rayan'];
         const lastNames = ['El Amrani', 'Berrada', 'Fassi', 'Benjelloun', 'Tazi', 'Alaoui', 'Mansouri', 'Bennani', 'El Idrissi', 'Haddad', 'Naji', 'Bouazzaoui', 'Harrak', 'Slaoui', 'Kadiri', 'Filali', 'Jahidi', 'Kabbaj', 'Zouhair', 'Chraibi', 'Dahmouni', 'Ghazali', 'Saber', 'Tahiri', 'Amraoui', 'Moussaoui'];
         const bios = [
-            'Coding is my superpower! 💻🚀',
+            'Coding is my superpower! ',
             'Learning JavaScript and building mini games.',
             'Future software engineer from Morocco. 🇲🇦',
             'Python enthusiast. Love data science!',
             'Building modern web projects with HTML & CSS.',
             'Code for Tomorrow student. Passionate about logic.',
             'Solving algorithms and logical puzzles.',
-            'Always learning, coding day by day. 🔥',
+            'Always learning, coding day by day. ',
             'Passionate about UI/UX and frontend engineering.',
             'Exploring block programming tracks.',
         ];

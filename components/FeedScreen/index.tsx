@@ -66,7 +66,7 @@ const generateMockPosts = (): Post[] => {
   const postsData = [
     {
       author: mockAuthors[0],
-      content: 'Just solved the recursive Fibonacci challenge in Javascript! 🤯 It took me 2 hours, but seeing the call stack visually made it click. Next stop: Dynamic Programming!',
+      content: 'Just solved the recursive Fibonacci challenge in Javascript!  It took me 2 hours, but seeing the call stack visually made it click. Next stop: Dynamic Programming!',
       milestone: {
         type: 'xp' as const,
         title: 'Reached 1200 Total XP!',
@@ -84,7 +84,7 @@ const generateMockPosts = (): Post[] => {
     },
     {
       author: mockAuthors[1],
-      content: 'Loving the Block Coding tracks! 🚀 Just built a mini maze solver script using repeat-until loops. It feels so cool to see the robot navigate automatically.',
+      content: 'Loving the Block Coding tracks!  Just built a mini maze solver script using repeat-until loops. It feels so cool to see the robot navigate automatically.',
       milestone: {
         type: 'streak' as const,
         title: 'Hit a 10-Day Streak!',
@@ -102,7 +102,7 @@ const generateMockPosts = (): Post[] => {
     },
     {
       author: mockAuthors[3],
-      content: 'Hey everyone, does anyone know the difference between CSS Flexbox and Grid? When should I use one over the other? 🤔',
+      content: 'Hey everyone, does anyone know the difference between CSS Flexbox and Grid? When should I use one over the other? ',
       likes: ['mock_author_0', 'mock_author_6'],
       comments: [
         {
@@ -115,14 +115,14 @@ const generateMockPosts = (): Post[] => {
     },
     {
       author: mockAuthors[4],
-      content: 'Had a wonderful block programming session with the middle school class today. They built interactive storyboards using conditional events. Teaching logic is so rewarding! 🎨🤖',
+      content: 'Had a wonderful block programming session with the middle school class today. They built interactive storyboards using conditional events. Teaching logic is so rewarding! ',
       likes: ['mock_author_2', 'mock_author_3', 'mock_author_0'],
       comments: [],
       createdAt: new Date(Date.now() - 3600000 * 12).toISOString()
     },
     {
       author: mockAuthors[5],
-      content: 'Just reached Level 4 in the Web Development pathway! 💻 Built a simple responsive personal portfolio page. Styling with CSS variables is super clean.',
+      content: 'Just reached Level 4 in the Web Development pathway!  Built a simple responsive personal portfolio page. Styling with CSS variables is super clean.',
       milestone: {
         type: 'level' as const,
         title: 'Reached Level 4!',
@@ -134,7 +134,7 @@ const generateMockPosts = (): Post[] => {
     },
     {
       author: mockAuthors[6],
-      content: 'Python is amazing! 🐍 I just wrote a script to automate downloading my favorite music playlists. Combining logic and real-world tools is satisfying.',
+      content: 'Python is amazing!  I just wrote a script to automate downloading my favorite music playlists. Combining logic and real-world tools is satisfying.',
       likes: ['mock_author_0', 'mock_author_4'],
       comments: [
         {
@@ -173,8 +173,8 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ currentUser }) => {
       postingButton: "Posting...",
       milestoneLabel: "Attach Achievement",
       noMilestone: "No Milestone",
-      streakMilestone: "🔥 Streak Milestone",
-      xpMilestone: "🚀 XP Milestone",
+      streakMilestone: " Streak Milestone",
+      xpMilestone: " XP Milestone",
       streakTitle: "Hit a {value}-Day Streak!",
       xpTitle: "Reached {value} Total XP!",
       commentsHeader: "Comments",
@@ -197,8 +197,8 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ currentUser }) => {
       postingButton: "Publication...",
       milestoneLabel: "Joindre une réussite",
       noMilestone: "Aucune",
-      streakMilestone: "🔥 Série de Jours",
-      xpMilestone: "🚀 Jalons d'XP",
+      streakMilestone: " Série de Jours",
+      xpMilestone: " Jalons d'XP",
       streakTitle: "Série active de {value} jours !",
       xpTitle: "Total de {value} XP atteint !",
       commentsHeader: "Commentaires",
@@ -221,8 +221,8 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ currentUser }) => {
       postingButton: "جاري النشر...",
       milestoneLabel: "إرفاق إنجاز",
       noMilestone: "بدون إنجاز",
-      streakMilestone: "🔥 إنجاز الحماس",
-      xpMilestone: "🚀 إنجاز نقاط الخبرة",
+      streakMilestone: " إنجاز الحماس",
+      xpMilestone: " إنجاز نقاط الخبرة",
       streakTitle: "حماس يومي متواصل لمدة {value} أيام!",
       xpTitle: "الوصول إلى {value} نقطة خبرة إجمالية!",
       commentsHeader: "التعليقات",
@@ -294,7 +294,7 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ currentUser }) => {
       setPosts(prev => [newPost, ...prev]);
       setContent('');
       setSelectedMilestone('none');
-      showToast('Post shared with the community! 🚀', 'success');
+      showToast('Post shared with the community! ', 'success');
     } catch (error) {
       console.error('Failed to create post:', error);
       showToast(texts.errorMessage, 'error');

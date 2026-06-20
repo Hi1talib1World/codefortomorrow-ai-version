@@ -41,7 +41,7 @@ export const getStudentProgress = async (req: Request, res: Response, next: Next
     const { userId } = req.params;
 
     if (!isDbConnected()) {
-      console.warn("⚠️ MongoDB offline. Returning mock user progress details.");
+      console.warn("️ MongoDB offline. Returning mock user progress details.");
       return res.json({
         xp: 0,
         streak: 0,
@@ -77,7 +77,7 @@ export const getSkillStates = async (req: Request, res: Response, next: NextFunc
     const { userId } = req.params;
 
     if (!isDbConnected()) {
-      console.warn("⚠️ MongoDB offline. Returning empty mock skill states.");
+      console.warn("️ MongoDB offline. Returning empty mock skill states.");
       // Return 0 progress mocks for existing courses
       const emptyMockStates = PATHS.map((path) => ({
         skill_id: path.id,

@@ -107,9 +107,9 @@ const StoreItem: React.FC<StoreItemProps> = ({ item, isUnlocked, isEquipped, onA
 
 const TokenPurchaseSection = () => {
     const items = [
-        { icon: '💰', title: 'Token Boost', amount: '250', price: '49 DH' },
-        { icon: '🛍️', title: 'Token Pouch', amount: '1000', price: '129 DH' },
-        { icon: '🏦', title: 'Token Vault', amount: '2000', price: '199 DH' },
+        { icon: '', title: 'Token Boost', amount: '250', price: '49 DH' },
+        { icon: '️', title: 'Token Pouch', amount: '1000', price: '129 DH' },
+        { icon: '', title: 'Token Vault', amount: '2000', price: '199 DH' },
     ];
     return (
         <div className="bg-white dark:bg-slate-800 rounded-[3rem] p-10 mt-16 border-2 border-slate-100 dark:border-slate-700 shadow-xl transition-colors relative overflow-hidden group">
@@ -143,26 +143,26 @@ export const AvatarPreview: React.FC<{ equipped: number[]; className?: string }>
             <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/10 via-transparent to-transparent opacity-60"></div>
             
             <div className="relative group-hover:scale-105 transition-transform duration-300">
-                🤖
+                
                 
                 {hasHat && (
                     <div className="absolute -top-[55%] left-1/2 -translate-x-1/2 text-[0.7em] z-10">
-                        🎓
+                        
                     </div>
                 )}
                 {hasGlasses && (
                     <div className="absolute top-[10%] left-1/2 -translate-x-1/2 text-[0.6em] z-10">
-                        👓
+                        
                     </div>
                 )}
                 {hasWand && (
                     <div className="absolute -right-[30%] bottom-0 text-[0.5em] animate-pulse">
-                        ✨
+                        
                     </div>
                 )}
                 {hasArm && (
                     <div className="absolute -left-[30%] bottom-0.5 text-[0.5em] transform -rotate-12">
-                        🦾
+                        
                     </div>
                 )}
             </div>
@@ -181,33 +181,33 @@ const StoreScreen: React.FC<StoreScreenProps> = ({ currentUser, onUpdateUser }) 
     const [searchQuery, setSearchQuery] = useState('');
 
     const boosterItems = [
-        { id: 1, icon: '🎁', title: 'Free Chest', description: 'Open once a day to earn up to 10 tokens for free.', type: 'free', category: 'Boosters' },
-        { id: 2, icon: '📜', title: 'Title Box', description: 'Open to receive a random locked title.', type: 'cost', cost: 50, category: 'Boosters' },
-        { id: 3, icon: '📦', title: 'Avatar Chest', description: 'Open to receive a random locked avatar item.', type: 'cost', cost: 100, category: 'Boosters' },
-        { id: 4, icon: '💧', title: 'Streak Freeze', description: 'Keeps your streak alive even if you take a day off.', type: 'equip', cost: 20, category: 'Boosters' },
-        { id: 5, icon: '✨', title: 'XP Surge', description: 'Double your XP for the next 30 minutes.', type: 'active', cost: 25, category: 'Boosters' },
+        { id: 1, icon: '', title: 'Free Chest', description: 'Open once a day to earn up to 10 tokens for free.', type: 'free', category: 'Boosters' },
+        { id: 2, icon: '', title: 'Title Box', description: 'Open to receive a random locked title.', type: 'cost', cost: 50, category: 'Boosters' },
+        { id: 3, icon: '', title: 'Avatar Chest', description: 'Open to receive a random locked avatar item.', type: 'cost', cost: 100, category: 'Boosters' },
+        { id: 4, icon: '', title: 'Streak Freeze', description: 'Keeps your streak alive even if you take a day off.', type: 'equip', cost: 20, category: 'Boosters' },
+        { id: 5, icon: '', title: 'XP Surge', description: 'Double your XP for the next 30 minutes.', type: 'active', cost: 25, category: 'Boosters' },
     ];
 
     const titleItems = [
-        { id: 101, icon: '🧙‍♂️', title: 'Math Wizard', description: 'Master of the numbers', type: 'cost', cost: 150, category: 'Titles', rarity: 'Epic' },
-        { id: 102, icon: '🧠', title: 'Logic Master', description: 'Solving puzzles with ease', type: 'cost', cost: 150, category: 'Titles', rarity: 'Epic' },
-        { id: 103, icon: '💻', title: 'Coding Cadet', description: 'First steps into the matrix', type: 'cost', cost: 50, category: 'Titles' },
-        { id: 104, icon: '🔢', title: 'Algorithm Ace', description: 'Efficiency is your second name', type: 'cost', cost: 200, category: 'Titles', rarity: 'Legendary' },
-        { id: 105, icon: '🐍', title: 'Python Pro', description: 'Speaking the language of snakes', type: 'cost', cost: 300, category: 'Titles', rarity: 'Legendary' },
+        { id: 101, icon: '‍️', title: 'Math Wizard', description: 'Master of the numbers', type: 'cost', cost: 150, category: 'Titles', rarity: 'Epic' },
+        { id: 102, icon: '', title: 'Logic Master', description: 'Solving puzzles with ease', type: 'cost', cost: 150, category: 'Titles', rarity: 'Epic' },
+        { id: 103, icon: '', title: 'Coding Cadet', description: 'First steps into the matrix', type: 'cost', cost: 50, category: 'Titles' },
+        { id: 104, icon: '', title: 'Algorithm Ace', description: 'Efficiency is your second name', type: 'cost', cost: 200, category: 'Titles', rarity: 'Legendary' },
+        { id: 105, icon: '', title: 'Python Pro', description: 'Speaking the language of snakes', type: 'cost', cost: 300, category: 'Titles', rarity: 'Legendary' },
     ];
 
     const themeItems = [
-        { id: 201, icon: '🌌', title: 'Cosmic Night', description: 'Deep space learning experience', type: 'cost', cost: 500, category: 'Themes', rarity: 'Legendary' },
-        { id: 202, icon: '🌊', title: 'Ocean Deep', description: 'Calm and blue environment', type: 'cost', cost: 250, category: 'Themes', rarity: 'Epic' },
-        { id: 203, icon: '🌵', title: 'Desert Sun', description: 'Bright and warm interface', type: 'cost', cost: 100, category: 'Themes' },
-        { id: 204, icon: '🌲', title: 'Forest Green', description: 'Nature-inspired focus mode', type: 'cost', cost: 150, category: 'Themes' },
+        { id: 201, icon: '', title: 'Cosmic Night', description: 'Deep space learning experience', type: 'cost', cost: 500, category: 'Themes', rarity: 'Legendary' },
+        { id: 202, icon: '', title: 'Ocean Deep', description: 'Calm and blue environment', type: 'cost', cost: 250, category: 'Themes', rarity: 'Epic' },
+        { id: 203, icon: '', title: 'Desert Sun', description: 'Bright and warm interface', type: 'cost', cost: 100, category: 'Themes' },
+        { id: 204, icon: '', title: 'Forest Green', description: 'Nature-inspired focus mode', type: 'cost', cost: 150, category: 'Themes' },
     ];
 
     const avatarItems = [
-        { id: 301, icon: '🎓', title: 'Professor Hat', description: 'Looking smart is half the work', type: 'cost', cost: 200, category: 'Avatar', rarity: 'Epic' },
-        { id: 302, icon: '👓', title: 'Coding Glasses', description: 'See the code clearly', type: 'cost', cost: 75, category: 'Avatar' },
-        { id: 303, icon: '✨', title: 'Magic Wand', description: 'Wave away the bugs', type: 'cost', cost: 400, category: 'Avatar', rarity: 'Legendary' },
-        { id: 304, icon: '🦾', title: 'Robot Arm', description: 'Code at lightning speed', type: 'cost', cost: 250, category: 'Avatar', rarity: 'Epic' },
+        { id: 301, icon: '', title: 'Professor Hat', description: 'Looking smart is half the work', type: 'cost', cost: 200, category: 'Avatar', rarity: 'Epic' },
+        { id: 302, icon: '', title: 'Coding Glasses', description: 'See the code clearly', type: 'cost', cost: 75, category: 'Avatar' },
+        { id: 303, icon: '', title: 'Magic Wand', description: 'Wave away the bugs', type: 'cost', cost: 400, category: 'Avatar', rarity: 'Legendary' },
+        { id: 304, icon: '', title: 'Robot Arm', description: 'Code at lightning speed', type: 'cost', cost: 250, category: 'Avatar', rarity: 'Epic' },
     ];
 
     const allItems = [...boosterItems, ...titleItems, ...themeItems, ...avatarItems];
@@ -229,7 +229,7 @@ const StoreScreen: React.FC<StoreScreenProps> = ({ currentUser, onUpdateUser }) 
         if (!isUnlocked) {
             // Purchase flow
             if (progress.xp < item.cost) {
-                alert(`Insufficient Stars/XP! You need ${item.cost} XP but you only have ${progress.xp} XP. Keep completing lessons to earn more! 🌟`);
+                alert(`Insufficient Stars/XP! You need ${item.cost} XP but you only have ${progress.xp} XP. Keep completing lessons to earn more! `);
                 return;
             }
             newXp -= item.cost;
@@ -335,7 +335,7 @@ const StoreScreen: React.FC<StoreScreenProps> = ({ currentUser, onUpdateUser }) 
                         </div>
                     ) : (
                         <div className="text-center py-20 animate-pop-in">
-                            <span className="text-8xl block mb-6">🔍</span>
+                            <span className="text-8xl block mb-6"></span>
                             <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">No items found</h2>
                             <p className="text-slate-400 font-bold mt-2">Try searching for something else!</p>
                             <button

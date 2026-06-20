@@ -67,7 +67,7 @@ export const checkPathUnlocks = async (
     if (blockCodingBefore < 30 && blockCodingAfter >= 30) {
       await createNotification(
         userId,
-        'Courses Unlocked! 🔓',
+        'Courses Unlocked! ',
         'Congratulations! Your Block Coding progress reached 30%. Python and JavaScript pathways are now unlocked!',
         'course_unlocked'
       );
@@ -76,7 +76,7 @@ export const checkPathUnlocks = async (
     if (jsBefore < 30 && jsAfter >= 30) {
       await createNotification(
         userId,
-        'New Courses Unlocked! 🔓',
+        'New Courses Unlocked! ',
         'Congratulations! Your JavaScript progress reached 30%. Web Development, TypeScript, and Lua pathways are now unlocked!',
         'course_unlocked'
       );
@@ -85,7 +85,7 @@ export const checkPathUnlocks = async (
     if (jsBefore < 40 && jsAfter >= 40) {
       await createNotification(
         userId,
-        'Advanced Paths Unlocked! 🚀',
+        'Advanced Paths Unlocked! ',
         'Incredible! Your JavaScript progress reached 40%. Advanced coding tracks (C++, Java, Kotlin, Swift, Go, Rust) are now unlocked!',
         'course_unlocked'
       );
