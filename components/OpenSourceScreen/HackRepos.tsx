@@ -83,7 +83,7 @@ export const HackRepos: React.FC = () => {
       ) : (
         <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(repo => {
-            const IconComp = repo.icon;
+            const IconComp = repo.icon || Shield;
             return (
               <motion.div onClick={() => {
                 if (repo.slug) {
@@ -91,10 +91,10 @@ export const HackRepos: React.FC = () => {
                 } else {
                   window.open(repo.html_url || repo.url, '_blank', 'noopener');
                 }
-              }} key={repo.id} variants={itemVariants}
+              }} key={repo.id || repo.full_name} variants={itemVariants}
                 className="bg-[#121212] rounded-2xl border border-slate-800/60 hover:border-[#111827]/30 p-6 flex flex-col transition-all group cursor-pointer hover:shadow-lg hover:shadow-[#111827]/5">
                 <div className="flex items-start gap-4 mb-4">
-                  <img src={repo.owner.avatar_url} alt={repo.name} className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800"
+                  <img src={repo.owner?.avatar_url || 'https://github.com/github.png'} alt={repo.name} className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800"
                     onError={(e) => { (e.target as HTMLImageElement).src = 'https://github.com/github.png'; }} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-1">
@@ -106,15 +106,15 @@ export const HackRepos: React.FC = () => {
                   <ExternalLink className="w-4 h-4 text-slate-600 group-hover:text-emerald-400 shrink-0 transition-colors" />
                 </div>
                 <div className="flex items-center gap-2 mb-6 flex-wrap">
-                  <span className="px-3 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-[11px] font-bold rounded-md">{repo.language}</span>
-                  <span className="px-3 py-1 bg-[#111827]/10 border border-[#111827]/20 text-emerald-400 text-[11px] font-bold rounded-md flex items-center gap-1"><IconComp className="w-3 h-3" /> {repo.category}</span>
+                  <span className="px-3 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-[11px] font-bold rounded-md">{repo.language || 'Code'}</span>
+                  <span className="px-3 py-1 bg-[#111827]/10 border border-[#111827]/20 text-emerald-400 text-[11px] font-bold rounded-md flex items-center gap-1"><IconComp className="w-3 h-3" /> {repo.category || (repo.topics && repo.topics[0]) || 'Security'}</span>
                 </div>
                 <div className="flex items-center gap-2 mb-6 mt-auto flex-wrap">
-                  {repo.topics.map(topic => <div key={topic} className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">{topic}</div>)}
+                  {(repo.topics || []).slice(0, 3).map(topic => <div key={topic} className="px-3 py-1.5 bg-[#1a1a1f] text-slate-500 text-[10px] font-semibold rounded-md">{topic}</div>)}
                 </div>
                 <div className="flex items-center gap-6 pt-5 border-t border-slate-800/60 text-sm font-semibold">
-                  <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-[#FBBF24] fill-current" /><span className="text-white">{t('feed.stars')}</span><span className="text-slate-400">{formatNumber(repo.stargazers_count)}</span></div>
-                  <div className="flex items-center gap-1.5"><GitFork className="w-4 h-4 text-slate-500" /><span className="text-white">{t('feed.forks')}</span><span className="text-slate-400">{formatNumber(repo.forks_count)}</span></div>
+                  <div className="flex items-center gap-1.5"><Star className="w-4 h-4 text-[#FBBF24] fill-current" /><span className="text-white">{t('feed.stars')}</span><span className="text-slate-400">{formatNumber(repo.stargazers_count || 0)}</span></div>
+                  <div className="flex items-center gap-1.5"><GitFork className="w-4 h-4 text-slate-500" /><span className="text-white">{t('feed.forks')}</span><span className="text-slate-400">{formatNumber(repo.forks_count || 0)}</span></div>
                 </div>
               </motion.div>
             );
