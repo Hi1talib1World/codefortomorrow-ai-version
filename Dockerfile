@@ -6,7 +6,7 @@ COPY package*.json ./
 
 ENV MONGOMS_DISABLE_POSTINSTALL=1
 
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 COPY . .
 
