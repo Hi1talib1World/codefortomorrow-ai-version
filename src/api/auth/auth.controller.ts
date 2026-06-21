@@ -64,9 +64,10 @@ const syncUserRole = async (user: any) => {
 };
 
 const setAuthCookie = (res: Response, token: string, req?: Request) => {
+  const isProduction = process.env.NODE_ENV === 'production';
   const cookieOptions: any = {
     httpOnly: true,
-    secure: false,
+    secure: isProduction,
     sameSite: 'lax',
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   };
@@ -338,7 +339,11 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
         const hasAdminCredentials = !!(process.env.FIREBASE_SERVICE_ACCOUNT_KEY || process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
         if (!hasAdminCredentials) {
-            console.warn('️ Firebase admin credentials are not configured. Decoding token without signature verification (Development Mode Only).');
+            if (process.env.NODE_ENV === 'production') {
+                throw new ApiError(500, 'Firebase admin credentials are required in production.');
+            }
+
+            console.warn('Firebase admin credentials are not configured. Decoding token without signature verification for local development only.');
             decodedToken = jwt.decode(token);
             if (!decodedToken) {
                 throw new ApiError(400, 'Invalid Firebase ID token format');
@@ -373,12 +378,7 @@ export const firebaseLogin = async (req: Request, res: Response, next: NextFunct
              throw new ApiError(401, 'Please verify your email address before logging in.');
         }
 
-        console.log('Firebase ID token decoded:', {
-          uid: googleId,
-          email: email,
-          name: decodedToken.name,
-          picture: decodedToken.picture,
-        });
+        console.log('Firebase ID token decoded for user:', { uid: googleId, email });
 
         const name = decodedToken.name || (email ? email.split('@')[0] : 'User');
         const picture = decodedToken.picture || `https://ui-avatars.com/api/?name=${name?.charAt(0) || 'U'}&background=random&color=fff`;
@@ -489,7 +489,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
     const clearOptions: any = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
     };
 
     const host = req.headers.host || '';

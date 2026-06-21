@@ -41,8 +41,8 @@ const verifTranslations = {
 };
 
 interface AuthScreenProps {
-  onAuthSuccess: (user: User) => void;
-  skipAuth: () => void;
+  onAuthSuccess: (user: User, selectedRole?: 'teacher' | 'student') => void;
+  skipAuth: (selectedRole?: 'teacher' | 'student') => void;
   role?: 'teacher' | 'student';
 }
 
@@ -57,6 +57,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
   const [isLoading, setIsLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);
+  const [signupRole, setSignupRole] = useState<'student' | 'teacher'>('student');
 
   // Advanced Interactive UI State
   const [focusedField, setFocusedField] = useState<string | null>(null);
@@ -243,7 +244,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
           const token = await auth.currentUser.getIdToken(true);
           setTerminalLogs(prev => [...prev, 'SEC_SYS: Syncing session with database...']);
           const user = await api.loginWithFirebase(token);
-          onAuthSuccess(user);
+          onAuthSuccess(user, signupRole);
         } else {
           setTerminalLogs(prev => [...prev, 'SEC_SYS: Authentication state: UNVERIFIED.']);
           const currentLang = language as keyof typeof verifTranslations;
@@ -353,7 +354,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
           if (isLoginView) {
             user = await api.login(email, password);
           } else {
-            user = await api.register(name, email, password, role || 'student');
+            user = await api.register(name, email, password, signupRole);
           }
         }
       } else {
@@ -361,11 +362,11 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
         if (isLoginView) {
           user = await api.login(email, password);
         } else {
-          user = await api.register(name, email, password, role || 'student');
+          user = await api.register(name, email, password, signupRole);
         }
       }
 
-      onAuthSuccess(user);
+      onAuthSuccess(user, isLoginView ? undefined : signupRole);
     } catch (err: any) {
       console.error('Auth Submit Error:', err);
       const errMsg = err instanceof Error ? err.message : 'An unknown authentication error occurred.';
@@ -407,11 +408,11 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
       const token = await firebaseService.loginAnonymously();
       console.log('Anonymous login token:', token);
       const user = await api.loginWithFirebase(token);
-      onAuthSuccess(user);
+      onAuthSuccess(user, isLoginView ? 'student' : signupRole);
     } catch (err) {
       console.error('Anonymous login error, falling back to local guest session:', err);
       try {
-        skipAuth();
+        skipAuth(isLoginView ? 'student' : signupRole);
       } catch (skipErr) {
         setError(err instanceof Error ? err.message : 'Anonymous login failed.');
       }
@@ -660,22 +661,45 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
             <form onSubmit={handleSubmit}>
               <div className="space-y-5">
                 {!isLoginView && (
-                  <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="name">{t('username')}</label>
-                    <div className="relative flex items-center">
-                      <UserIcon className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'name' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
-                      <input
-                        type="text"
-                        id="name"
-                        value={name}
-                        onFocus={() => setFocusedField('name')}
-                        onBlur={() => setFocusedField(null)}
-                        onChange={e => setName(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-white focus:outline-none transition-all font-medium text-base glass-input"
-                        required
-                      />
+                  <>
+                    <div>
+                      <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="name">{t('username')}</label>
+                      <div className="relative flex items-center">
+                        <UserIcon className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'name' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
+                        <input
+                          type="text"
+                          id="name"
+                          value={name}
+                          onFocus={() => setFocusedField('name')}
+                          onBlur={() => setFocusedField(null)}
+                          onChange={e => setName(e.target.value)}
+                          className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-white focus:outline-none transition-all font-medium text-base glass-input"
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1">
+                        {t('role_selection_question' as any) || "What's Your Role?"}
+                      </label>
+                      <div className="flex gap-4">
+                        <button
+                          type="button"
+                          onClick={() => setSignupRole('student')}
+                          className={`flex-grow py-3 px-4 rounded-2xl border font-bold text-sm transition-all focus:outline-none cursor-pointer flex items-center justify-center gap-2 ${signupRole === 'student' ? 'bg-[#FBBF24] border-[#FBBF24] text-[#111827]' : 'border-slate-700 bg-slate-900/60 text-slate-400 hover:text-slate-200'}`}
+                        >
+                          {t('im_a_student' as any) || "I'm a student"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSignupRole('teacher')}
+                          className={`flex-grow py-3 px-4 rounded-2xl border font-bold text-sm transition-all focus:outline-none cursor-pointer flex items-center justify-center gap-2 ${signupRole === 'teacher' ? 'bg-[#FBBF24] border-[#FBBF24] text-[#111827]' : 'border-slate-700 bg-slate-900/60 text-slate-400 hover:text-slate-200'}`}
+                        >
+                          {t('im_a_teacher' as any) || "I'm a teacher"}
+                        </button>
+                      </div>
+                    </div>
+                  </>
                 )}
                 <div>
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="email">{t('email')}</label>

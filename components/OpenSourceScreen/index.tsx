@@ -46,7 +46,7 @@ export default function OpenSourceScreen({ currentUser, updateUser, onLogout }: 
               {activeTab === 'admin' && <MySaved />}
               {activeTab === 'community' && (
                 currentUser ? (
-                  <div className="bg-[#09090b] text-[#111827] dark:text-white rounded-2xl p-2 md:p-6">
+                  <div className="bg-[#09090b] text-slate-100 rounded-2xl p-2 md:p-6">
                     <FeedScreen currentUser={currentUser} onUpdateUser={updateUser || (async () => {})} />
                   </div>
                 ) : (

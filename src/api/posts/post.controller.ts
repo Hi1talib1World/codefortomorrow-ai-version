@@ -30,7 +30,7 @@ export const createPost = async (req: Request, res: Response, next: NextFunction
     if (!userId) {
       throw new ApiError(401, 'Unauthorized');
     }
-    const { content, milestone } = req.body;
+    const { content, milestone, postType, codeSnippet } = req.body;
     if (!content) {
       throw new ApiError(400, 'Content is required');
     }
@@ -38,6 +38,8 @@ export const createPost = async (req: Request, res: Response, next: NextFunction
       author: userId,
       content,
       milestone,
+      postType: postType || 'general',
+      codeSnippet,
       likes: [],
       comments: [],
     });
@@ -106,6 +108,8 @@ export const commentPost = async (req: Request, res: Response, next: NextFunctio
     post.comments.push({
       author: userId,
       content,
+      isAnswer: false,
+      isEndorsed: false,
       createdAt: new Date(),
     } as any);
     await post.save();
@@ -114,6 +118,117 @@ export const commentPost = async (req: Request, res: Response, next: NextFunctio
       .populate('comments.author', 'name profilePictureUrl role professionalTitle');
       
     res.status(201).json(updatedPost?.comments);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Toggle solved state for a question post
+ * @route   PUT /api/posts/:id/solve
+ * @access  Private
+ */
+export const toggleSolvedPost = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = (req as any).user?._id;
+    const userRole = (req as any).user?.role;
+    if (!userId) {
+      throw new ApiError(401, 'Unauthorized');
+    }
+    const { id } = req.params;
+    const post = await Post.findById(id);
+    if (!post) {
+      throw new ApiError(404, 'Post not found');
+    }
+    
+    // Only post author or teacher/admin can mark it as solved
+    if (post.author.toString() !== userId.toString() && userRole !== 'teacher' && userRole !== 'admin') {
+      throw new ApiError(403, 'Permission denied');
+    }
+    
+    post.isSolved = !post.isSolved;
+    await post.save();
+    
+    res.json({ isSolved: post.isSolved });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Toggle helpful/answer state for a comment
+ * @route   PUT /api/posts/:id/comment/:commentId/helpful
+ * @access  Private
+ */
+export const toggleHelpfulComment = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = (req as any).user?._id;
+    const userRole = (req as any).user?.role;
+    if (!userId) {
+      throw new ApiError(401, 'Unauthorized');
+    }
+    const { id, commentId } = req.params;
+    const post = await Post.findById(id);
+    if (!post) {
+      throw new ApiError(404, 'Post not found');
+    }
+    
+    // Only post author or teacher/admin can toggle helpful answers
+    if (post.author.toString() !== userId.toString() && userRole !== 'teacher' && userRole !== 'admin') {
+      throw new ApiError(403, 'Permission denied');
+    }
+    
+    const comment = (post.comments as any).id(commentId);
+    if (!comment) {
+      throw new ApiError(404, 'Comment not found');
+    }
+    
+    comment.isAnswer = !comment.isAnswer;
+    await post.save();
+    
+    const updatedPost = await Post.findById(id)
+      .populate('comments.author', 'name profilePictureUrl role professionalTitle');
+      
+    res.json(updatedPost?.comments);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Toggle endorsed state for a comment
+ * @route   PUT /api/posts/:id/comment/:commentId/endorse
+ * @access  Private (Teachers/Admins only)
+ */
+export const toggleEndorseComment = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = (req as any).user?._id;
+    const userRole = (req as any).user?.role;
+    if (!userId) {
+      throw new ApiError(401, 'Unauthorized');
+    }
+    if (userRole !== 'teacher' && userRole !== 'admin') {
+      throw new ApiError(403, 'Permission denied. Only educators can endorse comments.');
+    }
+    
+    const { id, commentId } = req.params;
+    const post = await Post.findById(id);
+    if (!post) {
+      throw new ApiError(404, 'Post not found');
+    }
+    
+    const comment = (post.comments as any).id(commentId);
+    if (!comment) {
+      throw new ApiError(404, 'Comment not found');
+    }
+    
+    comment.isEndorsed = !comment.isEndorsed;
+    await post.save();
+    
+    const updatedPost = await Post.findById(id)
+      .populate('comments.author', 'name profilePictureUrl role professionalTitle');
+      
+    res.json(updatedPost?.comments);
   } catch (error) {
     next(error);
   }

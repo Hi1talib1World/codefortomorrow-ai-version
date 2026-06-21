@@ -597,11 +597,11 @@ const api = {
     return data;
   },
 
-  createPost: async (content: string, milestone?: any): Promise<any> => {
+  createPost: async (content: string, milestone?: any, postType?: string, codeSnippet?: any): Promise<any> => {
     const response = await customFetch(`${API_BASE_URL}/posts`, {
       method: 'POST',
       headers: getAuthHeaders(),
-      body: JSON.stringify({ content, milestone }),
+      body: JSON.stringify({ content, milestone, postType, codeSnippet }),
     });
     const data = await response.json();
     if (!response.ok) {
@@ -631,6 +631,42 @@ const api = {
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || 'Failed to add comment.');
+    }
+    return data;
+  },
+
+  toggleSolvedPost: async (postId: string): Promise<{ isSolved: boolean }> => {
+    const response = await customFetch(`${API_BASE_URL}/posts/${postId}/solve`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to toggle solved status.');
+    }
+    return data;
+  },
+
+  toggleHelpfulComment: async (postId: string, commentId: string): Promise<any[]> => {
+    const response = await customFetch(`${API_BASE_URL}/posts/${postId}/comment/${commentId}/helpful`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to toggle helpful status.');
+    }
+    return data;
+  },
+
+  toggleEndorseComment: async (postId: string, commentId: string): Promise<any[]> => {
+    const response = await customFetch(`${API_BASE_URL}/posts/${postId}/comment/${commentId}/endorse`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to toggle endorsement status.');
     }
     return data;
   }

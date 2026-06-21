@@ -280,8 +280,8 @@ export default function App() {
     checkUserSession();
   }, []);
 
-  const handleAuthSuccess = useCallback(async (user: User) => {
-    const roleToSet = user.role || selectedRole || 'student';
+  const handleAuthSuccess = useCallback(async (user: User, customRole?: 'student' | 'teacher') => {
+    const roleToSet = user.role || customRole || selectedRole || 'student';
     const userWithRole = { ...user, role: roleToSet };
     if (!userWithRole.progress) {
       userWithRole.progress = { ...defaultProgress };
@@ -293,18 +293,18 @@ export default function App() {
 
     navigateToSavedRoute('/dashboard');
 
-    if (!user.role && selectedRole) {
+    if (!user.role || (customRole && user.role !== customRole)) {
       try {
-        await api.updateUserProfile({ role: selectedRole });
+        await api.updateUserProfile({ role: roleToSet });
       } catch (error) {
         console.error("Failed to save role to profile:", error);
       }
     }
   }, [selectedRole, navigateToSavedRoute]);
 
-  const handleSkipAuth = useCallback(() => {
+  const handleSkipAuth = useCallback((customRole?: 'student' | 'teacher') => {
     const now = new Date().toISOString();
-    const guestRole = selectedRole || 'student';
+    const guestRole = customRole || selectedRole || 'student';
     const guestUser: User = {
       _id: `guest_session`,
       name: 'Guest',

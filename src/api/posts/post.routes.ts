@@ -4,6 +4,9 @@ import {
   createPost,
   likePost,
   commentPost,
+  toggleSolvedPost,
+  toggleHelpfulComment,
+  toggleEndorseComment,
 } from './post.controller';
 import { protect } from '../../core/permissions/auth.middleware';
 
@@ -18,5 +21,8 @@ router.route('/')
 
 router.put('/:id/like', likePost);
 router.post('/:id/comment', commentPost);
+router.put('/:id/solve', toggleSolvedPost);
+router.put('/:id/comment/:commentId/helpful', toggleHelpfulComment);
+router.put('/:id/comment/:commentId/endorse', toggleEndorseComment);
 
 export default router;

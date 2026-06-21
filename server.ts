@@ -7,7 +7,6 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 import { createServer as createViteServer } from 'vite';
 import connectDB from './src/services/db/db';
 import authRoutes from './src/api/auth/auth.routes';
@@ -32,6 +31,21 @@ dotenv.config();
 // Safely resolve __dirname in environments where import.meta.url might be malformed (e.g. tsx with spaces in paths)
 const _filename = typeof __filename !== 'undefined' ? __filename : fileURLToPath(import.meta.url.replace(/ /g, '%20'));
 const _dirname = path.dirname(_filename);
+
+const parseAllowedOrigins = () => {
+  const configuredOrigins = (process.env.CLIENT_ORIGIN || process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  if (configuredOrigins.length > 0) {
+    return configuredOrigins;
+  }
+
+  return process.env.NODE_ENV === 'production'
+    ? []
+    : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173'];
+};
 
 async function startServer() {
   // Connect to the MongoDB database and block startup if the database cannot be reached.
@@ -83,8 +97,19 @@ async function startServer() {
   app.use(express.json());
   // Enable Express to parse cookies
   app.use(cookieParser());
-  // Enable CORS with credentials support
-  app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+  // Enable CORS with credentials support for explicit frontend origins only.
+  const allowedOrigins = parseAllowedOrigins();
+  app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+  }));
 
   // --- HTTP Security Headers ---
   // - Strict-Transport-Security (HSTS): Yes
@@ -177,20 +202,6 @@ async function startServer() {
   app.use('/api/ai', aiRoutes);
   app.use('/api/notifications', notificationRoutes);
   app.use('/api/posts', postRoutes);
-
-  const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:5001';
-  app.use(
-    '/api/ai',
-    createProxyMiddleware({
-      target: aiServiceUrl,
-      changeOrigin: true,
-      pathRewrite: { '^/api/ai': '' },
-      onError: (err, _req, res) => {
-        console.error('AI proxy error:', err);
-        res.status(502).json({ message: 'AI service is unavailable' });
-      }
-    })
-  );
 
   // --- Vite Middleware or Static Files ---
   if (process.env.NODE_ENV !== 'production') {

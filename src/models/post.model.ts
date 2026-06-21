@@ -1,8 +1,11 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IComment {
+  _id?: mongoose.Types.ObjectId | string;
   author: mongoose.Types.ObjectId;
   content: string;
+  isAnswer?: boolean;
+  isEndorsed?: boolean;
   createdAt: Date;
 }
 
@@ -15,6 +18,12 @@ export interface IMilestone {
 export interface IPost extends Document {
   author: mongoose.Types.ObjectId;
   content: string;
+  postType: 'general' | 'question' | 'milestone' | 'challenge';
+  isSolved: boolean;
+  codeSnippet?: {
+    code: string;
+    language: string;
+  };
   milestone?: IMilestone;
   likes: mongoose.Types.ObjectId[];
   comments: IComment[];
@@ -32,6 +41,14 @@ const commentSchema: Schema = new Schema({
     type: String,
     required: true,
     trim: true,
+  },
+  isAnswer: {
+    type: Boolean,
+    default: false,
+  },
+  isEndorsed: {
+    type: Boolean,
+    default: false,
   },
   createdAt: {
     type: Date,
@@ -66,6 +83,19 @@ const postSchema: Schema = new Schema({
     type: String,
     required: true,
     trim: true,
+  },
+  postType: {
+    type: String,
+    enum: ['general', 'question', 'milestone', 'challenge'],
+    default: 'general',
+  },
+  isSolved: {
+    type: Boolean,
+    default: false,
+  },
+  codeSnippet: {
+    code: { type: String },
+    language: { type: String },
   },
   milestone: {
     type: milestoneSchema,
