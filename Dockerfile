@@ -15,4 +15,4 @@ EXPOSE 7860
 ENV NODE_ENV=production
 ENV PORT=7860
 
-CMD ["node", "node_modules/jiti/bin/jiti.js", "server.ts"]
+CMD ["npm", "start"]
