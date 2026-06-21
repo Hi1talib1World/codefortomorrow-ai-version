@@ -45,6 +45,7 @@
     "firebase": "^12.14.0",
     "firebase-admin": "^10.3.0",
     "framer-motion": "^12.40.0",
+    "gcp-metadata": "^7.0.1",
     "google-auth-library": "^10.6.1",
     "http-proxy-middleware": "^2.0.9",
     "jsonwebtoken": "^9.0.3",
