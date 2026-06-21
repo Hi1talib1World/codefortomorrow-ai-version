@@ -1,19 +1,9 @@
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
-let mongoUri = process.env.MONGO_URI;
-const isProduction = process.env.NODE_ENV === 'production';
-const shouldUseMemoryMongo =
-  !isProduction &&
-  (!mongoUri || process.env.USE_MEMORY_MONGO === 'true');
-
-if (shouldUseMemoryMongo) {
-  console.warn('Using MongoMemoryServer fallback for local development.');
-  const mongod = await MongoMemoryServer.create();
-  mongoUri = mongod.getUri();
-}
-
+let mongoUri = '';
 let isConnecting = false;
+let memoryServer: any = null;
 
 /**
  * @desc    Establishes a connection to the MongoDB database.
@@ -22,6 +12,22 @@ let isConnecting = false;
 const connectDB = async () => {
   if (isConnecting) return;
   if (mongoose.connection.readyState === 1) return;
+
+  if (!mongoUri) {
+    mongoUri = process.env.MONGO_URI || '';
+    const isProduction = process.env.NODE_ENV === 'production';
+    const shouldUseMemoryMongo =
+      !isProduction &&
+      (!mongoUri || process.env.USE_MEMORY_MONGO === 'true');
+
+    if (shouldUseMemoryMongo) {
+      console.warn('Using MongoMemoryServer fallback for local development.');
+      if (!memoryServer) {
+        memoryServer = await MongoMemoryServer.create();
+      }
+      mongoUri = memoryServer.getUri();
+    }
+  }
 
   if (!mongoUri) {
     const message = 'MONGO_URI is not defined in environment variables. Database connection cannot be established.';
