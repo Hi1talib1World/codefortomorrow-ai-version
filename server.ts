@@ -234,8 +234,8 @@ async function startServer() {
       etag: true
     }));
 
-    // Fallback to index.html for SPA routing
-    app.get('*', (req, res) => {
+    // Fallback to index.html for SPA routing.
+    app.use((req, res) => {
       res.sendFile(path.resolve(distPath, 'index.html'));
     });
   }
