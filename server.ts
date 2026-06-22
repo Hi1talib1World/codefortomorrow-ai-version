@@ -97,18 +97,21 @@ async function startServer() {
   app.use(express.json());
   // Enable Express to parse cookies
   app.use(cookieParser());
-  // Enable CORS with credentials support for explicit frontend origins only.
-  const allowedOrigins = parseAllowedOrigins();
-  app.use(cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-        return;
-      }
-
-      callback(new Error('Not allowed by CORS'));
-    },
-    credentials: true,
+  // Enable CORS with credentials support.
+  // Automatically allows same-origin requests (frontend served from same host) and explicit CLIENT_ORIGINs.
+  app.use(cors((req: any, callback: any) => {
+    const origin = req.header('Origin');
+    const allowedOrigins = parseAllowedOrigins();
+    const host = req.get('host');
+    
+    // Check if same-origin (e.g. Origin is https://host or http://host)
+    const isSameOrigin = origin && (origin === `https://${host}` || origin === `http://${host}`);
+    
+    if (!origin || isSameOrigin || allowedOrigins.includes(origin)) {
+      callback(null, { origin: true, credentials: true });
+    } else {
+      callback(null, { origin: false });
+    }
   }));
 
   // --- HTTP Security Headers ---
