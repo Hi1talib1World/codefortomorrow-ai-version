@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowLeft, Star, GitFork, Github, CheckCircle2, Bookmark, Share2, Twitter, Facebook, Linkedin, Link2, X, Sparkles, FileText } from 'lucide-react';
+import { ArrowLeft, Star, GitFork, Github, ExternalLink, CheckCircle2, Bookmark, Share2, Twitter, Facebook, Linkedin, Link2, X, Sparkles, FileText } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { User } from '../../types';
@@ -18,6 +19,7 @@ interface RepoDetailsProps {
 
 export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentUser, updateUser }) => {
   const { t, lang } = useI18n();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'guide' | 'readme'>('guide');
   const [guide, setGuide] = useState<string>('');
   const [readme, setReadme] = useState<string>('');
@@ -27,6 +29,8 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [translatedDesc, setTranslatedDesc] = useState<string | null>(null);
   const [isTranslating, setIsTranslating] = useState(false);
+
+  const articleUrl = `${window.location.origin}/cftos/post/${repo.full_name}`;
 
   // Automatically translate description when language is switched to Arabic
   useEffect(() => {
@@ -166,6 +170,13 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
         </button>
         <div className="flex items-center gap-3">
           <button
+            onClick={() => navigate(`/cftos/post/${repo.full_name}`)}
+            className="flex items-center gap-2 px-4 py-2 border rounded-lg font-semibold transition-colors bg-[#121212] border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white"
+          >
+            <ExternalLink className="w-4 h-4" />
+            <span>{t('details.openAsArticle') || 'Open as Article'}</span>
+          </button>
+          <button
             onClick={() => setIsShareModalOpen(true)}
             className="flex items-center gap-2 px-4 py-2 border rounded-lg font-semibold transition-colors bg-[#121212] border-slate-800 text-slate-300 hover:bg-slate-800"
           >
@@ -249,7 +260,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
             <div className="p-6">
               <div className="grid grid-cols-4 gap-4 mb-6">
                 <a 
-                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(repo.html_url)}&text=${encodeURIComponent(repo.name)}`}
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(articleUrl)}&text=${encodeURIComponent(repo.name)}`}
                   target="_blank" rel="noopener noreferrer"
                   className="flex flex-col items-center gap-2 group"
                 >
@@ -259,7 +270,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
                   <span className="text-xs font-bold text-slate-500">Twitter</span>
                 </a>
                 <a 
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(repo.html_url)}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`}
                   target="_blank" rel="noopener noreferrer"
                   className="flex flex-col items-center gap-2 group"
                 >
@@ -269,7 +280,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
                   <span className="text-xs font-bold text-slate-500">Facebook</span>
                 </a>
                 <a 
-                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(repo.html_url)}`}
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`}
                   target="_blank" rel="noopener noreferrer"
                   className="flex flex-col items-center gap-2 group"
                 >
@@ -279,7 +290,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
                   <span className="text-xs font-bold text-slate-500">LinkedIn</span>
                 </a>
                 <button 
-                  onClick={async () => { await navigator.clipboard.writeText(repo.html_url); setIsShareModalOpen(false); }}
+                  onClick={async () => { await navigator.clipboard.writeText(articleUrl); setIsShareModalOpen(false); }}
                   className="flex flex-col items-center gap-2 group"
                 >
                   <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center group-hover:-translate-y-1 transition-transform">
@@ -288,12 +299,12 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
                   <span className="text-xs font-bold text-slate-500">{t('details.copy')}</span>
                 </button>
               </div>
-              <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 border border-slate-200 dark:border-slate-700">
+              <div className="bg-slate-55 dark:bg-slate-800 rounded-xl p-3 flex items-center gap-3 border border-slate-200 dark:border-slate-700">
                 <div className="text-xs font-medium text-slate-500 truncate flex-1 pl-1 select-all">
-                  {repo.html_url}
+                  {articleUrl}
                 </div>
                 <button 
-                  onClick={async () => { await navigator.clipboard.writeText(repo.html_url); setIsShareModalOpen(false); }}
+                  onClick={async () => { await navigator.clipboard.writeText(articleUrl); setIsShareModalOpen(false); }}
                   className="px-4 py-2 bg-white dark:bg-slate-700 text-slate-700 dark:text-white text-xs font-bold rounded-lg shadow-sm hover:shadow transition-shadow border border-slate-200 dark:border-slate-600 shrink-0"
                 >
                   {t('details.copyLink')}

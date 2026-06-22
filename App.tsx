@@ -673,6 +673,11 @@ export default function App() {
               <RepoArticlePage />
             </ProtectedRoute>
           } />
+          <Route path="/cftos/post/:owner/:repoName" element={
+            <ProtectedRoute currentUser={currentUser}>
+              <RepoArticlePage />
+            </ProtectedRoute>
+          } />
 
           {/* ─── Owner Admin Dashboard ────────────────────────────────────── */}
           <Route
