@@ -14,22 +14,34 @@ if (!rootElement) {
 }
 
 const root = ReactDOM.createRoot(rootElement);
+
+const posthogKey = import.meta.env.VITE_PUBLIC_POSTHOG_KEY;
+const posthogHost = import.meta.env.VITE_PUBLIC_POSTHOG_HOST;
+
+const AppContent = () => (
+  <LanguageProvider>
+    <SyncProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </SyncProvider>
+  </LanguageProvider>
+);
+
 root.render(
   <React.StrictMode>
-    <PostHogProvider
-      apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_KEY}
-      options={{
-        api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
-        person_profiles: 'identified_only',
-      }}
-    >
-      <LanguageProvider>
-        <SyncProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </SyncProvider>
-      </LanguageProvider>
-    </PostHogProvider>
+    {posthogKey ? (
+      <PostHogProvider
+        apiKey={posthogKey}
+        options={{
+          api_host: posthogHost,
+          person_profiles: 'identified_only',
+        }}
+      >
+        <AppContent />
+      </PostHogProvider>
+    ) : (
+      <AppContent />
+    )}
   </React.StrictMode>
 );
