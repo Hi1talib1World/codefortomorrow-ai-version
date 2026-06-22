@@ -240,6 +240,21 @@ export const getTrendingRepos = async (req: Request, res: Response) => {
     });
 
     if (repos.length > 0) {
+      try {
+        const descList = repos.map(r => r.description || '');
+        console.log(`[Trending] Translating ${descList.length} descriptions to Arabic...`);
+        const translationsAr = await AIEngine.translateDescriptionsToArabic(descList);
+        if (translationsAr && translationsAr.length === repos.length) {
+          repos.forEach((repo, idx) => {
+            if (translationsAr[idx]) {
+              repo.description_ar = translationsAr[idx];
+            }
+          });
+        }
+      } catch (err) {
+        console.error('Failed to translate trending descriptions:', err);
+      }
+
       setCached(cacheKey, repos);
       return res.json(repos);
     } else {

@@ -52,7 +52,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
   const [searchResults, setSearchResults] = useState<Repo[] | null>(null);
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   useEffect(() => {
     const fetchTrending = async () => {
@@ -251,7 +251,7 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
                       <CheckCircle2 className="w-4 h-4 text-[#111827] shrink-0" />
                     </div>
                     <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
-                      {repo.description || t('feed.noDescription')}
+                      {(lang === 'ar' && repo.description_ar) ? repo.description_ar : (repo.description || t('feed.noDescription'))}
                     </p>
                   </div>
                   <button 

@@ -601,6 +601,42 @@ Do not give them the complete solution code directly. Focus on guidance and debu
     }
   }
 
+  static async translateDescriptionsToArabic(descriptions: string[]): Promise<string[]> {
+    if (!hasValidGeminiKey() || descriptions.length === 0) {
+      return descriptions.map(() => '');
+    }
+
+    const prompt = `
+      You are a professional translator translating developer tool/repository descriptions to Arabic.
+      Your task is to translate the following English description strings to Arabic.
+      Return a JSON array of strings in the exact same order.
+      
+      Format the output as a valid JSON array of strings only. Do NOT include markdown code blocks (like \`\`\`json) or any conversational text.
+      
+      Descriptions:
+      ${JSON.stringify(descriptions, null, 2)}
+    `;
+
+    try {
+      const response = await getAi().models.generateContent({
+        model: this.model,
+        contents: prompt
+      });
+      const text = response.text || '';
+      // Clean potential markdown blocks
+      const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
+      const parsed = JSON.parse(cleanJson);
+      if (Array.isArray(parsed) && parsed.length === descriptions.length) {
+        return parsed.map(s => String(s));
+      }
+      console.warn("AI translation array length mismatch or invalid format");
+      return descriptions.map(() => '');
+    } catch (error) {
+      console.error("AI Translation Error:", error);
+      return descriptions.map(() => '');
+    }
+  }
+
   private static getFallbackRecommendation() {
     return {
       recommendation: "Keep practicing your core skills to build a strong foundation!",

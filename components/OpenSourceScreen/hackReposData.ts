@@ -5,6 +5,7 @@ export const HACK_REPOS_DATA: RepoData[] = [
   {
     id: 1, slug: 'payloadsallthethings', name: 'PayloadsAllTheThings', full_name: 'swisskyrepo/PayloadsAllTheThings',
     description: 'Useful payloads and bypass for Web Application Security and Pentest/CTF.',
+    description_ar: 'حمولة مفيدة وتجاوزات لأمان تطبيقات الويب واختبار الاختراق/CTF.',
     stargazers_count: 63000, forks_count: 14800, language: 'Python',
     html_url: 'https://github.com/swisskyrepo/PayloadsAllTheThings',
     category: 'Web Security', icon: Globe, topics: ['payloads', 'pentesting', 'web-security'],
@@ -19,6 +20,7 @@ export const HACK_REPOS_DATA: RepoData[] = [
   {
     id: 2, slug: 'metasploit', name: 'metasploit-framework', full_name: 'rapid7/metasploit-framework',
     description: 'The world\'s most used penetration testing framework.',
+    description_ar: 'إطار عمل اختبار الاختراق الأكثر استخداماً في العالم.',
     stargazers_count: 34500, forks_count: 14200, language: 'Ruby',
     html_url: 'https://github.com/rapid7/metasploit-framework',
     category: 'Exploitation', icon: Bug, topics: ['metasploit', 'exploit', 'pentest'],
@@ -33,6 +35,7 @@ export const HACK_REPOS_DATA: RepoData[] = [
   {
     id: 3, slug: 'nmap', name: 'nmap', full_name: 'nmap/nmap',
     description: 'Nmap — the Network Mapper for discovery and security auditing.',
+    description_ar: 'Nmap — مخطط الشبكة لاكتشاف الأجهزة وفحص الأمان.',
     stargazers_count: 10500, forks_count: 2400, language: 'C',
     html_url: 'https://github.com/nmap/nmap',
     category: 'Network', icon: Wifi, topics: ['network-scanner', 'security-audit', 'reconnaissance'],
@@ -47,6 +50,7 @@ export const HACK_REPOS_DATA: RepoData[] = [
   {
     id: 4, slug: 'owasp-wstg', name: 'OWASP Testing Guide', full_name: 'OWASP/wstg',
     description: 'The comprehensive guide to testing web application security.',
+    description_ar: 'الدليل الشامل لاختبار أمان تطبيقات الويب.',
     stargazers_count: 7400, forks_count: 1500, language: 'Markdown',
     html_url: 'https://github.com/OWASP/wstg',
     category: 'Web Security', icon: Shield, topics: ['owasp', 'security-testing', 'guide'],
@@ -61,6 +65,7 @@ export const HACK_REPOS_DATA: RepoData[] = [
   {
     id: 5, slug: 'sqlmap', name: 'sqlmap', full_name: 'sqlmapproject/sqlmap',
     description: 'Automatic SQL injection and database takeover tool.',
+    description_ar: 'أداة تلقائية لحقن SQL والسيطرة على قواعد البيانات.',
     stargazers_count: 33000, forks_count: 5700, language: 'Python',
     html_url: 'https://github.com/sqlmapproject/sqlmap',
     category: 'Database', icon: Database, topics: ['sql-injection', 'database-security', 'automation'],
@@ -75,6 +80,7 @@ export const HACK_REPOS_DATA: RepoData[] = [
   {
     id: 6, slug: 'burp-extensions', name: 'Burp Extensions', full_name: 'snoopysecurity/awesome-burp-extensions',
     description: 'Curated list of amazing Burp Extensions for web security testing.',
+    description_ar: 'قائمة مختارة من إضافات Burp الرائعة لاختبار أمان الويب.',
     stargazers_count: 3200, forks_count: 680, language: 'Markdown',
     html_url: 'https://github.com/snoopysecurity/awesome-burp-extensions',
     category: 'Web Security', icon: Globe, topics: ['burp-suite', 'extensions', 'web-proxy'],
@@ -89,6 +95,7 @@ export const HACK_REPOS_DATA: RepoData[] = [
   {
     id: 7, slug: 'john-the-ripper', name: 'John the Ripper', full_name: 'openwall/john',
     description: 'Advanced offline password cracker supporting hundreds of hash types.',
+    description_ar: 'برنامج متقدم لكسر كلمات المرور دون اتصال يدعم مئات أنواع التجزئة.',
     stargazers_count: 10800, forks_count: 2400, language: 'C',
     html_url: 'https://github.com/openwall/john',
     category: 'Cryptography', icon: Lock, topics: ['password-cracker', 'hash', 'cryptography'],
@@ -103,6 +110,7 @@ export const HACK_REPOS_DATA: RepoData[] = [
   {
     id: 8, slug: 'ghidra', name: 'Ghidra', full_name: 'NationalSecurityAgency/ghidra',
     description: 'Software reverse engineering framework by NSA.',
+    description_ar: 'إطار عمل الهندسة العكسية للبرمجيات من وكالة الأمن القومي (NSA).',
     stargazers_count: 53000, forks_count: 5900, language: 'Java',
     html_url: 'https://github.com/NationalSecurityAgency/ghidra',
     category: 'Reverse Engineering', icon: Cpu, topics: ['reverse-engineering', 'decompiler', 'binary-analysis'],
@@ -117,6 +125,7 @@ export const HACK_REPOS_DATA: RepoData[] = [
   {
     id: 9, slug: 'katoolin', name: 'Kali Linux Tools', full_name: 'LionSec/katoolin',
     description: 'Install Kali Linux tools on any Debian-based distro.',
+    description_ar: 'تثبيت أدوات Kali Linux على أي توزيعة مبنية على Debian.',
     stargazers_count: 2400, forks_count: 510, language: 'Python',
     html_url: 'https://github.com/LionSec/katoolin',
     category: 'Toolkit', icon: Terminal, topics: ['kali-linux', 'security-tools', 'automation'],

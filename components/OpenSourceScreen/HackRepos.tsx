@@ -12,7 +12,7 @@ const itemVariants = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0, 
 const formatNumber = (num: number) => num >= 1000 ? (num / 1000).toFixed(1) + 'k' : num.toString();
 
 export const HackRepos: React.FC = () => {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [repos, setRepos] = useState<any[]>([]);
@@ -107,7 +107,9 @@ export const HackRepos: React.FC = () => {
                       <h3 className="font-bold text-lg text-white truncate group-hover:text-emerald-300 transition-colors">{repo.name}</h3>
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                     </div>
-                    <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">{repo.description}</p>
+                    <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
+                      {(lang === 'ar' && repo.description_ar) ? repo.description_ar : repo.description}
+                    </p>
                   </div>
                   <ExternalLink className="w-4 h-4 text-slate-600 group-hover:text-emerald-400 shrink-0 transition-colors" />
                 </div>
