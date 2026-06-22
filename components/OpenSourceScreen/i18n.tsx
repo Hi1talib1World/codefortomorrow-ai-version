@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { Language } from '../../types';
 
 export type Lang = 'en' | 'ar';
 
@@ -142,14 +144,33 @@ const translations: Record<string, Record<Lang, string>> = {
 };
 
 export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  let globalLangContext: any;
+  try {
+    globalLangContext = useLanguage();
+  } catch (e) {
+    // Ignore error if used outside provider (e.g. in tests)
+  }
+  const currentLanguage = globalLangContext ? globalLangContext.language : undefined;
+
   const [lang, setLangState] = useState<Lang>(() => {
+    if (currentLanguage === Language.AR) return 'ar';
     const saved = localStorage.getItem('cftos-lang');
     return (saved === 'ar' || saved === 'en') ? saved : 'en';
   });
 
+  // Sync state if global language changes
+  useEffect(() => {
+    if (currentLanguage) {
+      setLangState(currentLanguage === Language.AR ? 'ar' : 'en');
+    }
+  }, [currentLanguage]);
+
   const setLang = (newLang: Lang) => {
     setLangState(newLang);
     localStorage.setItem('cftos-lang', newLang);
+    if (globalLangContext) {
+      globalLangContext.setLanguage(newLang === 'ar' ? Language.AR : Language.EN);
+    }
   };
 
   const t = (key: string): string => {
@@ -164,7 +185,7 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (cftosRoot) {
       cftosRoot.dir = dir;
       if (lang === 'ar') {
-        cftosRoot.style.fontFamily = "'Noto Kufi Arabic', 'Inter', system-ui, sans-serif";
+        cftosRoot.style.fontFamily = "'Cairo', 'Inter', system-ui, sans-serif";
       } else {
         cftosRoot.style.fontFamily = '';
       }
