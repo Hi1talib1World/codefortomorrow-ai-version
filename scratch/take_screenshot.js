@@ -23,16 +23,8 @@ async function run() {
       localStorage.setItem('appLanguage', 'en');
     });
 
-    console.log("Navigating to http://localhost:3000/role-selection...");
-    await page.goto("http://localhost:3000/role-selection");
-
-    console.log("Selecting student role...");
-    // Wait for student button and click it
-    await page.waitForSelector('button:has-text("I\'m a student")');
-    await page.click('button:has-text("I\'m a student")');
-
-    console.log("Waiting for auth screen...");
-    await page.waitForURL('**/auth');
+    console.log("Navigating to http://localhost:3000/auth...");
+    await page.goto("http://localhost:3000/auth");
 
     console.log("Logging in as Guest...");
     // Wait for guest login button and click it

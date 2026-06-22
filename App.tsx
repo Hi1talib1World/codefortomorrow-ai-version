@@ -22,7 +22,6 @@ const TeacherDashboard = lazy(() => import('./components/teacher/TeacherDashboar
 const LessonScreen = lazy(() => import('./components/LessonScreen'));
 const QuizLessonScreen = lazy(() => import('./components/QuizLessonScreen'));
 const AuthScreen = lazy(() => import('./components/AuthScreen'));
-const RoleSelectionScreen = lazy(() => import('./components/RoleSelectionScreen'));
 const MathGameScreen = lazy(() => import('./components/MathGameScreen'));
 const LandingPage = lazy(() => import('./components/LandingPage'));
 const LanguageSelectionScreen = lazy(() => import('./components/LanguageSelectionScreen'));
@@ -210,7 +209,6 @@ export default function App() {
   const { hasSelectedLanguage } = useLanguage();
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [selectedRole, setSelectedRole] = useState<'teacher' | 'student' | null>(null);
   const [isSessionLoaded, setIsSessionLoaded] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -281,7 +279,7 @@ export default function App() {
   }, []);
 
   const handleAuthSuccess = useCallback(async (user: User, customRole?: 'student' | 'teacher') => {
-    const roleToSet = user.role || customRole || selectedRole || 'student';
+    const roleToSet = user.role || customRole || 'student';
     const userWithRole = { ...user, role: roleToSet };
     if (!userWithRole.progress) {
       userWithRole.progress = { ...defaultProgress };
@@ -300,11 +298,11 @@ export default function App() {
         console.error("Failed to save role to profile:", error);
       }
     }
-  }, [selectedRole, navigateToSavedRoute]);
+  }, [navigateToSavedRoute]);
 
   const handleSkipAuth = useCallback((customRole?: 'student' | 'teacher') => {
     const now = new Date().toISOString();
-    const guestRole = customRole || selectedRole || 'student';
+    const guestRole = customRole || 'student';
     const guestUser: User = {
       _id: `guest_session`,
       name: 'Guest',
@@ -322,7 +320,7 @@ export default function App() {
     setCurrentUser(guestUser);
 
     navigateToSavedRoute('/dashboard');
-  }, [selectedRole, navigateToSavedRoute]);
+  }, [navigateToSavedRoute]);
 
   const handleLogout = useCallback(async () => {
     if (currentUser && currentUser.progress) {
@@ -354,10 +352,6 @@ export default function App() {
     }
   }, [currentUser, navigate, hasSelectedLanguage]);
 
-  const handleRoleSelect = useCallback((role: 'teacher' | 'student') => {
-    setSelectedRole(role);
-    navigate('/auth');
-  }, [navigate]);
 
   const switchPath = useCallback(async (pathId: ProgrammingPath['id']) => {
     if (!currentUser) return;
@@ -572,7 +566,7 @@ export default function App() {
       return <OpenSourceScreen currentUser={currentUser} updateUser={updateUser} onLogout={handleLogout} />;
     }
     // Default (palycofoto.club, localhost, etc.): serve the main LandingPage at "/"
-    return <LandingPage currentUser={currentUser} onGetStarted={() => navigate(currentUser ? '/dashboard' : '/role-selection')} />;
+    return <LandingPage currentUser={currentUser} onGetStarted={() => navigate(currentUser ? '/dashboard' : '/auth')} />;
   };
 
   const renderContent = () => {
@@ -607,15 +601,11 @@ export default function App() {
           <Route path="/welcome" element={
             currentUser ? <Navigate to="/dashboard" replace /> :
               !hasSelectedLanguage ? <Navigate to="/language-selection" replace /> :
-                <LandingPage currentUser={currentUser} onGetStarted={() => navigate(currentUser ? '/dashboard' : '/role-selection')} />
-          } />
-
-          <Route path="/role-selection" element={
-            currentUser ? <Navigate to="/dashboard" replace /> : <RoleSelectionScreen onSelect={handleRoleSelect} />
+                <LandingPage currentUser={currentUser} onGetStarted={() => navigate(currentUser ? '/dashboard' : '/auth')} />
           } />
 
           <Route path="/auth" element={
-            (currentUser && !currentUser._id.startsWith('guest_')) ? <Navigate to="/dashboard" replace /> : <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} role={selectedRole || undefined} />
+            (currentUser && !currentUser._id.startsWith('guest_')) ? <Navigate to="/dashboard" replace /> : <AuthScreen onAuthSuccess={handleAuthSuccess} skipAuth={handleSkipAuth} />
           } />
 
           {/* ─── Teacher dashboard ───────────────────────────────────────── */}
