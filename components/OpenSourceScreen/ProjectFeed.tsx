@@ -197,15 +197,17 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
     window.open(`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`, '_blank', 'noopener');
   };
 
-  const handleSaveRepo = async (e: React.MouseEvent, repoId: number) => {
+  const handleSaveRepo = async (e: React.MouseEvent, repo: Repo) => {
     e.stopPropagation();
     if (!currentUser || currentUser._id.startsWith('guest_')) {
       setIsAuthModalOpen(true);
       return;
     }
     
+    const repoIdentifier = repo.id > 1000 ? repo.id.toString() : repo.full_name;
+    
     try {
-      const updatedUser = await api.toggleSaveItem(repoId.toString(), 'repo');
+      const updatedUser = await api.toggleSaveItem(repoIdentifier, 'repo');
       if (updateUser) {
         await updateUser(updatedUser);
       }
@@ -314,10 +316,10 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
                     </p>
                   </div>
                   <button 
-                    onClick={(e) => handleSaveRepo(e, repo.id)}
-                    className={`p-2 rounded-lg transition-colors ${currentUser?.savedRepos?.includes(repo.id.toString()) ? 'bg-brand-500/20 text-brand-500' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+                    onClick={(e) => handleSaveRepo(e, repo)}
+                    className={`p-2 rounded-lg transition-colors ${currentUser?.savedRepos?.includes(repo.id.toString()) || currentUser?.savedRepos?.includes(repo.full_name) ? 'bg-brand-500/20 text-brand-500' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
                   >
-                    <Bookmark className={`w-5 h-5 ${currentUser?.savedRepos?.includes(repo.id.toString()) ? 'fill-current' : ''}`} />
+                    <Bookmark className={`w-5 h-5 ${currentUser?.savedRepos?.includes(repo.id.toString()) || currentUser?.savedRepos?.includes(repo.full_name) ? 'fill-current' : ''}`} />
                   </button>
                 </div>
 

@@ -375,7 +375,12 @@ export const getReposById = async (req: Request, res: Response) => {
 
     for (const id of idList) {
       try {
-        const response = await fetch(`https://api.github.com/repositories/${encodeURIComponent(id)}`, {
+        const isFullName = id.includes('/');
+        const url = isFullName 
+          ? `https://api.github.com/repos/${id}` 
+          : `https://api.github.com/repositories/${encodeURIComponent(id)}`;
+
+        const response = await fetch(url, {
           headers: {
             'User-Agent': 'CodeForTomorrow-App',
             ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
@@ -386,7 +391,7 @@ export const getReposById = async (req: Request, res: Response) => {
           results.push(data);
         }
       } catch (err) {
-        console.warn('Failed to fetch repo by id', id, err);
+        console.warn('Failed to fetch repo by id or full name', id, err);
       }
     }
 

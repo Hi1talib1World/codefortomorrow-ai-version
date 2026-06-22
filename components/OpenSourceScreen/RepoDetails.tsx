@@ -133,8 +133,10 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
       return;
     }
     
+    const repoIdentifier = repo.id > 1000 ? repo.id.toString() : repo.full_name;
+    
     try {
-      const updatedUser = await api.toggleSaveItem(repo.id.toString(), 'repo');
+      const updatedUser = await api.toggleSaveItem(repoIdentifier, 'repo');
       if (updateUser) {
         await updateUser(updatedUser);
       }
@@ -143,7 +145,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
     }
   };
 
-  const isSaved = currentUser?.savedRepos?.includes(repo.id.toString());
+  const isSaved = currentUser?.savedRepos?.includes(repo.id.toString()) || currentUser?.savedRepos?.includes(repo.full_name);
 
   return (
     <motion.div

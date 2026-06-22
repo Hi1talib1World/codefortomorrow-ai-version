@@ -59,8 +59,14 @@ export const MySaved: React.FC = () => {
                 </div>
                 <p className="text-slate-400 text-sm line-clamp-2">{repo.description}</p>
               </div>
-              <button onClick={() => toggleSave(String(repo.id))} className="p-2">
-                <Bookmark className="w-5 h-5 text-slate-300" />
+              <button 
+                onClick={() => {
+                  const identifier = savedRepoIds.includes(repo.full_name) ? repo.full_name : String(repo.id);
+                  toggleSave(identifier);
+                }} 
+                className="p-2"
+              >
+                <Bookmark className={`w-5 h-5 ${savedRepoIds.includes(repo.full_name) || savedRepoIds.includes(String(repo.id)) ? 'text-brand-500 fill-current' : 'text-slate-300'}`} />
               </button>
             </div>
             <div className="mt-auto pt-4 border-t border-slate-800/60 flex items-center gap-4 text-sm font-semibold">
