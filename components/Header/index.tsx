@@ -389,7 +389,10 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
         {/* Left Side: App Launcher, Logo, Explore Dropdown, My Learning */}
         <div className="flex items-center gap-4">
           {/* App Launcher (Bento/Grid Menu icon) */}
-          <button className="p-2 hover:bg-white/10 dark:hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer hidden sm:block">
+          <button 
+            onClick={() => navigate('/portals')}
+            className="p-2 hover:bg-white/10 dark:hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer hidden sm:block"
+          >
             <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
               <path d="M4 4h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 16h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4z" />
             </svg>

@@ -80,6 +80,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
       {/* Top Navigation Bar */}
       <header className="h-16 border-b border-slate-800 flex items-center justify-between px-6 bg-[#09090b] z-50 sticky top-0">
         <div className="flex items-center gap-3 w-64 shrink-0">
+          <button 
+            onClick={() => navigate('/portals')}
+            className="p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer hidden sm:block mr-1"
+            title="App Launcher"
+          >
+            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M4 4h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 16h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4z" />
+            </svg>
+          </button>
           <div className="w-6 h-6 rounded-full border-2 border-white"></div>
           <span className="font-black text-xl tracking-wider italic">CFTOS</span>
         </div>

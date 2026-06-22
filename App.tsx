@@ -33,6 +33,7 @@ const OpenSourceScreen = lazy(() => import('./components/OpenSourceScreen'));
 const RepoArticlePage = lazy(() => import('./components/OpenSourceScreen/RepoArticlePage'));
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 const AgentsPage = lazy(() => import('./components/AgentsPage'));
+const PortalsScreen = lazy(() => import('./components/PortalsScreen'));
 
 /** Default blank progress object used when creating a guest/new user session. */
 const defaultProgress: UserProgress = {
@@ -676,6 +677,11 @@ export default function App() {
           <Route path="/cftos/post/:owner/:repoName" element={
             <ProtectedRoute currentUser={currentUser}>
               <RepoArticlePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/portals" element={
+            <ProtectedRoute currentUser={currentUser}>
+              <PortalsScreen />
             </ProtectedRoute>
           } />
 
