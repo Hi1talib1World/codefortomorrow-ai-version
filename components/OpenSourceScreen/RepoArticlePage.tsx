@@ -5,6 +5,7 @@ import { ArrowLeft, Star, GitFork, Github, ExternalLink, Share2, Twitter, Facebo
 import { useToast } from '../ToastNotification';
 import { AI_REPOS_DATA } from './aiReposData';
 import { HACK_REPOS_DATA } from './hackReposData';
+import { GITHUB_FALLBACK_AVATAR } from './utils';
 
 export default function RepoArticlePage() {
   const { category, slug } = useParams<{ category: string; slug: string }>();
@@ -95,8 +96,13 @@ export default function RepoArticlePage() {
           {/* Article Header */}
           <div className="bg-[#121212] rounded-3xl border border-slate-800 p-8 md:p-10">
             <div className="flex items-start gap-5 mb-6">
-              <img src={repo.owner.avatar_url} alt={repo.name} className="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800"
-                onError={(e) => { (e.target as HTMLImageElement).src = 'https://github.com/github.png'; }} />
+              <img src={repo.owner?.avatar_url || GITHUB_FALLBACK_AVATAR} alt={repo.name} className="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (target.src !== GITHUB_FALLBACK_AVATAR) {
+                    target.src = GITHUB_FALLBACK_AVATAR;
+                  }
+                }} />
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className={`px-2.5 py-1 ${accent.bgLight} border ${accent.border} ${accent.text} text-[10px] font-bold rounded-md uppercase tracking-wider`}>

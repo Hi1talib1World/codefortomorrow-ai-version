@@ -7,6 +7,7 @@ import { User } from '../../types';
 import api from '../../services/api';
 import { AuthPromptModal } from '../AuthPromptModal';
 import { useI18n } from './i18n';
+import { GITHUB_FALLBACK_AVATAR } from './utils';
 
 interface RepoDetailsProps {
   repo: any;
@@ -159,9 +160,15 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
       {/* Repo Header Info */}
       <div className="bg-[#121212] rounded-3xl border border-slate-800 p-8 flex flex-col md:flex-row gap-6 items-start md:items-center">
         <img 
-          src={repo.owner?.avatar_url || 'https://github.com/github.png'} 
+          src={repo.owner?.avatar_url || GITHUB_FALLBACK_AVATAR} 
           alt={repo.name} 
-          className="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-800"
+          className="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-800 object-cover"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            if (target.src !== GITHUB_FALLBACK_AVATAR) {
+              target.src = GITHUB_FALLBACK_AVATAR;
+            }
+          }}
         />
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">

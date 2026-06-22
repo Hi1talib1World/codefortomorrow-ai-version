@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Trophy, Users, MapPin, Search } from 'lucide-react';
 import { useI18n } from './i18n';
+import { GITHUB_FALLBACK_AVATAR } from './utils';
 
 interface GitHubUser {
   id: number;
@@ -230,9 +231,15 @@ export const Leaderboard: React.FC = () => {
                 </div>
                 
                 <img 
-                  src={user.avatar_url} 
+                  src={user.avatar_url || GITHUB_FALLBACK_AVATAR} 
                   alt={user.login} 
-                  className="w-12 h-12 rounded-full border border-slate-700 group-hover:border-[#FBBF24] transition-colors"
+                  className="w-12 h-12 rounded-full border border-slate-700 group-hover:border-[#FBBF24] transition-colors object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    if (target.src !== GITHUB_FALLBACK_AVATAR) {
+                      target.src = GITHUB_FALLBACK_AVATAR;
+                    }
+                  }}
                 />
                 
                 <div className="flex-1 min-w-0">

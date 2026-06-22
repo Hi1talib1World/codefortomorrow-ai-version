@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { Search, CheckCircle2, Star, GitFork, ExternalLink, Shield } from 'lucide-react';
 import { HACK_REPOS_DATA } from './hackReposData';
 import { useI18n } from './i18n';
+import { GITHUB_FALLBACK_AVATAR } from './utils';
 
 const CATEGORIES = ['All', 'Web Security', 'Exploitation', 'Network', 'Database', 'Cryptography', 'Reverse Engineering', 'Toolkit'];
 const containerVariants = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.08 } } };
@@ -94,8 +95,13 @@ export const HackRepos: React.FC = () => {
               }} key={repo.id || repo.full_name} variants={itemVariants}
                 className="bg-[#121212] rounded-2xl border border-slate-800/60 hover:border-[#111827]/30 p-6 flex flex-col transition-all group cursor-pointer hover:shadow-lg hover:shadow-[#111827]/5">
                 <div className="flex items-start gap-4 mb-4">
-                  <img src={repo.owner?.avatar_url || 'https://github.com/github.png'} alt={repo.name} className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800"
-                    onError={(e) => { (e.target as HTMLImageElement).src = 'https://github.com/github.png'; }} />
+                  <img src={repo.owner?.avatar_url || GITHUB_FALLBACK_AVATAR} alt={repo.name} className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      if (target.src !== GITHUB_FALLBACK_AVATAR) {
+                        target.src = GITHUB_FALLBACK_AVATAR;
+                      }
+                    }} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-1">
                       <h3 className="font-bold text-lg text-white truncate group-hover:text-emerald-300 transition-colors">{repo.name}</h3>

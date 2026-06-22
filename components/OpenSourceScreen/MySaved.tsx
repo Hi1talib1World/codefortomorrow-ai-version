@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Star, GitFork, Bookmark, ExternalLink } from 'lucide-react';
 import { useRepo } from '../../contexts/RepoContext';
 import { useI18n } from './i18n';
+import { GITHUB_FALLBACK_AVATAR } from './utils';
 
 export const MySaved: React.FC = () => {
   const { savedRepoIds, toggleSave } = useRepo();
@@ -42,7 +43,16 @@ export const MySaved: React.FC = () => {
         {repos.map(repo => (
           <div key={repo.id} className="bg-[#121212] rounded-2xl border border-slate-800/60 p-6 flex flex-col">
             <div className="flex items-start gap-4 mb-4">
-              <img src={repo.owner?.avatar_url} className="w-10 h-10 rounded-xl" />
+              <img 
+                src={repo.owner?.avatar_url || GITHUB_FALLBACK_AVATAR} 
+                className="w-10 h-10 rounded-xl object-cover" 
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (target.src !== GITHUB_FALLBACK_AVATAR) {
+                    target.src = GITHUB_FALLBACK_AVATAR;
+                  }
+                }}
+              />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="font-bold text-white truncate">{repo.full_name}</a>

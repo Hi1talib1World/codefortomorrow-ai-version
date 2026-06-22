@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Star, GitFork, Github, ExternalLink, Share2, Twitter, Facebook, Linkedin, Link2, X, Clock, Calendar } from 'lucide-react';
 import { useToast } from '../ToastNotification';
+import { GITHUB_FALLBACK_AVATAR } from './utils';
 
 interface RepoArticleProps {
   repo: {
@@ -94,10 +95,15 @@ export const RepoArticle: React.FC<RepoArticleProps> = ({ repo, onBack, accentCo
       <div className="bg-[#121212] rounded-3xl border border-slate-800 p-8">
         <div className="flex flex-col md:flex-row gap-6 items-start md:items-center mb-6">
           <img
-            src={repo.owner.avatar_url}
+            src={repo.owner?.avatar_url || GITHUB_FALLBACK_AVATAR}
             alt={repo.name}
-            className="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-800"
-            onError={(e) => { (e.target as HTMLImageElement).src = 'https://github.com/github.png'; }}
+            className="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-800 object-cover"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              if (target.src !== GITHUB_FALLBACK_AVATAR) {
+                target.src = GITHUB_FALLBACK_AVATAR;
+              }
+            }}
           />
           <div className="flex-1">
             <h1 className="text-3xl font-black text-white mb-2">{repo.article.title}</h1>
