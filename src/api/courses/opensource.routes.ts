@@ -1,5 +1,5 @@
 import express from 'express';
-import { getLeaderboard, getCuratedRepos, addCuratedRepo, getTrendingRepos, getRepoReadme, getRepoSetupGuide, searchRepos, searchIssues, getReposById } from './opensource.controller';
+import { getLeaderboard, getCuratedRepos, addCuratedRepo, getTrendingRepos, getRepoReadme, getRepoSetupGuide, searchRepos, searchIssues, getReposById, translateText } from './opensource.controller';
 import { protect } from '../../../src/core/permissions/auth.middleware';
 import { adminOnly } from '../../../src/core/permissions/admin.middleware';
 
@@ -14,5 +14,6 @@ router.get('/trending', getTrendingRepos);
 router.get('/search', searchRepos);
 router.get('/issues', searchIssues);
 router.get('/by-id', getReposById);
+router.post('/translate', translateText);
 
 export default router;

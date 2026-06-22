@@ -18,6 +18,36 @@ export const HackRepos: React.FC = () => {
   const [repos, setRepos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [translatedDescs, setTranslatedDescs] = useState<Record<string, string>>({});
+  const [translatingIds, setTranslatingIds] = useState<Record<string, boolean>>({});
+
+  const handleTranslateRepo = async (repoId: string, text: string) => {
+    if (translatedDescs[repoId]) {
+      setTranslatedDescs(prev => {
+        const copy = { ...prev };
+        delete copy[repoId];
+        return copy;
+      });
+      return;
+    }
+    
+    setTranslatingIds(prev => ({ ...prev, [repoId]: true }));
+    try {
+      const res = await fetch('/api/opensource/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, targetLang: lang === 'ar' ? 'ar' : 'en' })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTranslatedDescs(prev => ({ ...prev, [repoId]: data.translatedText }));
+      }
+    } catch (err) {
+      console.error('Translation failed:', err);
+    } finally {
+      setTranslatingIds(prev => ({ ...prev, [repoId]: false }));
+    }
+  };
 
   const source = repos.length > 0 ? repos : HACK_REPOS_DATA;
   const filtered = source.filter((r: any) => {
@@ -108,8 +138,26 @@ export const HackRepos: React.FC = () => {
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                     </div>
                     <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
-                      {(lang === 'ar' && repo.description_ar) ? repo.description_ar : repo.description}
+                      {translatedDescs[String(repo.id || repo.full_name)] 
+                        ? translatedDescs[String(repo.id || repo.full_name)] 
+                        : ((lang === 'ar' && repo.description_ar) ? repo.description_ar : repo.description)}
                     </p>
+                    {repo.description && (
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); handleTranslateRepo(String(repo.id || repo.full_name), repo.description); }}
+                        disabled={translatingIds[String(repo.id || repo.full_name)]}
+                        className="mt-2 text-[11px] font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1 cursor-pointer disabled:opacity-50 self-start"
+                      >
+                        <Sparkles className="w-3 h-3 animate-pulse text-brand-400" />
+                        <span>
+                          {translatingIds[String(repo.id || repo.full_name)] 
+                            ? (lang === 'ar' ? 'جاري...' : 'Translating...') 
+                            : (translatedDescs[String(repo.id || repo.full_name)] 
+                                ? (lang === 'ar' ? 'الأصلي' : 'Original') 
+                                : (lang === 'ar' ? 'ترجم' : 'Translate'))}
+                        </span>
+                      </button>
+                    )}
                   </div>
                   <ExternalLink className="w-4 h-4 text-slate-600 group-hover:text-emerald-400 shrink-0 transition-colors" />
                 </div>

@@ -539,3 +539,19 @@ export const getRepoSetupGuide = async (req: Request, res: Response) => {
   }
 };
 
+export const translateText = async (req: Request, res: Response) => {
+  try {
+    const { text, targetLang } = req.body;
+    if (!text) {
+      return res.status(400).json({ message: 'Text to translate is required' });
+    }
+    const target = targetLang === 'ar' || targetLang === 'en' ? targetLang : 'ar';
+    const translatedText = await AIEngine.translateText(text, target);
+    res.json({ translatedText });
+  } catch (error) {
+    console.error('Error translating text:', error);
+    res.status(500).json({ message: 'Error translating text' });
+  }
+};
+
+

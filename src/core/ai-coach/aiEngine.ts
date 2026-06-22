@@ -637,6 +637,31 @@ Do not give them the complete solution code directly. Focus on guidance and debu
     }
   }
 
+  static async translateText(text: string, targetLang: 'ar' | 'en'): Promise<string> {
+    if (!hasValidGeminiKey() || !text) {
+      return text;
+    }
+    const langName = targetLang === 'ar' ? 'Arabic' : 'English';
+    const prompt = `
+      Translate the following text to ${langName}. 
+      Do NOT include any conversational filler, intro, or markdown formatting. 
+      Only return the clean translated text.
+      
+      Text to translate:
+      ${text}
+    `;
+    try {
+      const response = await getAi().models.generateContent({
+        model: this.model,
+        contents: prompt
+      });
+      return response.text?.trim() || text;
+    } catch (error) {
+      console.error("AI translation error:", error);
+      return text;
+    }
+  }
+
   private static getFallbackRecommendation() {
     return {
       recommendation: "Keep practicing your core skills to build a strong foundation!",

@@ -17,7 +17,7 @@ interface RepoDetailsProps {
 }
 
 export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentUser, updateUser }) => {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [activeTab, setActiveTab] = useState<'guide' | 'readme'>('guide');
   const [guide, setGuide] = useState<string>('');
   const [readme, setReadme] = useState<string>('');
@@ -25,6 +25,36 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
   const [error, setError] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [translatedDesc, setTranslatedDesc] = useState<string | null>(null);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [useTranslation, setUseTranslation] = useState(false);
+
+  const handleTranslate = async () => {
+    if (translatedDesc) {
+      setUseTranslation(!useTranslation);
+      return;
+    }
+    setIsTranslating(true);
+    try {
+      const res = await fetch('/api/opensource/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: repo.description,
+          targetLang: lang === 'ar' ? 'ar' : 'en'
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTranslatedDesc(data.translatedText);
+        setUseTranslation(true);
+      }
+    } catch (err) {
+      console.error('Translation failed:', err);
+    } finally {
+      setIsTranslating(false);
+    }
+  };
 
   // Reset state when active repo changes
   useEffect(() => {
@@ -32,6 +62,9 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
     setReadme('');
     setActiveTab('guide');
     setError(null);
+    setTranslatedDesc(null);
+    setUseTranslation(false);
+    setIsTranslating(false);
   }, [repo.full_name]);
 
   // Fetch AI Setup Guide
@@ -175,7 +208,25 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
             <h1 className="text-3xl font-black text-white">{repo.name}</h1>
             <CheckCircle2 className="w-6 h-6 text-[#111827] shrink-0" />
           </div>
-          <p className="text-slate-400 text-lg">{repo.description}</p>
+          <p className="text-slate-400 text-lg">
+            {useTranslation && translatedDesc ? translatedDesc : ((lang === 'ar' && repo.description_ar) ? repo.description_ar : repo.description)}
+          </p>
+          {repo.description && (
+            <button 
+              onClick={handleTranslate}
+              disabled={isTranslating}
+              className="mt-2 text-xs font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1 cursor-pointer disabled:opacity-50"
+            >
+              <Sparkles className="w-3.5 h-3.5 animate-pulse text-brand-400" />
+              <span>
+                {isTranslating 
+                  ? (lang === 'ar' ? 'جاري الترجمة...' : 'Translating...') 
+                  : (useTranslation 
+                      ? (lang === 'ar' ? 'عرض الأصلي' : 'Show Original') 
+                      : (lang === 'ar' ? 'ترجمة الوصف' : 'Translate Description'))}
+              </span>
+            </button>
+          )}
         </div>
         <div className="flex gap-6 text-sm font-semibold">
           <div className="flex items-center gap-2">

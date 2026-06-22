@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Search, ChevronDown, CheckCircle2, Star, GitFork, Bookmark, Share2 } from 'lucide-react';
+import { Search, ChevronDown, CheckCircle2, Star, GitFork, Bookmark, Share2, Sparkles } from 'lucide-react';
 import { RepoDetails } from './RepoDetails';
 import { User } from '../../types';
 import api from '../../services/api';
@@ -53,6 +53,36 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { t, lang } = useI18n();
+  const [translatedDescs, setTranslatedDescs] = useState<Record<string, string>>({});
+  const [translatingIds, setTranslatingIds] = useState<Record<string, boolean>>({});
+
+  const handleTranslateRepo = async (repoId: string, text: string) => {
+    if (translatedDescs[repoId]) {
+      setTranslatedDescs(prev => {
+        const copy = { ...prev };
+        delete copy[repoId];
+        return copy;
+      });
+      return;
+    }
+    
+    setTranslatingIds(prev => ({ ...prev, [repoId]: true }));
+    try {
+      const res = await fetch('/api/opensource/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, targetLang: lang === 'ar' ? 'ar' : 'en' })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTranslatedDescs(prev => ({ ...prev, [repoId]: data.translatedText }));
+      }
+    } catch (err) {
+      console.error('Translation failed:', err);
+    } finally {
+      setTranslatingIds(prev => ({ ...prev, [repoId]: false }));
+    }
+  };
 
   useEffect(() => {
     const fetchTrending = async () => {
@@ -251,8 +281,26 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
                       <CheckCircle2 className="w-4 h-4 text-[#111827] shrink-0" />
                     </div>
                     <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
-                      {(lang === 'ar' && repo.description_ar) ? repo.description_ar : (repo.description || t('feed.noDescription'))}
+                      {translatedDescs[String(repo.id)] 
+                        ? translatedDescs[String(repo.id)] 
+                        : ((lang === 'ar' && repo.description_ar) ? repo.description_ar : (repo.description || t('feed.noDescription')))}
                     </p>
+                    {repo.description && (
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); handleTranslateRepo(String(repo.id), repo.description); }}
+                        disabled={translatingIds[String(repo.id)]}
+                        className="mt-2 text-[11px] font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1 cursor-pointer disabled:opacity-50 self-start"
+                      >
+                        <Sparkles className="w-3 h-3 animate-pulse text-brand-400" />
+                        <span>
+                          {translatingIds[String(repo.id)] 
+                            ? (lang === 'ar' ? 'جاري...' : 'Translating...') 
+                            : (translatedDescs[String(repo.id)] 
+                                ? (lang === 'ar' ? 'الأصلي' : 'Original') 
+                                : (lang === 'ar' ? 'ترجم' : 'Translate'))}
+                        </span>
+                      </button>
+                    )}
                   </div>
                   <button 
                     onClick={(e) => handleSaveRepo(e, repo.id)}
