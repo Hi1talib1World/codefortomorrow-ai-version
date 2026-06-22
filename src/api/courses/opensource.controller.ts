@@ -466,7 +466,9 @@ export const getRepoSetupGuide = async (req: Request, res: Response) => {
     const owner = typeof req.params.owner === 'string' ? req.params.owner : '';
     const repo = typeof req.params.repo === 'string' ? req.params.repo : '';
     const description = typeof req.query.description === 'string' ? req.query.description : '';
-    const cacheKey = `setup_guide_${owner}_${repo}`;
+    const lang = typeof req.query.lang === 'string' ? req.query.lang : 'en';
+    const targetLang = lang === 'ar' ? 'ar' : 'en';
+    const cacheKey = `setup_guide_${owner}_${repo}_${targetLang}`;
 
     // 1. Check in-memory cache first
     const cachedData = getCached(cacheKey);
@@ -476,7 +478,7 @@ export const getRepoSetupGuide = async (req: Request, res: Response) => {
 
     // 2. Check persistent file cache
     const readmeCacheDir = path.resolve(process.cwd(), 'readme-cache');
-    const guideCacheFile = path.resolve(readmeCacheDir, `setup_guide_${owner}__${repo}.md`);
+    const guideCacheFile = path.resolve(readmeCacheDir, `setup_guide_${owner}__${repo}_${targetLang}.md`);
     
     if (fs.existsSync(guideCacheFile)) {
       const persistentCachedGuide = fs.readFileSync(guideCacheFile, 'utf-8');
@@ -523,7 +525,7 @@ export const getRepoSetupGuide = async (req: Request, res: Response) => {
     }
 
     // 4. Generate AI guide
-    const guide = await AIEngine.getBeginnerSetupGuide(repo, description, readmeContent);
+    const guide = await AIEngine.getBeginnerSetupGuide(repo, description, readmeContent, targetLang);
 
     // 5. Cache and return the generated guide
     if (!fs.existsSync(readmeCacheDir)) {

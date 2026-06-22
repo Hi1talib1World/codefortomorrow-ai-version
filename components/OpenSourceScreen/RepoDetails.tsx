@@ -56,7 +56,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
     }
   }, [lang, repo.description, repo.description_ar, translatedDesc, isTranslating]);
 
-  // Reset state when active repo changes
+  // Reset state when active repo or language changes
   useEffect(() => {
     setGuide('');
     setReadme('');
@@ -64,7 +64,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
     setError(null);
     setTranslatedDesc(null);
     setIsTranslating(false);
-  }, [repo.full_name]);
+  }, [repo.full_name, lang]);
 
   // Fetch AI Setup Guide
   useEffect(() => {
@@ -74,7 +74,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
       try {
         const [owner, name] = repo.full_name.split('/');
         const descriptionParam = encodeURIComponent(repo.description || '');
-        const res = await fetch(`/api/opensource/repos/${owner}/${name}/setup-guide?description=${descriptionParam}`);
+        const res = await fetch(`/api/opensource/repos/${owner}/${name}/setup-guide?description=${descriptionParam}&lang=${lang}`);
         if (!res.ok) {
           throw new Error(t('details.failedFetchGuide'));
         }
@@ -90,7 +90,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
     if (activeTab === 'guide' && !guide) {
       fetchGuide();
     }
-  }, [repo.full_name, activeTab, guide, repo.description]);
+  }, [repo.full_name, activeTab, guide, repo.description, lang]);
 
   // Fetch README
   useEffect(() => {

@@ -149,13 +149,12 @@ export class AIEngine {
     }
   }
 
-  /**
-   * Generates a beginner-friendly setup guide based on a repository's README
-   */
-  static async getBeginnerSetupGuide(repoName: string, repoDescription: string, readmeContent: string): Promise<string> {
+  static async getBeginnerSetupGuide(repoName: string, repoDescription: string, readmeContent: string, targetLang: 'ar' | 'en' = 'en'): Promise<string> {
+    const langName = targetLang === 'ar' ? 'Arabic' : 'English';
     const prompt = `
       You are an expert AI Developer and friendly coding mentor.
       Your task is to generate a step-by-step, beginner-friendly setup guide for the following open-source project.
+      The entire guide MUST be written in ${langName}.
       
       Project Name: ${repoName}
       Description: ${repoDescription}
@@ -172,6 +171,7 @@ export class AIEngine {
       4. Avoid overwhelming technical jargon; focus on the absolute minimum path to get the project running locally.
       
       Format your response in beautiful, clean Markdown. Do NOT include any intro or conversational filler (like "Here is the guide..."). Start directly with the title.
+      All text, descriptions, explanations, and headings MUST be in ${langName}. Only keep original shell commands or code parameters in English.
     `;
 
     try {
@@ -185,7 +185,11 @@ export class AIEngine {
       return response.text || "Failed to generate setup guide.";
     } catch (error) {
       console.error("AI Setup Guide Generation Error:", error);
-      return this.generateProgrammaticSetupGuide(repoName, readmeContent);
+      const rawGuide = this.generateProgrammaticSetupGuide(repoName, readmeContent);
+      if (targetLang === 'ar') {
+        return this.translateText(rawGuide, 'ar');
+      }
+      return rawGuide;
     }
   }
 
