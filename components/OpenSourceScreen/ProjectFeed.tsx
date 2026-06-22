@@ -56,34 +56,6 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
   const [translatedDescs, setTranslatedDescs] = useState<Record<string, string>>({});
   const [translatingIds, setTranslatingIds] = useState<Record<string, boolean>>({});
 
-  const handleTranslateRepo = async (repoId: string, text: string) => {
-    if (translatedDescs[repoId]) {
-      setTranslatedDescs(prev => {
-        const copy = { ...prev };
-        delete copy[repoId];
-        return copy;
-      });
-      return;
-    }
-    
-    setTranslatingIds(prev => ({ ...prev, [repoId]: true }));
-    try {
-      const res = await fetch('/api/opensource/translate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, targetLang: lang === 'ar' ? 'ar' : 'en' })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setTranslatedDescs(prev => ({ ...prev, [repoId]: data.translatedText }));
-      }
-    } catch (err) {
-      console.error('Translation failed:', err);
-    } finally {
-      setTranslatingIds(prev => ({ ...prev, [repoId]: false }));
-    }
-  };
-
   useEffect(() => {
     const fetchTrending = async () => {
       try {
@@ -151,6 +123,61 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
     (r.name || r.full_name || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
     ((r.description || '')).toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Automatically translate descriptions to Arabic when language is switched to Arabic
+  useEffect(() => {
+    if (lang !== 'ar') return;
+
+    const toTranslate = displayedRepos.filter(r => 
+      r.description && 
+      !r.description_ar && 
+      !translatedDescs[String(r.id)] && 
+      !translatingIds[String(r.id)]
+    );
+
+    if (toTranslate.length === 0) return;
+
+    const markMap: Record<string, boolean> = {};
+    toTranslate.forEach(r => {
+      markMap[String(r.id)] = true;
+    });
+    setTranslatingIds(prev => ({ ...prev, ...markMap }));
+
+    const translateBatch = async () => {
+      try {
+        const res = await fetch('/api/opensource/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            texts: toTranslate.map(r => r.description),
+            targetLang: 'ar'
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.translatedTexts && data.translatedTexts.length === toTranslate.length) {
+            const newTrans: Record<string, string> = {};
+            toTranslate.forEach((r, idx) => {
+              if (data.translatedTexts[idx]) {
+                newTrans[String(r.id)] = data.translatedTexts[idx];
+              }
+            });
+            setTranslatedDescs(prev => ({ ...prev, ...newTrans }));
+          }
+        }
+      } catch (err) {
+        console.error('Batch translation failed:', err);
+      } finally {
+        const unmarkMap: Record<string, boolean> = {};
+        toTranslate.forEach(r => {
+          unmarkMap[String(r.id)] = false;
+        });
+        setTranslatingIds(prev => ({ ...prev, ...unmarkMap }));
+      }
+    };
+
+    translateBatch();
+  }, [lang, displayedRepos, translatedDescs, translatingIds]);
 
   const formatNumber = (num: number) => {
     if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
@@ -285,22 +312,6 @@ export const ProjectFeed: React.FC<ProjectFeedProps> = ({ currentUser, updateUse
                         ? translatedDescs[String(repo.id)] 
                         : ((lang === 'ar' && repo.description_ar) ? repo.description_ar : (repo.description || t('feed.noDescription')))}
                     </p>
-                    {repo.description && (
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); handleTranslateRepo(String(repo.id), repo.description); }}
-                        disabled={translatingIds[String(repo.id)]}
-                        className="mt-2 text-[11px] font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1 cursor-pointer disabled:opacity-50 self-start"
-                      >
-                        <Sparkles className="w-3 h-3 animate-pulse text-brand-400" />
-                        <span>
-                          {translatingIds[String(repo.id)] 
-                            ? (lang === 'ar' ? 'جاري...' : 'Translating...') 
-                            : (translatedDescs[String(repo.id)] 
-                                ? (lang === 'ar' ? 'الأصلي' : 'Original') 
-                                : (lang === 'ar' ? 'ترجم' : 'Translate'))}
-                        </span>
-                      </button>
-                    )}
                   </div>
                   <button 
                     onClick={(e) => handleSaveRepo(e, repo.id)}

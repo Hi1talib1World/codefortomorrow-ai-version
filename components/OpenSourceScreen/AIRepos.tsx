@@ -23,34 +23,6 @@ export const AIRepos: React.FC = () => {
   const [translatedDescs, setTranslatedDescs] = useState<Record<string, string>>({});
   const [translatingIds, setTranslatingIds] = useState<Record<string, boolean>>({});
 
-  const handleTranslateRepo = async (repoId: string, text: string) => {
-    if (translatedDescs[repoId]) {
-      setTranslatedDescs(prev => {
-        const copy = { ...prev };
-        delete copy[repoId];
-        return copy;
-      });
-      return;
-    }
-    
-    setTranslatingIds(prev => ({ ...prev, [repoId]: true }));
-    try {
-      const res = await fetch('/api/opensource/translate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, targetLang: lang === 'ar' ? 'ar' : 'en' })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setTranslatedDescs(prev => ({ ...prev, [repoId]: data.translatedText }));
-      }
-    } catch (err) {
-      console.error('Translation failed:', err);
-    } finally {
-      setTranslatingIds(prev => ({ ...prev, [repoId]: false }));
-    }
-  };
-
   const source = repos.length > 0 ? repos : AI_REPOS_DATA;
   const filtered = source.filter((r: any) => {
     const name = (r.name || r.full_name || '').toLowerCase();
@@ -60,6 +32,61 @@ export const AIRepos: React.FC = () => {
     const matchesLanguage = !languageFilter || (r.language || '').toLowerCase() === languageFilter.toLowerCase();
     return matchesSearch && matchesCategory && matchesLanguage;
   });
+
+  // Automatically translate descriptions to Arabic when language is switched to Arabic
+  useEffect(() => {
+    if (lang !== 'ar') return;
+
+    const toTranslate = filtered.filter((r: any) => 
+      r.description && 
+      !r.description_ar && 
+      !translatedDescs[String(r.id || r.full_name)] && 
+      !translatingIds[String(r.id || r.full_name)]
+    );
+
+    if (toTranslate.length === 0) return;
+
+    const markMap: Record<string, boolean> = {};
+    toTranslate.forEach((r: any) => {
+      markMap[String(r.id || r.full_name)] = true;
+    });
+    setTranslatingIds(prev => ({ ...prev, ...markMap }));
+
+    const translateBatch = async () => {
+      try {
+        const res = await fetch('/api/opensource/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            texts: toTranslate.map((r: any) => r.description),
+            targetLang: 'ar'
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.translatedTexts && data.translatedTexts.length === toTranslate.length) {
+            const newTrans: Record<string, string> = {};
+            toTranslate.forEach((r: any, idx: number) => {
+              if (data.translatedTexts[idx]) {
+                newTrans[String(r.id || r.full_name)] = data.translatedTexts[idx];
+              }
+            });
+            setTranslatedDescs(prev => ({ ...prev, ...newTrans }));
+          }
+        }
+      } catch (err) {
+        console.error('Batch translation failed:', err);
+      } finally {
+        const unmarkMap: Record<string, boolean> = {};
+        toTranslate.forEach((r: any) => {
+          unmarkMap[String(r.id || r.full_name)] = false;
+        });
+        setTranslatingIds(prev => ({ ...prev, ...unmarkMap }));
+      }
+    };
+
+    translateBatch();
+  }, [lang, filtered, translatedDescs, translatingIds]);
 
   useEffect(() => {
     const fetchAIRepos = async () => {
@@ -142,22 +169,6 @@ export const AIRepos: React.FC = () => {
                         ? translatedDescs[String(repo.id || repo.full_name)] 
                         : ((lang === 'ar' && repo.description_ar) ? repo.description_ar : repo.description)}
                     </p>
-                    {repo.description && (
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); handleTranslateRepo(String(repo.id || repo.full_name), repo.description); }}
-                        disabled={translatingIds[String(repo.id || repo.full_name)]}
-                        className="mt-2 text-[11px] font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1 cursor-pointer disabled:opacity-50 self-start"
-                      >
-                        <Sparkles className="w-3 h-3 animate-pulse text-brand-400" />
-                        <span>
-                          {translatingIds[String(repo.id || repo.full_name)] 
-                            ? (lang === 'ar' ? 'جاري...' : 'Translating...') 
-                            : (translatedDescs[String(repo.id || repo.full_name)] 
-                                ? (lang === 'ar' ? 'الأصلي' : 'Original') 
-                                : (lang === 'ar' ? 'ترجم' : 'Translate'))}
-                        </span>
-                      </button>
-                    )}
                   </div>
                   <ExternalLink className="w-4 h-4 text-slate-600 group-hover:text-purple-400 shrink-0 transition-colors" />
                 </div>

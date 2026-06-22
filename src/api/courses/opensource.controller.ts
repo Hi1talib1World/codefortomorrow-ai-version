@@ -541,11 +541,24 @@ export const getRepoSetupGuide = async (req: Request, res: Response) => {
 
 export const translateText = async (req: Request, res: Response) => {
   try {
-    const { text, targetLang } = req.body;
+    const { text, texts, targetLang } = req.body;
+    const target = targetLang === 'ar' || targetLang === 'en' ? targetLang : 'ar';
+
+    if (texts && Array.isArray(texts)) {
+      if (texts.length === 0) {
+        return res.json({ translatedTexts: [] });
+      }
+      if (target === 'ar') {
+        const translatedTexts = await AIEngine.translateDescriptionsToArabic(texts);
+        return res.json({ translatedTexts });
+      } else {
+        return res.json({ translatedTexts: texts });
+      }
+    }
+
     if (!text) {
       return res.status(400).json({ message: 'Text to translate is required' });
     }
-    const target = targetLang === 'ar' || targetLang === 'en' ? targetLang : 'ar';
     const translatedText = await AIEngine.translateText(text, target);
     res.json({ translatedText });
   } catch (error) {
