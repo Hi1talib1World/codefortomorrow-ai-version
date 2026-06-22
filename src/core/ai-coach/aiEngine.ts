@@ -99,7 +99,7 @@ export class AIEngine {
       if (!hasValidGeminiKey()) {
         throw new Error("No valid Gemini API key configured.");
       }
-      const response = await getAi().models.generateContent({
+      const apiCallPromise = getAi().models.generateContent({
         model: this.model,
         contents: prompt,
         config: {
@@ -115,6 +115,10 @@ export class AIEngine {
           }
         }
       });
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Gemini API call timed out after 4000ms")), 4000)
+      );
+      const response = await Promise.race([apiCallPromise, timeoutPromise]);
 
       return JSON.parse(response.text || '{}');
     } catch (error) {
@@ -178,10 +182,14 @@ export class AIEngine {
       if (!hasValidGeminiKey()) {
         throw new Error("No valid Gemini API key configured.");
       }
-      const response = await getAi().models.generateContent({
+      const apiCallPromise = getAi().models.generateContent({
         model: this.model,
         contents: prompt
       });
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Gemini API call timed out after 8000ms")), 8000)
+      );
+      const response = await Promise.race([apiCallPromise, timeoutPromise]);
       return response.text || "Failed to generate setup guide.";
     } catch (error) {
       console.error("AI Setup Guide Generation Error:", error);
@@ -622,10 +630,15 @@ Do not give them the complete solution code directly. Focus on guidance and debu
     `;
 
     try {
-      const response = await getAi().models.generateContent({
+      const apiCallPromise = getAi().models.generateContent({
         model: this.model,
         contents: prompt
       });
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Gemini API call timed out after 3000ms")), 3000)
+      );
+      const response = await Promise.race([apiCallPromise, timeoutPromise]);
+      
       const text = response.text || '';
       // Clean potential markdown blocks
       const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
@@ -655,10 +668,14 @@ Do not give them the complete solution code directly. Focus on guidance and debu
       ${text}
     `;
     try {
-      const response = await getAi().models.generateContent({
+      const apiCallPromise = getAi().models.generateContent({
         model: this.model,
         contents: prompt
       });
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Gemini API call timed out after 3000ms")), 3000)
+      );
+      const response = await Promise.race([apiCallPromise, timeoutPromise]);
       return response.text?.trim() || text;
     } catch (error) {
       console.error("AI translation error:", error);

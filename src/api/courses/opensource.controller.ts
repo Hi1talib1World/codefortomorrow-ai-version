@@ -192,11 +192,25 @@ export const getTrendingRepos = async (req: Request, res: Response) => {
       return res.json(cachedData);
     }
 
-    const response = await fetch('https://github.com/trending', {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+    let response;
+    try {
+      response = await fetch('https://github.com/trending', {
+        signal: controller.signal,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        }
+      });
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        throw new Error('GitHub HTML trending request timed out');
       }
-    });
+      throw err;
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     if (!response.ok) {
       throw new Error(`GitHub HTML trending request failed: ${response.status}`);
@@ -243,7 +257,16 @@ export const getTrendingRepos = async (req: Request, res: Response) => {
       try {
         const descList = repos.map(r => r.description || '');
         console.log(`[Trending] Translating ${descList.length} descriptions to Arabic...`);
-        const translationsAr = await AIEngine.translateDescriptionsToArabic(descList);
+        
+        const translatePromise = AIEngine.translateDescriptionsToArabic(descList);
+        const translateTimeoutPromise = new Promise<string[]>((resolve) => {
+          setTimeout(() => {
+            console.warn('[Trending] Description translation timed out. Bypassing translation.');
+            resolve(descList.map(() => ''));
+          }, 2000);
+        });
+
+        const translationsAr = await Promise.race([translatePromise, translateTimeoutPromise]);
         if (translationsAr && translationsAr.length === repos.length) {
           repos.forEach((repo, idx) => {
             if (translationsAr[idx]) {
