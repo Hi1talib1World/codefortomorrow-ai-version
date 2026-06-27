@@ -25,6 +25,9 @@ export interface IUser extends Document {
   websiteUrl?: string;
   professionalTitle?: string;
   skills?: string[];
+  isPremium?: boolean;
+  stripeCustomerId?: string | null;
+  stripeSubscriptionId?: string | null;
 }
 
 const userSchema: Schema = new Schema({
@@ -61,6 +64,18 @@ const userSchema: Schema = new Schema({
   },
   savedRepos: [{ type: String }],
   savedPosts: [{ type: String }],
+  isPremium: {
+    type: Boolean,
+    default: false,
+  },
+  stripeCustomerId: {
+    type: String,
+    default: null,
+  },
+  stripeSubscriptionId: {
+    type: String,
+    default: null,
+  },
   emailVerified: {
     type: Boolean,
     default: false,

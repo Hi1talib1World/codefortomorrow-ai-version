@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useI18n } from './i18n';
+import { useToast } from '../ToastNotification';
 
 import { User } from '../../types';
 
@@ -15,14 +16,56 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
   currentUser?: User | null;
   onLogout?: () => void;
+  updateUser?: (data: Partial<User>) => Promise<void>;
 }
 
-export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, currentUser, onLogout }) => {
+export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, currentUser, onLogout, updateUser }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'feed';
   const { t, lang, setLang } = useI18n();
+  const { showToast } = useToast();
+
+  const handlePremiumClick = async () => {
+    if (!currentUser || currentUser._id.startsWith('guest_')) {
+      showToast('Please sign in to unlock Premium features!', 'info');
+      navigate('/auth');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/payments/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.mock) {
+          if (updateUser) {
+            await updateUser({ isPremium: data.isPremium });
+          } else {
+            window.location.reload();
+          }
+          showToast(
+            data.isPremium ? 'Mock Premium Plan Activated!' : 'Mock Premium Plan Deactivated.',
+            data.isPremium ? 'success' : 'info'
+          );
+        } else if (data.url) {
+          window.location.href = data.url;
+        }
+      } else {
+        const errData = await res.json();
+        showToast(errData.message || 'Payment request failed.', 'error');
+      }
+    } catch (error) {
+      console.error('Premium checkout error:', error);
+      showToast('Connection to payment server failed.', 'error');
+    }
+  };
 
   const GENERAL_ITEMS = [
     { id: 'feed', icon: Home, label: t('nav.home') },
@@ -129,9 +172,21 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
           <button className="text-slate-400 hover:text-white transition-colors">
             <Bell className="w-5 h-5" />
           </button>
-          <button className="flex items-center gap-1.5 bg-[#FBBF24]/10 border border-[#FBBF24]/30 text-[#FBBF24] hover:bg-[#FBBF24]/20 px-3 py-1.5 rounded-md text-xs font-bold transition-colors">
-            <Star className="w-3.5 h-3.5 fill-current" /> {t('header.premium')}
-          </button>
+          {currentUser?.isPremium ? (
+            <button 
+              onClick={handlePremiumClick}
+              className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 px-3 py-1.5 rounded-md text-xs font-bold transition-colors animate-pulse"
+            >
+              <CheckCircle2 className="w-3.5 h-3.5 fill-current text-emerald-400" /> {lang === 'ar' ? 'مميز نشط' : '✓ Premium Active'}
+            </button>
+          ) : (
+            <button 
+              onClick={handlePremiumClick}
+              className="flex items-center gap-1.5 bg-[#FBBF24]/10 border border-[#FBBF24]/30 text-[#FBBF24] hover:bg-[#FBBF24]/20 px-3 py-1.5 rounded-md text-xs font-bold transition-colors"
+            >
+              <Star className="w-3.5 h-3.5 fill-current" /> {t('header.premium')}
+            </button>
+          )}
           
           <div className="h-6 w-px bg-slate-800 mx-2"></div>
           
@@ -267,9 +322,21 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
                 </button>
               )}
 
-              <button className="flex items-center justify-center gap-1.5 bg-[#FBBF24]/10 border border-[#FBBF24]/30 text-[#FBBF24] hover:bg-[#FBBF24]/20 px-3 py-2 rounded-md text-xs font-bold transition-colors w-full">
-                <Star className="w-3.5 h-3.5 fill-current" /> {t('header.premium')}
-              </button>
+              {currentUser?.isPremium ? (
+                <button 
+                  onClick={handlePremiumClick}
+                  className="flex items-center justify-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 px-3 py-2 rounded-md text-xs font-bold transition-colors w-full"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 fill-current text-emerald-400" /> {lang === 'ar' ? 'مميز نشط' : '✓ Premium Active'}
+                </button>
+              ) : (
+                <button 
+                  onClick={handlePremiumClick}
+                  className="flex items-center justify-center gap-1.5 bg-[#FBBF24]/10 border border-[#FBBF24]/30 text-[#FBBF24] hover:bg-[#FBBF24]/20 px-3 py-2 rounded-md text-xs font-bold transition-colors w-full"
+                >
+                  <Star className="w-3.5 h-3.5 fill-current" /> {t('header.premium')}
+                </button>
+              )}
               <Link to="/" className="text-xs font-bold text-slate-500 hover:text-white transition-colors flex items-center justify-center gap-2 py-2">
                 {t('nav.backToMainApp')}
               </Link>

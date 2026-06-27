@@ -11,6 +11,7 @@ import { createServer as createViteServer } from 'vite';
 import connectDB from './src/services/db/db';
 import authRoutes from './src/api/auth/auth.routes';
 import userRoutes from './src/api/users/user.routes';
+import paymentRoutes from './src/api/users/payment.routes';
 import quizRoutes from './src/api/courses/quiz.routes';
 import activityRoutes from './src/api/courses/activity.routes';
 import messageRoutes from './src/api/messages/message.routes';
@@ -94,7 +95,13 @@ async function startServer() {
   // Enable response compression (gzip/deflate)
   app.use(compression());
   // Enable Express to parse JSON formatted request bodies
-  app.use(express.json());
+  app.use(express.json({
+    verify: (req: any, res, buf) => {
+      if (req.originalUrl && req.originalUrl.startsWith('/api/payments/webhook')) {
+        req.rawBody = buf;
+      }
+    }
+  }));
   // Enable Express to parse cookies
   app.use(cookieParser());
   // Enable CORS with credentials support.
@@ -191,6 +198,8 @@ async function startServer() {
   app.use('/api/auth', authRoutes);
   // Mount the user-related routes under the /api/users prefix
   app.use('/api/users', userRoutes);
+  // Mount the payment-related routes under the /api/payments prefix
+  app.use('/api/payments', paymentRoutes);
   // Mount the quiz-related routes under the /api/quizzes prefix
   app.use('/api/quizzes', quizRoutes);
   // Mount the activity-related routes under the /api/activities prefix

@@ -28,7 +28,7 @@ export default function OpenSourceScreen({ currentUser, updateUser, onLogout }: 
   return (
     <I18nProvider>
       <div id="cftos-root">
-        <DashboardLayout currentUser={currentUser} onLogout={onLogout}>
+        <DashboardLayout currentUser={currentUser} onLogout={onLogout} updateUser={updateUser}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
