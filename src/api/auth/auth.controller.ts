@@ -98,10 +98,33 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       throw new ApiError(503, 'Service unavailable: database connection is required to register users.');
     }
 
-    const userExists = await User.findOne({ email });
+    const userExists = await User.findOne({ email }).select('+password');
 
     if (userExists) {
-      throw new ApiError(400, 'User already exists');
+      if (!userExists.password) {
+        // User exists (Google Auth) but has no password. Let them set it by registering.
+        userExists.password = password;
+        if (name) userExists.name = name;
+        const userRole = determineRole(email, role);
+        userExists.role = userRole;
+        await userExists.save();
+
+        const token = generateToken(userExists._id);
+        setAuthCookie(res, token, req);
+
+        return res.status(201).json({
+          _id: userExists._id,
+          name: userExists.name,
+          email: userExists.email,
+          profilePictureUrl: userExists.profilePictureUrl,
+          progress: userExists.progress,
+          currentPath: (userExists as any).currentPath,
+          role: userExists.role,
+          token,
+        });
+      } else {
+        throw new ApiError(400, 'User already exists');
+      }
     }
 
     // Each new user gets a corresponding progress document.
