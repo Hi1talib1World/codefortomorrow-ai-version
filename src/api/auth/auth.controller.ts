@@ -158,7 +158,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       throw new ApiError(503, 'Service unavailable: database connection is required to authenticate users.');
     }
 
-    const user = await User.findOne({ email }).populate('progress');
+    const user = await User.findOne({ email }).select('+password').populate('progress');
 
     if (user && (await bcrypt.compare(password, user.password || ''))) {
       // Sync admin status from environment variables dynamically
