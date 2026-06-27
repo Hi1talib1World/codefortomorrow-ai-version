@@ -715,7 +715,7 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RepoProvider>
+      <RepoProvider initialSaved={currentUser?.savedRepos || undefined}>
       <ErrorBoundary>
         <ThemeProvider>
           <ToastProvider>

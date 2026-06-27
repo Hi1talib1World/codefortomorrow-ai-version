@@ -139,7 +139,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
       case 'docs':
         return <DocumentationScreen currentUser={currentUser} />;
       case 'ai-assistant':
-        return <AIAssistantScreen currentUser={currentUser} />;
+        return <AIAssistantScreen currentUser={currentUser} onUpdateUser={onUpdateUser} />;
       case 'missions':
         return <MissionsScreen currentUser={currentUser} />;
       case 'how-to-learn':
@@ -179,6 +179,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
           onSwitchPath={(pId) => navigate(`/dashboard/learn/${pId}`)}
           onStartLesson={onStartLesson}
           unreadMessagesCount={unreadMessagesCount}
+          updateUser={onUpdateUser}
         />
         <main className={`flex-grow overflow-y-auto ${mainContentBg} pb-24 md:pb-12 transition-colors`}>
           <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-6 md:py-10">

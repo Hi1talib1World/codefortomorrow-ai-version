@@ -20,9 +20,10 @@ interface HeaderProps {
   activeView?: DashboardView;
   setActiveView?: (view: DashboardView) => void;
   unreadMessagesCount?: number;
+  updateUser?: (data: Partial<User>) => Promise<void>;
 }
 
-const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, onStartLesson, activeView, setActiveView, unreadMessagesCount = 0 }) => {
+const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, onStartLesson, activeView, setActiveView, unreadMessagesCount = 0, updateUser }) => {
   const { language, setLanguage, t } = useLanguage();
   const { isOnline, syncPending, triggerSync } = useSync();
   const { theme, toggleTheme } = useTheme();
@@ -38,6 +39,46 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
   const exploreRef = useRef<HTMLDivElement>(null);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const { showToast } = useToast();
+
+  const handlePremiumClick = async () => {
+    if (!currentUser || currentUser._id.startsWith('guest_')) {
+      showToast('Please sign in to unlock Premium features!', 'info');
+      navigate('/auth');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/payments/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.mock) {
+          if (updateUser) {
+            await updateUser({ isPremium: data.isPremium });
+          } else {
+            window.location.reload();
+          }
+          showToast(
+            data.isPremium ? 'Mock Premium Plan Activated!' : 'Mock Premium Plan Deactivated.',
+            data.isPremium ? 'success' : 'info'
+          );
+        } else if (data.url) {
+          window.location.href = data.url;
+        }
+      } else {
+        const errData = await res.json();
+        showToast(errData.message || 'Payment request failed.', 'error');
+      }
+    } catch (error) {
+      console.error('Premium checkout error:', error);
+      showToast('Connection to payment server failed.', 'error');
+    }
+  };
 
   const fetchNotifications = async () => {
     try {
@@ -805,6 +846,25 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
 
 
 
+
+          {/* Premium Subscription Button */}
+          {currentUser?.isPremium ? (
+            <button
+              onClick={handlePremiumClick}
+              className="flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/25 px-4 py-2 rounded-full text-xs font-black tracking-wide transition-all animate-pulse cursor-pointer shrink-0"
+            >
+              <CheckCircle className="w-3.5 h-3.5 fill-current" />
+              <span>{language === Language.AR ? 'مميز نشط' : '✓ Premium Active'}</span>
+            </button>
+          ) : (
+            <button
+              onClick={handlePremiumClick}
+              className="flex items-center gap-1.5 bg-[#FBBF24]/15 border border-[#FBBF24]/30 text-amber-600 dark:text-amber-400 hover:bg-[#FBBF24]/25 px-4 py-2 rounded-full text-xs font-black tracking-wide transition-all cursor-pointer shrink-0"
+            >
+              <Sparkles className="w-3.5 h-3.5 fill-current" />
+              <span>{language === Language.AR ? 'ترقية مميز' : 'Go Premium'}</span>
+            </button>
+          )}
 
           <div className="relative group">
             <select
