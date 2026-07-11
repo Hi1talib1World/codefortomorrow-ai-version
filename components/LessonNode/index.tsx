@@ -48,9 +48,9 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
   const circleBg = isCompleted
     ? 'bg-[#58cc02]'
     : isNext
-      ? 'bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600'
+      ? (lesson.nodeType === 'game' ? 'bg-gradient-to-tr from-purple-500 to-pink-500 border-2 border-purple-400' : 'bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600')
       : isUnlocked
-        ? 'bg-white dark:bg-slate-800'
+        ? (lesson.nodeType === 'game' ? 'bg-gradient-to-tr from-purple-400 to-pink-400' : 'bg-white dark:bg-slate-800')
         : 'bg-slate-200 dark:bg-slate-900';
 
   const ringColor = isCompleted
@@ -123,7 +123,7 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
               className="w-10 h-10 object-contain select-none"
             />
           ) : (
-            <span className="text-3xl select-none drop-shadow-sm filter grayscale opacity-70">{emoji}</span>
+            <span className={`text-3xl select-none drop-shadow-sm ${lesson.nodeType === 'game' ? '' : 'filter grayscale opacity-70'}`}>{emoji}</span>
           )}
         </motion.button>
       </div>
