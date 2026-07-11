@@ -49,7 +49,7 @@ export interface Lesson {
   /** Lesson category — affects styling and sorting. */
   type: 'lesson' | 'quiz' | 'project';
   /** Visual variant of the roadmap node bubble. */
-  nodeType: 'standard' | 'quiz' | 'project' | 'trophy';
+  nodeType: 'standard' | 'quiz' | 'project' | 'trophy' | 'game';
   /** Translation key for the main challenge/task description. */
   challengeDescriptionKey: string;
   /** Translation key for the concept explanation shown in the theory card. */
