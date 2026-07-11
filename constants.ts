@@ -2101,6 +2101,49 @@ export const BADGES_BY_PATH: { [key: string]: Badge[] } = {
   ],
 };
 
+// Dynamically add a gamified "Kids Zone" to every language
+PATHS.forEach((path) => {
+  const kidLesson: any = {
+    id: 999,
+    level: 999,
+    titleKey: 'kid_game_1',
+    icon: 'game',
+    xp: 150,
+    color: '#a855f7',
+    type: 'lesson',
+    nodeType: 'game',
+    challengeDescriptionKey: 'kid_game_desc_1',
+    starterCode: '// 🐉 Welcome to the Gamified Challenge!\n// Your task: Defeat the dragon using your coding skills!\n\n',
+    solutionCode: 'console.log("dragon defeated");',
+    expectedOutput: ''
+  };
+
+  if (LESSONS_BY_PATH[path.id]) {
+    LESSONS_BY_PATH[path.id].push({
+      id: `${path.id}_kids_zone`,
+      titleKey: 'kids_gamified_challenges',
+      lessons: [kidLesson]
+    });
+  }
+
+  if (MODULES_BY_PATH[path.id]) {
+    MODULES_BY_PATH[path.id].push({
+      id: `${path.id}_kids_module`,
+      titleKey: 'kids_gamified_challenges',
+      color: 'bg-purple-500',
+      descriptionKey: 'kids_gamified_challenges_desc',
+      levels: [
+        {
+          id: `${path.id}_kids_lvl_1`,
+          titleKey: 'kid_game_1',
+          isLocked: false,
+          lessons: [kidLesson]
+        }
+      ]
+    });
+  }
+});
+
 // Post-process LESSONS_BY_PATH to fix duplicate copy-pasted lesson IDs programmatically
 Object.keys(LESSONS_BY_PATH).forEach((pathKey) => {
   let currentId = 1;
