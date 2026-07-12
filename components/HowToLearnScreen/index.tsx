@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { BookOpen, Target, Trophy, Sparkles, Code, Play, Star, Flame, Gift, ArrowRight, BookOpenCheck, Volume2, Gamepad2 } from 'lucide-react';
+import { BookOpen, Target, Trophy, Zap, Code, Play, Star, Flame, Gift, ArrowRight, BookOpenCheck, Volume2, Gamepad2 } from 'lucide-react';
 
 const HowToLearnScreen: React.FC = () => {
     const { language } = useLanguage();
@@ -301,7 +301,7 @@ const HowToLearnScreen: React.FC = () => {
                         <div className="space-y-8">
                             <div className="border-b border-slate-100 dark:border-slate-700/50 pb-4">
                                 <h2 className="text-xl sm:text-2xl font-black text-[#111827] dark:text-indigo-200 uppercase tracking-tight flex items-center gap-2">
-                                    <Sparkles className="w-6 h-6 text-pink-600 dark:text-pink-400" />
+                                    <Zap className="w-6 h-6 text-pink-600 dark:text-pink-400" />
                                     {texts.games_title}
                                 </h2>
                                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 font-semibold">

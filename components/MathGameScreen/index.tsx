@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Lesson, ProgrammingPath, User } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import Mascot from '../Mascot';
-import { Sparkles } from 'lucide-react';
 import { MatchPairs, VerticalStack, PerimeterMatch, PerimeterGrid } from '../MathInteractive';
 
 interface MathGameScreenProps {

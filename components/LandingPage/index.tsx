@@ -86,6 +86,10 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-white hover:text-[#FBBF24] transition-colors text-sm font-bold tracking-wide">
               Docs & Blog
             </a>
+            <div className="w-[1px] h-4 bg-slate-800 self-center" />
+            <a href="/about" className="text-white hover:text-[#FBBF24] transition-colors text-sm font-bold tracking-wide">
+              About
+            </a>
           </nav>
 
           <div className="hidden md:flex items-center">
@@ -112,6 +116,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <a href={getPlatformHref('academy', '/dashboard')} className="text-2xl font-bold text-white hover:text-[#FBBF24]">Academy</a>
             <a href={getPlatformHref('os', '/cftos')} className="text-2xl font-bold text-white hover:text-[#FBBF24]">Open Source</a>
             <a href={getPlatformHref('docs', '/blog')} className="text-2xl font-bold text-white hover:text-[#FBBF24]">Docs & Blog</a>
+            <a href="/about" className="text-2xl font-bold text-white hover:text-[#FBBF24]">About</a>
             <button onClick={onGetStarted} className="mt-8 bg-[#FBBF24] text-[#111827] font-bold px-8 py-4 rounded-full text-xl hover:bg-[#f59e0b]">
               Launch Ecosystem
             </button>
@@ -364,6 +369,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <div>
               <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-6">Resources</h4>
               <ul className="space-y-3">
+                <li><a href="/about" className="hover:text-[#FBBF24] transition-colors text-sm font-bold text-white/90">About Us</a></li>
                 <li><a href="#" className="hover:text-[#FBBF24] transition-colors text-sm">Getting Started Guide</a></li>
                 <li><a href="#" className="hover:text-[#FBBF24] transition-colors text-sm">API Documentation</a></li>
                 <li><a href="#" className="hover:text-[#FBBF24] transition-colors text-sm">Community Forum</a></li>
@@ -400,6 +406,7 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               &copy; {new Date().getFullYear()} Code for Tomorrow. All rights reserved.
             </p>
             <div className="flex flex-wrap items-center gap-6 text-xs">
+              <a href="/about" className="text-slate-500 hover:text-[#FBBF24] transition-colors">About Us</a>
               <a href="#" className="text-slate-500 hover:text-[#FBBF24] transition-colors">Privacy Policy</a>
               <a href="#" className="text-slate-500 hover:text-[#FBBF24] transition-colors">Terms of Service</a>
               <a href="#" className="text-slate-500 hover:text-[#FBBF24] transition-colors">Cookie Policy</a>

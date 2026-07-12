@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Play, X, Sparkles } from 'lucide-react';
+import { Heart, Play, X, Zap } from 'lucide-react';
 
 export interface Buddy {
     id: string;
@@ -62,7 +62,7 @@ const ChooseBuddyScreen: React.FC<ChooseBuddyScreenProps> = ({ onClose, onSelect
 
                     <div className="flex items-center space-x-4">
                         <div className="flex items-center space-x-2 text-[#4A4A4A] font-bold">
-                            <Sparkles className="w-5 h-5 text-yellow-500" />
+                            <Zap className="w-5 h-5 text-yellow-500" />
                             <span>Choose Your Buddy</span>
                         </div>
                         <button

@@ -9,7 +9,7 @@ import {
   Users,
   GraduationCap,
   Crown,
-  Sparkles,
+  Zap,
   TrendingUp,
   Award,
 } from 'lucide-react';
@@ -293,7 +293,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
                 {podiumUsers[0].name}
               </h3>
               <span className="text-yellow-600 dark:text-yellow-500 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-yellow-500" />
+                <Zap className="w-3.5 h-3.5 text-yellow-500" />
                 {podiumUsers[0].role}
               </span>
               <div className="flex gap-2 w-full mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/80 justify-center">

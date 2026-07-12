@@ -85,7 +85,7 @@ export default function PortalsScreen() {
 
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 15 } }
+    show: { opacity: 1, y: 0, transition: { type: "spring" as any, stiffness: 100, damping: 15 } }
   };
 
   return (

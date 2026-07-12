@@ -13,6 +13,7 @@ interface Repo {
   name: string;
   full_name: string;
   description: string;
+  description_ar?: string;
   stargazers_count: number;
   forks_count: number;
   language: string;

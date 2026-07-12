@@ -212,6 +212,7 @@ export interface User {
   websiteUrl?: string;
   professionalTitle?: string;
   skills?: string[];
+  isPremium?: boolean;
 }
 
 export interface DBCourse {

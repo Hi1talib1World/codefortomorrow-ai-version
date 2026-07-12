@@ -6,7 +6,7 @@ import Mascot from '../Mascot';
 import { AvatarFallback } from '../AvatarCanvas';
 import api from '../../services/api';
 import { 
-    Sparkles, Brain, Zap, RotateCcw, Play, Terminal, 
+    Brain, Zap, RotateCcw, Play, Terminal, 
     Settings, ChevronRight, ChevronLeft, Bookmark, 
     Trash2, Copy, ChevronDown, Check, X, Eye, EyeOff,
     Cpu, Layers, Activity
@@ -533,7 +533,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         </div>
                         {aiContext?.recommendation && (
                             <div className="flex items-center gap-2 bg-cyan-950/20 px-3 py-1 rounded-full border border-cyan-500/30 animate-pulse">
-                                <Sparkles className="w-3 h-3 text-cyan-400" />
+                                <Zap className="w-3 h-3 text-cyan-400" />
                                 <span className="text-[9px] font-black text-cyan-300 uppercase tracking-wider">HOLO ASSISTANT</span>
                             </div>
                         )}
@@ -985,7 +985,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                             <div className="absolute top-0 left-0 w-2 h-full bg-cyan-500"></div>
                             <div className="flex gap-2.5 items-start">
                                 <div className="p-1 rounded bg-cyan-500/10 text-cyan-400 shrink-0">
-                                    <Sparkles className="w-4 h-4 animate-pulse" />
+                                    <Zap className="w-4 h-4 animate-pulse" />
                                 </div>
                                 <div className="text-left">
                                     <h4 className="text-cyan-400 text-[10px] font-black uppercase tracking-wider mb-0.5">AI Code Doctor</h4>

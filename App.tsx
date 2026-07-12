@@ -34,6 +34,7 @@ const RepoArticlePage = lazy(() => import('./components/OpenSourceScreen/RepoArt
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 const AgentsPage = lazy(() => import('./components/AgentsPage'));
 const PortalsScreen = lazy(() => import('./components/PortalsScreen'));
+const AboutScreen = lazy(() => import('./components/AboutScreen'));
 
 /** Default blank progress object used when creating a guest/new user session. */
 const defaultProgress: UserProgress = {
@@ -592,6 +593,7 @@ export default function App() {
         <Routes>
           <Route path="/missions" element={<Navigate to="/dashboard/missions" replace />} />
           <Route path="/" element={getRootElement()} />
+          <Route path="/about" element={<AboutScreen currentUser={currentUser} />} />
 
           <Route path="/language-selection" element={
             currentUser ? <Navigate to="/dashboard" replace /> :

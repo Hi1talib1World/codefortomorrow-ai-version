@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Bot, User as UserIcon, Lightbulb, Activity, BookOpen, Sparkles, Cpu, Clock, Terminal, AlertCircle, Play, Pause } from 'lucide-react';
+import { Send, Bot, User as UserIcon, Lightbulb, Activity, BookOpen, Zap, Cpu, Clock, Terminal, AlertCircle, Play, Pause } from 'lucide-react';
 
 export type AgentStatus = 'Idle' | 'Working' | 'Offline';
 
@@ -47,7 +47,7 @@ const getAgentIcon = (agentId: string, className = "w-5 h-5") => {
     case 'curriculum-factory':
       return <BookOpen className={className} />;
     case 'b2b-sales':
-      return <Sparkles className={className} />;
+      return <Zap className={className} />;
     default:
       return <Bot className={className} />;
   }

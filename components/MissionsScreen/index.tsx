@@ -12,7 +12,7 @@ import {
   Activity, 
   Award, 
   BookOpen,
-  Sparkles,
+  Zap,
   RefreshCw,
   Trophy,
   Filter,
@@ -826,7 +826,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
             {/* AI Diagnosis Insights Panel */}
             <div className="bg-cyan-500/5 dark:bg-cyan-950/20 border border-cyan-500/25 dark:border-cyan-500/20 rounded-2xl p-4.5 space-y-2 mb-7 text-left">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-cyan-500 dark:text-cyan-400 animate-pulse" />
+                <Zap className="w-4 h-4 text-cyan-500 dark:text-cyan-400 animate-pulse" />
                 <span className="text-[10px] font-black text-cyan-600 dark:text-cyan-300 uppercase tracking-widest font-mono">AI Diagnostics Insight</span>
               </div>
               <p className="text-xs text-slate-650 dark:text-slate-200 leading-relaxed font-semibold">

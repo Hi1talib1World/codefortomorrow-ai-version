@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Send, Sparkles, Bot, User, Copy, Check, ShieldAlert, Plus, MessageSquare, Trash2, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Send, Zap, Bot, User, Copy, Check, ShieldAlert, Plus, MessageSquare, Trash2, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import api from '../../services/api';
 import { useToast } from '../ToastNotification';
 
@@ -442,7 +442,7 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser, onUp
                     msg.text.startsWith('### ⚠️ Daily Limit Reached!') ? (
                       <div className="bg-slate-150/40 dark:bg-slate-900/30 p-6 text-center max-w-md mx-auto my-2 space-y-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
                         <div className="w-12 h-12 bg-amber-500/10 dark:bg-amber-500/20 rounded-full flex items-center justify-center mx-auto">
-                          <Sparkles className="w-6 h-6 text-amber-500 dark:text-amber-400" />
+                          <Zap className="w-6 h-6 text-amber-500 dark:text-amber-400" />
                         </div>
                         <h3 className="text-base font-black text-slate-800 dark:text-white">Daily AI Limit Reached</h3>
                         <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-semibold">

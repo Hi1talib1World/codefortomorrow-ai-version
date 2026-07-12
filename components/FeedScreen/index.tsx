@@ -10,7 +10,7 @@ import {
   Flame, 
   Trophy, 
   Share2, 
-  Sparkles,
+  Zap,
   ChevronDown,
   UserCheck
 } from 'lucide-react';
@@ -461,7 +461,7 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ currentUser }) => {
         </div>
       ) : posts.length === 0 ? (
         <div className="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-10 text-center shadow-lg">
-          <Sparkles className="w-12 h-12 text-[#FBBF24] mx-auto mb-4 animate-bounce" />
+          <Zap className="w-12 h-12 text-[#FBBF24] mx-auto mb-4 animate-bounce" />
           <p className="font-extrabold text-slate-800 dark:text-white text-lg">{texts.emptyFeed}</p>
         </div>
       ) : (

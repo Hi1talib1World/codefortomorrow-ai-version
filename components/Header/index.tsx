@@ -8,7 +8,7 @@ import { PATHS, MODULES_BY_PATH, LESSONS_BY_PATH } from '../../constants';
 import DbSetupGuide from '../DbSetupGuide';
 import { useSync } from '../../contexts/SyncContext';
 import { DashboardView } from '../Dashboard';
-import { Bell, BookOpen, Compass, Trophy, Play, Home, Target, Sparkles, Folder, Award, ShoppingBag, FileText, MessageSquare, Settings, ChevronDown, ExternalLink, LogOut, Flame, Unlock, Trash2, CheckCircle, Share2, Bot } from 'lucide-react';
+import { Bell, BookOpen, Compass, Trophy, Play, Home, Target, Zap, Folder, Award, ShoppingBag, FileText, MessageSquare, Settings, ChevronDown, ExternalLink, LogOut, Flame, Unlock, Trash2, CheckCircle, Share2, Bot } from 'lucide-react';
 import api from '../../services/api';
 import { useToast } from '../ToastNotification';
 
@@ -369,18 +369,21 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
       { label: "How do I learn?", href: "how-to-learn", isExternal: false, icon: <Compass className="w-3.5 h-3.5 text-indigo-500" /> },
       { label: "What are missions?", href: "missions", isExternal: false, icon: <Target className="w-3.5 h-3.5 text-emerald-500" /> },
       { label: "Who is leading?", href: "leaderboard", isExternal: false, icon: <Trophy className="w-3.5 h-3.5 text-cyan-500" /> },
+      { label: "About Us", href: "about", isExternal: false, icon: <BookOpen className="w-3.5 h-3.5 text-amber-500" /> },
       { label: "Follow Us", href: "https://wa.me/212600000000", isExternal: true, icon: <MessageSquare className="w-3.5 h-3.5 text-rose-500" /> }
     ],
     fr: [
       { label: "Comment apprendre ?", href: "how-to-learn", isExternal: false, icon: <Compass className="w-3.5 h-3.5 text-indigo-500" /> },
       { label: "Qu'est-ce que les missions ?", href: "missions", isExternal: false, icon: <Target className="w-3.5 h-3.5 text-emerald-500" /> },
       { label: "Qui est en tête ?", href: "leaderboard", isExternal: false, icon: <Trophy className="w-3.5 h-3.5 text-cyan-500" /> },
+      { label: "À propos de nous", href: "about", isExternal: false, icon: <BookOpen className="w-3.5 h-3.5 text-amber-500" /> },
       { label: "Suivez-nous", href: "https://wa.me/212600000000", isExternal: true, icon: <MessageSquare className="w-3.5 h-3.5 text-rose-500" /> }
     ],
     ar: [
       { label: "كيف أتعلم؟", href: "how-to-learn", isExternal: false, icon: <Compass className="w-3.5 h-3.5 text-indigo-500" /> },
       { label: "ما هي المهام؟", href: "missions", isExternal: false, icon: <Target className="w-3.5 h-3.5 text-emerald-500" /> },
       { label: "من في الصدارة؟", href: "leaderboard", isExternal: false, icon: <Trophy className="w-3.5 h-3.5 text-cyan-500" /> },
+      { label: "من نحن", href: "about", isExternal: false, icon: <BookOpen className="w-3.5 h-3.5 text-amber-500" /> },
       { label: "تابعنا", href: "https://wa.me/212600000000", isExternal: true, icon: <MessageSquare className="w-3.5 h-3.5 text-rose-500" /> }
     ]
   };
@@ -398,7 +401,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
   };
 
   const handleSubItemClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    const internalViews = ['how-to-learn', 'missions', 'leaderboard'];
+    const internalViews = ['how-to-learn', 'missions', 'leaderboard', 'about'];
     if (internalViews.includes(href)) {
       e.preventDefault();
       if (setActiveView) {
@@ -861,7 +864,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
               onClick={handlePremiumClick}
               className="flex items-center gap-1.5 bg-[#FBBF24]/15 border border-[#FBBF24]/30 text-amber-600 dark:text-amber-400 hover:bg-[#FBBF24]/25 px-4 py-2 rounded-full text-xs font-black tracking-wide transition-all cursor-pointer shrink-0"
             >
-              <Sparkles className="w-3.5 h-3.5 fill-current" />
+              <Zap className="w-3.5 h-3.5 fill-current" />
               <span>{language === Language.AR ? 'ترقية مميز' : 'Go Premium'}</span>
             </button>
           )}
