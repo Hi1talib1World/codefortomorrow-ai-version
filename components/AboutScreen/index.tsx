@@ -72,6 +72,17 @@ const content = {
     moroccan_context_title: 'Local Impact in Morocco',
     moroccan_context_desc1: 'In rural Morocco, schools face structural challenges, including a lack of computer labs and internet connectivity. Code for Tomorrow addresses this by building software designed to sync offline and run efficiently on limited school hardware.',
     moroccan_context_desc2: 'By integrating dialectal Arabic (Darija), French, and English, we remove language barriers so that any student can learn syntax and logic concepts in a natural, welcoming environment.',
+    offline_tech_title: 'Offline-First Architecture',
+    offline_tech_desc: 'To support schools in remote Atlas Mountain villages, our ecosystem features an offline-first database sync. Lessons and progress are cached locally on tablets, and synchronize seamlessly whenever a network connection is detected, ensuring uninterrupted learning.',
+
+    methodology_title: 'Our Localized Methodology',
+    methodology_desc: 'We translate abstract computer science concepts into familiar Moroccan cultural motifs, using storytelling that resonates with rural children.',
+    meth_1_title: 'Argan Harvest Variables',
+    meth_1_desc: 'Students learn variable declarations by conceptualizing them as baskets sorting argan nuts by size and type.',
+    meth_2_title: 'Carpet Pattern Loops',
+    meth_2_desc: 'Looping and iteration structures are taught by studying the repetitive geometric shapes in traditional Amazigh weaving designs.',
+    meth_3_title: 'Moroccan Bread Functions',
+    meth_3_desc: 'Functions and inputs are explained as baking Tafarnout bread, where raw ingredients go in and delicious loaves come out.',
 
     gallery_title: 'Our Clubs in Action',
     gallery_desc: 'Real moments from our interactive coding clubs in rural Moroccan schools, bringing digital literacy to the next generation.',
@@ -121,6 +132,17 @@ const content = {
     moroccan_context_title: 'Impact Local au Maroc',
     moroccan_context_desc1: 'Dans les régions rurales du Maroc, les écoles font face à des défis structurels, notamment l’absence de salles informatiques et de connexion internet. Code for Tomorrow résout cela avec une solution légère conçue pour fonctionner hors ligne.',
     moroccan_context_desc2: 'En combinant l’arabe dialectal (Darija), le français et l’anglais, nous éliminons les barrières linguistiques pour que chaque élève apprenne la syntaxe et la logique dans un environnement accueillant.',
+    offline_tech_title: 'Architecture Axée sur le Hors-ligne',
+    offline_tech_desc: 'Pour desservir les villages isolés du Haut Atlas, notre plateforme fonctionne entièrement hors ligne. Les progrès sont stockés localement sur les tablettes et synchronisés de manière transparente dès qu’une connexion réseau est détectée, garantissant un apprentissage continu.',
+
+    methodology_title: 'Notre Méletologie Localisée',
+    methodology_desc: 'Nous traduisons les concepts informatiques abstraits en métaphores culturelles marocaines familières, favorisant l’assimilation.',
+    meth_1_title: 'Variables de la Récolte d’Argan',
+    meth_1_desc: 'Les élèves comprennent la déclaration de variables en les visualisant comme des paniers triant les noix d’argan par taille.',
+    meth_2_title: 'Boucles des Motifs de Tapis',
+    meth_2_desc: 'Les structures répétitives sont enseignées à travers les motifs géométriques des tissages traditionnels amazighs.',
+    meth_3_title: 'Fonctions du Pain Tafarnout',
+    meth_3_desc: 'Les fonctions et paramètres sont expliqués via la cuisson du pain Tafarnout, transformant les ingrédients bruts en miches cuites.',
 
     gallery_title: 'Nos Clubs en Action',
     gallery_desc: 'Des moments réels capturés au sein de nos clubs de codage dans les écoles rurales marocaines.',
@@ -170,6 +192,17 @@ const content = {
     moroccan_context_title: 'الأثر المحلي بالمغرب',
     moroccan_context_desc1: 'تواجه المدارس في المناطق القروية بالمغرب تحديات هيكلية، منها غياب قاعات الحواسيب وضعف الاتصال بالإنترنت. لهذا صممنا منصتنا لتعمل دون إنترنت على أجهزة الحاسوب البسيطة والمحدودة.',
     moroccan_context_desc2: 'عبر توفير المناهج باللغة العربية (الدارجة)، الفرنسية، والإنجليزية، نزيل الحواجز اللغوية لتمكين جميع التلاميذ من استيعاب المفاهيم البرمجية بسلاسة.',
+    offline_tech_title: 'بنية تقنية تدعم العمل دون اتصال',
+    offline_tech_desc: 'لخدمة المدارس في جبال الأطلس النائية، توفر المنصة ميزة المزامنة دون إنترنت. يتم حفظ الدروس والتقدم محلياً على الألواح الإلكترونية، وتُرفع تلقائياً للسحابة فور رصد شبكة اتصال لنضمن تعلماً مستمراً دون انقطاع.',
+
+    methodology_title: 'منهجيتنا التعليمية المحلية',
+    methodology_desc: 'نقوم بربط المفاهيم البرمجية بروافد ثقافية مغربية مألوفة، لتيسير الفهم وتنمية شغف التلاميذ بالابتكار.',
+    meth_1_title: 'سلال متغيرات الأركان',
+    meth_1_desc: 'يتعلم التلاميذ متغيرات البرمجة بتصورها كسلال تقوم بتخزين وتصنيف ثمار الأركان حسب الحجم والجودة.',
+    meth_2_title: 'حلقات نقوش الزربية',
+    meth_2_desc: 'تُشرح هياكل التكرار (Loops) من خلال تفكيك الأشكال الهندسية المتكررة والمرسومة على الزرابي الأمازيغية التقليدية.',
+    meth_3_title: 'دوال خبز تافرنوت',
+    meth_3_desc: 'نشرح الدوال والمدخلات بعملية تحضير خبز تافرنوت التقليدي؛ حيث تدخل المقادير كمدخلات لتنتج خبزاً شهياً كمخرجات.',
 
     gallery_title: 'نوادينا في عملها',
     gallery_desc: 'لحظات حقيقية مبهجة من نوادي الترميز التفاعلية في مدارسنا القروية بالمملكة.',
@@ -325,8 +358,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
       {/* Mission & Vision Section */}
       <section className="py-16 container mx-auto px-6 max-w-5xl">
         <div className="grid md:grid-cols-2 gap-8">
-          <motion.div 
-            whileHover={{ y: -5 }}
+          <div 
             className="p-8 rounded-[2rem] bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm shadow-xl flex flex-col justify-between"
           >
             <div>
@@ -338,10 +370,9 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
                 {tContent.mission_desc}
               </p>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div 
-            whileHover={{ y: -5 }}
+          <div 
             className="p-8 rounded-[2rem] bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm shadow-xl flex flex-col justify-between"
           >
             <div>
@@ -353,7 +384,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
                 {tContent.vision_desc}
               </p>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -378,6 +409,34 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
                 </div>
                 <h4 className="text-lg font-bold mb-2">{pillar.title}</h4>
                 <p className="text-slate-400 text-sm leading-relaxed">{pillar.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Our Methodology Section */}
+      <section className="py-16 bg-[#0a0f1d] border-t border-b border-slate-800">
+        <div className="container mx-auto px-6 max-w-5xl text-center">
+          <h2 className="text-3xl font-black mb-4 uppercase tracking-wide">
+            {tContent.methodology_title}
+          </h2>
+          <p className="text-slate-400 max-w-2xl mx-auto mb-12 text-sm md:text-base">
+            {tContent.methodology_desc}
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { icon: Layers, title: tContent.meth_1_title, desc: tContent.meth_1_desc, color: 'text-indigo-400 bg-indigo-500/10' },
+              { icon: Network, title: tContent.meth_2_title, desc: tContent.meth_2_desc, color: 'text-amber-400 bg-amber-500/10' },
+              { icon: Target, title: tContent.meth_3_title, desc: tContent.meth_3_desc, color: 'text-emerald-400 bg-emerald-500/10' }
+            ].map((m, i) => (
+              <div key={i} className="p-6 rounded-3xl bg-slate-800/20 border border-slate-700/30 hover:border-slate-600 transition-all text-left">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${m.color}`}>
+                  <m.icon className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-black text-white mb-2">{m.title}</h3>
+                <p className="text-xs text-slate-400 leading-relaxed font-semibold">{m.desc}</p>
               </div>
             ))}
           </div>
@@ -464,7 +523,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
       <section className="py-16 container mx-auto px-6 max-w-4xl">
         <div className="grid md:grid-cols-3 gap-8 items-center">
           <div className="md:col-span-1 flex justify-center">
-            <div className="w-24 h-24 md:w-32 md:h-32 bg-indigo-500/20 text-[#FBBF24] rounded-full flex items-center justify-center shadow-lg animate-pulse">
+            <div className="w-24 h-24 md:w-32 md:h-32 bg-indigo-500/20 text-[#FBBF24] rounded-full flex items-center justify-center shadow-lg">
               <Globe className="w-12 h-12 md:w-16 md:h-16" />
             </div>
           </div>
@@ -505,12 +564,14 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { src: '/assets/images/about_media_1.jpg', alt: 'Students learning' },
               { src: '/assets/images/about_media_2.jpg', alt: 'Outdoors session' },
               { src: '/assets/images/about_media_3.jpg', alt: 'Classroom coding' },
-              { src: '/assets/images/about_media_4.jpg', alt: 'Partner school group' }
+              { src: '/assets/images/about_media_4.jpg', alt: 'Partner school group' },
+              { src: '/assets/images/about_media_5.png', alt: 'Generation Connect ITU Alliance' },
+              { src: '/assets/images/about_media_6.png', alt: 'ITU International Delegates' }
             ].map((img, idx) => (
               <motion.div
                 key={idx}
@@ -575,7 +636,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
           <button 
             onClick={(e) => {
               e.stopPropagation();
-              setSelectedPhotoIndex((prev) => (prev !== null ? (prev - 1 + 4) % 4 : null));
+              setSelectedPhotoIndex((prev) => (prev !== null ? (prev - 1 + 6) % 6 : null));
             }}
             className="absolute left-6 p-3 text-white/70 hover:text-white bg-slate-800/50 rounded-full hover:bg-slate-700/50 transition-all border border-slate-700 cursor-pointer z-10"
             aria-label="Previous photo"
@@ -589,17 +650,21 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
                 '/assets/images/about_media_1.jpg',
                 '/assets/images/about_media_2.jpg',
                 '/assets/images/about_media_3.jpg',
-                '/assets/images/about_media_4.jpg'
+                '/assets/images/about_media_4.jpg',
+                '/assets/images/about_media_5.png',
+                '/assets/images/about_media_6.png'
               ][selectedPhotoIndex]} 
               alt="Fullscreen view" 
               className="max-w-full max-h-[75vh] object-contain rounded-2xl border border-slate-800 shadow-2xl"
             />
-            <p className="text-slate-300 mt-4 text-sm font-bold bg-slate-900/60 px-4 py-2 rounded-full border border-slate-800">
+            <p className="text-slate-300 mt-4 text-sm font-bold bg-slate-900/60 px-4 py-2 rounded-full border border-slate-800 text-center max-w-lg">
               {[
                 'Students learning with tablets in rural Morocco',
                 'Outdoor interactive session under trees',
                 'Classroom digital lesson engagement',
-                'Moroccan school coding club group'
+                'Moroccan school coding club group',
+                'Generation Connect & ITU Global Alliance partnership',
+                'ITU Summit of international youth delegates'
               ][selectedPhotoIndex]}
             </p>
           </div>
@@ -607,7 +672,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
           <button 
             onClick={(e) => {
               e.stopPropagation();
-              setSelectedPhotoIndex((prev) => (prev !== null ? (prev + 1) % 4 : null));
+              setSelectedPhotoIndex((prev) => (prev !== null ? (prev + 1) % 6 : null));
             }}
             className="absolute right-6 p-3 text-white/70 hover:text-white bg-slate-800/50 rounded-full hover:bg-slate-700/50 transition-all border border-slate-700 cursor-pointer z-10"
             aria-label="Next photo"
