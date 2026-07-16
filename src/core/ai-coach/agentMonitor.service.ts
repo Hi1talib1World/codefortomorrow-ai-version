@@ -172,8 +172,8 @@ function triggerAgentCommand(agentId: string, command: string) {
     try {
       const result = await AIEngine.chatWithAgent(agentId, command);
       
-      // We will print the thoughts/steps sequentially with a 1.2s delay
-      let delay = 1000;
+      // Optimized performance thoughts sequence
+      let delay = 200;
       result.thoughts.forEach((thought) => {
         setTimeout(() => {
           const current = agentStateMap.get(agentId);
@@ -181,10 +181,10 @@ function triggerAgentCommand(agentId: string, command: string) {
             appendAgentLog(agentId, `[Analysis] ${thought}`, 'info');
           }
         }, delay);
-        delay += 1200;
+        delay += 350;
       });
 
-      // Finally print the agent's reply
+      // Optimized performance response delivery
       setTimeout(() => {
         const current = agentStateMap.get(agentId);
         if (current && current.status === 'Working' && current.activeTask === activeTaskName) {
