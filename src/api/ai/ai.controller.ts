@@ -78,7 +78,7 @@ export const generateQuiz = async (req: Request, res: Response) => {
     const { prompt, fileData } = req.body;
     
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
-    const model = "gemini-3-flash-preview";
+    const model = "gemini-2.5-flash";
 
     let contents: any;
     if (fileData) {
@@ -114,12 +114,12 @@ export const logTokenUsage = async (req: Request, res: Response) => {
 
 export const chatWithAssistant = async (req: Request, res: Response) => {
   try {
-    const { message, history } = req.body;
+    const { message, history, buddyId } = req.body;
     if (!message) {
       return res.status(400).json({ message: 'Message is required.' });
     }
 
-    const responseText = await AIEngine.chatWithAssistant(message, history || [], (req as any).user);
+    const responseText = await AIEngine.chatWithAssistant(message, history || [], (req as any).user, buddyId);
     res.json({ text: responseText });
   } catch (error) {
     console.error("AI Assistant Chat Error:", error);
