@@ -139,7 +139,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
   const highlighted = highlightCode(cleanCode, language);
 
   return (
-    <div className="my-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-900 overflow-hidden shadow-md flex flex-col font-mono text-sm">
+    <div className="my-6 rounded-2xl bg-slate-900 overflow-hidden shadow-md flex flex-col font-mono text-sm">
       {/* Header bar */}
       <div className="flex justify-between items-center px-4 py-2.5 bg-slate-950 text-slate-400 text-xs border-b border-slate-800 select-none">
         <span className="font-bold uppercase tracking-wider text-slate-500">{language || 'code'}</span>
