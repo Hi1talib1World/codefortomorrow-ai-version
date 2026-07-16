@@ -9,19 +9,16 @@ import {
   Users, 
   Globe, 
   MapPin, 
-  BookOpen, 
-  CheckCircle,
-  Award,
-  Layers,
-  ArrowRight,
-  ArrowLeft,
-  ArrowUp,
-  Zap,
-  Network,
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Smile
+  Layers, 
+  ArrowRight, 
+  ArrowLeft, 
+  ArrowUp, 
+  Zap, 
+  Network, 
+  X, 
+  ChevronLeft, 
+  ChevronRight, 
+  Smile 
 } from 'lucide-react';
 
 const content = {
@@ -135,7 +132,7 @@ const content = {
     offline_tech_title: 'Architecture Axée sur le Hors-ligne',
     offline_tech_desc: 'Pour desservir les villages isolés du Haut Atlas, notre plateforme fonctionne entièrement hors ligne. Les progrès sont stockés localement sur les tablettes et synchronisés de manière transparente dès qu’une connexion réseau est détectée, garantissant un apprentissage continu.',
 
-    methodology_title: 'Notre Méletologie Localisée',
+    methodology_title: 'Notre Méthodologie Localisée',
     methodology_desc: 'Nous traduisons les concepts informatiques abstraits en métaphores culturelles marocaines familières, favorisant l’assimilation.',
     meth_1_title: 'Variables de la Récolte d’Argan',
     meth_1_desc: 'Les élèves comprennent la déclaration de variables en les visualisant comme des paniers triant les noix d’argan par taille.',
@@ -176,7 +173,7 @@ const content = {
     sdg_tab_5_desc: 'تضمن نوادي الترميز وتصميماتنا الدامجة مشاركة متساوية للبنات والبنين لكسر الصور النمطية في مجال التكنولوجيا.',
     sdg_tab_9: 'الهدف 9: الابتكار والبنية التحتية',
     sdg_tab_9_desc: 'تطوير تطبيقات خفيفة متزامنة مع السحاب تعمل بكفاءة على أجهزة الكمبيوتر القديمة، مما يطور البنية التحتية التقنية محلياً.',
-    sdg_tab_10: 'الالهدف 10: الحد من أوجه عدم المساواة',
+    sdg_tab_10: 'الهدف 10: الحد من أوجه عدم المساواة',
     sdg_tab_10_desc: 'تقليص الفجوة التعليمية بين المناطق القروية والمراكز الحضرية، مما يضمن بداية عادلة لكل المواهب الصاعدة.',
 
     impact_metrics: 'نتائج قابلة للقياس',
@@ -226,6 +223,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
+  const [gridOn, setGridOn] = useState(false);
 
   const isDashboard = window.location.pathname.startsWith('/dashboard');
   const port = window.location.port ? `:${window.location.port}` : '';
@@ -236,6 +234,54 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === 'g' || e.key === 'G') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        setGridOn(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    if (gridOn) {
+      document.body.classList.add('grid-on');
+    } else {
+      document.body.classList.remove('grid-on');
+    }
+  }, [gridOn]);
+
+  useEffect(() => {
+    const alignOptics = () => {
+      const cvs = document.createElement('canvas');
+      const ctx = cvs.getContext('2d');
+      if (!ctx) return;
+      
+      document.querySelectorAll('.opt-align').forEach((el) => {
+        const htmlEl = el as HTMLElement;
+        htmlEl.style.marginLeft = '0px';
+        const cs = window.getComputedStyle(htmlEl);
+        let ch = (htmlEl.textContent || '').trim().charAt(0);
+        if (!ch) return;
+        if (cs.textTransform === 'uppercase') ch = ch.toUpperCase();
+        ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+        ctx.textAlign = 'left';
+        const abl = ctx.measureText(ch).actualBoundingBoxLeft;
+        if (isFinite(abl)) {
+          htmlEl.style.marginLeft = `-${abl.toFixed(2)}px`;
+        }
+      });
+    };
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(alignOptics);
+    }
+    alignOptics();
+    window.addEventListener('resize', alignOptics);
+    return () => window.removeEventListener('resize', alignOptics);
   }, []);
 
   const scrollToTop = () => {
@@ -265,37 +311,337 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
     navigate(currentUser ? '/dashboard' : '/auth');
   };
 
+  const renderGuides = () => (
+    <div className="guides" aria-hidden="true">
+      <div className="cols">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="col">
+            <span>{i + 1}</span>
+          </div>
+        ))}
+      </div>
+      <div className="rows" />
+      <div className="mline l" />
+      <div className="mline r" />
+    </div>
+  );
+
   return (
-    <div className={`min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-[#FBBF24] selection:text-slate-950 pb-20 ${isRtl ? 'text-right' : 'text-left'}`} dir={isRtl ? 'rtl' : 'ltr'}>
-      
-      {/* 1. Sleek Floating Header */}
+    <div className={`muller-grid-root min-h-screen pb-24 ${isRtl ? 'text-right' : 'text-left'}`} dir={isRtl ? 'rtl' : 'ltr'}>
+      {/* Scope-contained style block for the Müller-Brockmann layout */}
+      <style>{`
+        .muller-grid-root {
+          --cols: 12;
+          --bl: 8px;
+          --lh: 24px;
+          --gutter: 24px;
+          --margin: 72px;
+          --pad: 96px;
+          --maxw: 1296px;
+          
+          --paper: #0a0f1d;
+          --ink: #ffffff;
+          --ink-soft: #94a3b8;
+          --accent: #FBBF24;
+          
+          --g-col: rgba(251, 191, 36, 0.03);
+          --g-edge: rgba(251, 191, 36, 0.2);
+          --g-base: rgba(99, 102, 241, 0.15);
+          --g-base-min: rgba(99, 102, 241, 0.05);
+          
+          background-color: var(--paper);
+          color: var(--ink);
+          font-family: "Inter", system-ui, sans-serif;
+          line-height: var(--lh);
+          -webkit-font-smoothing: antialiased;
+        }
+
+        .muller-grid-root,
+        .muller-grid-root * {
+          box-sizing: border-box;
+        }
+
+        /* Responsive Margins & Gutters to prevent horizontal scroll on mobile */
+        @media (max-width: 992px) {
+          .muller-grid-root {
+            --margin: 40px;
+            --gutter: 16px;
+            --pad: 64px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .muller-grid-root {
+            --margin: 20px;
+            --gutter: 12px;
+            --pad: 40px;
+          }
+        }
+
+        /* Spreads & Wrappers */
+        .muller-grid-root .spread {
+          position: relative;
+          width: 100%;
+          border-bottom: 1px solid rgba(17, 19, 21, 0.08);
+        }
+
+        .muller-grid-root .wrap {
+          position: relative;
+          max-width: var(--maxw);
+          margin: 0 auto;
+          padding: var(--pad) var(--margin);
+        }
+
+        /* 12-Column Modular Grid template */
+        .muller-grid-root .muller-grid {
+          display: grid;
+          grid-template-columns: repeat(var(--cols), 1fr);
+          column-gap: var(--gutter);
+          row-gap: var(--lh);
+        }
+
+        /* Subgrid bands */
+        .muller-grid-root .band {
+          grid-column: 1 / -1;
+          display: grid;
+          grid-template-columns: subgrid;
+          column-gap: var(--gutter);
+          row-gap: var(--lh);
+          align-items: start;
+        }
+
+        @supports not (grid-template-columns: subgrid) {
+          .muller-grid-root .band {
+            grid-template-columns: repeat(var(--cols), 1fr);
+          }
+        }
+
+        /* Toggleable Overlay Guides */
+        .muller-grid-root .guides {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 60;
+          opacity: 0;
+          transition: opacity 0.25s ease;
+        }
+
+        body.grid-on .muller-grid-root .guides {
+          opacity: 1;
+        }
+
+        .muller-grid-root .guides .cols {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: var(--margin);
+          right: var(--margin);
+          display: grid;
+          grid-template-columns: repeat(var(--cols), 1fr);
+          column-gap: var(--gutter);
+        }
+
+        .muller-grid-root .guides .col {
+          background: var(--g-col);
+          box-shadow: inset 1px 0 0 var(--g-edge), inset -1px 0 0 var(--g-edge);
+          position: relative;
+        }
+
+        .muller-grid-root .guides .col span {
+          position: absolute;
+          top: 32px;
+          left: 0;
+          right: 0;
+          text-align: center;
+          font-family: "Space Mono", monospace;
+          font-size: 10px;
+          line-height: 1;
+          color: var(--accent);
+        }
+
+        .muller-grid-root .guides .rows {
+          position: absolute;
+          left: var(--margin);
+          right: var(--margin);
+          top: var(--pad);
+          bottom: 0;
+          background-image: 
+            repeating-linear-gradient(to bottom, var(--g-base) 0 1px, transparent 1px var(--lh)),
+            repeating-linear-gradient(to bottom, var(--g-base-min) 0 1px, transparent 1px var(--bl));
+        }
+
+        .muller-grid-root .guides .mline {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 1px;
+          background: var(--g-edge);
+        }
+
+        .muller-grid-root .guides .mline.l {
+          left: var(--margin);
+        }
+
+        .muller-grid-root .guides .mline.r {
+          right: var(--margin);
+        }
+
+        /* Swiss Sizzle Toggle Button */
+        .grid-sizzle-toggle {
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          z-index: 200;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: var(--ink);
+          color: #ffffff;
+          border: 1px solid rgba(255,255,255,0.15);
+          cursor: pointer;
+          font-family: "Space Mono", monospace;
+          font-size: 11px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 10px 14px;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          transition: all 0.2s ease;
+        }
+
+        body.grid-on .grid-sizzle-toggle {
+          background: var(--accent);
+          color: #111827;
+          border-color: var(--accent);
+        }
+
+        .grid-sizzle-toggle .dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #555;
+          transition: background 0.2s ease;
+        }
+
+        body.grid-on .grid-sizzle-toggle .dot {
+          background: #111827;
+        }
+
+        /* Typography & Layout snapping */
+        .muller-grid-root h1.masthead {
+          font-family: "Inter", sans-serif;
+          font-weight: 900;
+          font-size: 64px;
+          line-height: 64px;
+          letter-spacing: -0.04em;
+          text-transform: uppercase;
+          margin: 0;
+          color: var(--ink);
+        }
+
+        .muller-grid-root .shead h2 {
+          font-family: "Inter", sans-serif;
+          font-weight: 850;
+          font-size: 32px;
+          line-height: 32px;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          margin: 0;
+          color: var(--ink);
+        }
+
+        .muller-grid-root .numeral {
+          font-family: "Inter", sans-serif;
+          font-weight: 900;
+          font-size: 56px;
+          line-height: 56px;
+          letter-spacing: -0.03em;
+          color: var(--accent);
+          margin: 0;
+        }
+
+        .muller-grid-root .mono-label {
+          font-family: "Space Mono", monospace;
+          font-size: 11px;
+          line-height: 16px;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: var(--accent);
+          font-weight: bold;
+          margin: 0;
+        }
+
+        .muller-grid-root .caption {
+          font-family: "Space Mono", monospace;
+          font-size: 11px;
+          line-height: 16px;
+          color: var(--ink-soft);
+        }
+
+        /* Grid Alignment overrides */
+        .muller-grid-root .lead-text {
+          font-size: 18px;
+          line-height: 28px;
+          font-weight: 500;
+          color: var(--ink);
+        }
+
+        .muller-grid-root .body-text {
+          font-size: 14px;
+          line-height: 22px;
+          color: var(--ink-soft);
+          text-align: justify;
+        }
+
+        .muller-grid-root .hr-grid {
+          grid-column: 1 / -1;
+          height: 1px;
+          background: rgba(255, 255, 255, 0.12);
+          margin: 0;
+          border: none;
+        }
+
+        /* Tabs & interactive cards */
+        .muller-grid-root .pill-card {
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.01);
+          padding: 24px;
+          transition: all 0.2s ease;
+        }
+        .muller-grid-root .pill-card:hover {
+          border-color: var(--accent);
+          background: rgba(251, 191, 36, 0.02);
+        }
+      `}</style>
+
+      {/* 1. Floating Header (grotesque alignment) */}
       {!isDashboard && (
         <header className="fixed top-0 left-0 right-0 bg-[#0a0f1d]/90 backdrop-blur-md z-50 border-b border-slate-800 transition-all duration-300">
           <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div className="flex items-center cursor-pointer group shrink-0" onClick={() => navigate('/')}>
-              <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+            <div className="flex items-center cursor-pointer shrink-0" onClick={() => navigate('/')}>
+              <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-8 w-auto object-contain" />
             </div>
 
-            <nav className="hidden lg:flex items-center gap-4">
-              <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-white hover:text-[#FBBF24] transition-colors text-sm font-bold tracking-wide">
+            <nav className={`hidden lg:flex items-center gap-6 ${isRtl ? 'flex-row-reverse' : ''}`}>
+              <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
                 Academy
               </a>
-              <div className="w-[1px] h-4 bg-slate-800 self-center" />
-              <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-white hover:text-[#FBBF24] transition-colors text-sm font-bold tracking-wide">
+              <div className="w-[1px] h-3 bg-slate-350 self-center" />
+              <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
                 Open Source
               </a>
-              <div className="w-[1px] h-4 bg-slate-800 self-center" />
-              <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-white hover:text-[#FBBF24] transition-colors text-sm font-bold tracking-wide">
+              <div className="w-[1px] h-3 bg-slate-350 self-center" />
+              <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
                 Docs & Blog
               </a>
-              <div className="w-[1px] h-4 bg-slate-800 self-center" />
-              <a href="/about" className="text-[#FBBF24] transition-colors text-sm font-bold tracking-wide">
+              <div className="w-[1px] h-3 bg-slate-350 self-center" />
+              <a href="/about" className="text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
                 About
               </a>
             </nav>
 
             <div className="hidden md:flex items-center">
-              <button onClick={onGetStarted} className="bg-[#FBBF24] text-[#111827] font-bold px-6 py-2.5 rounded-full hover:bg-[#f59e0b] transition-all flex items-center gap-2 active:scale-95 shadow-lg shadow-[#FBBF24]/20">
+              <button onClick={onGetStarted} className="bg-[#FBBF24] text-[#111827] font-bold text-xs uppercase tracking-wider px-6 py-3 rounded hover:bg-[#f59e0b] transition-all flex items-center gap-2 active:scale-95 shadow-md shadow-[#FBBF24]/20">
                 Launch Ecosystem
               </button>
             </div>
@@ -311,321 +657,329 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
 
       {/* Mobile Menu */}
       {!isDashboard && isMenuOpen && (
-        <div className="fixed inset-0 bg-[#111827]/95 backdrop-blur-sm z-50 md:hidden flex flex-col p-8">
+        <div className="fixed inset-0 bg-[#111827]/95 z-50 md:hidden flex flex-col p-8">
           <button onClick={() => setIsMenuOpen(false)} className="absolute top-6 right-6 p-1 text-white hover:text-[#FBBF24]">
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
           <nav className="flex flex-col space-y-6 mt-16 text-center">
-            <a href={getPlatformHref('academy', '/dashboard')} className="text-2xl font-bold text-white hover:text-[#FBBF24]">Academy</a>
-            <a href={getPlatformHref('os', '/cftos')} className="text-2xl font-bold text-white hover:text-[#FBBF24]">Open Source</a>
-            <a href={getPlatformHref('docs', '/blog')} className="text-2xl font-bold text-white hover:text-[#FBBF24]">Docs & Blog</a>
-            <a href="/about" className="text-2xl font-bold text-[#FBBF24]">About</a>
-            <button onClick={onGetStarted} className="mt-8 bg-[#FBBF24] text-[#111827] font-bold px-8 py-4 rounded-full text-xl hover:bg-[#f59e0b]">
+            <a href={getPlatformHref('academy', '/dashboard')} className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">Academy</a>
+            <a href={getPlatformHref('os', '/cftos')} className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">Open Source</a>
+            <a href={getPlatformHref('docs', '/blog')} className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">Docs & Blog</a>
+            <a href="/about" className="text-xl font-black uppercase text-[#FBBF24]">About</a>
+            <button onClick={onGetStarted} className="mt-8 bg-[#FBBF24] text-[#111827] font-bold px-8 py-4 rounded text-lg hover:bg-[#f59e0b]">
               Launch Ecosystem
             </button>
           </nav>
         </div>
       )}
-      
-      {/* Hero section */}
-      <section className="relative pt-24 pb-16 bg-[#0a0f1d] overflow-hidden border-b border-slate-800">
-        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-        <div className="absolute top-1/2 right-1/4 w-[300px] h-[300px] bg-[#FBBF24]/5 rounded-full blur-[80px] pointer-events-none"></div>
 
-        <div className="container mx-auto px-6 max-w-5xl text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: -25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tight">
-              {tContent.title}
-            </h1>
-            <div className="mb-8">
-              <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-16 mx-auto object-contain drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]" />
+      {/* SPREAD 1: HERO / INTRODUCTION */}
+      <section className="spread pt-16">
+        <div className="wrap">
+          <div className="muller-grid">
+            <div className="band">
+              <span className="mono-label opt-align" style={{ gridColumn: '1 / 13' }}>Code for Tomorrow</span>
+              <h1 className="masthead opt-align mt-4" style={{ gridColumn: '1 / 13' }}>
+                {tContent.title}
+              </h1>
             </div>
-            <p className="text-xl md:text-2xl text-slate-300 leading-relaxed font-semibold max-w-3xl mx-auto mb-8">
-              {tContent.subtitle}
-            </p>
-            <div className="w-24 h-1 bg-[#FBBF24] mx-auto rounded-full mb-8"></div>
-            <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-              {tContent.tagline}
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Mission & Vision Section */}
-      <section className="py-16 container mx-auto px-6 max-w-5xl">
-        <div className="grid md:grid-cols-2 gap-8">
-          <div 
-            className="p-8 rounded-[2rem] bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm shadow-xl flex flex-col justify-between"
-          >
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 text-[#FBBF24] flex items-center justify-center mb-6">
-                <Target className="w-6 h-6" />
-              </div>
-              <h2 className="text-2xl font-black mb-4 uppercase tracking-wide">{tContent.our_mission}</h2>
-              <p className="text-slate-300 leading-relaxed text-sm md:text-base">
-                {tContent.mission_desc}
+            
+            <div className="band mt-6">
+              <p className="lead-text" style={{ gridColumn: '1 / 9' }}>
+                {tContent.subtitle}
               </p>
             </div>
-          </div>
 
-          <div 
-            className="p-8 rounded-[2rem] bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm shadow-xl flex flex-col justify-between"
-          >
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 text-[#FBBF24] flex items-center justify-center mb-6">
-                <Eye className="w-6 h-6" />
-              </div>
-              <h2 className="text-2xl font-black mb-4 uppercase tracking-wide">{tContent.our_vision}</h2>
-              <p className="text-slate-300 leading-relaxed text-sm md:text-base">
-                {tContent.vision_desc}
+            <div className="band mt-6">
+              <hr className="hr-grid mb-4" />
+              <p className="body-text" style={{ gridColumn: '1 / 7' }}>
+                {tContent.tagline}
               </p>
+              <div style={{ gridColumn: '8 / 13' }} className="flex justify-center items-center">
+                <img src="/assets/images/logo.png" alt="Logo" className="h-12 w-auto opacity-75" />
+              </div>
             </div>
           </div>
+          {renderGuides()}
         </div>
       </section>
 
-      {/* Pillars Section */}
-      <section className="py-12 bg-slate-900/60">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <h2 className="text-3xl font-black text-center mb-12 uppercase tracking-wide">
-            {tContent.key_pillars}
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { icon: GraduationCap, title: tContent.pillar_students_title, desc: tContent.pillar_students_desc },
-              { icon: Users, title: tContent.pillar_teachers_title, desc: tContent.pillar_teachers_desc },
-              { icon: Network, title: tContent.pillar_community_title, desc: tContent.pillar_community_desc }
-            ].map((pillar, idx) => (
-              <div 
-                key={idx} 
-                className="p-6 rounded-2xl bg-slate-800/20 border border-slate-700/30 hover:border-indigo-500/40 hover:bg-slate-800/40 transition-all shadow-md"
-              >
-                <div className="w-10 h-10 rounded-xl bg-slate-900/80 flex items-center justify-center text-[#FBBF24] mb-4">
-                  <pillar.icon className="w-5 h-5" />
+      {/* SPREAD 2: MISSION & VISION */}
+      <section className="spread">
+        <div className="wrap">
+          <div className="muller-grid">
+            <div className="band">
+              <span className="mono-label opt-align">Foundational Ethic</span>
+              <h2 className="numeral opt-align mt-2" style={{ gridColumn: '1 / 13' }}>01</h2>
+            </div>
+            
+            <div className="band mt-8">
+              <div style={{ gridColumn: '1 / 6' }} className="pill-card">
+                <div className="w-8 h-8 flex items-center justify-center text-[#FBBF24] mb-4">
+                  <Target className="w-5 h-5" />
                 </div>
-                <h4 className="text-lg font-bold mb-2">{pillar.title}</h4>
-                <p className="text-slate-400 text-sm leading-relaxed">{pillar.desc}</p>
+                <h3 className="text-lg font-black uppercase text-white mb-3">{tContent.our_mission}</h3>
+                <p className="body-text">{tContent.mission_desc}</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Our Methodology Section */}
-      <section className="py-16 bg-[#0a0f1d] border-t border-b border-slate-800">
-        <div className="container mx-auto px-6 max-w-5xl text-center">
-          <h2 className="text-3xl font-black mb-4 uppercase tracking-wide">
-            {tContent.methodology_title}
-          </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto mb-12 text-sm md:text-base">
-            {tContent.methodology_desc}
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { icon: Layers, title: tContent.meth_1_title, desc: tContent.meth_1_desc, color: 'text-indigo-400 bg-indigo-500/10' },
-              { icon: Network, title: tContent.meth_2_title, desc: tContent.meth_2_desc, color: 'text-amber-400 bg-amber-500/10' },
-              { icon: Target, title: tContent.meth_3_title, desc: tContent.meth_3_desc, color: 'text-emerald-400 bg-emerald-500/10' }
-            ].map((m, i) => (
-              <div key={i} className="p-6 rounded-3xl bg-slate-800/20 border border-slate-700/30 hover:border-slate-600 transition-all text-left">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${m.color}`}>
-                  <m.icon className="w-5 h-5" />
+              <div style={{ gridColumn: '7 / 12' }} className="pill-card">
+                <div className="w-8 h-8 flex items-center justify-center text-[#FBBF24] mb-4">
+                  <Eye className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-black text-white mb-2">{m.title}</h3>
-                <p className="text-xs text-slate-400 leading-relaxed font-semibold">{m.desc}</p>
+                <h3 className="text-lg font-black uppercase text-white mb-3">{tContent.our_vision}</h3>
+                <p className="body-text">{tContent.vision_desc}</p>
               </div>
-            ))}
+            </div>
           </div>
+          {renderGuides()}
         </div>
       </section>
 
-      {/* Interactive SDG Toggles */}
-      <section className="py-16 container mx-auto px-6 max-w-4xl">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-black mb-4 uppercase tracking-wide">
-            {tContent.sdg_title}
-          </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base">
-            {tContent.sdg_desc}
-          </p>
-        </div>
+      {/* SPREAD 3: PILLARS & SDG ALIGNMENT */}
+      <section className="spread">
+        <div className="wrap">
+          <div className="muller-grid">
+            <div className="band">
+              <span className="mono-label opt-align">Pillars of Action</span>
+              <h2 className="numeral opt-align mt-2" style={{ gridColumn: '1 / 13' }}>02</h2>
+            </div>
 
-        <div className="bg-slate-800/30 rounded-3xl border border-slate-700/50 p-6 md:p-8 backdrop-blur-sm shadow-xl">
-          {/* Tabs */}
-          <div className="flex flex-wrap gap-2 mb-6 border-b border-slate-700/50 pb-4 justify-center md:justify-start">
-            {[4, 5, 9, 10].map((num) => (
+            <div className="band mt-8">
+              <div style={{ gridColumn: '1 / 5' }} className="pill-card">
+                <div className="w-8 h-8 text-[#FBBF24] mb-4"><GraduationCap className="w-5 h-5" /></div>
+                <h4 className="text-base font-black uppercase text-white mb-2">{tContent.pillar_students_title}</h4>
+                <p className="body-text">{tContent.pillar_students_desc}</p>
+              </div>
+
+              <div style={{ gridColumn: '5 / 9' }} className="pill-card">
+                <div className="w-8 h-8 text-[#FBBF24] mb-4"><Users className="w-5 h-5" /></div>
+                <h4 className="text-base font-black uppercase text-white mb-2">{tContent.pillar_teachers_title}</h4>
+                <p className="body-text">{tContent.pillar_teachers_desc}</p>
+              </div>
+
+              <div style={{ gridColumn: '9 / 13' }} className="pill-card">
+                <div className="w-8 h-8 text-[#FBBF24] mb-4"><Network className="w-5 h-5" /></div>
+                <h4 className="text-base font-black uppercase text-white mb-2">{tContent.pillar_community_title}</h4>
+                <p className="body-text">{tContent.pillar_community_desc}</p>
+              </div>
+            </div>
+
+            <hr className="hr-grid my-8" />
+
+            {/* SDG Sub-Section */}
+            <div className="band">
+              <div style={{ gridColumn: '1 / 5' }}>
+                <span className="mono-label">UN SDG ALIGNMENT</span>
+                <h3 className="text-lg font-black uppercase text-white mt-2">{tContent.sdg_title}</h3>
+                <p className="body-text mt-3">{tContent.sdg_desc}</p>
+              </div>
+
+              <div style={{ gridColumn: '6 / 13' }} className="pill-card">
+                <div className="flex gap-2 mb-6 border-b border-slate-200 pb-3 justify-start">
+                  {[4, 5, 9, 10].map((num) => (
+                    <button
+                      key={num}
+                      onClick={() => setActiveSdg(num)}
+                      className={`px-3 py-1.5 rounded text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        activeSdg === num
+                          ? 'bg-[#FBBF24] text-slate-950'
+                          : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+                      }`}
+                    >
+                      SDG {num}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="min-h-[100px]">
+                  <h4 className="text-base font-black text-white mb-2">
+                    {activeSdg === 4 && tContent.sdg_tab_4}
+                    {activeSdg === 5 && tContent.sdg_tab_5}
+                    {activeSdg === 9 && tContent.sdg_tab_9}
+                    {activeSdg === 10 && tContent.sdg_tab_10}
+                  </h4>
+                  <p className="body-text">
+                    {activeSdg === 4 && tContent.sdg_tab_4_desc}
+                    {activeSdg === 5 && tContent.sdg_tab_5_desc}
+                    {activeSdg === 9 && tContent.sdg_tab_9_desc}
+                    {activeSdg === 10 && tContent.sdg_tab_10_desc}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {renderGuides()}
+        </div>
+      </section>
+
+      {/* SPREAD 4: MEASURABLE OUTCOMES */}
+      <section className="spread">
+        <div className="wrap">
+          <div className="muller-grid">
+            <div className="band">
+              <span className="mono-label opt-align">Measurable Impact</span>
+              <h2 className="numeral opt-align mt-2" style={{ gridColumn: '1 / 13' }}>03</h2>
+            </div>
+
+            <div className="band mt-8">
+              {[
+                { val: tContent.metric_students, sub: tContent.metric_students_sub, span: '1 / 4' },
+                { val: tContent.metric_schools, sub: tContent.metric_schools_sub, span: '4 / 7' },
+                { val: tContent.metric_courses, sub: tContent.metric_courses_sub, span: '7 / 10' },
+                { val: tContent.metric_cost, sub: tContent.metric_cost_sub, span: '10 / 13' }
+              ].map((m, i) => (
+                <div key={i} style={{ gridColumn: m.span }} className="pill-card text-center">
+                  <p className="numeral opt-align">{m.val}</p>
+                  <p className="caption mt-2 font-bold uppercase tracking-wider">{m.sub}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          {renderGuides()}
+        </div>
+      </section>
+
+      {/* SPREAD 5: MOROCCAN CONTEXT & OFFLINE TECH */}
+      <section className="spread">
+        <div className="wrap">
+          <div className="muller-grid">
+            <div className="band">
+              <span className="mono-label opt-align">Local Context</span>
+              <h2 className="numeral opt-align mt-2" style={{ gridColumn: '1 / 13' }}>04</h2>
+            </div>
+
+            <div className="band mt-8">
+              <div style={{ gridColumn: '1 / 7' }}>
+                <h3 className="text-xl font-black uppercase text-white mb-4 flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-[#FBBF24]" />
+                  {tContent.moroccan_context_title}
+                </h3>
+                <p className="body-text mb-4">{tContent.moroccan_context_desc1}</p>
+                <p className="body-text">{tContent.moroccan_context_desc2}</p>
+              </div>
+
+              <div style={{ gridColumn: '8 / 13' }} className="pill-card border-l-4 border-l-[#FBBF24]">
+                <h3 className="text-base font-black uppercase text-white mb-3 flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-[#FBBF24]" />
+                  {tContent.offline_tech_title}
+                </h3>
+                <p className="body-text">{tContent.offline_tech_desc}</p>
+              </div>
+            </div>
+          </div>
+          {renderGuides()}
+        </div>
+      </section>
+
+      {/* SPREAD 6: LOCALIZED METHODOLOGY */}
+      <section className="spread">
+        <div className="wrap">
+          <div className="muller-grid">
+            <div className="band">
+              <span className="mono-label opt-align">Localized Pedagogy</span>
+              <h2 className="numeral opt-align mt-2" style={{ gridColumn: '1 / 13' }}>05</h2>
+            </div>
+            
+            <div className="band mt-4">
+              <p className="lead-text" style={{ gridColumn: '1 / 9' }}>
+                {tContent.methodology_desc}
+              </p>
+            </div>
+
+            <div className="band mt-8">
+              {[
+                { title: tContent.meth_1_title, desc: tContent.meth_1_desc, span: '1 / 5', icon: Layers },
+                { title: tContent.meth_2_title, desc: tContent.meth_2_desc, span: '5 / 9', icon: Network },
+                { title: tContent.meth_3_title, desc: tContent.meth_3_desc, span: '9 / 13', icon: Target }
+              ].map((m, i) => (
+                <div key={i} style={{ gridColumn: m.span }} className="pill-card">
+                  <div className="w-8 h-8 rounded bg-slate-800/40 flex items-center justify-center text-[#FBBF24] mb-4">
+                    <m.icon className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-base font-black text-white mb-2">{m.title}</h3>
+                  <p className="body-text text-xs">{m.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          {renderGuides()}
+        </div>
+      </section>
+
+      {/* SPREAD 7: PHOTO GALLERY */}
+      <section className="spread">
+        <div className="wrap">
+          <div className="muller-grid">
+            <div className="band">
+              <span className="mono-label opt-align">Clubs in Action</span>
+              <h2 className="numeral opt-align mt-2" style={{ gridColumn: '1 / 13' }}>06</h2>
+            </div>
+            
+            <div className="band mt-4">
+              <p className="lead-text" style={{ gridColumn: '1 / 9' }}>
+                {tContent.gallery_desc}
+              </p>
+            </div>
+
+            <div className="band mt-8">
+              {[
+                { src: '/assets/images/about_media_1.jpg', alt: 'Students learning', span: '1 / 5' },
+                { src: '/assets/images/about_media_2.jpg', alt: 'Outdoors session', span: '5 / 9' },
+                { src: '/assets/images/about_media_3.jpg', alt: 'Classroom coding', span: '9 / 13' },
+                { src: '/assets/images/about_media_4.jpg', alt: 'Partner school group', span: '1 / 5' },
+                { src: '/assets/images/about_media_5.png', alt: 'Generation Connect ITU Alliance', span: '5 / 9' },
+                { src: '/assets/images/about_media_6.png', alt: 'ITU International Delegates', span: '9 / 13' }
+              ].map((img, idx) => (
+                <div
+                  key={idx}
+                  style={{ gridColumn: img.span }}
+                  onClick={() => setSelectedPhotoIndex(idx)}
+                  className="relative aspect-[4/3] rounded overflow-hidden border border-slate-200 shadow-md group cursor-pointer"
+                >
+                  <img 
+                    src={img.src} 
+                    alt={img.alt} 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                  />
+                  <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                    <span className="text-[10px] font-bold text-white tracking-wide uppercase">{img.alt}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {renderGuides()}
+        </div>
+      </section>
+
+      {/* FOOTER BAND */}
+      <section className="spread border-none">
+        <div className="wrap py-12">
+          <div className="muller-grid">
+            <div className="band justify-center">
               <button
-                key={num}
-                onClick={() => setActiveSdg(num)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
-                  activeSdg === num
-                    ? 'bg-[#FBBF24] text-slate-950 shadow-md shadow-[#FBBF24]/20'
-                    : 'bg-slate-800 text-slate-400 hover:text-slate-200'
-                }`}
+                type="button"
+                onClick={() => {
+                  window.location.href = isDashboard ? '/dashboard' : '/';
+                }}
+                className="bg-[#FBBF24] text-slate-950 font-black text-xs uppercase tracking-wider px-8 py-3 rounded hover:bg-[#f59e0b] active:scale-95 transition-all shadow-md flex items-center gap-2 mx-auto cursor-pointer"
               >
-                SDG {num}
+                {isRtl ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
+                {tContent.back_button}
               </button>
-            ))}
-          </div>
-
-          {/* Tab content */}
-          <div className="min-h-[140px] flex flex-col justify-between">
-            <div>
-              <h3 className="text-xl font-bold text-white mb-3">
-                {activeSdg === 4 && tContent.sdg_tab_4}
-                {activeSdg === 5 && tContent.sdg_tab_5}
-                {activeSdg === 9 && tContent.sdg_tab_9}
-                {activeSdg === 10 && tContent.sdg_tab_10}
-              </h3>
-              <p className="text-slate-300 leading-relaxed text-sm md:text-base">
-                {activeSdg === 4 && tContent.sdg_tab_4_desc}
-                {activeSdg === 5 && tContent.sdg_tab_5_desc}
-                {activeSdg === 9 && tContent.sdg_tab_9_desc}
-                {activeSdg === 10 && tContent.sdg_tab_10_desc}
-              </p>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Impact Metrics Section */}
-      <section className="py-16 bg-[#0a0f1d] border-t border-b border-slate-800">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <h2 className="text-3xl font-black text-center mb-12 uppercase tracking-wide">
-            {tContent.impact_metrics}
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {[
-              { metric: tContent.metric_students, label: tContent.metric_students_sub },
-              { metric: tContent.metric_schools, label: tContent.metric_schools_sub },
-              { metric: m => typeof m === 'object' ? tContent.metric_courses : '', label: tContent.metric_courses_sub }, // Safe check
-              { metric: m => typeof m === 'object' ? tContent.metric_cost : '', label: tContent.metric_cost_sub }
-            ].map((m, i) => {
-              // Map index values directly to avoid any type problems
-              const val = i === 0 ? tContent.metric_students : i === 1 ? tContent.metric_schools : i === 2 ? tContent.metric_courses : tContent.metric_cost;
-              const sub = i === 0 ? tContent.metric_students_sub : i === 1 ? tContent.metric_schools_sub : i === 2 ? tContent.metric_courses_sub : tContent.metric_cost_sub;
-              return (
-                <div key={i} className="p-6 rounded-2xl bg-slate-850/50 border border-slate-800 hover:border-slate-700 transition-all shadow-lg">
-                  <p className="text-2xl md:text-3xl font-black text-[#FBBF24] mb-2">{val}</p>
-                  <p className="text-xs text-slate-400 font-semibold leading-relaxed">{sub}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Moroccan Context Section */}
-      <section className="py-16 container mx-auto px-6 max-w-4xl">
-        <div className="grid md:grid-cols-3 gap-8 items-center">
-          <div className="md:col-span-1 flex justify-center">
-            <div className="w-24 h-24 md:w-32 md:h-32 bg-indigo-500/20 text-[#FBBF24] rounded-full flex items-center justify-center shadow-lg">
-              <Globe className="w-12 h-12 md:w-16 md:h-16" />
-            </div>
-          </div>
-          <div className="md:col-span-2 space-y-4">
-            <h2 className="text-2xl font-black uppercase tracking-wide flex items-center gap-2">
-              <MapPin className="w-6 h-6 text-[#FBBF24]" />
-              {tContent.moroccan_context_title}
-            </h2>
-            <p className="text-slate-300 leading-relaxed text-sm md:text-base">
-              {tContent.moroccan_context_desc1}
-            </p>
-            <p className="text-slate-300 leading-relaxed text-sm md:text-base">
-              {tContent.moroccan_context_desc2}
-            </p>
-            <div className="mt-6 pt-6 border-t border-slate-800">
-              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2 text-indigo-400">
-                <Zap className="w-4 h-4" />
-                {tContent.offline_tech_title}
-              </h3>
-              <p className="text-slate-400 leading-relaxed text-xs md:text-sm font-semibold">
-                {tContent.offline_tech_desc}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Photo Gallery Section */}
-      <section className="py-16 bg-slate-900/40 border-t border-slate-800">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-black mb-4 uppercase tracking-wide flex items-center justify-center gap-2">
-              <Smile className="w-8 h-8 text-[#FBBF24]" />
-              {tContent.gallery_title}
-            </h2>
-            <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base">
-              {tContent.gallery_desc}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { src: '/assets/images/about_media_1.jpg', alt: 'Students learning' },
-              { src: '/assets/images/about_media_2.jpg', alt: 'Outdoors session' },
-              { src: '/assets/images/about_media_3.jpg', alt: 'Classroom coding' },
-              { src: '/assets/images/about_media_4.jpg', alt: 'Partner school group' },
-              { src: '/assets/images/about_media_5.png', alt: 'Generation Connect ITU Alliance' },
-              { src: '/assets/images/about_media_6.png', alt: 'ITU International Delegates' }
-            ].map((img, idx) => (
-              <motion.div
-                key={idx}
-                whileHover={{ scale: 1.03, y: -5 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                onClick={() => setSelectedPhotoIndex(idx)}
-                className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-slate-700/50 shadow-lg group cursor-pointer"
-              >
-                <img 
-                  src={img.src} 
-                  alt={img.alt} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <span className="text-xs font-bold text-[#FBBF24] tracking-wide uppercase">{img.alt}</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Back button */}
-      <div className="text-center mt-8">
-        <button
-          onClick={() => {
-            const hasDashboard = window.location.pathname.startsWith('/dashboard');
-            window.location.href = hasDashboard ? '/dashboard' : '/';
-          }}
-          className="bg-[#FBBF24] text-slate-950 font-black px-8 py-3 rounded-full hover:bg-[#f59e0b] active:scale-95 transition-all shadow-lg shadow-[#FBBF24]/20 flex items-center gap-2 mx-auto cursor-pointer"
-        >
-          {isRtl ? <ArrowRight className="w-5 h-5" /> : <ArrowLeft className="w-5 h-5" />}
-          {tContent.back_button}
-        </button>
-      </div>
-
-      {/* Scroll to top */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-indigo-600 text-white shadow-xl hover:bg-indigo-700 transition-all active:scale-90 flex items-center justify-center z-40 cursor-pointer"
-          aria-label={tContent.scroll_top}
-        >
-          <ArrowUp className="w-6 h-6" />
-        </button>
-      )}
 
       {/* Lightbox Modal */}
       {selectedPhotoIndex !== null && (
         <div 
-          className="fixed inset-0 bg-[#000000]/95 z-[100] flex items-center justify-center p-4"
+          className="fixed inset-0 bg-slate-950/95 z-[100] flex items-center justify-center p-4"
           onClick={() => setSelectedPhotoIndex(null)}
         >
           <button 
+            type="button"
             onClick={() => setSelectedPhotoIndex(null)}
             className="absolute top-6 right-6 p-2 text-white/70 hover:text-white bg-slate-800/50 rounded-full hover:bg-slate-700/50 transition-all border border-slate-700 cursor-pointer z-10"
             aria-label="Close lightbox"
@@ -634,6 +988,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
           </button>
 
           <button 
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               setSelectedPhotoIndex((prev) => (prev !== null ? (prev - 1 + 6) % 6 : null));
@@ -655,9 +1010,9 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
                 '/assets/images/about_media_6.png'
               ][selectedPhotoIndex]} 
               alt="Fullscreen view" 
-              className="max-w-full max-h-[75vh] object-contain rounded-2xl border border-slate-800 shadow-2xl"
+              className="max-w-full max-h-[75vh] object-contain rounded-lg border border-slate-800 shadow-2xl"
             />
-            <p className="text-slate-300 mt-4 text-sm font-bold bg-slate-900/60 px-4 py-2 rounded-full border border-slate-800 text-center max-w-lg">
+            <p className="text-slate-300 mt-4 text-xs font-bold bg-slate-900/60 px-4 py-2 rounded-full border border-slate-800 text-center max-w-lg">
               {[
                 'Students learning with tablets in rural Morocco',
                 'Outdoor interactive session under trees',
@@ -670,6 +1025,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
           </div>
 
           <button 
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               setSelectedPhotoIndex((prev) => (prev !== null ? (prev + 1) % 6 : null));
