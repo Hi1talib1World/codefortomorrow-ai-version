@@ -491,7 +491,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
   }
 
   return (
-    <div className="space-y-8 select-none text-slate-800 dark:text-slate-100 p-1 rounded-3xl">
+    <div className="w-full max-w-5xl mx-auto flex flex-col space-y-8 select-none text-slate-850 dark:text-slate-100 py-6 px-4">
       <style>{`
         @keyframes pulse-subtle {
           0%, 100% { opacity: 1; transform: scale(1); }
@@ -631,7 +631,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
             
             <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
               {/* Difficulty selector */}
-              <div className="flex items-center bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl p-1 w-full sm:w-auto justify-between sm:justify-start">
+              <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl p-1 w-full sm:w-auto justify-between sm:justify-start">
                 <span className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase px-2">Difficulty:</span>
                 <div className="flex">
                   {['all', 'easy', 'medium', 'hard'].map((opt) => (
@@ -647,7 +647,7 @@ const MissionsScreen: React.FC<MissionsScreenProps> = ({ currentUser }) => {
               </div>
 
               {/* Status selector */}
-              <div className="flex items-center bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl p-1 w-full sm:w-auto justify-between sm:justify-start">
+              <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl p-1 w-full sm:w-auto justify-between sm:justify-start">
                 <span className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase px-2">Status:</span>
                 <div className="flex">
                   {['all', 'locked', 'in-progress', 'completed'].map((opt) => (
