@@ -500,11 +500,11 @@ const api = {
     return data;
   },
 
-  chatWithAssistant: async (message: string, history: any[]): Promise<{ text: string }> => {
+  chatWithAssistant: async (message: string, history: any[], buddyId?: string): Promise<{ text: string }> => {
     const response = await customFetch(`${API_BASE_URL}/ai/chat`, {
       method: 'POST',
       headers: getAuthHeaders(),
-      body: JSON.stringify({ message, history }),
+      body: JSON.stringify({ message, history, buddyId }),
     });
     const data = await response.json();
     if (!response.ok) {
