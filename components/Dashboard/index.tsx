@@ -55,6 +55,27 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
   const location = useLocation();
   const { view, pathId } = useParams<{ view?: string; pathId?: string }>();
   const [unreadMessagesCount, setUnreadMessagesCount] = React.useState(0);
+  const [gridOn, setGridOn] = React.useState(false);
+
+  // Keyboard layout toggle trigger (G key)
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === 'g' || e.key === 'G') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        setGridOn(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  React.useEffect(() => {
+    if (gridOn) {
+      document.body.classList.add('grid-on');
+    } else {
+      document.body.classList.remove('grid-on');
+    }
+    return () => document.body.classList.remove('grid-on');
+  }, [gridOn]);
 
   // Poll for unread message counts in the background
   React.useEffect(() => {
@@ -94,6 +115,21 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
       navigate(`/dashboard/${v}`);
     }
   };
+
+  const renderGuides = () => (
+    <div className="guides" aria-hidden="true">
+      <div className="cols">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="col">
+            <span>{i + 1}</span>
+          </div>
+        ))}
+      </div>
+      <div className="rows" />
+      <div className="mline l" />
+      <div className="mline r" />
+    </div>
+  );
 
   const renderActiveView = () => {
     switch (activeView) {
@@ -185,9 +221,134 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
           unreadMessagesCount={unreadMessagesCount}
           updateUser={onUpdateUser}
         />
-        <main className={`flex-grow overflow-y-auto ${mainContentBg} pb-24 md:pb-12 transition-colors`}>
-          <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-6 md:py-10">
-            {renderActiveView()}
+        <main className={`flex-grow overflow-y-auto ${mainContentBg} pb-24 md:pb-12 transition-colors muller-grid-root`}>
+          <style>{`
+            .muller-grid-root {
+              --cols: 12;
+              --bl: 8px;
+              --lh: 24px;
+              --gutter: 24px;
+              --margin: 24px;
+              --pad: 32px;
+              --maxw: 1296px;
+              
+              --paper: transparent;
+              --ink: #ffffff;
+              --accent: #FBBF24;
+              
+              --g-col: rgba(251, 191, 36, 0.02);
+              --g-edge: rgba(251, 191, 36, 0.18);
+              --g-base: rgba(99, 102, 241, 0.12);
+              --g-base-min: rgba(99, 102, 241, 0.04);
+            }
+
+            .muller-grid-root,
+            .muller-grid-root * {
+              box-sizing: border-box;
+            }
+
+            .muller-grid-root .spread {
+              position: relative;
+              width: 100%;
+            }
+
+            .muller-grid-root .wrap {
+              position: relative;
+              max-width: var(--maxw);
+              margin: 0 auto;
+              padding: var(--pad) var(--margin);
+            }
+
+            .muller-grid-root .muller-grid {
+              display: grid;
+              grid-template-columns: repeat(var(--cols), 1fr);
+              column-gap: var(--gutter);
+              row-gap: var(--lh);
+            }
+
+            .muller-grid-root .guides {
+              position: absolute;
+              inset: 0;
+              pointer-events: none;
+              z-index: 60;
+              opacity: 0;
+              transition: opacity 0.25s ease;
+            }
+
+            body.grid-on .muller-grid-root .guides {
+              opacity: 1;
+            }
+
+            .muller-grid-root .guides .cols {
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              left: var(--margin);
+              right: var(--margin);
+              display: grid;
+              grid-template-columns: repeat(var(--cols), 1fr);
+              column-gap: var(--gutter);
+            }
+
+            .muller-grid-root .guides .col {
+              background: var(--g-col);
+              box-shadow: inset 1px 0 0 var(--g-edge), inset -1px 0 0 var(--g-edge);
+              position: relative;
+            }
+
+            .muller-grid-root .guides .col span {
+              position: absolute;
+              top: 32px;
+              left: 0;
+              right: 0;
+              text-align: center;
+              font-family: "Space Mono", monospace;
+              font-size: 10px;
+              line-height: 1;
+              color: var(--accent);
+            }
+
+            .muller-grid-root .guides .rows {
+              position: absolute;
+              left: var(--margin);
+              right: var(--margin);
+              top: var(--pad);
+              bottom: 0;
+              background-image: 
+                repeating-linear-gradient(to bottom, var(--g-base) 0 1px, transparent 1px var(--lh)),
+                repeating-linear-gradient(to bottom, var(--g-base-min) 0 1px, transparent 1px var(--bl));
+            }
+
+            .muller-grid-root .guides .mline {
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              width: 1px;
+              background: var(--g-edge);
+            }
+
+            .muller-grid-root .guides .mline.l { left: var(--margin); }
+            .muller-grid-root .guides .mline.r { right: var(--margin); }
+
+            /* Responsive margins */
+            @media (max-width: 640px) {
+              .muller-grid-root {
+                --margin: 16px;
+                --gutter: 12px;
+                --pad: 24px;
+              }
+            }
+          `}</style>
+          
+          <div className="spread">
+            <div className="wrap">
+              <div className="muller-grid">
+                <div style={{ gridColumn: '1 / -1' }}>
+                  {renderActiveView()}
+                </div>
+              </div>
+              {renderGuides()}
+            </div>
           </div>
         </main>
         <BottomNav activeView={activeView} setActiveView={setActiveView} unreadMessagesCount={unreadMessagesCount} />
