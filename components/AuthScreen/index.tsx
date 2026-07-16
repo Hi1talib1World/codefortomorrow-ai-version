@@ -61,6 +61,17 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
 
   // Advanced Interactive UI State
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [showGrid, setShowGrid] = useState(false);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'g' || e.key === 'G') {
+        setShowGrid(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
   const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
@@ -531,7 +542,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
           <select
             value={language}
             onChange={handleLanguageChange}
-            className="appearance-none bg-slate-900/60 text-slate-300 rounded-full py-2 pl-9 pr-8 font-semibold border border-slate-700/40 focus:outline-none focus:ring-2 focus:ring-[#FBBF24]/40 transition-all text-sm cursor-pointer hover:bg-slate-800/80 backdrop-blur-md"
+            className="appearance-none bg-slate-900/30 text-slate-300 rounded-full py-2 pl-9 pr-8 font-semibold border border-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FBBF24]/40 transition-all text-sm cursor-pointer hover:bg-slate-850 backdrop-blur-md"
             aria-label="Select language"
           >
             <option value={Language.EN} className="bg-slate-900 text-slate-300">EN</option>
@@ -541,7 +552,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
         </div>
       </div>
 
-      <div className="max-w-sm w-full py-6 relative z-10">
+      <div className="col-span-12 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-5 py-6 relative z-10 flex flex-col justify-center">
         {/* Mascot display */}
         <div className="flex justify-center mb-6">
           <div className="w-28 h-28 flex items-center justify-center">
@@ -549,12 +560,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
           </div>
         </div>
 
-        <div className="glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden">
+        <div className="pill-card bg-slate-900/30 border border-slate-800 rounded-[2.5rem] p-6 md:p-8 relative overflow-hidden">
           {/* Cyberpunk HUD Corner Brackets */}
-          <div className="absolute top-0 left-0 border-t-2 border-l-2 border-[#FBBF24]/40 w-4 h-4 rounded-tl-sm pointer-events-none" />
-          <div className="absolute top-0 right-0 border-t-2 border-r-2 border-[#FBBF24]/40 w-4 h-4 rounded-tr-sm pointer-events-none" />
-          <div className="absolute bottom-0 left-0 border-b-2 border-l-2 border-[#FBBF24]/40 w-4 h-4 rounded-bl-sm pointer-events-none" />
-          <div className="absolute bottom-0 right-0 border-b-2 border-r-2 border-[#FBBF24]/40 w-4 h-4 rounded-br-sm pointer-events-none" />
+
 
           {/* Decorative tactical dots */}
           <div className="absolute top-3 left-1/2 -translate-x-1/2 flex gap-1 pointer-events-none">
