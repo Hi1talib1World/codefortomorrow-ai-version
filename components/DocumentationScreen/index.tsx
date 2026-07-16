@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, ProgrammingPath } from '../../types';
 import { LANGUAGE_DOCS, FALLBACK_DOC, LANGUAGE_DOCS_FR, LANGUAGE_DOCS_AR } from '../../utils/languageDocs';
 import { PATHS } from '../../constants';
@@ -45,42 +45,79 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
 
   const ui = localizedUI[language as 'en' | 'fr' | 'ar'] || localizedUI.en;
 
-  return (
-    <div className="max-w-4xl mx-auto pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="mb-8">
-        <h1 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-3">
-          <BookOpen className="w-8 h-8 text-[#2E2FCE]" />
-          {ui.title}
-        </h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">
-          {ui.description}
-        </p>
-      </header>
+  // Runtime Optical Alignment
+  useEffect(() => {
+    const alignInk = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      document.querySelectorAll('.opt-align').forEach((el) => {
+        const htmlEl = el as HTMLElement;
+        htmlEl.style.marginLeft = '0px';
+        const style = window.getComputedStyle(htmlEl);
+        const char = (htmlEl.textContent || '').trim().charAt(0);
+        if (!char) return;
+
+        ctx.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+        ctx.textAlign = 'left';
+        const metrics = ctx.measureText(char);
+        const sideBearing = metrics.actualBoundingBoxLeft;
+
+        if (isFinite(sideBearing) && sideBearing > 0) {
+          htmlEl.style.marginLeft = `${sideBearing.toFixed(2)}px`;
+        }
+      });
+    };
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(alignInk);
+    }
+    alignInk();
+    window.addEventListener('resize', alignInk);
+    return () => window.removeEventListener('resize', alignInk);
+  }, []);
+
+  return (
+    <div className="w-full flex flex-col py-6">
+      {/* Intro Header */}
+      <div className="grid grid-cols-12 w-full mb-12">
+        <div className="col-span-12 flex flex-col text-left space-y-2">
+          <span className="mono-label opt-align font-mono text-xs uppercase tracking-wider text-[#FBBF24]">REFERENCE RESOURCES</span>
+          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mt-2 opt-align">
+            <span>{ui.title}</span>
+          </h1>
+          <p className="text-slate-400 font-semibold text-sm">
+            {ui.description}
+          </p>
+        </div>
+      </div>
+
+      {/* Main Grid wrapper */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
         {/* Sidebar / Path selector */}
-        <div className="lg:w-1/4">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 sticky top-4">
-            <h2 className="text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-3">{ui.languages}</h2>
+        <div className="col-span-12 lg:col-span-3">
+          <div className="bg-slate-900/30 rounded-[2rem] p-5 shadow-xl sticky top-24">
+            <h2 className="text-xs font-black uppercase text-slate-500 tracking-wider mb-4">{ui.languages}</h2>
             <div className="space-y-1">
               {PATHS.filter(p => p.isAvailable || LANGUAGE_DOCS[p.id]).map(path => (
                 <button
                   key={path.id}
                   onClick={() => setSelectedPath(path.id)}
-                  className={`w-full text-left px-3 py-2.5 rounded-xl font-bold text-sm transition-colors ${
+                  className={`w-full text-left px-3 py-2.5 rounded-xl font-bold text-sm transition-colors cursor-pointer flex items-center gap-2.5 ${
                     selectedPath === path.id
-                      ? 'bg-[#2E2FCE]/10 text-[#2E2FCE]'
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
+                      ? 'bg-[#FBBF24]/10 text-[#FBBF24]'
+                      : 'text-slate-300 hover:bg-slate-850 hover:text-white'
                   }`}
                 >
-                  <span className="mr-2 inline-flex items-center justify-center w-5 h-5 align-middle">
+                  <span className="inline-flex items-center justify-center w-5 h-5 shrink-0">
                     {path.icon.startsWith('http') || path.icon.startsWith('/') ? (
                       <img src={path.icon} alt="" className="w-5 h-5 object-contain" referrerPolicy="no-referrer" />
                     ) : (
-                      path.icon
+                      <span className="text-base select-none">{path.icon}</span>
                     )}
                   </span>
-                  {t(path.titleKey as any)}
+                  <span>{t(path.titleKey as any)}</span>
                 </button>
               ))}
             </div>
@@ -88,28 +125,28 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
         </div>
 
         {/* Documentation Content */}
-        <div className="lg:w-3/4">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200 dark:border-slate-700">
-            <div className="mb-8 border-b border-slate-100 dark:border-slate-700 pb-6">
-              <h2 className="text-3xl font-black text-slate-800 dark:text-white mt-1">
+        <div className="col-span-12 lg:col-span-9">
+          <div className="bg-slate-900/30 border border-slate-800 rounded-[2rem] p-6 md:p-8 shadow-xl">
+            <div className="mb-8 border-b border-slate-850 pb-6 text-left">
+              <h2 className="text-3xl font-black text-white mt-1">
                 {doc.title}
               </h2>
-              <p className="text-slate-500 dark:text-slate-400 mt-3 text-lg">
+              <p className="text-slate-400 font-semibold text-base mt-3">
                 {doc.description}
               </p>
             </div>
 
             <div className="space-y-10">
               {doc.sections.map((section, idx) => (
-                <div key={idx} className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-700/50">
-                  <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4 capitalize">
+                <div key={idx} className="bg-slate-950 rounded-2xl p-6 text-left">
+                  <h3 className="text-xl font-black text-white mb-4 capitalize">
                     {section.title}
                   </h3>
                   
                   {section.isCode ? (
                     <CodeBlock code={section.content} language={selectedPath} />
                   ) : (
-                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-slate-300 font-semibold text-sm leading-relaxed">
                       {section.content}
                     </p>
                   )}
