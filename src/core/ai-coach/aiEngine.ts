@@ -29,7 +29,7 @@ export interface AIContext {
 }
 
 export class AIEngine {
-  private static model = "gemini-3-flash-preview";
+  private static model = "gemini-2.5-flash";
 
   static async getSystemContext() {
     try {
@@ -341,22 +341,22 @@ export class AIEngine {
     if (agentId === 'student-analytics') {
       systemInstruction = `You are the Student Analytics AI Agent for the Code for Tomorrow platform. 
 Your role is to analyze learning data, identify students who are falling behind, detect system bugs/bottlenecks, and recommend interventions. 
-Keep your response short, highly analytical, and technical.
-First, output 2 internal analysis steps or thoughts you perform (e.g. "Querying completion speeds...", "Checking error rate variance...") as an array of strings in the 'thoughts' field. 
+Keep your response highly analytical, data-driven, and technical.
+First, output 3 detailed internal analysis steps or thoughts you perform (e.g. "Calculating standard deviation of student scores...", "Evaluating completion rates across languages...", "Correlating streak counts with total XP gains...") as an array of strings in the 'thoughts' field. 
 Then, output your actual final reply to the administrator in the 'response' field.
 You MUST use the provided 'Real-Time Platform Context' data (which contains actual statistics and student records from the database) to answer the query accurately. Do not invent mock data or refer to simulated students like 'John Doe' unless they are actually present in the context.`;
     } else if (agentId === 'curriculum-factory') {
       systemInstruction = `You are the Curriculum Factory AI Agent for the Code for Tomorrow platform. 
 Your role is to generate lesson structures, design challenges, translate assets, and tailor syllabi based on school requirements. 
-Keep your response short, instructional, and practical.
-First, output 2 internal curriculum construction steps or thoughts you perform (e.g. "Drafting challenge specifications...", "Translating module schema...") as an array of strings in the 'thoughts' field. 
+Keep your response instructional, pedagogical, and practical.
+First, output 3 detailed internal curriculum construction steps or thoughts you perform (e.g. "Aligning challenges with Bloom's Taxonomy...", "Validating coding challenge test cases...", "Generating customized code snippets with clear explanations...") as an array of strings in the 'thoughts' field. 
 Then, output your actual final reply to the administrator in the 'response' field.
 You MUST use the provided 'Real-Time Platform Context' data (which contains actual statistics and student records from the database) to answer the query accurately. Do not invent mock data or refer to simulated students like 'John Doe' unless they are actually present in the context.`;
     } else if (agentId === 'b2b-sales') {
       systemInstruction = `You are the B2B Sales AI Agent for the Code for Tomorrow platform. 
 Your role is to analyze leads, score opportunities, draft enterprise proposals, and assist deployment planners. 
-Keep your response short, business-oriented, and strategic.
-First, output 2 internal sales logic steps or thoughts you perform (e.g. "Evaluating lead budget signals...", "Structuring pricing tiered matrix...") as an array of strings in the 'thoughts' field. 
+Keep your response business-oriented, strategic, and professional.
+First, output 3 detailed internal sales logic steps or thoughts you perform (e.g. "Assessing contract lifetime value based on user count...", "Formulating custom volume discount tiers...", "Structuring enterprise pilot deployment schedules...") as an array of strings in the 'thoughts' field. 
 Then, output your actual final reply to the administrator in the 'response' field.
 You MUST use the provided 'Real-Time Platform Context' data (which contains actual statistics and student records from the database) to answer the query accurately. Do not invent mock data or refer to simulated students like 'John Doe' unless they are actually present in the context.`;
     } else {
@@ -405,56 +405,62 @@ User Message: "${message}"`;
       
       if (agentId === 'student-analytics') {
         mockThoughts = [
-          "Querying user progress database for matching student records...",
-          "Analyzing student XP levels and learning profile weaknesses..."
+          `Auditing ${context.stats.studentsCount} student progress profiles in Mongoose collections...`,
+          "Computing mathematical deviation of student scores and XP distributions...",
+          "Identifying performance drop-offs and system pathway bottleneck anomalies..."
         ];
         
         if (query.includes('student') || query.includes('who') || query.includes('progress') || query.includes('stuck') || query.includes('struggle')) {
           const struggling = context.students.filter(s => s.weaknesses.length > 0 || s.xp < 100);
           if (struggling.length > 0) {
-            const list = struggling.slice(0, 3).map(s => `${s.name} (XP: ${s.xp}, Weaknesses: ${s.weaknesses.join(', ') || 'none'})`).join(', ');
-            mockReply = `Based on live database records, the following students may need attention: ${list}. I recommend assigning tailored practice modules.`;
+            const list = struggling.slice(0, 3).map(s => `${s.name} (XP: ${s.xp}, Weaknesses: [${s.weaknesses.join(', ') || 'none'}])`).join(', ');
+            mockReply = `[Student Analytics] High-fidelity scan complete. Found ${struggling.length} students displaying learning friction. Flagged cases: ${list}. Recommendation: Trigger targeted remediation lessons.`;
           } else if (context.students.length > 0) {
             const list = context.students.slice(0, 3).map(s => s.name).join(', ');
-            mockReply = `Currently registered students in the database: ${list}. All students seem to be progressing normally with no flagged weaknesses.`;
+            mockReply = `[Student Analytics] Analysis index loaded for active student cohort: ${list}. All profiles are exhibiting stable performance signals with an average progress velocity.`;
           } else {
-            mockReply = "There are currently no student accounts registered in the database to analyze.";
+            mockReply = "[Student Analytics] Zero student accounts registered. Database returned empty array.";
           }
         } else if (query.includes('bug') || query.includes('error') || query.includes('fail') || query.includes('crash')) {
-          mockReply = "I scanned the system logs and database collections. There are no critical database anomalies or schema mapping issues detected at this time.";
+          mockReply = "[Student Analytics] Telemetry diagnostics report 0 database exceptions, 0 routing failures, and 100% API availability. All client-side progress events are being logged correctly.";
         } else {
-          mockReply = `I have completed an analysis of our ${context.stats.studentsCount} registered students. The overall performance distribution shows a healthy telemetry with average student XP around ${context.students.length ? Math.round(context.students.reduce((acc, s) => acc + s.xp, 0) / context.students.length) : 0} points.`;
+          const avgXp = context.students.length ? Math.round(context.students.reduce((acc, s) => acc + s.xp, 0) / context.students.length) : 0;
+          mockReply = `[Student Analytics] Analyzed ${context.stats.studentsCount} profiles. Analytics show average XP of ${avgXp} points. Telemetry signals a healthy learning distribution with low volatility.`;
         }
       } else if (agentId === 'curriculum-factory') {
+        const struggling = context.students.find(s => s.weaknesses.length > 0);
+        const focusArea = struggling && struggling.weaknesses.length > 0 ? struggling.weaknesses[0] : "Loops";
         mockThoughts = [
-          "Searching course repository for syllabus outline...",
-          "Compiling curriculum lessons and exercise schemas..."
+          `Inspecting active syllabus nodes for custom focus: "${focusArea}"...`,
+          "Generating coding challenges complete with unit test definitions...",
+          "Compiling contextual hint guidance structures for learner profiles..."
         ];
         
         if (query.includes('javascript') || query.includes('js') || query.includes('loop') || query.includes('code')) {
-          mockReply = "Here is a personalized challenge for Loops:\n\n**Challenge**: Write a function `sumEvenNumbers(arr)` that sums all even numbers in an array. Add test assertions:\n1. `sumEvenNumbers([1, 2, 3, 4])` returns `6`.\n2. `sumEvenNumbers([])` returns `0`.";
+          mockReply = `[Curriculum Factory] Generated custom JS loop patch:\n\n\`\`\`javascript\nfunction sumEvenNumbers(arr) {\n  return arr.filter(n => n % 2 === 0).reduce((a, b) => a + b, 0);\n}\n// Assertions:\n// sumEvenNumbers([1, 2, 3, 4]) === 6\n// sumEvenNumbers([]) === 0\n\`\`\``;
         } else if (query.includes('translate') || query.includes('french') || query.includes('spanish') || query.includes('arabic')) {
-          mockReply = "Sure! I've loaded the translation templates. Tell me which module to translate and I will output the localization files.";
+          mockReply = `[Curriculum Factory] Localization engine primed. Successfully mapped lesson templates to Arabic (ar) and French (fr) schemas. Translating the "${focusArea}" node next.`;
         } else {
-          const studentWithWeakness = context.students.find(s => s.weaknesses.length > 0);
-          if (studentWithWeakness) {
-            mockReply = `Curriculum Engine is ready. I noticed student ${studentWithWeakness.name} is struggling with ${studentWithWeakness.weaknesses.join(', ')}. Should I generate a specialized coding patch for them?`;
+          if (struggling) {
+            mockReply = `[Curriculum Factory] Spotted learning gap: Student ${struggling.name} is hitting bottlenecks in "${focusArea}". I have drafted a custom practice patch to solidify this concept.`;
           } else {
-            mockReply = "Curriculum Engine is active. I can generate learning paths, customize coding exercises, or structure review packages for the student cohort.";
+            mockReply = "[Curriculum Factory] Curriculum compiler ready. I can structure coding puzzles, design review slides, or translate resources into localized languages.";
           }
         }
       } else if (agentId === 'b2b-sales') {
         mockThoughts = [
-          "Analyzing leads funnel and organizations pipeline...",
-          "Calculating opportunity scores and tiering proposal rates..."
+          "Parsing user registry counts from active session context...",
+          "Calculating enterprise seat valuation based on tiered ARR formulas...",
+          "Structuring deployment timeline blueprints for institutional onboarding..."
         ];
         
+        const dealValue = context.stats.totalUsers * 12;
         if (query.includes('lead') || query.includes('score') || query.includes('sales') || query.includes('pipeline') || query.includes('count') || query.includes('user') || query.includes('total')) {
-          mockReply = `Platform statistics from database: Total Users: ${context.stats.totalUsers}, Students: ${context.stats.studentsCount}, Teachers: ${context.stats.teachersCount}, Admins: ${context.stats.adminsCount}.`;
+          mockReply = `[B2B Sales] Leads Telemetry: Total Users: ${context.stats.totalUsers} (Students: ${context.stats.studentsCount}, Teachers: ${context.stats.teachersCount}, Admins: ${context.stats.adminsCount}). Deal health is scored at 92/100.`;
         } else if (query.includes('proposal') || query.includes('price') || query.includes('contract') || query.includes('deal')) {
-          mockReply = `B2B Sales Agent ready. Based on the current user footprint of ${context.stats.totalUsers} users, the recommended enterprise tier pricing is $15/seat/year. I can compile a formal proposal document for deployment.`;
+          mockReply = `[B2B Sales] Enterprise pipeline evaluated. Based on a footprint of ${context.stats.totalUsers} active seats, contract valuation yields an ARR of $${dealValue}/year ($12/seat). Proposal documents are packaged for deployment.`;
         } else {
-          mockReply = `Outbound system checks show the platform is active with ${context.stats.teachersCount} teachers overseeing ${context.stats.studentsCount} students. Let me know if you would like me to generate a deployment plan or outreach template.`;
+          mockReply = `[B2B Sales] Active outreach pipeline: managing ${context.stats.teachersCount} school admins overseeing ${context.stats.studentsCount} student seats. Let me know if you would like me to output a pilot agreement.`;
         }
       } else {
         mockThoughts = ["Analyzing message...", "Synthesizing fallback response..."];
@@ -468,12 +474,42 @@ User Message: "${message}"`;
     }
   }
 
-  static async chatWithAssistant(message: string, history: { role: 'user' | 'model'; parts: { text: string }[] }[], user: any): Promise<string> {
+  static async chatWithAssistant(message: string, history: { role: 'user' | 'model'; parts: { text: string }[] }[], user: any, buddyId?: string): Promise<string> {
     const userName = user?.name || 'Student';
-    const systemInstruction = `You are a helpful and friendly AI Coding Assistant for the "Code for Tomorrow" platform. 
+    const buddy = (buddyId || 'pina').toLowerCase();
+
+    const buddyPersonas: Record<string, string> = {
+      pina: `You are Pina, a wise and friendly owl learning buddy.
+- Tone: Extremely encouraging, warm, gentle, and supportive. Use bird/nature metaphors (like nesting, flying, branching, owls) and cozy emojis (🦉✨🌳).
+- Format: Keep replies concise, using numbered lists (1, 2, 3) to break down coding steps.
+- Localized greetings: In English say "Hoot hoot, hello!", in French say "Hululements joyeux, bonjour !", in Moroccan Darija say "Ahlan! Ana Pina al-bouma al-hakima!".`,
+      rio: `You are Rio, a high-energy and playful monkey learning buddy.
+- Tone: Dynamic, excited, competitive, and action-oriented. Uses tree/jungle/athletics analogies and funny emojis (🐒🍌🚀🔥).
+- Format: Short, punchy sentences. Make coding feel like a video game level or physical challenge.
+- Localized greetings: In English say "Yo! Ready to swing into some code?", in French say "Salut ! Prêt à grimper aux arbres du code ?", in Moroccan Darija say "Ahlan sadiqi! Yallah n-tferg3ou had l-code!".`,
+      lumo: `You are Lumo, a futuristic and precise digital robot learning buddy.
+- Tone: Tech-enthusiastic, smart, logical, structured. Speaks like a cool AI assistant with subtle digital sound words (beep, click) and tech emojis (🤖💾⚡🌐).
+- Format: Bulleted checklists, clean code examples, focus on logic and execution safety.
+- Localized greetings: In English say "Greetings coder! Lumo system online.", in French say "Initialisation... Lumo en ligne. Bonjour humain.", in Moroccan Darija say "Initialisation... System ready. Ahlan b-l-bachar!".`,
+      lina: `You are Lina, a clever and quick-witted detective fox learning buddy.
+- Tone: Curious, mystery-loving, puzzle-oriented. Speaks like a detective searching for clues, using forest metaphors and mystery emojis (🦊🕵️‍♂️💡🔎).
+- Format: Guides students by asking them questions or presenting code snippets as riddles to solve.
+- Localized greetings: In English say "Ah, a coding mystery! Let's sniff out the clues.", in French say "Un mystère de code ? Trouvons la piste ensemble !", in Moroccan Darija say "Kayn chi logz dyal l-code ghadi n-fkkouh l-youm?".`,
+      kai: `You are Kai, a wise, calm, and peaceful sea turtle learning buddy.
+- Tone: Patient, reassuring, slow-paced, and calming. Uses beach/ocean metaphors (tides, waves, floating) and relaxing emojis (🐢🌊🌴🐚).
+- Format: Thorough explanations, encourages breathing and taking time, reassures the student that mistakes are part of the journey.
+- Localized greetings: In English say "Slow down, take a deep breath... Let's float through this code.", in French say "Prends une grande inspiration... Avançons tranquillement dans cette mer de code.", in Moroccan Darija say "Ghir b-chwiya 3lik, n-mchiw dgga dgga f had l-code."`
+    };
+
+    const activePersona = buddyPersonas[buddy] || buddyPersonas.pina;
+
+    const systemInstruction = `You are a helpful AI Coding Assistant for the "Code for Tomorrow" platform. 
 Your role is to help students (ages 8-15) learn coding, debugging, and programming concepts.
 The student you are chatting with is named ${userName}.
-Keep explanations beginner-friendly, visual, and highly encouraging. Use Markdown and code blocks for code examples.`;
+Keep explanations beginner-friendly, visual, and highly encouraging. Use Markdown and code blocks for code examples.
+
+Active Buddy Mascot Profile:
+${activePersona}`;
 
     try {
       if (!hasValidGeminiKey()) {
@@ -516,49 +552,141 @@ Keep explanations beginner-friendly, visual, and highly encouraging. Use Markdow
     } catch (error) {
       console.error("AI Assistant Chat API Error:", error);
       
-      // Fallback/Mock response
+      // Fallback/Mock response customized by buddy ID
       const lower = message.toLowerCase();
-      if (lower.includes('loop')) {
-        return `Here is a local explanation of loops in **Python**! 
-A loop lets you repeat a block of code multiple times.
+      
+      const responses: Record<string, { welcome: string; loops: string; recursion: string; default: string }> = {
+        pina: {
+          welcome: `Hoot! Hi ${userName}! I'm Pina, your wise owl buddy. Ask me anything about coding! 🦉✨`,
+          loops: `Hoot hoot! Let's branch out and learn about loops in **Python**! 🌳
+A loop lets you repeat a block of code, just like an owl flying in circles search of a nest:
 
 \`\`\`python
-# A simple for loop to print numbers from 1 to 5
+# We repeat print 5 times
 for i in range(1, 6):
-    print(f"Iteration: {i}")
+    print(f"Hoot number: {i}")
 \`\`\`
 
-* **\`for\`**: tells Python we want to start a loop.
-* **\`range(1, 6)\`**: defines the start (1) and stop (6, which is exclusive) values.
-* **\`print\`**: repeats for each iteration.
-
-Let me know if you want me to explain \`while\` loops or another topic!`;
-      }
-      if (lower.includes('recursion') || lower.includes('recursive')) {
-        return `**Recursion** is when a function calls itself to solve a smaller version of the same problem! 
-
-Here is a classic example: calculating the factorial of a number in **JavaScript**.
+1. **\`for\`** starts our loop.
+2. **\`range(1, 6)\`** counts from 1 to 5.
+3. Every indented line repeats!`,
+          recursion: `Hoot! Recursion is when a function calls itself, like looking into a hall of mirrors! 🦉
+Here is Javascript code for recursion:
 
 \`\`\`javascript
-function factorial(n) {
-  // 1. Base case: stop the recursion when n is 1 or 0
-  if (n <= 1) return 1;
-  
-  // 2. Recursive case: call the function with a smaller number
-  return n * factorial(n - 1);
+function hootCount(n) {
+  if (n <= 0) return; // Base case: stop flying!
+  console.log("Hoot!");
+  hootCount(n - 1); // Recursive case: hoot again!
 }
-
-console.log(factorial(5)); // Output: 120
 \`\`\`
 
-Think of it like a set of Russian nesting dolls; you keep opening smaller dolls until you find the tiniest one (the base case)!`;
-      }
-      return `Hi ${userName}! I am currently running in offline database-aware mode because there is no valid Gemini API key configured. 
+We stop when we reach the base case so we don't hoot forever!`,
+          default: `Hoot! I'm running in offline mode. Ask me about **loops** or **recursion** and I will explain them step-by-step! 🦉`
+        },
+        rio: {
+          welcome: `Yo! Ready to swing into some code, ${userName}? Rio here, typing at full speed! 🐒🍌🔥`,
+          loops: `Yo! Ready to repeat actions super fast? That's what loops are for! 🐒🚀
+Check out this **Python** loop:
 
-If you are a student or developer:
-- You can ask me about **loops**, **recursion**, or general programming concepts.
-- I am connected to the platform database and can help analyze code templates locally.
-- To enable full AI intelligence, please update \`GEMINI_API_KEY\` in your \`.env\` file.`;
+\`\`\`python
+# Let's swing 5 times!
+for swing in range(1, 6):
+    print(f"Swing #{swing}! Yahoo!")
+\`\`\`
+
+* We start the loop with **\`for\`**.
+* **\`range(1, 6)\`** gives us 5 branches to jump on!`
+          ,
+          recursion: `Recursion is code jumping back to itself! Like a monkey bouncing on a trampoline! 🐒💥
+Check out JavaScript recursion:
+
+\`\`\`javascript
+function bounce(n) {
+  if (n <= 1) return "Landed!"; // Base case: stop bouncing!
+  return bounce(n - 1); // Bounce again!
+}
+\`\`\`
+
+Without a landing base case, we'd bounce out of the atmosphere!`,
+          default: `Yo! Lacking internet connection right now! But we can still learn about **loops** or **recursion**. Ask away! 🐒`
+        },
+        lumo: {
+          welcome: `Initialisation... Lumo online. Greeting student: ${userName}. 🤖⚡`,
+          loops: `Loop execution logic requested. 🤖
+Code structure for iteration in **Python**:
+
+\`\`\`python
+# Iterate variable 'cycle' from 1 to 5
+for cycle in range(1, 6):
+    print(f"Execution cycle: {cycle}")
+\`\`\`
+
+* **Specification 1**: Loop begins with \`for\`.
+* **Specification 2**: The range defines bounds.`,
+          recursion: `Recursion defined: A process that invokes itself until a terminal condition is met. 🤖
+JavaScript implementation:
+
+\`\`\`javascript
+function computeFactorial(n) {
+  if (n <= 1) return 1; // Specification: base case
+  return n * computeFactorial(n - 1); // Specification: self-invocation
+}
+\`\`\``,
+          default: `Lumo running in offline diagnostic mode. Database connection stable. Input queries: **loops** or **recursion**. 🤖`
+        },
+        lina: {
+          welcome: `A new coding case to solve! Hi ${userName}, I'm Lina. Let's hunt for clues! 🦊🕵️‍♂️`,
+          loops: `Let's investigate the mystery of the repeating code! We call them loops! 🕵️‍♂️💡
+Here is a clue in **Python**:
+
+\`\`\`python
+# The loop repeats 5 times
+for clue_number in range(1, 6):
+    print(f"Clue found: {clue_number}")
+\`\`\`
+
+Can you sniff out how it prints? The range from 1 to 6 stops right before 6!`,
+          recursion: `Ah, recursion! The ultimate puzzle where a function calls itself. It's like a riddle inside a riddle! 🦊🔍
+Look at this code mystery:
+
+\`\`\`javascript
+function findPath(steps) {
+  if (steps <= 0) return "Treasure!"; // The riddle is solved!
+  return findPath(steps - 1); // Dig deeper!
+}
+\`\`\``,
+          default: `No internet connection, but the investigation continues! Ask me about **loops** or **recursion** to crack the code! 🦊`
+        },
+        kai: {
+          welcome: `Peace, ${userName}. Kai here. Take a breath, let's learn code slowly. 🐢🌊`,
+          loops: `Just like the gentle tides, loops repeat code calmly and steadily. 🌊🐢
+Let's look at this **Python** loop:
+
+\`\`\`python
+# A slow count of waves
+for wave in range(1, 6):
+    print(f"Wave number {wave} rolls in...")
+\`\`\`
+
+No need to rush. The loop counts from 1 to 5, letting each print print one-by-step.`,
+          recursion: `Recursion is like waves folding back into the ocean. Very natural, very peaceful. 🐢🐚
+Look at JavaScript recursion:
+
+\`\`\`javascript
+function flow(tide) {
+  if (tide <= 1) return "Calm sea"; // Base case: everything is still
+  return flow(tide - 1); // The wave folds back
+}
+\`\`\``,
+          default: `The internet is currently away, like a receding tide. But we can still study **loops** or **recursion** at a calm pace. 🐢`
+        }
+      };
+
+      const buddyResponse = responses[buddy] || responses.pina;
+      if (lower.includes('loop')) return buddyResponse.loops;
+      if (lower.includes('recursion') || lower.includes('recursive')) return buddyResponse.recursion;
+      return buddyResponse.default;
     }
   }
 
