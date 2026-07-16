@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Send, Zap, Bot, User, Copy, Check, ShieldAlert, Plus, MessageSquare, Trash2, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Send, Zap, Bot, User, Copy, Check, ShieldAlert, Plus, MessageSquare, Trash2, Clock, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import api from '../../services/api';
 import { useToast } from '../ToastNotification';
+import { useLanguage } from '../../contexts/LanguageContext';
+import ChooseBuddyScreen, { BUDDIES, BUDDY_INFOS } from '../ChooseBuddyScreen';
 
 interface Message {
   text: string;
@@ -103,6 +105,12 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser, onUp
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { showToast } = useToast();
+  const { language } = useLanguage();
+
+  const [selectedBuddyId, setSelectedBuddyId] = useState<string>(() => {
+    return localStorage.getItem('cft_ai_selected_buddy') || 'pina';
+  });
+  const [showBuddySelect, setShowBuddySelect] = useState(false);
 
   const [dailyLimit, setDailyLimit] = useState<{ date: string; count: number }>(() => {
     try {
@@ -194,8 +202,40 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser, onUp
   }, [messages, isLoading]);
 
   const handleNewChat = useCallback(() => {
+    const activeLang = language === 'ar' || language === 'fr' ? language : 'en';
+    
+    const greetings: Record<string, Record<string, string>> = {
+      pina: {
+        en: `Hi ${currentUser.name}! I'm Pina, your wise owl coding assistant. Ask me anything about coding! 🦉✨`,
+        fr: `Salut ${currentUser.name} ! Je suis Pina, ton compagnon hibou pour le code. Pose-moi toutes tes questions ! 🦉✨`,
+        ar: `مرحباً ${currentUser.name}! أنا بينا، البومة الحكيمة ومساعدتك في البرمجة. اسألني عن أي شيء! 🦉✨`
+      },
+      rio: {
+        en: `Yo ${currentUser.name}! Rio in the house! Ready to swing into some wild coding exercises? 🐒🍌🔥`,
+        fr: `Yo ${currentUser.name} ! Rio est là ! Prêt à t'amuser avec des exercices de code super fun ? 🐒🍌🔥`,
+        ar: `يا هلا ${currentUser.name}! ريو هنا! هل أنت مستعد للبدء في بعض التمارين البرمجية الممتعة؟ 🐒🍌🔥`
+      },
+      lumo: {
+        en: `Greetings ${currentUser.name}. Lumo system online. Input your programming query below. 🤖⚡`,
+        fr: `Salutations ${currentUser.name}. Système Lumo en ligne. Saisissez votre requête ci-dessous. 🤖⚡`,
+        ar: `أهلاً بك ${currentUser.name}. نظام لومو قيد التشغيل. أدخل سؤالك البرمجي أدناه. 🤖⚡`
+      },
+      lina: {
+        en: `Hey ${currentUser.name}! I'm Lina. Got a sneaky bug to solve or a code riddle to crack? Let's trace it! 🦊🕵️‍♂️`,
+        fr: `Salut ${currentUser.name} ! Je suis Lina. Tu as un bug mystérieux à résoudre ? Trouvons la piste ! 🦊🕵️‍♂️`,
+        ar: `أهلاً ${currentUser.name}! أنا لينا. هل لديك خطأ برمجيا غامض تريد حله؟ دعنا نتتبعه! 🦊🕵️‍♂️`
+      },
+      kai: {
+        en: `Peace, ${currentUser.name}... Kai is here. Take a slow breath, mistakes are just steps. What shall we learn? 🐢🌊`,
+        fr: `Bonjour, ${currentUser.name}... Kai est là. Respire tranquillement, chaque erreur nous fait grandir. Que veut-on apprendre ? 🐢🌊`,
+        ar: `السلام عليكم ${currentUser.name}... كاي هنا. خذ نفساً عميقاً، الأخطاء هي مجرد خطوات للتعلم. ماذا سنعلم اليوم؟ 🐢🌊`
+      }
+    };
+    
+    const welcomeText = greetings[selectedBuddyId]?.[activeLang] || greetings.pina.en;
+
     const welcomeMsg: Message = {
-      text: `Hi ${currentUser.name}!  I'm your C4T AI Coding Assistant. Ask me anything about coding, algorithms, debugging, or programming concepts. How can I help you learn today?`,
+      text: welcomeText,
       sender: 'ai',
       timestamp: new Date().toISOString(),
     };
@@ -209,7 +249,7 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser, onUp
     setSessions(prev => [newSession, ...prev]);
     setActiveSessionId(newSession.id);
     setInput('');
-  }, [currentUser.name]);
+  }, [currentUser.name, selectedBuddyId, language]);
 
   const handleDeleteSession = useCallback((sessionId: string) => {
     setSessions(prev => {
@@ -275,7 +315,7 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser, onUp
         parts: [{ text: msg.text }],
       }));
 
-      const res = await api.chatWithAssistant(text, chatHistory);
+      const res = await api.chatWithAssistant(text, chatHistory, selectedBuddyId);
       const aiMsg: Message = { text: res.text, sender: 'ai', timestamp: new Date().toISOString() };
 
       updateActiveSession(session => ({
@@ -404,34 +444,63 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser, onUp
             >
               {sidebarOpen ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </button>
-            <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-500">
-              <Bot className="w-5 h-5" />
+            <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-slate-900 border border-slate-700/50 flex-shrink-0 flex items-center justify-center">
+              <img 
+                src={BUDDIES.find(b => b.id === selectedBuddyId)?.imageUrl || '/assets/images/buddies/buddy_pina.png'} 
+                alt="Active Buddy" 
+                className="w-full h-full object-contain p-1"
+              />
             </div>
             <div>
-              <h3 className="font-bold text-slate-800 dark:text-white text-sm">AI Coding Assistant</h3>
+              <h3 className="font-black text-slate-800 dark:text-white text-sm flex items-center gap-2">
+                {BUDDY_INFOS[selectedBuddyId]?.title[language === 'ar' || language === 'fr' ? language : 'en'] || 'Buddy'}
+                <span className="text-[9px] font-bold text-indigo-500 dark:text-indigo-400 px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 uppercase">
+                  {BUDDY_INFOS[selectedBuddyId]?.label[language === 'ar' || language === 'fr' ? language : 'en']}
+                </span>
+              </h3>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className={`w-1.5 h-1.5 rounded-full ${isSimulation ? 'bg-amber-400 animate-pulse' : 'bg-emerald-500 animate-ping'}`} />
+                <span className={`w-1.5 h-1.5 rounded-full ${isSimulation ? 'bg-amber-400 animate-pulse' : 'bg-emerald-500'}`} />
                 <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">
-                  {isSimulation ? 'Simulation Mode' : 'Online'}
+                  {isSimulation ? 'Simulation' : 'Online'}
                 </span>
               </div>
             </div>
           </div>
-          {isSimulation && (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-semibold">
-              <ShieldAlert className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Set GEMINI_API_KEY in .env</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowBuddySelect(true)}
+              className="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-205 dark:border-slate-700 rounded-xl text-xs font-bold text-indigo-600 dark:text-indigo-300 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+            >
+              <Zap className="w-3.5 h-3.5 text-amber-500" />
+              <span>Change Buddy</span>
+            </button>
+            {isSimulation && (
+              <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-semibold">
+                <ShieldAlert className="w-3.5 h-3.5" />
+                <span>Offline Simulation</span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Chat Messages */}
         <div className="flex-1 overflow-y-auto px-4 md:px-6 py-6 space-y-6 scrollbar-thin dark:scrollbar-thumb-slate-700">
           {messages.map((msg, i) => (
             <div key={i} className={`flex gap-3 max-w-[85%] ${msg.sender === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.sender === 'user' ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-cyan-400'}`}>
-                {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-              </div>
+              {msg.sender === 'user' ? (
+                <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
+                  <User className="w-4 h-4" />
+                </div>
+              ) : (
+                <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-900 border border-slate-750 flex items-center justify-center flex-shrink-0 shadow-md">
+                  <img 
+                    src={BUDDIES.find(b => b.id === selectedBuddyId)?.imageUrl || '/assets/images/buddies/buddy_pina.png'} 
+                    alt="Buddy" 
+                    className="w-full h-full object-contain p-0.5" 
+                  />
+                </div>
+              )}
               <div>
                 <div className={`p-4 rounded-3xl text-sm ${
                   msg.sender === 'user'
@@ -480,8 +549,12 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser, onUp
           ))}
           {isLoading && (
             <div className="flex gap-3 max-w-[85%] mr-auto">
-              <div className="w-8 h-8 rounded-full bg-slate-700 text-cyan-400 flex items-center justify-center flex-shrink-0">
-                <Bot className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-900 border border-slate-750 flex items-center justify-center flex-shrink-0 shadow-md">
+                <img 
+                  src={BUDDIES.find(b => b.id === selectedBuddyId)?.imageUrl || '/assets/images/buddies/buddy_pina.png'} 
+                  alt="Buddy" 
+                  className="w-full h-full object-contain p-0.5" 
+                />
               </div>
               <div className="p-4 rounded-3xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-tl-none shadow-sm flex items-center justify-center">
                 <div className="flex items-center space-x-1 px-2 py-0.5">
@@ -533,6 +606,64 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser, onUp
           </button>
         </div>
       </div>
+
+      {/* Buddy Selection Modal */}
+      {showBuddySelect && (
+        <ChooseBuddyScreen 
+          onClose={() => setShowBuddySelect(false)} 
+          onSelectBuddy={(buddy) => {
+            setSelectedBuddyId(buddy.id);
+            localStorage.setItem('cft_ai_selected_buddy', buddy.id);
+            
+            // Auto-update first greeting message if it hasn't been engaged by user yet
+            setSessions(prev => 
+              prev.map(s => {
+                if (s.id === activeSessionId && s.messages.length === 1 && s.messages[0].sender === 'ai') {
+                  const activeLang = language === 'ar' || language === 'fr' ? language : 'en';
+                  const greetings: Record<string, Record<string, string>> = {
+                    pina: {
+                      en: `Hi ${currentUser.name}! I'm Pina, your wise owl coding assistant. Ask me anything about coding! 🦉✨`,
+                      fr: `Salut ${currentUser.name} ! Je suis Pina, ton compagnon hibou pour le code. Pose-moi toutes tes questions ! 🦉✨`,
+                      ar: `مرحباً ${currentUser.name}! أنا بينا، البومة الحكيمة ومساعدتك في البرمجة. اسألني عن أي شيء! 🦉✨`
+                    },
+                    rio: {
+                      en: `Yo ${currentUser.name}! Rio in the house! Ready to swing into some wild coding exercises? 🐒🍌🔥`,
+                      fr: `Yo ${currentUser.name} ! Rio est là ! Prêt à t'amuser avec des exercices de code super fun ? 🐒🍌🔥`,
+                      ar: `يا هلا ${currentUser.name}! ريو هنا! هل أنت مستعد للبدء في بعض التمارين البرمجية الممتعة؟ 🐒🍌🔥`
+                    },
+                    lumo: {
+                      en: `Greetings ${currentUser.name}. Lumo system online. Input your programming query below. 🤖⚡`,
+                      fr: `Salutations ${currentUser.name}. Système Lumo en ligne. Saisissez votre requête ci-dessous. 🤖⚡`,
+                      ar: `أهلاً بك ${currentUser.name}. نظام لومو قيد التشغيل. أدخل سؤالك البرمجي أدناه. 🤖⚡`
+                    },
+                    lina: {
+                      en: `Hey ${currentUser.name}! I'm Lina. Got a sneaky bug to solve or a code riddle to crack? Let's trace it! 🦊🕵️‍♂️`,
+                      fr: `Salut ${currentUser.name} ! Je suis Lina. Tu as un bug mystérieux à résoudre ? Trouvons la piste ! 🦊🕵️‍♂️`,
+                      ar: `أهلاً ${currentUser.name}! أنا لينا. هل لديك خطأ برمجيا غامض تريد حله؟ دعنا نتتبعه! 🦊🕵️‍♂️`
+                    },
+                    kai: {
+                      en: `Peace, ${currentUser.name}... Kai is here. Take a slow breath, mistakes are just steps. What shall we learn? 🐢🌊`,
+                      fr: `Bonjour, ${currentUser.name}... Kai est là. Respire tranquillement, chaque erreur nous fait grandir. Que veut-on apprendre ? 🐢🌊`,
+                      ar: `السلام عليكم ${currentUser.name}... كاي هنا. خذ نفساً عميقاً، الأخطاء هي مجرد خطوات للتعلم. ماذا سنعلم اليوم؟ 🐢🌊`
+                    }
+                  };
+                  return {
+                    ...s,
+                    messages: [{
+                      ...s.messages[0],
+                      text: greetings[buddy.id]?.[activeLang] || greetings.pina.en
+                    }]
+                  };
+                }
+                return s;
+              })
+            );
+
+            setShowBuddySelect(false);
+            showToast(`Say hello to your new learning buddy: ${BUDDY_INFOS[buddy.id].title[language === 'ar' || language === 'fr' ? language : 'en']}! 🌟`);
+          }} 
+        />
+      )}
     </div>
   );
 };
