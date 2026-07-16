@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, ChevronRight, Bookmark } from 'lucide-react';
+import { ArrowLeft, Calendar, User, ChevronRight, Bookmark, Menu, X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { User as UserType } from '../../types';
 import api from '../../services/api';
@@ -115,8 +115,93 @@ interface BlogScreenProps {
 
 export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps) {
     const navigate = useNavigate();
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [gridOn, setGridOn] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const isDashboard = window.location.pathname.startsWith('/dashboard') || currentUser !== null;
+    const isRtl = language === 'ar';
+
+    const getPlatformHref = (platform: 'academy' | 'os' | 'docs', fallbackRoute: string) => {
+        const hostname = window.location.hostname;
+        const port = window.location.port ? `:${window.location.port}` : '';
+        if (hostname.endsWith('palycofoto.club')) {
+            if (platform === 'academy') return `http://palycofoto.club${port}${fallbackRoute}`;
+            if (platform === 'os') return `http://os.palycofoto.club${port}${fallbackRoute}`;
+            if (platform === 'docs') return `http://docs.palycofoto.club${port}${fallbackRoute}`;
+        }
+        return fallbackRoute;
+    };
+
+    const handleCardClick = (e: React.MouseEvent, platform: 'academy' | 'os' | 'docs', fallbackRoute: string) => {
+        const hostname = window.location.hostname;
+        if (hostname.endsWith('palycofoto.club')) {
+            e.preventDefault();
+            window.location.href = getPlatformHref(platform, fallbackRoute);
+        }
+    };
+
+    const onGetStarted = () => {
+        if (currentUser) {
+            navigate('/dashboard');
+        } else {
+            navigate('/auth');
+        }
+    };
+
+    // Keyboard layout toggle trigger (G key)
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.key === 'g' || e.key === 'G') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+                setGridOn(prev => !prev);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    useEffect(() => {
+        if (gridOn) {
+            document.body.classList.add('grid-on');
+        } else {
+            document.body.classList.remove('grid-on');
+        }
+        return () => document.body.classList.remove('grid-on');
+    }, [gridOn]);
+
+    // Runtime Optical Alignment
+    useEffect(() => {
+        const alignInk = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            document.querySelectorAll('.opt-align').forEach((el) => {
+                const htmlEl = el as HTMLElement;
+                htmlEl.style.marginLeft = '0px';
+                const style = window.getComputedStyle(htmlEl);
+                const char = (htmlEl.textContent || '').trim().charAt(0);
+                if (!char) return;
+
+                ctx.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+                ctx.textAlign = 'left';
+                const metrics = ctx.measureText(char);
+                const sideBearing = metrics.actualBoundingBoxLeft;
+
+                if (isFinite(sideBearing) && sideBearing > 0) {
+                    htmlEl.style.marginLeft = `${sideBearing.toFixed(2)}px`;
+                }
+            });
+        };
+
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(alignInk);
+        }
+        alignInk();
+        window.addEventListener('resize', alignInk);
+        return () => window.removeEventListener('resize', alignInk);
+    }, []);
 
     const handleSavePost = async (e: React.MouseEvent, postId: string) => {
         e.stopPropagation();
@@ -135,16 +220,216 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
         }
     };
 
+    const renderGuides = () => (
+        <div className="guides" aria-hidden="true">
+            <div className="cols">
+                {Array.from({ length: 12 }).map((_, i) => (
+                    <div key={i} className="col">
+                        <span>{i + 1}</span>
+                    </div>
+                ))}
+            </div>
+            <div className="rows" />
+            <div className="mline l" />
+            <div className="mline r" />
+        </div>
+    );
+
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 selection:bg-brand-100 selection:text-brand-900">
+        <div className="min-h-screen bg-[#0a0f1d] font-sans text-white selection:bg-[#FBBF24]/30 selection:text-white muller-grid-root">
+            <style>{`
+                .muller-grid-root {
+                    --cols: 12;
+                    --bl: 8px;
+                    --lh: 24px;
+                    --gutter: 24px;
+                    --margin: 72px;
+                    --pad: 96px;
+                    --maxw: 1296px;
+                    
+                    --paper: #0a0f1d;
+                    --ink: #ffffff;
+                    --ink-soft: #94a3b8;
+                    --accent: #FBBF24;
+                    
+                    --g-col: rgba(251, 191, 36, 0.03);
+                    --g-edge: rgba(251, 191, 36, 0.2);
+                    --g-base: rgba(99, 102, 241, 0.15);
+                    --g-base-min: rgba(99, 102, 241, 0.05);
+
+                    background-color: var(--paper);
+                    color: var(--ink);
+                }
+
+                .muller-grid-root,
+                .muller-grid-root * {
+                    box-sizing: border-box;
+                }
+
+                .muller-grid-root .spread {
+                    position: relative;
+                    width: 100%;
+                }
+
+                .muller-grid-root .wrap {
+                    position: relative;
+                    max-width: var(--maxw);
+                    margin: 0 auto;
+                    padding: var(--pad) var(--margin);
+                }
+
+                .muller-grid-root .muller-grid {
+                    display: grid;
+                    grid-template-columns: repeat(var(--cols), 1fr);
+                    column-gap: var(--gutter);
+                    row-gap: var(--lh);
+                }
+
+                .muller-grid-root .band {
+                    grid-column: 1 / -1;
+                    display: grid;
+                    grid-template-columns: subgrid;
+                    column-gap: var(--gutter);
+                    row-gap: var(--lh);
+                    align-items: start;
+                }
+
+                @supports not (grid-template-columns: subgrid) {
+                    .muller-grid-root .band {
+                        grid-template-columns: repeat(var(--cols), 1fr);
+                    }
+                }
+
+                .muller-grid-root .guides {
+                    position: absolute;
+                    inset: 0;
+                    pointer-events: none;
+                    z-index: 60;
+                    opacity: 0;
+                    transition: opacity 0.25s ease;
+                }
+
+                body.grid-on .muller-grid-root .guides {
+                    opacity: 1;
+                }
+
+                .muller-grid-root .guides .cols {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: var(--margin);
+                    right: var(--margin);
+                    display: grid;
+                    grid-template-columns: repeat(var(--cols), 1fr);
+                    column-gap: var(--gutter);
+                }
+
+                .muller-grid-root .guides .col {
+                    background: var(--g-col);
+                    box-shadow: inset 1px 0 0 var(--g-edge), inset -1px 0 0 var(--g-edge);
+                    position: relative;
+                }
+
+                .muller-grid-root .guides .col span {
+                    position: absolute;
+                    top: 32px;
+                    left: 0;
+                    right: 0;
+                    text-align: center;
+                    font-family: "Space Mono", monospace;
+                    font-size: 10px;
+                    line-height: 1;
+                    color: var(--accent);
+                }
+
+                .muller-grid-root .guides .rows {
+                    position: absolute;
+                    left: var(--margin);
+                    right: var(--margin);
+                    top: var(--pad);
+                    bottom: 0;
+                    background-image: 
+                        repeating-linear-gradient(to bottom, var(--g-base) 0 1px, transparent 1px var(--lh)),
+                        repeating-linear-gradient(to bottom, var(--g-base-min) 0 1px, transparent 1px var(--bl));
+                }
+
+                .muller-grid-root .guides .mline {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    width: 1px;
+                    background: var(--g-edge);
+                }
+
+                .muller-grid-root .guides .mline.l { left: var(--margin); }
+                .muller-grid-root .guides .mline.r { right: var(--margin); }
+
+                /* Typography snapper */
+                .muller-grid-root .masthead {
+                    font-family: "Inter", sans-serif;
+                    font-weight: 900;
+                    font-size: 64px;
+                    line-height: 64px;
+                    letter-spacing: -0.04em;
+                    text-transform: uppercase;
+                    margin: 0;
+                }
+
+                .muller-grid-root .mono-label {
+                    font-family: "Space Mono", monospace;
+                    font-size: 11px;
+                    line-height: 16px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.12em;
+                    color: var(--accent);
+                    display: block;
+                }
+
+                .muller-grid-root .pill-card {
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    background: rgba(255, 255, 255, 0.01);
+                    padding: 24px;
+                    transition: all 0.2s ease;
+                }
+                .muller-grid-root .pill-card:hover {
+                    border-color: var(--accent);
+                    background: rgba(251, 191, 36, 0.02);
+                }
+
+                @media (max-width: 992px) {
+                    .muller-grid-root {
+                        --margin: 40px;
+                        --gutter: 16px;
+                        --pad: 64px;
+                    }
+                    .muller-grid-root .masthead {
+                        font-size: 48px;
+                        line-height: 48px;
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    .muller-grid-root {
+                        --margin: 20px;
+                        --gutter: 12px;
+                        --pad: 40px;
+                    }
+                    .muller-grid-root .masthead {
+                        font-size: 36px;
+                        line-height: 36px;
+                    }
+                }
+            `}</style>
+
             <AuthPromptModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+            
             {/* Header */}
-            <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+            <header className="fixed top-0 left-0 right-0 bg-[#0a0f1d]/90 backdrop-blur-md z-50 border-b border-slate-800 transition-all duration-300">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         <button 
                             onClick={() => navigate('/portals')}
-                            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-350 hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer hidden sm:block"
+                            className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors cursor-pointer hidden sm:block"
                             title="App Launcher"
                         >
                             <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -152,79 +437,156 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
                             </svg>
                         </button>
                         <div 
-                            className="flex items-center cursor-pointer group"
+                            className="flex items-center cursor-pointer shrink-0" 
                             onClick={() => navigate('/welcome')}
                         >
-                            <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+                            <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-8 w-auto object-contain" />
                         </div>
+                    </div>
+
+                    <nav className={`hidden lg:flex items-center gap-6 ${isRtl ? 'flex-row-reverse' : ''}`}>
+                        <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+                            Academy
+                        </a>
+                        <div className="w-[1px] h-3 bg-slate-800 self-center" />
+                        <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+                            Open Source
+                        </a>
+                        <div className="w-[1px] h-3 bg-slate-800 self-center" />
+                        <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+                            Docs & Blog
+                        </a>
+                        <div className="w-[1px] h-3 bg-slate-800 self-center" />
+                        <a href="/about" className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+                            About
+                        </a>
+                    </nav>
+
+                    <div className="hidden md:flex items-center">
+                        <button onClick={onGetStarted} className="bg-[#FBBF24] text-[#111827] font-bold text-xs uppercase tracking-wider px-6 py-3 rounded hover:bg-[#f59e0b] transition-all flex items-center gap-2 active:scale-95 shadow-md shadow-[#FBBF24]/20">
+                            Launch Ecosystem
+                        </button>
+                    </div>
+
+                    <div className="flex lg:hidden items-center">
+                        <button className="p-1 text-white hover:text-[#FBBF24] bg-transparent border-none cursor-pointer" onClick={() => setIsMenuOpen(true)}>
+                            <Menu className="w-6 h-6" />
+                        </button>
                     </div>
                 </div>
             </header>
 
-            <main className="container mx-auto px-6 py-12 md:py-20">
-                <div className="mb-12">
-                    <button 
-                        onClick={() => navigate(-1)} 
-                        className="flex items-center gap-2 text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 font-bold mb-8 transition-colors"
-                    >
-                        <ArrowLeft className="w-5 h-5" /> Back
+            {/* Mobile Menu */}
+            {isMenuOpen && (
+                <div className="fixed inset-0 bg-[#111827]/95 z-50 md:hidden flex flex-col p-8">
+                    <button onClick={() => setIsMenuOpen(false)} className="absolute top-6 right-6 p-1 text-white hover:text-[#FBBF24] bg-transparent border-none cursor-pointer">
+                        <X className="w-8 h-8" />
                     </button>
-                    <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-4 text-slate-900 dark:text-white">Our Blog</h1>
-                    <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 font-medium max-w-2xl">
-                        News, updates, and educational insights from the Code for Tomorrow team.
-                    </p>
+                    <nav className="flex flex-col space-y-6 mt-16 text-center">
+                        <a href={getPlatformHref('academy', '/dashboard')} className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">Academy</a>
+                        <a href={getPlatformHref('os', '/cftos')} className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">Open Source</a>
+                        <a href={getPlatformHref('docs', '/blog')} className="text-xl font-black uppercase text-[#FBBF24]">Docs & Blog</a>
+                        <a href="/about" className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">About</a>
+                        <button onClick={onGetStarted} className="mt-8 bg-[#FBBF24] text-[#111827] font-bold px-8 py-4 rounded text-lg hover:bg-[#f59e0b]">
+                            Launch Ecosystem
+                        </button>
+                    </nav>
                 </div>
+            )}
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {blogPosts.map(post => (
-                        <div 
-                            key={post.id} 
-                            onClick={() => navigate(`/blog/${post.id}`)}
-                            className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group flex flex-col cursor-pointer"
-                        >
-                            <div className="relative h-48 overflow-hidden bg-slate-200 dark:bg-slate-800">
-                                <img 
-                                    src={post.image} 
-                                    alt={post.title} 
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                />
-                                <div className="absolute top-4 left-4 flex gap-2">
-                                    <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider text-brand-600 dark:text-brand-400 shadow-sm">
-                                        {post.category}
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={(e) => handleSavePost(e, post.id)}
-                                    className={`absolute top-4 right-4 p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm ${currentUser?.savedPosts?.includes(post.id) ? 'bg-brand-500 text-white' : 'bg-white/90 dark:bg-slate-900/90 text-slate-500 hover:text-brand-500'}`}
+            <section className="spread pt-16">
+                <div className="wrap">
+                    <div className="muller-grid">
+                        
+                        {/* Title Band */}
+                        <div className="band mb-16">
+                            <div style={{ gridColumn: '1 / 13' }}>
+                                <button 
+                                    onClick={() => navigate(-1)} 
+                                    className="flex items-center gap-2 text-slate-450 hover:text-[#FBBF24] font-bold mb-8 transition-colors text-xs uppercase tracking-wider bg-transparent border-none cursor-pointer"
                                 >
-                                    <Bookmark className={`w-4 h-4 ${currentUser?.savedPosts?.includes(post.id) ? 'fill-current' : ''}`} />
+                                    <ArrowLeft className="w-4 h-4" /> Back
                                 </button>
-                            </div>
-                            <div className="p-8 flex flex-col flex-1">
-                                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-3 line-clamp-2 mix-blend-luminosity">
-                                    {post.title}
-                                </h2>
-                                <p className="text-slate-500 dark:text-slate-400 text-sm mb-6 line-clamp-3 font-medium flex-1">
-                                    {post.excerpt}
+                                <span className="mono-label opt-align">CFT PUBLICATION</span>
+                                <h1 className="masthead opt-align mt-2">Our Blog</h1>
+                                <p className="text-slate-400 text-base font-semibold mt-4 max-w-2xl leading-relaxed">
+                                    News, updates, and educational insights from the Code for Tomorrow team.
                                 </p>
-                                <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
-                                    <div className="flex flex-col gap-1">
-                                        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400">
-                                            <User className="w-3.5 h-3.5" /> {post.author}
-                                        </div>
-                                        <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                                            <Calendar className="w-3.5 h-3.5" /> {post.date}
-                                        </div>
-                                    </div>
-                                    <button className="w-10 h-10 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition-colors">
-                                        <ChevronRight className="w-5 h-5" />
-                                    </button>
-                                </div>
                             </div>
                         </div>
-                    ))}
+
+                        {/* Cards Band */}
+                        <div className="band">
+                            {blogPosts.map((post, i) => {
+                                // Design asymmetrical column placements based on index
+                                const colSpanMap = [
+                                    '1 / 5',   // Item 1
+                                    '5 / 9',   // Item 2
+                                    '9 / 13',  // Item 3
+                                    '1 / 7',   // Item 4 (wider grid span)
+                                    '7 / 13',  // Item 5 (wider grid span)
+                                    '1 / 5',   // Item 6
+                                    '5 / 9',   // Item 7
+                                    '9 / 13',  // Item 8
+                                    '1 / 13'   // Item 9 (hero focus span)
+                                ];
+                                const colSpan = colSpanMap[i % colSpanMap.length];
+
+                                return (
+                                    <div 
+                                        key={post.id} 
+                                        onClick={() => navigate(`/blog/${post.id}`)}
+                                        style={{ gridColumn: colSpan }}
+                                        className="pill-card rounded-[2rem] overflow-hidden group flex flex-col cursor-pointer"
+                                    >
+                                        <div className="relative h-48 overflow-hidden bg-slate-900 border-b border-slate-800">
+                                            <img 
+                                                src={post.image} 
+                                                alt={post.title} 
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                            />
+                                            <div className="absolute top-4 left-4 flex gap-2">
+                                                <div className="bg-[#0a0f1d]/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-[#FBBF24] border border-[#FBBF24]/30 shadow-sm">
+                                                    {post.category}
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={(e) => handleSavePost(e, post.id)}
+                                                className={`absolute top-4 right-4 p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm border ${currentUser?.savedPosts?.includes(post.id) ? 'bg-[#FBBF24] border-[#FBBF24] text-slate-950' : 'bg-[#0a0f1d]/95 border-slate-800 text-slate-400 hover:text-[#FBBF24]'}`}
+                                            >
+                                                <Bookmark className={`w-4 h-4 ${currentUser?.savedPosts?.includes(post.id) ? 'fill-current' : ''}`} />
+                                            </button>
+                                        </div>
+                                        <div className="pt-6 flex flex-col flex-1">
+                                            <h2 className="text-xl font-bold text-white mb-3 line-clamp-2 transition-colors group-hover:text-[#FBBF24]">
+                                                {post.title}
+                                            </h2>
+                                            <p className="text-slate-400 text-sm mb-6 line-clamp-3 leading-relaxed font-semibold flex-1">
+                                                {post.excerpt}
+                                            </p>
+                                            <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-800">
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
+                                                        <User className="w-3.5 h-3.5" /> {post.author}
+                                                    </div>
+                                                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-semibold">
+                                                        <Calendar className="w-3.5 h-3.5" /> {post.date}
+                                                    </div>
+                                                </div>
+                                                <button className="w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center group-hover:bg-[#FBBF24] group-hover:text-slate-950 transition-colors border-none cursor-pointer">
+                                                    <ChevronRight className="w-5 h-5" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                    </div>
+                    {renderGuides()}
                 </div>
-            </main>
+            </section>
         </div>
     );
 }
