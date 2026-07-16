@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { ProgrammingPath } from '../../types';
@@ -8,38 +8,6 @@ import Mascot from '../Mascot';
 interface PathSelectionScreenProps {
   onPathSelected: (pathId: ProgrammingPath['id']) => void;
 }
-
-const getPathStyle = (pathId: string) => {
-  const blueStyle = {
-    cardBg: 'bg-[#2E2FCE] hover:bg-[#2324ba] shadow-[#2E2FCE]/10 border-blue-400/20',
-    textColor: 'text-white',
-    descColor: 'text-blue-100/80',
-    iconBg: 'bg-white/15 border-white/10',
-  };
-  const yellowStyle = {
-    cardBg: 'bg-[#FDD501] hover:bg-[#e0be00] shadow-yellow-500/10 border-yellow-600/20',
-    textColor: 'text-slate-900',
-    descColor: 'text-slate-700/95',
-    iconBg: 'bg-black/5 border-black/5',
-  };
-
-  switch (pathId) {
-    case 'block_coding':
-    case 'javascript':
-    case 'web_dev':
-    case 'java':
-    case 'swift':
-      return blueStyle;
-    case 'python':
-    case 'lua':
-    case 'sql':
-    case 'rust':
-    case 'go':
-      return yellowStyle;
-    default:
-      return blueStyle;
-  }
-};
 
 const getEnrolledCount = (pathId: string) => {
   const counts: Record<string, number> = {
@@ -72,71 +40,123 @@ const PathSelectionScreen: React.FC<PathSelectionScreenProps> = ({ onPathSelecte
     navigate(`/dashboard/learn/${pathId}`);
   };
 
+  // Runtime Optical Alignment
+  useEffect(() => {
+    const alignInk = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      document.querySelectorAll('.opt-align').forEach((el) => {
+        const htmlEl = el as HTMLElement;
+        htmlEl.style.marginLeft = '0px';
+        const style = window.getComputedStyle(htmlEl);
+        const char = (htmlEl.textContent || '').trim().charAt(0);
+        if (!char) return;
+
+        ctx.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+        ctx.textAlign = 'left';
+        const metrics = ctx.measureText(char);
+        const sideBearing = metrics.actualBoundingBoxLeft;
+
+        if (isFinite(sideBearing) && sideBearing > 0) {
+          htmlEl.style.marginLeft = `${sideBearing.toFixed(2)}px`;
+        }
+      });
+    };
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(alignInk);
+    }
+    alignInk();
+    window.addEventListener('resize', alignInk);
+    return () => window.removeEventListener('resize', alignInk);
+  }, []);
+
   return (
-    <div className="transition-colors flex flex-col items-center justify-start py-6 px-4 overflow-x-hidden">
-      <header className="text-center mb-12 flex flex-col items-center max-w-2xl">
-        <div className="w-24 h-24 mb-6">
+    <div className="w-full max-w-5xl mx-auto flex flex-col items-center justify-start py-6 px-4">
+      {/* Intro Header */}
+      <div className="flex flex-col items-center text-center space-y-4 mb-16">
+        <div className="w-24 h-24 mb-4 drop-shadow-[0_0_20px_rgba(251,191,36,0.15)]">
           <Mascot />
         </div>
-        <h1 className="text-4xl md:text-5xl font-black text-[#2E2FCE] dark:text-white tracking-tight mb-3 drop-shadow-sm">
+        <span className="mono-label opt-align">C4T ACADEMY CURRICULUM</span>
+        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mt-2 mb-3 opt-align">
           {t('choose_your_path')}
         </h1>
-        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 leading-relaxed">
+        <p className="text-slate-400 text-sm font-semibold max-w-2xl leading-relaxed">
           Select a path to begin your coding adventure! Each path offers interactive lessons, fun games, and customized rewards.
         </p>
-      </header>
+      </div>
 
-      <main className="max-w-6xl w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2">
+      {/* Path Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
         {PATHS.map((path) => {
-          const style = getPathStyle(path.id);
           return (
             <button
               key={path.id}
               onClick={() => handleSelect(path.id)}
               disabled={!path.isAvailable}
-              className={`relative p-8 rounded-3xl shadow-xl transition-all duration-300 flex flex-col justify-between min-h-[220px] text-left border
-                ${style.cardBg}
+              className={`group pill-card rounded-[2rem] transition-all duration-300 flex flex-col justify-between min-h-[300px] overflow-hidden text-left border bg-slate-900/30 border-slate-800/80 hover:border-[#FBBF24] p-0
                 ${!path.isAvailable 
                   ? 'opacity-40 cursor-not-allowed filter grayscale' 
-                  : 'hover:scale-[1.03] cursor-pointer hover:shadow-2xl'
+                  : 'hover:scale-[1.02] cursor-pointer hover:shadow-2xl'
                 }
               `}
+              style={{ padding: '0px' }}
             >
-              <div className="flex justify-between items-start w-full mb-6">
-                {path.isAvailable ? (
-                  <span className={`text-[10px] font-extrabold px-3 py-1.5 rounded-full backdrop-blur-md border border-white/10 flex items-center gap-1 ${style.iconBg} ${style.textColor}`}>
-                     {getEnrolledCount(path.id)} enrolled
+              {/* Top Row: Floating Icon / Badge */}
+              <div className="flex justify-between items-start w-full px-6 pt-6">
+                {!path.isAvailable ? (
+                  <span className="text-[9px] font-black px-2.5 py-1 rounded bg-slate-800/35 border border-slate-800 text-slate-500 uppercase tracking-widest">
+                    Locked
                   </span>
                 ) : (
-                  <span className="text-[10px] font-extrabold px-3 py-1.5 rounded-full bg-slate-800/20 border border-slate-700/10 text-slate-400">
-                    Coming Soon
-                  </span>
+                  <div />
                 )}
-                <div className={`p-3 rounded-2xl backdrop-blur-md border flex items-center justify-center w-16 h-16 shrink-0 shadow-inner ${style.iconBg}`}>
+                
+                {/* Floating Logo (no container box) */}
+                <div className="w-12 h-12 flex items-center justify-center shrink-0">
                   {path.icon.startsWith('http') || path.icon.startsWith('/') ? (
                     <img 
                       src={path.icon} 
                       alt="" 
-                      className="w-10 h-10 object-contain filter drop-shadow-sm" 
+                      className="w-full h-full object-contain filter drop-shadow-sm transition-transform group-hover:scale-110 duration-300" 
                       referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <span className="text-4xl">{path.icon}</span>
+                    <span className="text-3xl select-none transition-transform group-hover:scale-110 duration-300">{path.icon}</span>
                   )}
                 </div>
               </div>
-              <div>
-                <h2 className={`text-2xl font-black tracking-tight leading-none mb-2.5 ${style.textColor}`}>
+
+              {/* Middle Row: Title & Description inside common text container */}
+              <div className="px-6 flex-grow flex flex-col justify-center min-h-[120px] mt-4">
+                <h2 className="text-2xl font-black tracking-tight leading-tight mb-2 text-white group-hover:text-[#FBBF24] transition-colors">
                   {t(path.titleKey as any)}
                 </h2>
-                <p className={`text-xs font-semibold leading-normal line-clamp-3 ${style.descColor}`}>
+                <p className="text-xs font-semibold leading-relaxed text-slate-200 line-clamp-3">
                   {t(path.descriptionKey as any)}
                 </p>
+              </div>
+
+              {/* Bottom Row: Soft Metadata Footer */}
+              <div className="px-6 pb-6 w-full">
+                {path.isAvailable ? (
+                  <div className="text-[9px] font-black uppercase tracking-wider text-slate-400 pt-3 border-t border-slate-800/60 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FBBF24]" />
+                    <span>{getEnrolledCount(path.id)} enrolled</span>
+                  </div>
+                ) : (
+                  <div className="text-[9px] font-black uppercase tracking-wider text-slate-500 pt-3 border-t border-slate-800/60">
+                    Coming Soon
+                  </div>
+                )}
               </div>
             </button>
           );
         })}
-      </main>
+      </div>
     </div>
   );
 };
