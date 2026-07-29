@@ -209,6 +209,33 @@ const content = {
   }
 };
 
+const GALLERY_PHOTOS = [
+  { 
+    src: '/assets/images/about_media_1.jpg', 
+    alt: 'Students learning', 
+    span: '1 / 7', 
+    desc: 'Students learning with tablets in rural Morocco' 
+  },
+  { 
+    src: '/assets/images/about_media_2.jpg', 
+    alt: 'Outdoors session', 
+    span: '7 / 13', 
+    desc: 'Outdoor interactive session under trees' 
+  },
+  { 
+    src: '/assets/images/about_media_3.jpg', 
+    alt: 'Classroom coding', 
+    span: '1 / 7', 
+    desc: 'Classroom digital lesson engagement' 
+  },
+  { 
+    src: '/assets/images/about_media_4.jpg', 
+    alt: 'Partner school group', 
+    span: '7 / 13', 
+    desc: 'Moroccan school coding club group' 
+  }
+];
+
 interface AboutScreenProps {
   currentUser?: any;
 }
@@ -922,14 +949,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
             </div>
 
             <div className="band mt-8">
-              {[
-                { src: '/assets/images/about_media_1.jpg', alt: 'Students learning', span: '1 / 5' },
-                { src: '/assets/images/about_media_2.jpg', alt: 'Outdoors session', span: '5 / 9' },
-                { src: '/assets/images/about_media_3.jpg', alt: 'Classroom coding', span: '9 / 13' },
-                { src: '/assets/images/about_media_4.jpg', alt: 'Partner school group', span: '1 / 5' },
-                { src: '/assets/images/about_media_5.png', alt: 'Generation Connect ITU Alliance', span: '5 / 9' },
-                { src: '/assets/images/about_media_6.png', alt: 'ITU International Delegates', span: '9 / 13' }
-              ].map((img, idx) => (
+              {GALLERY_PHOTOS.map((img, idx) => (
                 <div
                   key={idx}
                   style={{ gridColumn: img.span }}
@@ -991,7 +1011,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              setSelectedPhotoIndex((prev) => (prev !== null ? (prev - 1 + 6) % 6 : null));
+              setSelectedPhotoIndex((prev) => (prev !== null ? (prev - 1 + GALLERY_PHOTOS.length) % GALLERY_PHOTOS.length : null));
             }}
             className="absolute left-6 p-3 text-white/70 hover:text-white bg-slate-800/50 rounded-full hover:bg-slate-700/50 transition-all border border-slate-700 cursor-pointer z-10"
             aria-label="Previous photo"
@@ -1000,35 +1020,25 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
           </button>
 
           <div className="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center" onClick={(e) => e.stopPropagation()}>
-            <img 
-              src={[
-                '/assets/images/about_media_1.jpg',
-                '/assets/images/about_media_2.jpg',
-                '/assets/images/about_media_3.jpg',
-                '/assets/images/about_media_4.jpg',
-                '/assets/images/about_media_5.png',
-                '/assets/images/about_media_6.png'
-              ][selectedPhotoIndex]} 
-              alt="Fullscreen view" 
-              className="max-w-full max-h-[75vh] object-contain rounded-lg border border-slate-800 shadow-2xl"
-            />
-            <p className="text-slate-300 mt-4 text-xs font-bold bg-slate-900/60 px-4 py-2 rounded-full border border-slate-800 text-center max-w-lg">
-              {[
-                'Students learning with tablets in rural Morocco',
-                'Outdoor interactive session under trees',
-                'Classroom digital lesson engagement',
-                'Moroccan school coding club group',
-                'Generation Connect & ITU Global Alliance partnership',
-                'ITU Summit of international youth delegates'
-              ][selectedPhotoIndex]}
-            </p>
+            {selectedPhotoIndex !== null && GALLERY_PHOTOS[selectedPhotoIndex] && (
+              <>
+                <img 
+                  src={GALLERY_PHOTOS[selectedPhotoIndex].src} 
+                  alt="Fullscreen view" 
+                  className="max-w-full max-h-[75vh] object-contain rounded-lg border border-slate-800 shadow-2xl"
+                />
+                <p className="text-slate-300 mt-4 text-xs font-bold bg-slate-900/60 px-4 py-2 rounded-full border border-slate-800 text-center max-w-lg">
+                  {GALLERY_PHOTOS[selectedPhotoIndex].desc}
+                </p>
+              </>
+            )}
           </div>
 
           <button 
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              setSelectedPhotoIndex((prev) => (prev !== null ? (prev + 1) % 6 : null));
+              setSelectedPhotoIndex((prev) => (prev !== null ? (prev + 1) % GALLERY_PHOTOS.length : null));
             }}
             className="absolute right-6 p-3 text-white/70 hover:text-white bg-slate-800/50 rounded-full hover:bg-slate-700/50 transition-all border border-slate-700 cursor-pointer z-10"
             aria-label="Next photo"
