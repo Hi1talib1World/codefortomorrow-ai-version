@@ -11,7 +11,7 @@ interface Question {
     questionText: string;
     options: { label: string; value: string }[];
     correctAnswer: string;
-    category: 'math' | 'logic' | 'problem-solving' | 'python' | 'web' | 'algo' | 'cyber';
+    category: 'math' | 'logic' | 'problem-solving' | 'python' | 'web' | 'algo' | 'cyber' | 'kids';
     imageUrl?: string;
 }
 
@@ -62,6 +62,8 @@ const LOGIC_QUESTIONS: Omit<Question, 'id'>[] = [
     { questionText: 'If A > B, B > C, and C > D, which is the smallest?', options: [{ label: 'A', value: 'A' }, { label: 'B', value: 'B' }, { label: 'C', value: 'C' }, { label: 'D', value: 'D' }], correctAnswer: 'D', category: 'logic' },
     { questionText: 'In a race you pass the person in 2nd place. What place are you in now?', options: [{ label: 'A', value: '1st' }, { label: 'B', value: '2nd' }, { label: 'C', value: '3rd' }, { label: 'D', value: 'Last' }], correctAnswer: '2nd', category: 'logic' },
     { questionText: 'If it takes 5 machines 5 minutes to make 5 widgets, how long for 100 machines to make 100 widgets?', options: [{ label: 'A', value: '100 min' }, { label: 'B', value: '5 min' }, { label: 'C', value: '20 min' }, { label: 'D', value: '1 min' }], correctAnswer: '5 min', category: 'logic' },
+];
+
 const KIDS_QUESTIONS: Omit<Question, 'id'>[] = [
     { questionText: '🤖 Robo needs to cross the grid. Which order of commands reaches the star?', options: [{ label: 'A', value: 'Forward -> Turn Right -> Forward' }, { label: 'B', value: 'Turn Right -> Stop' }, { label: 'C', value: 'Turn Left -> Turn Left' }, { label: 'D', value: 'Backwards -> Backward' }], correctAnswer: 'Forward -> Turn Right -> Forward', category: 'kids' },
     { questionText: '🐒 To eat 5 bananas with a loop, how many times does the monkey repeat "Eat Banana"?', options: [{ label: 'A', value: '1 time' }, { label: 'B', value: '5 times' }, { label: 'C', value: '10 times' }, { label: 'D', value: '0 times' }], correctAnswer: '5 times', category: 'kids' },
