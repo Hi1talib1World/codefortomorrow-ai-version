@@ -7,6 +7,7 @@ import { User as UserType } from '../../types';
 import api from '../../services/api';
 import { useToast } from '../ToastNotification';
 import { PATHS, LESSONS_BY_PATH } from '../../constants';
+import { Sparkles, Flame, Trophy, Target, Compass, BookOpen, ArrowRight, Zap } from 'lucide-react';
 
 interface HomeHubScreenProps {
     onNavigate: (view: DashboardView) => void;
@@ -329,18 +330,19 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 <div className="max-w-6xl mx-auto space-y-6 relative z-10">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
                         <div className="flex flex-col gap-2.5 text-left">
-                            <div className="flex flex-wrap items-center gap-4">
-                                <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-16 w-auto" />
-                                <h1 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight flex items-center flex-wrap gap-2">
-                                    <span></span> Hello, {userName}!
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black bg-brand-500/10 text-brand-600 dark:bg-indigo-950/40 dark:text-indigo-300 border border-brand-500/20 select-none">
+                            <div className="flex flex-wrap items-center gap-3">
+                                <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-12 w-auto object-contain" />
+                                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center flex-wrap gap-2">
+                                    <Sparkles className="w-6 h-6 text-amber-500" />
+                                    <span>Hello, {userName}!</span>
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black bg-blue-500/10 text-blue-600 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-500/20 select-none">
                                         Level {Math.floor(xp / 100) + 1}
                                     </span>
                                 </h1>
                             </div>
                             {streak >= 3 && (
                                 <div className="inline-flex items-center gap-1.5 self-start">
-                                    <span className="text-xs"></span>
+                                    <Flame className="w-4 h-4 text-orange-500 animate-pulse" />
                                     <p className="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest leading-none">
                                         Streak Multiplier: {streak >= 5 ? '1.5x XP Active!' : '1.2x XP Active!'}
                                     </p>
@@ -348,13 +350,13 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             )}
                             {/* Level Progress Bar */}
                             <div className="w-64 mt-1">
-                                <div className="flex justify-between items-center text-[10px] font-black text-slate-450 dark:text-slate-500 mb-1 select-none">
+                                <div className="flex justify-between items-center text-[10px] font-black text-slate-500 dark:text-slate-400 mb-1 select-none">
                                     <span>Level {Math.floor(xp / 100) + 1} Progress</span>
                                     <span>{xp % 100} / 100 XP</span>
                                 </div>
-                                <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200/40 dark:border-slate-700/40">
+                                <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
                                     <div 
-                                        className="h-full bg-gradient-to-r from-brand-500 to-indigo-600 transition-all duration-500 rounded-full" 
+                                        className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 transition-all duration-500 rounded-full" 
                                         style={{ width: `${xp % 100}%` }}
                                     />
                                 </div>
@@ -363,18 +365,18 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         
                         {/* Streak & Points display on Home Page */}
                         <div className="flex items-center gap-3.5 self-start sm:self-auto">
-                            <div className="flex items-center gap-2 text-red-500 dark:text-red-400 font-black text-sm bg-red-500/10 px-4 py-2 rounded-2xl border border-red-500/20 shadow-sm transition-transform hover:scale-105 duration-200">
-                                <span className="text-lg"></span>
+                            <div className="flex items-center gap-2 text-red-500 dark:text-red-400 font-black text-sm bg-red-500/10 px-4 py-2.5 rounded-2xl border border-red-500/20 shadow-xs transition-transform hover:scale-105 duration-200">
+                                <Flame className="w-5 h-5 text-red-500" />
                                 <div className="text-left leading-none">
-                                    <p className="text-sm font-black text-slate-800 dark:text-white">{streak}</p>
-                                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mt-0.5">Day Streak</p>
+                                    <p className="text-sm font-black text-slate-900 dark:text-white">{streak}</p>
+                                    <p className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mt-0.5">Day Streak</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2 text-amber-500 dark:text-amber-400 font-black text-sm bg-amber-500/10 px-4 py-2 rounded-2xl border border-amber-500/20 shadow-sm transition-transform hover:scale-105 duration-200">
-                                <span className="text-lg"></span>
+                            <div className="flex items-center gap-2 text-amber-500 dark:text-amber-400 font-black text-sm bg-amber-500/10 px-4 py-2.5 rounded-2xl border border-amber-500/20 shadow-xs transition-transform hover:scale-105 duration-200">
+                                <Trophy className="w-5 h-5 text-amber-500" />
                                 <div className="text-left leading-none">
-                                    <p className="text-sm font-black text-slate-800 dark:text-white">{xp}</p>
-                                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mt-0.5">Total XP</p>
+                                    <p className="text-sm font-black text-slate-900 dark:text-white">{xp}</p>
+                                    <p className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mt-0.5">Total XP</p>
                                 </div>
                             </div>
                         </div>

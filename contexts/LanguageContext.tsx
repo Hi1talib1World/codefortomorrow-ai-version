@@ -505,6 +505,16 @@ const translations = {
     js_hint_14: '"some string".toUpperCase() returns a new uppercase string.',
     js_hint_15: 'Use Math.max(...scores) — the spread (...) unpacks the array into arguments.',
 
+    // ─── New Programming Paths ─────────────────────────────────────────────
+    shell: 'Shell & Bash',
+    shell_desc: 'Automate tasks & control Linux terminals',
+    ai_ml: 'AI & Data Science',
+    ai_ml_desc: 'Neural Networks, AI models & Machine Learning',
+    cybersecurity: 'Cybersecurity',
+    cybersecurity_desc: 'Ethical hacking, encryption & network defense',
+    assembly: 'Assembly Language',
+    assembly_desc: 'Low-level CPU registers & hardware architecture',
+
     // ─── Web Dev Chapter 3 lesson titles ─────────────────────────────────────
     web_forms: 'HTML Forms',
     web_css_variables: 'CSS Variables',

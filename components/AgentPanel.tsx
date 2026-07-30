@@ -53,19 +53,41 @@ const getAgentIcon = (agentId: string, className = "w-5 h-5") => {
   }
 };
 
+const AGENT_SKILLS: Record<string, { id: string; label: string; prompt: string }[]> = {
+  'curriculum-factory': [
+    { id: 'gamified_builder', label: '🎮 Gamified Challenge Builder', prompt: 'Generate an interactive gamified coding boss fight and maze exercise in Python.' },
+    { id: 'national_mapper', label: '📜 National Curriculum Mapper', prompt: 'Map our Python & JS modules to Morocco & Tunisian National CS Standards.' },
+    { id: 'test_synthesizer', label: '🧪 Unit Test Synthesizer', prompt: 'Generate 5 robust edge-case validation tests and memory-limit assertions for arrays.' },
+    { id: 'audio_script', label: '🎙️ Audio & Voice Generator', prompt: 'Draft a bilingual Speaking Hub audio script in Moroccan Darija and French for lesson 1.' },
+  ],
+  'student-analytics': [
+    { id: 'retention_predictor', label: '📈 Churn & Retention Predictor', prompt: 'Predict student XP decay curves and retention rates for the next 30 days.' },
+    { id: 'skill_graph_mapper', label: '🎯 Prerequisite Skill Graph', prompt: 'Map prerequisite skill gaps for students struggling with loops and functions.' },
+    { id: 'cheat_detector', label: '🛡️ Plagiarism & Anomaly Detector', prompt: 'Scan activity logs for copy-pasted solutions and anomalous submission speeds.' },
+    { id: 'socratic_mentor', label: '💬 Socratic Debug Mentor', prompt: 'Generate 3 step-by-step debug hint clues for a student stuck on recursion.' },
+  ],
+  'b2b-sales': [
+    { id: 'b2g_rfp', label: '🏢 Government Grant & RFP Draft', prompt: 'Draft a B2G RFP tender grant proposal for 50 public schools in North Africa.' },
+    { id: 'offline_hotspot', label: '📡 Offline Hotspot Deployer', prompt: 'Package an offline Raspberry Pi / Ollama hotspot deployment bundle for rural classrooms.' },
+    { id: 'roi_calculator', label: '💰 Tiered License & ROI Calculator', prompt: 'Calculate seat volume discount tiers and ARR projection for 5,000 student seats.' },
+    { id: 'exec_dashboard', label: '📊 School Executive Report', prompt: 'Generate a monthly administrative impact report for ministry stakeholders.' },
+  ],
+};
+
 const AgentPanel: React.FC<AgentPanelProps> = ({ agent, logs, onCommand, onTogglePause }) => {
   const [command, setCommand] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = async (e?: React.FormEvent) => {
+  const handleSubmit = async (e?: React.FormEvent, customCommand?: string) => {
     if (e) e.preventDefault();
-    if (!command.trim() || isSending) return;
+    const textToSend = customCommand || command.trim();
+    if (!textToSend || isSending) return;
     setIsSending(true);
     try {
-      await onCommand(agent.id, command.trim());
-      setCommand('');
+      await onCommand(agent.id, textToSend);
+      if (!customCommand) setCommand('');
     } finally {
       setIsSending(false);
     }
@@ -133,6 +155,8 @@ const AgentPanel: React.FC<AgentPanelProps> = ({ agent, logs, onCommand, onToggl
       timestamp: log.timestamp,
     };
   });
+
+  const activeSkills = AGENT_SKILLS[agent.id] || [];
 
   return (
     <section className="flex flex-col h-[650px] rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-xl shadow-slate-100/50 dark:shadow-none">
@@ -303,6 +327,24 @@ const AgentPanel: React.FC<AgentPanelProps> = ({ agent, logs, onCommand, onToggl
         <div ref={messagesEndRef} />
       </div>
 
+      {/* SPECIALIZED AGENT SKILLS BAR */}
+      <div className="px-6 py-2.5 bg-slate-50 dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 overflow-x-auto">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 shrink-0">Skills Catalog:</span>
+        <div className="flex items-center gap-1.5 shrink-0 overflow-x-auto py-0.5">
+          {activeSkills.map((skill) => (
+            <button
+              key={skill.id}
+              type="button"
+              onClick={() => handleSubmit(undefined, skill.prompt)}
+              disabled={isSending || agent.status === 'Offline' || agent.status === 'Working'}
+              className="px-3 py-1 rounded-full bg-white dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 border border-slate-200 dark:border-slate-700 text-xs font-semibold whitespace-nowrap shadow-2xs transition-all cursor-pointer disabled:opacity-50"
+            >
+              {skill.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Input area */}
       <form onSubmit={handleSubmit} className="border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4">
         <div className="flex items-center gap-2">
@@ -315,7 +357,7 @@ const AgentPanel: React.FC<AgentPanelProps> = ({ agent, logs, onCommand, onToggl
                 ? "Agent is offline..."
                 : agent.status === 'Working'
                 ? "Agent is working, please wait..."
-                : "Ask this agent a question or run a task..."
+                : "Ask this agent a question or run a specialized skill..."
             }
             className="min-w-0 flex-1 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 dark:focus:ring-brand-950 disabled:cursor-not-allowed disabled:opacity-60"
           />

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { User, Language } from '../../types';
 import api from '../../services/api';
 import { auth, firebaseService, handleGoogleRedirectResult, isFirebaseConfigured } from '../../src/services/external/firebase';
-import { Mail, Lock, User as UserIcon, Globe } from 'lucide-react';
+import { Mail, Lock, User as UserIcon, Globe, Eye, EyeOff, ArrowRight, ChevronDown, Check } from 'lucide-react';
 import { sendEmailVerification, signOut } from 'firebase/auth';
 
 const verifTranslations = {
@@ -53,27 +52,13 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);
   const [signupRole, setSignupRole] = useState<'student' | 'teacher'>('student');
-
-  // Advanced Interactive UI State
-  const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [showGrid, setShowGrid] = useState(false);
-
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'g' || e.key === 'G') {
-        setShowGrid(prev => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-  const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
 
   const clearForm = () => {
     setName('');
@@ -88,149 +73,10 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
     clearForm();
   };
 
-  // Simulated Boot sequence terminal logs
-  React.useEffect(() => {
-    const logEntries = isLoginView
-      ? [
-          'SEC_SYS: Initializing workspace handshake...',
-          'MASCOT: Loading interface telemetry...',
-          'GATEWAY: Google Auth API initialized.',
-          'STATUS: Secure login pathway ready.'
-        ]
-      : [
-          'SEC_SYS: Registering new profile entry...',
-          'NEURAL: Assigning skill graphs...',
-          'GATEWAY: Initializing user progression...',
-          'STATUS: Registration gateway ready.'
-        ];
-
-    setTerminalLogs([]);
-    let timerIds: number[] = [];
-
-    logEntries.forEach((log, index) => {
-      const id = window.setTimeout(() => {
-        setTerminalLogs(prev => [...prev, log]);
-      }, 200 + index * 350 + Math.random() * 150);
-      timerIds.push(id);
-    });
-
-    return () => {
-      timerIds.forEach(id => clearTimeout(id));
-    };
-  }, [isLoginView]);
-
-  // Cursor-reactive Canvas Particle Network
-  React.useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrameId: number;
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-
-    const particles: Array<{
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      radius: number;
-    }> = [];
-
-    const particleCount = 45;
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: (Math.random() - 0.5) * 0.45,
-        radius: Math.random() * 1.5 + 0.5,
-      });
-    }
-
-    let mouse = { x: -1000, y: -1000 };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    };
-
-    const handleMouseLeave = () => {
-      mouse.x = -1000;
-      mouse.y = -1000;
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseleave', handleMouseLeave);
-
-    const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    };
-    window.addEventListener('resize', handleResize);
-
-    const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-
-      for (let i = 0; i < particleCount; i++) {
-        const p1 = particles[i];
-        p1.x += p1.vx;
-        p1.y += p1.vy;
-
-        if (p1.x < 0 || p1.x > width) p1.vx *= -1;
-        if (p1.y < 0 || p1.y > height) p1.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(251, 191, 36, 0.2)';
-        ctx.fill();
-
-        for (let j = i + 1; j < particleCount; j++) {
-          const p2 = particles[j];
-          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-          if (dist < 100) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(251, 191, 36, ${0.1 * (1 - dist / 100)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-
-        if (mouse.x !== -1000) {
-          const mouseDist = Math.hypot(p1.x - mouse.x, p1.y - mouse.y);
-          if (mouseDist < 120) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(251, 191, 36, ${0.15 * (1 - mouseDist / 120)})`;
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
-          }
-        }
-      }
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  // Handle Google sign‑in redirect result on component mount
+  // Handle Google sign-in redirect result on component mount
   React.useEffect(() => {
     const processRedirect = async () => {
       const idToken = await handleGoogleRedirectResult();
-      console.log('Google redirect result token:', idToken);
       if (idToken) {
         try {
           const user = await api.loginWithFirebase(idToken);
@@ -247,17 +93,13 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
     if (auth.currentUser) {
       setIsLoading(true);
       setError('');
-      setTerminalLogs(prev => [...prev, 'SEC_SYS: Querying authentication state...']);
       try {
         await auth.currentUser.reload();
         if (auth.currentUser.emailVerified) {
-          setTerminalLogs(prev => [...prev, 'SEC_SYS: Authentication state: VERIFIED.']);
           const token = await auth.currentUser.getIdToken(true);
-          setTerminalLogs(prev => [...prev, 'SEC_SYS: Syncing session with database...']);
           const user = await api.loginWithFirebase(token);
           onAuthSuccess(user, signupRole);
         } else {
-          setTerminalLogs(prev => [...prev, 'SEC_SYS: Authentication state: UNVERIFIED.']);
           const currentLang = language as keyof typeof verifTranslations;
           const dict = verifTranslations[currentLang] || verifTranslations.en;
           setError(dict.err_not_verified);
@@ -275,10 +117,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
     if (auth.currentUser) {
       setIsLoading(true);
       setError('');
-      setTerminalLogs(prev => [...prev, 'SEC_SYS: Dispatching verification link...']);
       try {
         await sendEmailVerification(auth.currentUser);
-        setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification email resent successfully.']);
       } catch (err: any) {
         console.error('Resend verification error:', err);
         setError(err instanceof Error ? err.message : 'Failed to resend verification email.');
@@ -294,7 +134,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
       await signOut(auth);
       setNeedsVerification(false);
       clearForm();
-      setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification cancelled. Session closed.']);
     } catch (err: any) {
       console.error('Cancel verification error:', err);
       setError(err instanceof Error ? err.message : 'Error signing out.');
@@ -315,13 +154,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
         try {
           let token: string;
           if (isLoginView) {
-            console.log('Logging in via Firebase Auth...');
             token = await firebaseService.loginWithEmail(email, password);
-            console.log('Firebase ID token acquired.');
           } else {
-            console.log('Registering via Firebase Auth...');
             token = await firebaseService.registerWithEmail(email, password);
-            console.log('Firebase registration successful.');
             if (auth.currentUser) {
               try {
                 const { updateProfile } = await import('firebase/auth');
@@ -332,7 +167,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
 
               try {
                 await sendEmailVerification(auth.currentUser);
-                setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification email dispatched.']);
               } catch (verifErr) {
                 console.error('Failed to send verification email on register:', verifErr);
               }
@@ -341,7 +175,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
               return;
             }
           }
-          console.log('Syncing session with database...');
           user = await api.loginWithFirebase(token);
         } catch (fbErr: any) {
           console.warn('Firebase authentication failed, falling back to local database auth:', fbErr);
@@ -351,7 +184,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
             if (auth.currentUser) {
               try {
                 await sendEmailVerification(auth.currentUser);
-                setTerminalLogs(prev => [...prev, 'SEC_SYS: Verification email dispatched.']);
               } catch (verifErr) {
                 console.error('Failed to send verification email:', verifErr);
               }
@@ -361,7 +193,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
             return;
           }
 
-          // Fallback to local DB endpoints
           if (isLoginView) {
             user = await api.login(email, password);
           } else {
@@ -369,7 +200,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
           }
         }
       } else {
-        console.log('Firebase is not configured. Logging in via local database auth...');
         if (isLoginView) {
           user = await api.login(email, password);
         } else {
@@ -396,11 +226,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
         throw new Error('Firebase is not configured. Google sign-in cannot proceed until valid Firebase settings are provided.');
       }
 
-      console.log('Initiating Firebase Google Sign-In Popup...');
       const token = await firebaseService.loginWithGooglePopup();
-      console.log('Firebase ID token:', token);
-      console.log('Firebase current user email:', auth.currentUser?.email);
-      console.log('Google login token retrieved, verifying with backend...');
       const user = await api.loginWithFirebase(token);
       onAuthSuccess(user);
     } catch (err) {
@@ -411,13 +237,11 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
     }
   };
 
-  // Anonymous login handler
   const handleAnonymousLogin = async () => {
     setError('');
     setIsLoading(true);
     try {
       const token = await firebaseService.loginAnonymously();
-      console.log('Anonymous login token:', token);
       const user = await api.loginWithFirebase(token);
       onAuthSuccess(user, isLoginView ? 'student' : signupRole);
     } catch (err) {
@@ -432,233 +256,164 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
     }
   };
 
-
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLanguage(e.target.value as Language);
-  };
+  const isRtl = language === Language.AR;
 
   return (
-    <div className="min-h-screen bg-[#111827] text-slate-100 flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden auth-screen-root">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
-        
-        .auth-screen-root {
-          font-family: 'Outfit', sans-serif;
-        }
-        
-        @keyframes blob-float {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.15);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-        }
-        
-        @keyframes scan-beam {
-          0% {
-            top: 0%;
-            opacity: 0;
-          }
-          10% {
-            opacity: 0.8;
-          }
-          90% {
-            opacity: 0.8;
-          }
-          100% {
-            top: 100%;
-            opacity: 0;
-          }
-        }
+    <div className={`min-h-screen w-full flex flex-col md:flex-row bg-[#008be3] text-white font-sans ${isRtl ? 'rtl' : 'ltr'}`}>
+      {/* LEFT COLUMN: Hero Photo Banner */}
+      <div className="relative w-full md:w-[55%] lg:w-[60%] min-h-[340px] md:min-h-screen overflow-hidden flex flex-col justify-between p-6 sm:p-10 lg:p-14">
+        {/* Photo Background */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-105"
+          style={{ backgroundImage: `url('/login_classroom_banner.jpg')` }}
+        />
+        {/* Soft Vignette Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/40" />
 
-        @keyframes rotate-clockwise {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
+        {/* Top Left: Logo & Brand */}
+        <div className="relative z-10 flex items-center gap-3">
+          <svg className="w-8 h-8 text-white fill-current drop-shadow-md" viewBox="0 0 100 100">
+            <path d="M50 10 C27.9 10 10 27.9 10 50 C10 72.1 27.9 90 50 90 C72.1 90 90 72.1 90 50 C90 36.2 83 23.9 72.3 16.5 C69.4 14.5 65.6 17.5 67.2 20.6 C75.5 27 80 38 80 50 C80 66.6 66.6 80 50 80 C33.4 80 20 66.6 20 50 C20 33.4 33.4 20 50 20 C58.2 20 65.6 23.3 71 28.7 C73.1 30.8 76.7 29.3 76.5 26.3 C75.8 19.5 70.5 13.8 63.8 11.2 C59.5 9.5 54.8 9.9 50 10 Z" />
+          </svg>
+          <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow-md">
+            Code for Tomorrow
+          </span>
+        </div>
 
-        @keyframes rotate-counter {
-          0% { transform: rotate(360deg); }
-          100% { transform: rotate(0deg); }
-        }
-        
-        .animate-blob-1 {
-          animation: blob-float 18s infinite ease-in-out;
-        }
-        
-        .animate-blob-2 {
-          animation: blob-float 22s infinite ease-in-out reverse;
-        }
-        
-        .animate-scan-beam {
-          animation: scan-beam 3s infinite linear;
-        }
-
-        .animate-rotate-cw {
-          animation: rotate-clockwise 15s infinite linear;
-        }
-
-        .animate-rotate-ccw {
-          animation: rotate-counter 20s infinite linear;
-        }
-
-        .glass-card {
-          background: rgba(15, 23, 42, 0.45);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.07);
-        }
-
-        .glass-input {
-          background: rgba(10, 15, 30, 0.65);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-input:focus {
-          border-color: rgba(251, 191, 36, 0.5);
-          box-shadow: 0 0 15px rgba(251, 191, 36, 0.15), inset 0 0 8px rgba(251, 191, 36, 0.05);
-          background: rgba(10, 15, 30, 0.85);
-        }
-      `}</style>
-
-      {/* Interactive Background Particle Canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" />
-
-      {/* Dynamic Background Mesh Blobs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#FBBF24]/10 blur-[120px] animate-blob-1 pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-slate-800/10 blur-[120px] animate-blob-2 pointer-events-none" />
-      
-      {/* Subtle Digital Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.007)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.007)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
-
-      {/* Top Bar with Language Selector */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
-        <div className="relative flex items-center">
-          <Globe className="absolute left-3 w-4 h-4 text-slate-400 pointer-events-none" />
-          <select
-            value={language}
-            onChange={handleLanguageChange}
-            className="appearance-none bg-slate-900/30 text-slate-300 rounded-full py-2 pl-9 pr-8 font-semibold border border-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FBBF24]/40 transition-all text-sm cursor-pointer hover:bg-slate-850 backdrop-blur-md"
-            aria-label="Select language"
-          >
-            <option value={Language.EN} className="bg-slate-900 text-slate-300">EN</option>
-            <option value={Language.FR} className="bg-slate-900 text-slate-300">FR</option>
-            <option value={Language.AR} className="bg-slate-900 text-slate-300">AR</option>
-          </select>
+        {/* Bottom Left: Headline & Slogan */}
+        <div className="relative z-10 max-w-2xl mt-auto pt-16">
+          <h3 className="text-sm sm:text-base lg:text-lg font-bold tracking-widest text-white/90 uppercase mb-2 drop-shadow">
+            {language === Language.FR ? 'BIENVENUE SUR' : language === Language.AR ? 'أهلاً بكم في' : 'WELCOME TO'}
+          </h3>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight uppercase drop-shadow-lg">
+            {language === Language.FR ? 'LA VRAIE JOIE DE L\'APPRENTISSAGE INTELLIGENT' : 
+             language === Language.AR ? 'المتعة الحقيقية للتعلم الذكي' : 
+             'THE TRUE JOY OF SMART LEARNING'}
+          </h1>
         </div>
       </div>
 
-      <div className="col-span-12 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-5 py-6 relative z-10 flex flex-col justify-center">
-        {/* Mascot display */}
-        <div className="flex justify-center mb-6">
-          <div className="w-28 h-28 flex items-center justify-center">
-            <Mascot />
+      {/* RIGHT COLUMN: Interactive Login / Register Form */}
+      <div className="w-full md:w-[45%] lg:w-[40%] min-h-screen bg-slate-50 p-6 sm:p-10 lg:p-12 flex flex-col justify-between relative z-10 shadow-2xl overflow-y-auto">
+        {/* Top Header: Language Selector */}
+        <div className="flex justify-end relative z-20 mb-4">
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
+              className="flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
+            >
+              <Globe className="w-3.5 h-3.5 text-slate-500" />
+              <span>{language.toUpperCase()}</span>
+              <ChevronDown className={`w-3 h-3 text-slate-500 transition-transform ${isLangDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {isLangDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-36 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden z-50">
+                {[
+                  { code: Language.EN, label: 'English' },
+                  { code: Language.FR, label: 'Français' },
+                  { code: Language.AR, label: 'العربية' }
+                ].map((item) => (
+                  <button
+                    key={item.code}
+                    onClick={() => {
+                      setLanguage(item.code);
+                      setIsLangDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2.5 text-xs font-semibold flex items-center justify-between transition-colors hover:bg-slate-100 ${language === item.code ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-700'}`}
+                  >
+                    <span>{item.label}</span>
+                    {language === item.code && <Check className="w-3.5 h-3.5 text-blue-600" />}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="pill-card bg-slate-900/30 border border-slate-800 rounded-[2.5rem] p-6 md:p-8 relative overflow-hidden">
-          {/* Cyberpunk HUD Corner Brackets */}
+        {/* Center High-Contrast Elevated Auth Card */}
+        <div className="my-auto max-w-md w-full mx-auto bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/60 space-y-6">
+          {/* Main Action Header */}
+          <div className="text-left space-y-4">
+            <div className="space-y-1">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                {needsVerification
+                  ? (verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).verify_email
+                  : (isLoginView 
+                      ? (language === Language.FR ? 'Connexion' : language === Language.AR ? 'تسجيل الدخول' : 'Welcome back')
+                      : (language === Language.FR ? 'Inscription' : language === Language.AR ? 'إنشاء حساب' : 'Create an account')
+                    )
+                }
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                {isLoginView 
+                  ? (language === Language.FR ? 'Entrez vos identifiants pour continuer' : language === Language.AR ? 'أدخل بياناتك للمتابعة' : 'Enter your credentials to access your account')
+                  : (language === Language.FR ? 'Rejoignez la communauté Code for Tomorrow' : language === Language.AR ? 'انضم إلى مجتمع كود فور تمورو' : 'Join the Code for Tomorrow learning platform')
+                }
+              </p>
+            </div>
 
-
-          {/* Decorative tactical dots */}
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 flex gap-1 pointer-events-none">
-            <span className="w-1 h-1 rounded-full bg-[#FBBF24]/40 animate-pulse" />
-            <span className="w-1 h-1 rounded-full bg-slate-800/40" />
-            <span className="w-1 h-1 rounded-full bg-[#FBBF24]/40" />
+            {/* Segmented Control Tab Switcher */}
+            {!needsVerification && (
+              <div className="flex rounded-2xl bg-slate-100 p-1.5 border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => handleViewChange(true)}
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${isLoginView ? 'bg-white text-blue-600 shadow-sm border border-slate-200/60' : 'text-slate-600 hover:text-slate-900'}`}
+                >
+                  {t('login')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleViewChange(false)}
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${!isLoginView ? 'bg-white text-blue-600 shadow-sm border border-slate-200/60' : 'text-slate-600 hover:text-slate-900'}`}
+                >
+                  {t('signUp')}
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Sliding Capsule Tab Selector */}
-          {!needsVerification && (
-            <div className="flex mb-8 rounded-2xl bg-slate-950/60 p-1.5 transition-colors border border-slate-800 relative overflow-hidden">
-              <div 
-                className="absolute top-1 bottom-1 rounded-xl bg-gradient-to-r from-[#FBBF24] to-[#f59e0b] shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all duration-300 ease-out z-0"
-                style={{
-                  width: 'calc(50% - 6px)',
-                  left: isLoginView ? '6px' : 'calc(50%)',
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => handleViewChange(true)}
-                disabled={isLoading}
-                className={`w-1/2 py-2.5 rounded-xl font-bold text-sm transition-all focus:outline-none cursor-pointer relative z-10 ${isLoginView ? 'text-white' : 'text-slate-400 hover:text-slate-200'}`}
-              >
-                {t('login')}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleViewChange(false)}
-                disabled={isLoading}
-                className={`w-1/2 py-2.5 rounded-xl font-bold text-sm transition-all focus:outline-none cursor-pointer relative z-10 ${!isLoginView ? 'text-white' : 'text-slate-400 hover:text-slate-200'}`}
-              >
-                {t('signUp')}
-              </button>
-            </div>
-          )}
-
-          <h2 className="text-2xl font-bold text-center mb-8 tracking-tight text-white select-none">
-            {needsVerification 
-              ? (verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).verify_email
-              : (isLoginView ? t('welcome_back') : t('join_the_adventure'))
-            }
-          </h2>
-
+          {/* Form / Verification View */}
           {needsVerification ? (
-            <div className="space-y-6">
-              <div className="text-sm text-slate-300 leading-relaxed text-center space-y-4">
-                <p>
-                  {(verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).verification_sent}
-                </p>
-                <p className="font-bold text-[#FBBF24] text-base break-all bg-slate-950/40 py-2.5 px-4 rounded-xl border border-slate-800">
+            <div className="space-y-5 bg-slate-50 rounded-2xl p-5 border border-slate-200">
+              <div className="text-xs text-slate-700 leading-relaxed space-y-3 text-center">
+                <p>{(verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).verification_sent}</p>
+                <p className="font-bold text-slate-900 text-sm bg-white py-2 px-4 rounded-xl border border-slate-300 break-all shadow-xs">
                   {email}
                 </p>
-                <p className="text-slate-400 text-xs">
-                  {(verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).check_inbox}
-                </p>
+                <p className="text-slate-500 text-xs">{(verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).check_inbox}</p>
               </div>
 
               {error && (
-                <div className="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-[#EA4335] text-sm text-center font-semibold animate-shake flex items-center justify-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold text-center">
                   {error}
                 </div>
               )}
 
-              <div className="space-y-3 pt-2">
+              <div className="space-y-2 pt-2">
                 <button
                   type="button"
                   onClick={handleCheckVerification}
                   disabled={isLoading}
-                  className="w-full py-4 rounded-full bg-[#FBBF24] hover:bg-[#f59e0b] text-[#111827] font-bold text-[15px] tracking-wide shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.35)] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer"
                 >
-                  {isLoading && (
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#111827]" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                  )}
                   {isLoading ? '...' : (verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).btn_check}
                 </button>
-
                 <button
                   type="button"
                   onClick={handleResendVerification}
                   disabled={isLoading}
-                  className="w-full py-3.5 rounded-full border border-slate-700 hover:border-[#FBBF24]/50 text-slate-300 hover:text-white font-bold text-[14px] tracking-wide active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs uppercase transition-all cursor-pointer"
                 >
-                  {isLoading ? '...' : (verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).btn_resend}
+                  {(verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).btn_resend}
                 </button>
-
-                <div className="text-center pt-2">
+                <div className="text-center pt-1">
                   <button
                     type="button"
                     onClick={handleCancelVerification}
-                    disabled={isLoading}
-                    className="text-slate-400 hover:text-[#FBBF24] font-semibold text-sm transition-colors disabled:opacity-50 cursor-pointer"
+                    className="text-slate-500 hover:text-slate-800 text-xs font-semibold transition-colors cursor-pointer"
                   >
                     {(verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).btn_cancel}
                   </button>
@@ -666,146 +421,201 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit}>
-              <div className="space-y-5">
-                {!isLoginView && (
-                  <>
-                    <div>
-                      <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="name">{t('username')}</label>
-                      <div className="relative flex items-center">
-                        <UserIcon className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'name' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
-                        <input
-                          type="text"
-                          id="name"
-                          value={name}
-                          onFocus={() => setFocusedField('name')}
-                          onBlur={() => setFocusedField(null)}
-                          onChange={e => setName(e.target.value)}
-                          className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-white focus:outline-none transition-all font-medium text-base glass-input"
-                          required
-                        />
-                      </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {!isLoginView && (
+                <>
+                  {/* Full Name input for registration */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block px-0.5">
+                      {language === Language.FR ? "Nom complet" : language === Language.AR ? "الاسم الكامل" : "Full Name"}
+                    </label>
+                    <div className="relative flex items-center">
+                      <input
+                        type="text"
+                        placeholder="John Doe"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        className="w-full py-3 px-4 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-400 text-sm font-medium focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 focus:outline-none transition-all"
+                        required
+                      />
                     </div>
-                    <div>
-                      <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1">
-                        {t('role_selection_question' as any) || "What's Your Role?"}
-                      </label>
-                      <div className="flex gap-4">
-                        <button
-                          type="button"
-                          onClick={() => setSignupRole('student')}
-                          className={`flex-grow py-3 px-4 rounded-2xl border font-bold text-sm transition-all focus:outline-none cursor-pointer flex items-center justify-center gap-2 ${signupRole === 'student' ? 'bg-[#FBBF24] border-[#FBBF24] text-[#111827]' : 'border-slate-700 bg-slate-900/60 text-slate-400 hover:text-slate-200'}`}
-                        >
-                          {t('im_a_student' as any) || "I'm a student"}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setSignupRole('teacher')}
-                          className={`flex-grow py-3 px-4 rounded-2xl border font-bold text-sm transition-all focus:outline-none cursor-pointer flex items-center justify-center gap-2 ${signupRole === 'teacher' ? 'bg-[#FBBF24] border-[#FBBF24] text-[#111827]' : 'border-slate-700 bg-slate-900/60 text-slate-400 hover:text-slate-200'}`}
-                        >
-                          {t('im_a_teacher' as any) || "I'm a teacher"}
-                        </button>
-                      </div>
+                  </div>
+
+                  {/* Role Selector Tabs */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block px-0.5">
+                      {t('role_selection_question' as any) || "Account Type"}
+                    </label>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setSignupRole('student')}
+                        className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer border ${signupRole === 'student' ? 'bg-blue-50 border-blue-600 text-blue-700 shadow-xs' : 'bg-slate-50 border-slate-300 text-slate-600 hover:bg-slate-100'}`}
+                      >
+                        {t('im_a_student' as any) || "Student"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSignupRole('teacher')}
+                        className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer border ${signupRole === 'teacher' ? 'bg-blue-50 border-blue-600 text-blue-700 shadow-xs' : 'bg-slate-50 border-slate-300 text-slate-600 hover:bg-slate-100'}`}
+                      >
+                        {t('im_a_teacher' as any) || "Teacher"}
+                      </button>
                     </div>
-                  </>
-                )}
-                <div>
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="email">{t('email')}</label>
-                  <div className="relative flex items-center">
-                    <Mail className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'email' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
-                    <input
-                      type="email"
-                      id="email"
-                      value={email}
-                      onFocus={() => setFocusedField('email')}
-                      onBlur={() => setFocusedField(null)}
-                      onChange={e => setEmail(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-white focus:outline-none transition-all font-medium text-base glass-input"
-                      required
-                    />
                   </div>
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1" htmlFor="password">{t('password')}</label>
-                  <div className="relative flex items-center">
-                    <Lock className={`absolute left-4 w-5 h-5 transition-all duration-300 pointer-events-none ${focusedField === 'password' ? 'text-[#FBBF24] drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'text-slate-500'}`} />
-                    <input
-                      type="password"
-                      id="password"
-                      value={password}
-                      onFocus={() => setFocusedField('password')}
-                      onBlur={() => setFocusedField(null)}
-                      onChange={e => setPassword(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-white focus:outline-none transition-all font-medium text-base glass-input"
-                      required
-                    />
-                  </div>
+                </>
+              )}
+
+              {/* Email / Username Input */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block px-0.5">
+                  {language === Language.FR ? "E-mail ou nom d'utilisateur" : language === Language.AR ? "البريد الإلكتروني أو اسم المستخدم" : "Email or Username"}
+                </label>
+                <div className="relative flex items-center">
+                  <input
+                    type="email"
+                    placeholder="name@example.com"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    className="w-full py-3 px-4 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-400 text-sm font-medium focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 focus:outline-none transition-all"
+                    required
+                  />
                 </div>
               </div>
 
-              {/* Terms of Use Checkbox — Sign Up only */}
+              {/* Password Input with eye toggle */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between px-0.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                    {language === Language.FR ? "Mot de passe" : language === Language.AR ? "كلمة المرور" : "Password"}
+                  </label>
+                  {isLoginView && (
+                    <button
+                      type="button"
+                      onClick={() => alert("Password reset functionality is available via your registered email or admin.")}
+                      className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer"
+                    >
+                      {language === Language.FR ? "Oublié ?" : language === Language.AR ? "نسيت؟" : "Forgot?"}
+                    </button>
+                  )}
+                </div>
+                <div className="relative flex items-center">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className="w-full py-3 pl-4 pr-11 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-400 text-sm font-medium focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 focus:outline-none transition-all"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer p-1"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Terms checkbox for Sign Up view */}
               {!isLoginView && (
-                <label className="flex items-start gap-3 mt-5 cursor-pointer group select-none">
-                  <div className="relative mt-0.5">
-                    <input
-                      type="checkbox"
-                      checked={acceptedTerms}
-                      onChange={(e) => setAcceptedTerms(e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-5 h-5 rounded-md border border-slate-600 bg-slate-900/60 peer-checked:bg-[#FBBF24] peer-checked:border-[#FBBF24] transition-all flex items-center justify-center">
-                      {acceptedTerms && (
-                        <svg className="w-3 h-3 text-[#111827]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </div>
-                  </div>
-                  <span className="text-xs text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">
-                    I agree to the{' '}
-                    <a href="/dashboard/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#FBBF24] hover:underline font-semibold">
-                      Terms of Service
-                    </a>{' '}
-                    and{' '}
-                    <a href="/dashboard/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#FBBF24] hover:underline font-semibold">
-                      Privacy Policy
-                    </a>
-              </span>
+                <label className="flex items-start gap-2.5 px-0.5 cursor-pointer group select-none pt-1">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    className="mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  />
+                  <span className="text-xs text-slate-600 group-hover:text-slate-900 leading-tight font-medium">
+                    I agree to the Terms of Service & Privacy Policy
+                  </span>
                 </label>
               )}
 
+              {/* Error Message banner */}
               {error && (
-                <div className="mt-6 p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-[#EA4335] text-sm text-center font-semibold animate-shake flex items-center justify-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold text-center">
                   {error}
                 </div>
               )}
 
+              {/* DOMINANT PRIMARY CTA BUTTON */}
               <button
                 type="submit"
                 disabled={isLoading || (!isLoginView && !acceptedTerms)}
-                className="mt-8 w-full py-4 rounded-full bg-[#FBBF24] hover:bg-[#f59e0b] text-[#111827] font-bold text-[15px] tracking-wide shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.35)] active:scale-[0.98] transition-all duration-300 disabled:from-slate-800 disabled:to-slate-900 disabled:text-slate-500 disabled:shadow-none disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-sm uppercase tracking-wider shadow-md shadow-blue-600/25 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 mt-4"
               >
                 {isLoading && (
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                  <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                 )}
-                {isLoading ? '...' : (isLoginView ? t('login') : t('create_account'))}
+                <span>{isLoading ? '...' : (isLoginView ? t('login') : t('create_account'))}</span>
               </button>
 
-              {/* Anonymous login button */}
-              <button
-                type="button"
-                onClick={handleAnonymousLogin}
-                disabled={isLoading}
-                className="mt-4 w-full py-3 rounded-full bg-[#333] hover:bg-[#555] text-white font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? '...' : 'Continue as Guest'}
-              </button>
+              {/* OR CONTINUE WITH Divider */}
+              <div className="relative flex items-center justify-center my-5">
+                <div className="border-t border-slate-200 w-full" />
+                <span className="bg-white px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">
+                  {language === Language.FR ? 'Ou continuer avec' : language === Language.AR ? 'أو المتابعة باستخدام' : 'Or continue with'}
+                </span>
+                <div className="border-t border-slate-200 w-full" />
+              </div>
+
+              {/* SECONDARY MUTED SOCIAL BUTTONS */}
+              <div className="grid grid-cols-2 gap-3">
+                {/* Microsoft Button */}
+                <button
+                  type="button"
+                  onClick={() => alert("Microsoft Sign-In integration ready. Connect your Azure AD Client ID in settings.")}
+                  className="w-full py-2.5 px-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+                >
+                  <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 23 23">
+                    <path fill="#f35325" d="M1 1h10v10H1z"/>
+                    <path fill="#81bc06" d="M12 1h10v10H12z"/>
+                    <path fill="#05a6f0" d="M1 12h10v10H1z"/>
+                    <path fill="#ffba08" d="M12 12h10v10H12z"/>
+                  </svg>
+                  <span>Microsoft</span>
+                </button>
+
+                {/* Google Button */}
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  disabled={isLoading}
+                  className="w-full py-2.5 px-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs disabled:opacity-50"
+                >
+                  <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                  </svg>
+                  <span>Google</span>
+                </button>
+              </div>
+
+              {/* Guest Option */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={handleAnonymousLogin}
+                  disabled={isLoading}
+                  className="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors border border-slate-200/80"
+                >
+                  {isLoading ? '...' : (language === Language.FR ? 'Continuer en tant qu\'invité' : language === Language.AR ? 'المتابعة كزائر' : 'Continue as Guest')}
+                </button>
+              </div>
             </form>
           )}
+        </div>
+
+        {/* Footer */}
+        <div className="text-center text-xs text-slate-500 font-medium py-2">
+          © {new Date().getFullYear()} Code for Tomorrow • Inclusive EdTech Platform
         </div>
       </div>
     </div>

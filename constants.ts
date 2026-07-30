@@ -176,6 +176,38 @@ export const PATHS: ProgrammingPath[] = [
     color: 'bg-indigo-500',
     isAvailable: true
   },
+  {
+    id: 'shell',
+    titleKey: 'shell',
+    descriptionKey: 'shell_desc',
+    icon: '/assets/images/shell_logo.svg',
+    color: 'bg-slate-700',
+    isAvailable: true
+  },
+  {
+    id: 'ai_ml',
+    titleKey: 'ai_ml',
+    descriptionKey: 'ai_ml_desc',
+    icon: '/assets/images/ai_logo.svg',
+    color: 'bg-emerald-600',
+    isAvailable: true
+  },
+  {
+    id: 'cybersecurity',
+    titleKey: 'cybersecurity',
+    descriptionKey: 'cybersecurity_desc',
+    icon: '/assets/images/cyber_logo.svg',
+    color: 'bg-red-600',
+    isAvailable: true
+  },
+  {
+    id: 'assembly',
+    titleKey: 'assembly',
+    descriptionKey: 'assembly_desc',
+    icon: '/assets/images/cpu_logo.svg',
+    color: 'bg-blue-900',
+    isAvailable: true
+  },
 ];
 
 export const MODULES_BY_PATH: { [key: string]: Module[] } = {
@@ -1976,6 +2008,54 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       ],
     },
   ],
+  shell: [
+    {
+      id: 'shell_basics',
+      titleKey: 'shell_basics_title',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'shell_echo', icon: 'brain', xp: 15, color: '#334155', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'shell_chal_1', starterCode: '# Print "Hello Terminal"\necho "Hello Terminal"\n', solutionCode: 'echo "Hello Terminal"', expectedOutput: 'Hello Terminal' },
+        { id: 1, level: 2, titleKey: 'shell_variables', icon: 'brain', xp: 20, color: '#334155', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'shell_chal_2', starterCode: 'NAME="Linux"\necho $NAME\n', solutionCode: 'NAME="Linux"\necho $NAME', expectedOutput: 'Linux' },
+        { id: 1, level: 3, titleKey: 'shell_loops', icon: 'brain', xp: 25, color: '#334155', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'shell_chal_3', starterCode: 'for i in 1 2 3; do echo $i; done\n', solutionCode: 'for i in 1 2 3; do echo $i; done', expectedOutput: '1\n2\n3' },
+        { id: 1, level: 4, titleKey: 'shell_script_project', icon: 'trophy', xp: 50, color: '#1e293b', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'shell_chal_4', starterCode: 'echo "Script Complete"\n', solutionCode: 'echo "Script Complete"', expectedOutput: 'Script Complete' },
+      ],
+    },
+  ],
+  ai_ml: [
+    {
+      id: 'ai_ml_basics',
+      titleKey: 'ai_ml_basics_title',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'ai_intro', icon: 'brain', xp: 20, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'ai_chal_1', starterCode: 'print("Model trained: 98% accuracy")\n', solutionCode: 'print("Model trained: 98% accuracy")', expectedOutput: 'Model trained: 98% accuracy' },
+        { id: 1, level: 2, titleKey: 'ai_linear_regression', icon: 'brain', xp: 25, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'ai_chal_2', starterCode: 'x = 5\ny = 2 * x + 1\nprint(y)\n', solutionCode: 'x = 5\ny = 2 * x + 1\nprint(y)', expectedOutput: '11' },
+        { id: 1, level: 3, titleKey: 'ai_classification', icon: 'star', xp: 30, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'ai_chal_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 4, titleKey: 'ai_bot_project', icon: 'trophy', xp: 60, color: '#047857', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'ai_chal_4', starterCode: 'print("Cat")\n', solutionCode: 'print("Cat")', expectedOutput: 'Cat' },
+      ],
+    },
+  ],
+  cybersecurity: [
+    {
+      id: 'cyber_basics',
+      titleKey: 'cyber_basics_title',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'cyber_intro', icon: 'brain', xp: 20, color: '#dc2626', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'cyber_chal_1', starterCode: 'print("SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")\n', solutionCode: 'print("SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")', expectedOutput: 'SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' },
+        { id: 1, level: 2, titleKey: 'cyber_encryption', icon: 'brain', xp: 25, color: '#dc2626', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'cyber_chal_2', starterCode: 'print("IBM")\n', solutionCode: 'print("IBM")', expectedOutput: 'IBM' },
+        { id: 1, level: 3, titleKey: 'cyber_firewall', icon: 'star', xp: 30, color: '#dc2626', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'cyber_chal_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 4, titleKey: 'cyber_ctf_project', icon: 'trophy', xp: 60, color: '#b91c1c', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'cyber_chal_4', starterCode: 'print("FLAG{cyber_hero}")\n', solutionCode: 'print("FLAG{cyber_hero}")', expectedOutput: 'FLAG{cyber_hero}' },
+      ],
+    },
+  ],
+  assembly: [
+    {
+      id: 'assembly_basics',
+      titleKey: 'assembly_basics_title',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'assembly_intro', icon: 'brain', xp: 25, color: '#1e3a8a', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'assembly_chal_1', starterCode: 'console.log(1);\n', solutionCode: 'console.log(1);', expectedOutput: '1' },
+        { id: 1, level: 2, titleKey: 'assembly_registers', icon: 'brain', xp: 30, color: '#1e3a8a', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'assembly_chal_2', starterCode: 'console.log(8);\n', solutionCode: 'console.log(8);', expectedOutput: '8' },
+        { id: 1, level: 3, titleKey: 'assembly_memory', icon: 'star', xp: 35, color: '#1e3a8a', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'assembly_chal_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 1, level: 4, titleKey: 'assembly_cpu_project', icon: 'trophy', xp: 75, color: '#172554', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'assembly_chal_4', starterCode: 'console.log("CPU READY");\n', solutionCode: 'console.log("CPU READY");', expectedOutput: 'CPU READY' },
+      ],
+    },
+  ],
 };
 
 export const BADGES_BY_PATH: { [key: string]: Badge[] } = {
@@ -2098,6 +2178,30 @@ export const BADGES_BY_PATH: { [key: string]: Badge[] } = {
     { id: 'math_badge2', lessonId: 2, icon: '➖', titleKey: 'math_badge_sub' },
     { id: 'math_badge3', lessonId: 3, icon: '🧩', titleKey: 'math_badge_puzzle' },
     { id: 'math_badge4', lessonId: 4, icon: '🏆', titleKey: 'math_badge_calc' },
+  ],
+  shell: [
+    { id: 'shell_badge1', lessonId: 1, icon: '💻', titleKey: 'shell_badge_echo' },
+    { id: 'shell_badge2', lessonId: 2, icon: '💲', titleKey: 'shell_badge_vars' },
+    { id: 'shell_badge3', lessonId: 3, icon: '🔁', titleKey: 'shell_badge_loop' },
+    { id: 'shell_badge4', lessonId: 4, icon: '🏆', titleKey: 'shell_badge_scripter' },
+  ],
+  ai_ml: [
+    { id: 'ai_badge1', lessonId: 1, icon: '🤖', titleKey: 'ai_badge_intro' },
+    { id: 'ai_badge2', lessonId: 2, icon: '📈', titleKey: 'ai_badge_reg' },
+    { id: 'ai_badge3', lessonId: 3, icon: '🧠', titleKey: 'ai_badge_class' },
+    { id: 'ai_badge4', lessonId: 4, icon: '🏆', titleKey: 'ai_badge_master' },
+  ],
+  cybersecurity: [
+    { id: 'cyber_badge1', lessonId: 1, icon: '🔐', titleKey: 'cyber_badge_hash' },
+    { id: 'cyber_badge2', lessonId: 2, icon: '🔑', titleKey: 'cyber_badge_cipher' },
+    { id: 'cyber_badge3', lessonId: 3, icon: '🛡️', titleKey: 'cyber_badge_wall' },
+    { id: 'cyber_badge4', lessonId: 4, icon: '🏆', titleKey: 'cyber_badge_ctf' },
+  ],
+  assembly: [
+    { id: 'asm_badge1', lessonId: 1, icon: '⚡', titleKey: 'asm_badge_mov' },
+    { id: 'asm_badge2', lessonId: 2, icon: '📼', titleKey: 'asm_badge_reg' },
+    { id: 'asm_badge3', lessonId: 3, icon: '💾', titleKey: 'asm_badge_mem' },
+    { id: 'asm_badge4', lessonId: 4, icon: '🏆', titleKey: 'asm_badge_cpu' },
   ],
 };
 

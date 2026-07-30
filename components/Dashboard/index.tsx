@@ -229,41 +229,12 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
               --lh: 24px;
               --gutter: 24px;
               --margin: 24px;
-              --pad: 32px;
-              --maxw: 1296px;
-              
-              --paper: transparent;
-              --ink: #ffffff;
-              --accent: #FBBF24;
+              --pad: 24px;
               
               --g-col: rgba(251, 191, 36, 0.02);
-              --g-edge: rgba(251, 191, 36, 0.18);
-              --g-base: rgba(99, 102, 241, 0.12);
-              --g-base-min: rgba(99, 102, 241, 0.04);
-            }
-
-            .muller-grid-root,
-            .muller-grid-root * {
-              box-sizing: border-box;
-            }
-
-            .muller-grid-root .spread {
-              position: relative;
-              width: 100%;
-            }
-
-            .muller-grid-root .wrap {
-              position: relative;
-              max-width: var(--maxw);
-              margin: 0 auto;
-              padding: var(--pad) var(--margin);
-            }
-
-            .muller-grid-root .muller-grid {
-              display: grid;
-              grid-template-columns: repeat(var(--cols), 1fr);
-              column-gap: var(--gutter);
-              row-gap: var(--lh);
+              --g-edge: rgba(251, 191, 36, 0.15);
+              --g-base: rgba(99, 102, 241, 0.1);
+              --g-base-min: rgba(99, 102, 241, 0.03);
             }
 
             .muller-grid-root .guides {
@@ -283,11 +254,11 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
               position: absolute;
               top: 0;
               bottom: 0;
-              left: var(--margin);
-              right: var(--margin);
+              left: 16px;
+              right: 16px;
               display: grid;
               grid-template-columns: repeat(var(--cols), 1fr);
-              column-gap: var(--gutter);
+              column-gap: 16px;
             }
 
             .muller-grid-root .guides .col {
@@ -298,57 +269,21 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
 
             .muller-grid-root .guides .col span {
               position: absolute;
-              top: 32px;
+              top: 16px;
               left: 0;
               right: 0;
               text-align: center;
-              font-family: "Space Mono", monospace;
+              font-family: monospace;
               font-size: 10px;
-              line-height: 1;
-              color: var(--accent);
-            }
-
-            .muller-grid-root .guides .rows {
-              position: absolute;
-              left: var(--margin);
-              right: var(--margin);
-              top: var(--pad);
-              bottom: 0;
-              background-image: 
-                repeating-linear-gradient(to bottom, var(--g-base) 0 1px, transparent 1px var(--lh)),
-                repeating-linear-gradient(to bottom, var(--g-base-min) 0 1px, transparent 1px var(--bl));
-            }
-
-            .muller-grid-root .guides .mline {
-              position: absolute;
-              top: 0;
-              bottom: 0;
-              width: 1px;
-              background: var(--g-edge);
-            }
-
-            .muller-grid-root .guides .mline.l { left: var(--margin); }
-            .muller-grid-root .guides .mline.r { right: var(--margin); }
-
-            /* Responsive margins */
-            @media (max-width: 640px) {
-              .muller-grid-root {
-                --margin: 16px;
-                --gutter: 12px;
-                --pad: 24px;
-              }
+              color: #FBBF24;
             }
           `}</style>
           
-          <div className="spread">
-            <div className="wrap">
-              <div className="muller-grid">
-                <div style={{ gridColumn: '1 / -1' }}>
-                  {renderActiveView()}
-                </div>
-              </div>
-              {renderGuides()}
+          <div className="relative w-full min-h-full">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+              {renderActiveView()}
             </div>
+            {renderGuides()}
           </div>
         </main>
         <BottomNav activeView={activeView} setActiveView={setActiveView} unreadMessagesCount={unreadMessagesCount} />
