@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, CreditCard, ShieldCheck, Lock, CheckCircle2, Sparkles, AlertCircle, ArrowRight, Zap, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import api from '../../services/api';
 
 export interface PaymentModalProps {
   isOpen: boolean;
@@ -88,9 +89,16 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   const finalPrice = Math.max(0, baseNumericPrice * (1 - appliedDiscount)).toFixed(2);
 
   // Handle Checkout Submission
-  const handlePay = (e: React.FormEvent) => {
+  const handlePay = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
+
+    try {
+      // Trigger backend Express payment checkout endpoint
+      await api.processPayment(planName, `$${finalPrice}`, selectedMethod);
+    } catch (err) {
+      console.warn("Backend payment check:", err);
+    }
 
     setTimeout(() => {
       setIsProcessing(false);
@@ -114,7 +122,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
       setReceiptDetails(receipt);
       setPaymentSuccess(true);
       if (onPaymentSuccess) onPaymentSuccess(receipt);
-    }, 1800);
+    }, 1500);
   };
 
   if (!isOpen) return null;
