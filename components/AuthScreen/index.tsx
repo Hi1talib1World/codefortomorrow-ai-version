@@ -3,39 +3,54 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { User, Language } from '../../types';
 import api from '../../services/api';
 import { auth, firebaseService, handleGoogleRedirectResult, isFirebaseConfigured } from '../../src/services/external/firebase';
-import { Mail, Lock, User as UserIcon, Globe, Eye, EyeOff, ArrowRight, ChevronDown, Check } from 'lucide-react';
+import { Mail, Lock, User as UserIcon, Globe, Eye, EyeOff, ArrowRight, ChevronDown, Check, CheckCircle2 } from 'lucide-react';
 import { sendEmailVerification, signOut } from 'firebase/auth';
+
+const regSuccessTranslations = {
+  en: {
+    success_registered: '🎉 Account registered successfully! Welcome to Code for Tomorrow.',
+    success_verification_needed: '✅ Account registered successfully! A verification link has been sent to your email address. (Please check your spam or junk folder if you don\'t see it).',
+  },
+  fr: {
+    success_registered: '🎉 Compte créé avec succès ! Bienvenue sur Code for Tomorrow.',
+    success_verification_needed: '✅ Compte créé avec succès ! Un e-mail de vérification a été envoyé à votre adresse. (Vérifiez également votre dossier spam ou courrier indésirable).',
+  },
+  ar: {
+    success_registered: '🎉 تم إنشاء الحساب بنجاح! مرحباً بك في كود فور تمورو.',
+    success_verification_needed: '✅ تم إنشاء الحساب بنجاح! تم إرسال رابط التحقق إلى عنوان بريدك الإلكتروني. (يرجى التحقق من مجلد الرسائل غير المرغوب فيها/السبام إذا لم تجده).',
+  }
+};
 
 const verifTranslations = {
   en: {
     verify_email: 'Verify Your Email',
     verification_sent: "We've sent a verification link to your email address:",
-    check_inbox: 'Please check your inbox and click the verification link to activate your account.',
+    check_inbox: 'Please check your inbox (including your spam or junk folder) and click the verification link to activate your account.',
     btn_check: 'I have verified my email',
     btn_resend: 'Resend Verification Email',
     btn_cancel: 'Back to Login',
-    err_not_verified: 'Email is not verified yet. Please check your inbox.',
-    success_resent: 'Verification email resent successfully.',
+    err_not_verified: 'Email is not verified yet. Please check your inbox or spam folder.',
+    success_resent: 'Verification email resent successfully. Please check your inbox or spam folder.',
   },
   fr: {
     verify_email: 'Vérifiez votre e-mail',
     verification_sent: 'Nous avons envoyé un lien de vérification à votre adresse e-mail :',
-    check_inbox: 'Veuillez vérifier votre boîte de réception et cliquer sur le lien de vérification pour activer votre compte.',
+    check_inbox: 'Veuillez vérifier votre boîte de réception (ainsi que votre dossier spam/courrier indésirable) et cliquer sur le lien de vérification pour activer votre compte.',
     btn_check: "J'ai vérifié mon e-mail",
     btn_resend: "Renvoyer l'e-mail de vérification",
     btn_cancel: 'Retour à la connexion',
-    err_not_verified: "L'e-mail n'est pas encore vérifié. Veuillez vérifier votre boîte de réception.",
-    success_resent: "L'e-mail de vérification a été renvoyé avec succès.",
+    err_not_verified: "L'e-mail n'est pas encore vérifié. Veuillez vérifier votre boîte de réception ou dossier spam.",
+    success_resent: "L'e-mail de vérification a été renvoyé avec succès. Veuillez vérifier votre boîte de réception ou dossier spam.",
   },
   ar: {
     verify_email: 'التحقق من بريدك الإلكتروني',
     verification_sent: 'لقد أرسلنا رابط تحقق إلى عنوان بريدك الإلكتروني:',
-    check_inbox: 'يرجى التحقق من صندوق الوارد الخاص بك والنقر على رابط التحقق لتفعيل حسابك.',
+    check_inbox: 'يرجى التحقق من صندوق الوارد (ومجلد الرسائل غير المرغوب فيها/السبام) والنقر على رابط التحقق لتفعيل حسابك.',
     btn_check: 'لقد قمت بالتحقق من بريدي الإلكتروني',
     btn_resend: 'إعادة إرسال بريد التحقق',
     btn_cancel: 'العودة لتسجيل الدخول',
-    err_not_verified: 'البريد الإلكتروني لم يتم التحقق منه بعد. يرجى التحقق من صندوق الوارد.',
-    success_resent: 'تم إعادة إرسال بريد التحقق بنجاح.',
+    err_not_verified: 'البريد الإلكتروني لم يتم التحقق منه بعد. يرجى التحقق من صندوق الوارد أو مجلد السبام.',
+    success_resent: 'تم إعادة إرسال بريد التحقق بنجاح. يرجى التحقق من صندوق الوارد أو مجلد السبام.',
   }
 };
 
@@ -54,6 +69,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);
@@ -65,6 +81,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
     setEmail('');
     setPassword('');
     setError('');
+    setSuccessMessage('');
     setAcceptedTerms(false);
   };
 
@@ -119,6 +136,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
       setError('');
       try {
         await sendEmailVerification(auth.currentUser);
+        const currentLang = language as keyof typeof verifTranslations;
+        const dict = verifTranslations[currentLang] || verifTranslations.en;
+        setSuccessMessage(dict.success_resent);
       } catch (err: any) {
         console.error('Resend verification error:', err);
         setError(err instanceof Error ? err.message : 'Failed to resend verification email.');
@@ -145,10 +165,12 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
+    setSuccessMessage('');
     setIsLoading(true);
 
     try {
       let user: User;
+      const currentDict = regSuccessTranslations[language as keyof typeof regSuccessTranslations] || regSuccessTranslations.en;
 
       if (isFirebaseConfigured) {
         try {
@@ -170,6 +192,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
               } catch (verifErr) {
                 console.error('Failed to send verification email on register:', verifErr);
               }
+              setSuccessMessage(currentDict.success_verification_needed);
               setNeedsVerification(true);
               setIsLoading(false);
               return;
@@ -207,7 +230,14 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
         }
       }
 
-      onAuthSuccess(user, isLoginView ? undefined : signupRole);
+      if (!isLoginView) {
+        setSuccessMessage(currentDict.success_registered);
+        setTimeout(() => {
+          onAuthSuccess(user, signupRole);
+        }, 1200);
+      } else {
+        onAuthSuccess(user, undefined);
+      }
     } catch (err: any) {
       console.error('Auth Submit Error:', err);
       const errMsg = err instanceof Error ? err.message : 'An unknown authentication error occurred.';
@@ -386,6 +416,13 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
                 <p className="text-slate-500 text-xs">{(verifTranslations[language as keyof typeof verifTranslations] || verifTranslations.en).check_inbox}</p>
               </div>
 
+              {successMessage && (
+                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2 text-left shadow-xs">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                  <span>{successMessage}</span>
+                </div>
+              )}
+
               {error && (
                 <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold text-center">
                   {error}
@@ -531,6 +568,14 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
                     I agree to the Terms of Service & Privacy Policy
                   </span>
                 </label>
+              )}
+
+              {/* Success Message banner */}
+              {successMessage && (
+                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2.5 shadow-sm animate-in fade-in duration-200">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                  <span>{successMessage}</span>
+                </div>
               )}
 
               {/* Error Message banner */}

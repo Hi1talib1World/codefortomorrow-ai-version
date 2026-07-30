@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { User } from '../../types';
 import { motion, useInView, useAnimation } from 'motion/react';
-import { Terminal, Play, CheckCircle, Menu, X, ArrowRight, BookOpen, Layers, Users, Star, MessageSquare, ChevronUp } from 'lucide-react';
+import { Terminal, Play, CheckCircle, Menu, X, ArrowRight, BookOpen, Layers, Users, Star, MessageSquare, ChevronUp, Sparkles, Check, Zap, ShieldCheck, Building2 } from 'lucide-react';
 import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { RadialOrbitalTimelineDemo } from '@/components/ui/demo';
 import { GlowCard } from '@/components/ui/spotlight-card';
 import { HeroScrollDemo } from '@/components/ui/scroll-demo';
+import { PaymentModal } from '../PaymentModal';
 
 
 const AnimatedSection: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
@@ -25,6 +26,23 @@ const AnimatedSection: React.FC<{ children: React.ReactNode, className?: string 
 
 const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void }> = ({ currentUser, onGetStarted }) => {
   const { language } = useLanguage();
+  const [isYearlyBilling, setIsYearlyBilling] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [selectedPlanDetails, setSelectedPlanDetails] = useState<{ name: string; price: string; interval: 'monthly' | 'yearly' }>({
+    name: 'Pioneer Pro',
+    price: '$19',
+    interval: 'monthly'
+  });
+
+  const handleOpenCheckout = (name: string, price: string) => {
+    setSelectedPlanDetails({
+      name,
+      price,
+      interval: isYearlyBilling ? 'yearly' : 'monthly'
+    });
+    setIsPaymentModalOpen(true);
+  };
+
   const port = window.location.port ? `:${window.location.port}` : '';
 
   const getPlatformHref = (subdomain: 'academy' | 'os' | 'docs', path: string) => {
@@ -87,13 +105,17 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               Docs & Blog
             </a>
             <div className="w-[1px] h-4 bg-slate-800 self-center" />
+            <a href="#pricing" className="text-white hover:text-[#FBBF24] transition-colors text-sm font-bold tracking-wide">
+              Pricing
+            </a>
+            <div className="w-[1px] h-4 bg-slate-800 self-center" />
             <a href="/about" className="text-white hover:text-[#FBBF24] transition-colors text-sm font-bold tracking-wide">
               About
             </a>
           </nav>
 
           <div className="hidden md:flex items-center">
-            <button onClick={onGetStarted} className="bg-[#FBBF24] text-[#111827] font-bold px-6 py-2.5 rounded-full hover:bg-[#f59e0b] transition-all flex items-center gap-2 active:scale-95 shadow-lg shadow-[#FBBF24]/20">
+            <button onClick={onGetStarted} className="bg-[#FBBF24] text-[#111827] font-bold px-6 py-2.5 rounded-full hover:bg-[#f59e0b] transition-all flex items-center gap-2 active:scale-95 shadow-lg shadow-[#FBBF24]/20 cursor-pointer">
               Launch Ecosystem
             </button>
           </div>
@@ -116,8 +138,9 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <a href={getPlatformHref('academy', '/dashboard')} className="text-2xl font-bold text-white hover:text-[#FBBF24]">Academy</a>
             <a href={getPlatformHref('os', '/cftos')} className="text-2xl font-bold text-white hover:text-[#FBBF24]">Open Source</a>
             <a href={getPlatformHref('docs', '/blog')} className="text-2xl font-bold text-white hover:text-[#FBBF24]">Docs & Blog</a>
+            <a href="#pricing" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold text-white hover:text-[#FBBF24]">Pricing</a>
             <a href="/about" className="text-2xl font-bold text-white hover:text-[#FBBF24]">About</a>
-            <button onClick={onGetStarted} className="mt-8 bg-[#FBBF24] text-[#111827] font-bold px-8 py-4 rounded-full text-xl hover:bg-[#f59e0b]">
+            <button onClick={() => { setIsMenuOpen(false); onGetStarted(); }} className="mt-8 bg-[#FBBF24] text-[#111827] font-bold px-8 py-4 rounded-full text-xl hover:bg-[#f59e0b]">
               Launch Ecosystem
             </button>
           </nav>
@@ -293,6 +316,211 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
         </div>
       </section>
 
+      {/* 5. PRICING SECTION */}
+      <section id="pricing" className="py-24 bg-[#0a0f1d] text-white relative overflow-hidden border-t border-slate-800">
+        {/* Ambient Glowing Orbs */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-r from-amber-500/10 via-indigo-500/10 to-blue-500/10 rounded-full blur-[140px] pointer-events-none" />
+
+        <div className="container mx-auto px-6 max-w-7xl relative z-10">
+          <AnimatedSection className="text-center max-w-3xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-black uppercase tracking-widest mb-4">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Transparent & Accessible Pricing</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6">
+              Flexible Plans for <span className="text-[#FBBF24]">Every Learner & Institution</span>
+            </h2>
+            <p className="text-slate-400 text-lg md:text-xl leading-relaxed">
+              Start learning for free, upgrade for unlimited AI tutoring, or deploy an offline-first CS lab in your school.
+            </p>
+
+            {/* Monthly / Yearly Billing Toggle */}
+            <div className="flex items-center justify-center gap-4 mt-8">
+              <span className={`text-sm font-bold ${!isYearlyBilling ? 'text-white' : 'text-slate-400'}`}>Monthly</span>
+              <button
+                onClick={() => setIsYearlyBilling(!isYearlyBilling)}
+                className="w-14 h-8 rounded-full bg-slate-800 border border-slate-700 p-1 flex items-center transition-colors cursor-pointer relative"
+              >
+                <div className={`w-6 h-6 rounded-full bg-[#FBBF24] shadow-md transform transition-transform ${isYearlyBilling ? 'translate-x-6' : 'translate-x-0'}`} />
+              </button>
+              <span className={`text-sm font-bold flex items-center gap-2 ${isYearlyBilling ? 'text-white' : 'text-slate-400'}`}>
+                <span>Yearly</span>
+                <span className="bg-amber-400/20 text-amber-300 border border-amber-400/40 text-[10px] font-black uppercase px-2 py-0.5 rounded-full">
+                  Save 20%
+                </span>
+              </span>
+            </div>
+          </AnimatedSection>
+
+          {/* Pricing Cards Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+            
+            {/* TIER 1: STARTER FREE */}
+            <AnimatedSection className="h-full">
+              <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 flex flex-col justify-between h-full hover:border-slate-700 transition-all shadow-xl">
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-xs font-black uppercase tracking-widest text-slate-400">Starter</span>
+                    <Zap className="w-5 h-5 text-slate-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Free Explorer</h3>
+                  <p className="text-slate-400 text-xs leading-relaxed mb-6">
+                    Essential coding challenges and playground for self-directed learners.
+                  </p>
+
+                  <div className="mb-8">
+                    <span className="text-5xl font-black text-white">$0</span>
+                    <span className="text-slate-400 text-sm font-medium ml-2">/ forever</span>
+                  </div>
+
+                  <div className="space-y-3.5 border-t border-slate-800/80 pt-6 text-sm text-slate-300">
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>Access to 60+ Basic CS & Logic Challenges</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>Standard AI Tutor (10 queries/day)</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>Public Code Sandbox & Playground</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>Community Discussion Forum</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => handleOpenCheckout('Free Explorer', '$0')}
+                  className="w-full py-4 mt-8 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm transition-all cursor-pointer border border-slate-700"
+                >
+                  Get Started Free
+                </button>
+              </div>
+            </AnimatedSection>
+
+            {/* TIER 2: PIONEER PRO (MOST POPULAR) */}
+            <AnimatedSection className="h-full">
+              <div className="bg-gradient-to-b from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-amber-400/80 rounded-3xl p-8 flex flex-col justify-between h-full relative shadow-2xl shadow-amber-400/10 transform lg:-translate-y-2">
+                {/* Popular Pill */}
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[11px] uppercase tracking-widest px-4 py-1 rounded-full shadow-md">
+                  🔥 Most Popular
+                </div>
+
+                <div>
+                  <div className="flex justify-between items-center mb-4 mt-1">
+                    <span className="text-xs font-black uppercase tracking-widest text-amber-400">Pioneer Pro</span>
+                    <Sparkles className="w-5 h-5 text-amber-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Pro Mastery</h3>
+                  <p className="text-slate-400 text-xs leading-relaxed mb-6">
+                    Full AI agent suite, 100+ challenges, unlimited diagnostics & multi-language support.
+                  </p>
+
+                  <div className="mb-8">
+                    <span className="text-5xl font-black text-white">
+                      {isYearlyBilling ? '$15' : '$19'}
+                    </span>
+                    <span className="text-slate-400 text-sm font-medium ml-2">
+                      / month {isYearlyBilling && '(billed yearly)'}
+                    </span>
+                  </div>
+
+                  <div className="space-y-3.5 border-t border-slate-800/80 pt-6 text-sm text-white">
+                    <div className="flex items-center gap-3 font-semibold">
+                      <Check className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>All 100+ CS, Python, Web & Kids Challenges</span>
+                    </div>
+                    <div className="flex items-center gap-3 font-semibold">
+                      <Check className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>Unlimited AI Tutor & Real-time Diagnostics</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>Multi-Language Support (EN, FR, AR)</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>3 Specialized Autonomous AI Agents Access</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>Interactive Math & Speaking Voice Labs</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>Priority Support & Certifications</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => handleOpenCheckout('Pioneer Pro', isYearlyBilling ? '$15' : '$19')}
+                  className="w-full py-4 mt-8 rounded-2xl bg-[#FBBF24] hover:bg-[#f59e0b] text-[#111827] font-black text-sm transition-all shadow-lg shadow-[#FBBF24]/25 active:scale-95 cursor-pointer"
+                >
+                  Start 14-Day Free Trial
+                </button>
+              </div>
+            </AnimatedSection>
+
+            {/* TIER 3: ENTERPRISE & SCHOOLS */}
+            <AnimatedSection className="h-full">
+              <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 flex flex-col justify-between h-full hover:border-slate-700 transition-all shadow-xl">
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-xs font-black uppercase tracking-widest text-indigo-400">Institutional</span>
+                    <Building2 className="w-5 h-5 text-indigo-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Schools & B2G</h3>
+                  <p className="text-slate-400 text-xs leading-relaxed mb-6">
+                    Offline-first classroom deployment, seat management & custom curriculum engineering.
+                  </p>
+
+                  <div className="mb-8">
+                    <span className="text-4xl font-black text-white">Custom</span>
+                    <span className="text-slate-400 text-sm font-medium ml-2">/ school license</span>
+                  </div>
+
+                  <div className="space-y-3.5 border-t border-slate-800/80 pt-6 text-sm text-slate-300">
+                    <div className="flex items-center gap-3 font-semibold text-white">
+                      <Check className="w-4 h-4 text-indigo-400 shrink-0" />
+                      <span>Offline Hotspot & Ollama Local Server Setup</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-indigo-400 shrink-0" />
+                      <span>Curriculum Factory Agent Customization</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-indigo-400 shrink-0" />
+                      <span>Student Analytics & Teacher Mastery Dashboard</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-indigo-400 shrink-0" />
+                      <span>Bulk Seat Allocations & NGO Grant Support</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-indigo-400 shrink-0" />
+                      <span>Dedicated Account Manager & 24/7 SLA</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => handleOpenCheckout('Schools & Enterprise', '$499')}
+                  className="w-full py-4 mt-8 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition-all shadow-md shadow-indigo-600/20 cursor-pointer"
+                >
+                  Contact Sales & Onboard
+                </button>
+              </div>
+            </AnimatedSection>
+
+          </div>
+        </div>
+      </section>
+
       {/* 6. Final Action Module (CTA Block) */}
       <section className="py-16 bg-slate-50 border-t border-slate-200 text-center">
         <AnimatedSection className="container mx-auto px-6">
@@ -418,10 +646,24 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
 
       {/* Floating Action Buttons */}
       <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
-        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="w-12 h-12 rounded-full bg-[#111827] flex items-center justify-center text-white shadow-lg hover:scale-110 active:scale-95 transition-all" aria-label="Scroll to top">
+        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="w-12 h-12 rounded-full bg-[#111827] flex items-center justify-center text-white shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer" aria-label="Scroll to top">
           <ChevronUp className="w-6 h-6" />
         </button>
       </div>
+
+      {/* REAL PAYMENT GATEWAY MODAL */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        planName={selectedPlanDetails.name}
+        planPrice={selectedPlanDetails.price}
+        planInterval={selectedPlanDetails.interval}
+        onPaymentSuccess={() => {
+          setTimeout(() => {
+            onGetStarted();
+          }, 2000);
+        }}
+      />
 
     </div>
   );
