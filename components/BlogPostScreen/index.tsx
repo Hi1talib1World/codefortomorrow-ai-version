@@ -124,7 +124,18 @@ export default function BlogPostScreen({ currentUser, updateUser }: BlogPostScre
     
     const isSaved = currentUser?.savedPosts?.includes(post?.id || '');
 
-    const handleShareClick = () => {
+    const handleShareClick = async () => {
+        if (navigator.share && post) {
+            try {
+                await navigator.share({
+                    title: post.title,
+                    text: post.excerpt,
+                    url: window.location.href,
+                });
+                showToast('Article shared successfully! 🚀', 'success');
+                return;
+            } catch (err) {}
+        }
         setIsShareModalOpen(true);
     };
 

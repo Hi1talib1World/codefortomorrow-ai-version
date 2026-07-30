@@ -252,7 +252,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                         : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                     }`}
                   >
-                    <Sparkles className="w-5 h-5 text-amber-500" />
+                    <Zap className="w-5 h-5 text-amber-500" />
                     <span>Apple/Google</span>
                   </button>
 

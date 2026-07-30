@@ -324,7 +324,6 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <AnimatedSection className="text-center max-w-3xl mx-auto mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-black uppercase tracking-widest mb-4">
-              <Sparkles className="w-3.5 h-3.5" />
               <span>Transparent & Accessible Pricing</span>
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6">
@@ -413,7 +412,6 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
                 <div>
                   <div className="flex justify-between items-center mb-4 mt-1">
                     <span className="text-xs font-black uppercase tracking-widest text-amber-400">Pioneer Pro</span>
-                    <Sparkles className="w-5 h-5 text-amber-400" />
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-2">Pro Mastery</h3>
                   <p className="text-slate-400 text-xs leading-relaxed mb-6">

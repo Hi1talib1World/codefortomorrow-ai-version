@@ -534,7 +534,6 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ currentUser }) => {
           {highlightedPostId && (
             <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-center justify-between text-xs text-amber-600 dark:text-amber-400 font-bold mb-4 shadow-sm">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-500" />
                 <span>Viewing Shared Post via Permalink</span>
               </div>
               <button

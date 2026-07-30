@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, ChevronRight, Bookmark, Menu, X } from 'lucide-react';
+import { ArrowLeft, Calendar, User, ChevronRight, Bookmark, Menu, X, Share2, Link, Check } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useToast } from '../ToastNotification';
 import { User as UserType } from '../../types';
 import api from '../../services/api';
 import { AuthPromptModal } from '../AuthPromptModal';
@@ -16,7 +17,7 @@ export const blogPosts = [
         date: "April 9, 2026",
         category: "Education",
         readTime: "5 min read",
-        image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop"
+        image: "/assets/images/blog_kids_coding.jpg"
     },
     {
         id: "2",
@@ -27,7 +28,7 @@ export const blogPosts = [
         date: "April 5, 2026",
         category: "Platform Updates",
         readTime: "4 min read",
-        image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop"
+        image: "/assets/images/blog_gamified_learning.jpg"
     },
     {
         id: "3",
@@ -38,7 +39,7 @@ export const blogPosts = [
         date: "March 28, 2026",
         category: "New Features",
         readTime: "3 min read",
-        image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop"
+        image: "/assets/images/blog_ai_mentorship.jpg"
     },
     {
         id: "4",
@@ -116,9 +117,31 @@ interface BlogScreenProps {
 export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps) {
     const navigate = useNavigate();
     const { t, language } = useLanguage();
+    const { showToast } = useToast();
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [gridOn, setGridOn] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [copiedBlogPostId, setCopiedBlogPostId] = useState<string | null>(null);
+
+    const handleShareBlogPost = async (e: React.MouseEvent, post: typeof blogPosts[0]) => {
+        e.stopPropagation();
+        const postUrl = `${window.location.origin}/blog/${post.id}`;
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: post.title,
+                    text: post.excerpt,
+                    url: postUrl,
+                });
+                showToast('Blog post link shared! 🚀', 'success');
+                return;
+            } catch (err) {}
+        }
+        navigator.clipboard.writeText(postUrl);
+        setCopiedBlogPostId(post.id);
+        showToast('Blog post permalink copied to clipboard! 🔗', 'success');
+        setTimeout(() => setCopiedBlogPostId(null), 2500);
+    };
 
     const isDashboard = window.location.pathname.startsWith('/dashboard') || currentUser !== null;
     const isRtl = language === 'ar';
@@ -550,12 +573,22 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
                                                     {post.category}
                                                 </div>
                                             </div>
-                                            <button
-                                                onClick={(e) => handleSavePost(e, post.id)}
-                                                className={`absolute top-4 right-4 p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm border ${currentUser?.savedPosts?.includes(post.id) ? 'bg-[#FBBF24] border-[#FBBF24] text-slate-950' : 'bg-[#0a0f1d]/95 border-slate-800 text-slate-400 hover:text-[#FBBF24]'}`}
-                                            >
-                                                <Bookmark className={`w-4 h-4 ${currentUser?.savedPosts?.includes(post.id) ? 'fill-current' : ''}`} />
-                                            </button>
+                                            <div className="absolute top-4 right-4 flex gap-2">
+                                                <button
+                                                    onClick={(e) => handleShareBlogPost(e, post)}
+                                                    title="Share / Copy Link"
+                                                    className="p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm border bg-[#0a0f1d]/95 border-slate-800 text-slate-400 hover:text-[#FBBF24] hover:border-[#FBBF24] cursor-pointer"
+                                                >
+                                                    {copiedBlogPostId === post.id ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4" />}
+                                                </button>
+                                                <button
+                                                    onClick={(e) => handleSavePost(e, post.id)}
+                                                    title="Save Article"
+                                                    className={`p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm border ${currentUser?.savedPosts?.includes(post.id) ? 'bg-[#FBBF24] border-[#FBBF24] text-slate-950' : 'bg-[#0a0f1d]/95 border-slate-800 text-slate-400 hover:text-[#FBBF24]'}`}
+                                                >
+                                                    <Bookmark className={`w-4 h-4 ${currentUser?.savedPosts?.includes(post.id) ? 'fill-current' : ''}`} />
+                                                </button>
+                                            </div>
                                         </div>
                                         <div className="pt-6 flex flex-col flex-1">
                                             <h2 className="text-xl font-bold text-white mb-3 line-clamp-2 transition-colors group-hover:text-[#FBBF24]">
