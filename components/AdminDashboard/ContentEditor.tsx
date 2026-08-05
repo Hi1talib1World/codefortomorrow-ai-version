@@ -172,16 +172,20 @@ const ContentEditor: React.FC = () => {
     setTagInput('');
   };
 
-  // Cover image upload (converts to base64 then uploads)
+  // Cover image upload (uploads to Cloudinary with Data URL fallback)
   const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = async () => {
+      const dataUrl = reader.result as string;
       try {
-        const url = await uploadImageApi(reader.result as string);
+        const url = await uploadImageApi(dataUrl);
         setCoverImageUrl(url);
-      } catch { alert('Image upload failed. Check Cloudinary config.'); }
+      } catch {
+        // Fallback to local Data URL if Cloudinary is not configured or fails
+        setCoverImageUrl(dataUrl);
+      }
     };
     reader.readAsDataURL(file);
   };
