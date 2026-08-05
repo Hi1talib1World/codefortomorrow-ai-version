@@ -652,14 +652,10 @@ export default function App() {
             </ProtectedRoute>
           } />
           <Route path="/blog" element={
-            <ProtectedRoute currentUser={currentUser}>
-              <BlogScreen currentUser={currentUser} updateUser={updateUser} />
-            </ProtectedRoute>
+            <BlogScreen currentUser={currentUser} updateUser={updateUser} />
           } />
           <Route path="/blog/:postId" element={
-            <ProtectedRoute currentUser={currentUser}>
-              <BlogPostScreen currentUser={currentUser} updateUser={updateUser} />
-            </ProtectedRoute>
+            <BlogPostScreen currentUser={currentUser} updateUser={updateUser} />
           } />
           <Route path="/cftos" element={
             <ProtectedRoute currentUser={currentUser}>
