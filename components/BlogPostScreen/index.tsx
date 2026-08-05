@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { ArrowLeft, Calendar, User, Clock, Share2, Twitter, Facebook, Linkedin, Link2, X, Bookmark, Menu } from 'lucide-react';
-import { blogPosts } from '../BlogScreen';
+import { blogPosts, getPostSlug } from '../BlogScreen';
 import { useToast } from '../ToastNotification';
 import { User as UserType } from '../../types';
 import api from '../../services/api';
@@ -48,7 +48,14 @@ export default function BlogPostScreen({ currentUser, updateUser }: BlogPostScre
         }
     };
 
-    const post = blogPosts.find(p => p.id === postId);
+    const decodedParam = postId ? decodeURIComponent(postId) : '';
+    const post = blogPosts.find(p => 
+        p.id === postId || 
+        p.slug === postId || 
+        p.slug === decodedParam || 
+        getPostSlug(p) === decodedParam || 
+        getPostSlug(p) === postId
+    );
 
     // Keyboard layout toggle trigger (G key)
     useEffect(() => {

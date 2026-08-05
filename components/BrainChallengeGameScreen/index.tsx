@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowRight, Brain, Zap, Trophy, Shield, Code, Calculator, Globe, Star } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { User } from '../../types';
 import api from '../../services/api';
 import { getChallengeById } from '../BrainTrainingScreen';
 
@@ -146,8 +147,13 @@ const categoryStyleMap: Record<string, { bg: string; text: string; emoji: string
     'cyber': { bg: 'bg-rose-100 dark:bg-rose-900/30', text: 'text-rose-700 dark:text-rose-300', emoji: '🛡️', key: 'Cybersecurity' },
 };
 
+interface BrainChallengeGameScreenProps {
+    currentUser?: User | null;
+    updateUser?: (data: Partial<User>) => Promise<void>;
+}
+
 /* ─── Component ─────────────────────────────────────────────────── */
-export default function BrainChallengeGameScreen() {
+export default function BrainChallengeGameScreen({ currentUser, updateUser }: BrainChallengeGameScreenProps) {
     const navigate = useNavigate();
     const { challengeId } = useParams<{ challengeId: string }>();
     const cId = Number(challengeId) || 1;
@@ -236,14 +242,40 @@ Format as a valid JSON array matching this structure:
         if (idx >= 0 && idx < questions.length) setCurrentIndex(idx);
     };
 
-    const handleFinishQuiz = () => {
+    const handleFinishQuiz = async () => {
         try {
             const stored = localStorage.getItem('completedBrainChallenges');
             const completed = stored ? JSON.parse(stored) : [];
             if (!completed.includes(cId)) {
                 localStorage.setItem('completedBrainChallenges', JSON.stringify([...completed, cId]));
             }
-        } catch (e) {}
+
+            if (currentUser && currentUser.progress) {
+                const earnedXP = currentChallenge.xpReward || 25;
+                const currentXP = currentUser.progress.xp || 0;
+                const currentStreak = currentUser.progress.streak || 1;
+                const todayStr = new Date().toISOString();
+
+                const updatedProgress = {
+                    ...currentUser.progress,
+                    xp: currentXP + earnedXP,
+                    streak: currentStreak,
+                    lastLessonCompletedDate: todayStr,
+                };
+
+                try {
+                    await api.updateUserProgress(updatedProgress);
+                } catch (err) {
+                    console.error("Failed to save progress to backend:", err);
+                }
+
+                if (updateUser) {
+                    await updateUser({ progress: updatedProgress });
+                }
+            }
+        } catch (e) {
+            console.error("Error saving challenge completion:", e);
+        }
         setShowResultsModal(true);
     };
 

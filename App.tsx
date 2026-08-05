@@ -648,7 +648,7 @@ export default function App() {
           } />
           <Route path="/brain-training/:challengeId" element={
             <ProtectedRoute currentUser={currentUser}>
-              <BrainChallengeGameScreen />
+              <BrainChallengeGameScreen currentUser={currentUser} updateUser={updateUser} />
             </ProtectedRoute>
           } />
           <Route path="/blog" element={
