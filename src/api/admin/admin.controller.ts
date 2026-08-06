@@ -442,3 +442,91 @@ export const getAnalytics = async (req: Request, res: Response, next: NextFuncti
     next(error);
   }
 };
+
+/**
+ * GET /api/admin/users
+ * Search and list all users with pagination and role filter
+ */
+export const listUsers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { search, role, page = '1', limit = '20' } = req.query as Record<string, string>;
+    const query: Record<string, any> = {};
+
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+      ];
+    }
+    if (role && role !== 'all') query.role = role;
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const [users, total] = await Promise.all([
+      User.find(query)
+        .select('name email role profilePictureUrl emailVerified progress createdAt updatedAt')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit)),
+      User.countDocuments(query),
+    ]);
+
+    res.json({ users, total, page: parseInt(page), limit: parseInt(limit) });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * PATCH /api/admin/users/:id/role
+ * Update user role (admin | teacher | student)
+ */
+export const updateUserRole = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { role } = req.body;
+    if (!['admin', 'teacher', 'student'].includes(role)) {
+      return next(new ApiError(400, 'Invalid role. Must be admin, teacher, or student.'));
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { role },
+      { new: true }
+    ).select('name email role profilePictureUrl emailVerified');
+
+    if (!updatedUser) return next(new ApiError(404, 'User not found'));
+    res.json(updatedUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /api/admin/status
+ * Real-time system health and configuration status
+ */
+export const getSystemStatus = async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const totalContent = await Content.countDocuments();
+    const liveContent = await Content.countDocuments({ status: 'live' });
+
+    res.json({
+      status: 'healthy',
+      nodeVersion: process.version,
+      uptimeSeconds: Math.floor(process.uptime()),
+      env: process.env.NODE_ENV || 'development',
+      mongodb: 'connected',
+      cloudinaryConfigured: !!process.env.CLOUDINARY_CLOUD_NAME,
+      posthogConfigured: !!process.env.POSTHOG_PERSONAL_API_KEY,
+      geminiConfigured: !!process.env.GEMINI_API_KEY,
+      adminEmails: (process.env.ADMIN_EMAILS || 'hichamoutaleb7@gmail.com').split(','),
+      metrics: {
+        totalUsers,
+        totalContent,
+        liveContent,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
