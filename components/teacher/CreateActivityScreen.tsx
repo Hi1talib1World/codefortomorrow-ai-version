@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Type, FileText, Clock, Users, Plus, Trash2, ListChecks, Sparkles } from 'lucide-react';
+import { X, Type, FileText, Clock, Users, Plus, Trash2, ListChecks, Zap } from 'lucide-react';
 import api from '../../services/api';
 
 interface CreateActivityScreenProps {
@@ -73,7 +73,7 @@ const CreateActivityScreen: React.FC<CreateActivityScreenProps> = ({ onClose, on
         <div className="sticky top-0 bg-white dark:bg-slate-800 p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center z-10 rounded-t-3xl">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-brand-100 dark:bg-brand-900/30 rounded-xl">
-              <Sparkles className="w-6 h-6 text-brand-600" />
+              <Zap className="w-6 h-6 text-brand-600" />
             </div>
             <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Prepare Classroom Activity</h2>
           </div>
