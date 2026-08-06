@@ -59,8 +59,8 @@ const PrivacyPolicyScreen: React.FC = () => {
     scrollContainer?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const effectiveDate = 'June 1, 2026';
-  const lastUpdated = 'June 1, 2026';
+  const effectiveDate = 'June 1';
+  const lastUpdated = 'June 1';
 
   return (
     <div className={`max-w-7xl mx-auto ${isRtl ? 'text-right' : 'text-left'}`} dir={isRtl ? 'rtl' : 'ltr'}>
