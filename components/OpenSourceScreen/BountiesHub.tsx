@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trophy, DollarSign, Sparkles } from 'lucide-react';
+import { Trophy, DollarSign, Zap } from 'lucide-react';
 import { useI18n } from './i18n';
 
 export const BountiesHub: React.FC = () => {
@@ -17,7 +17,7 @@ export const BountiesHub: React.FC = () => {
       <div className="grid grid-cols-1 gap-6">
         <div className="bg-[#121212] rounded-3xl border border-slate-800/60 p-8">
           <div className="flex items-center gap-3 mb-6">
-            <Sparkles className="w-6 h-6 text-[#FBBF24]" />
+            <Zap className="w-6 h-6 text-[#FBBF24]" />
             <h2 className="text-2xl font-bold text-white">{t('bounties.topPlatforms')}</h2>
           </div>
           <div className="space-y-4 text-slate-300 text-sm">
