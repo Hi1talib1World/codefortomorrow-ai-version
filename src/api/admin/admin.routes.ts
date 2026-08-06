@@ -10,6 +10,9 @@ import {
   toggleStatus,
   uploadImage,
   getAnalytics,
+  listUsers,
+  updateUserRole,
+  getSystemStatus,
 } from '../admin/admin.controller';
 
 const router = express.Router();
@@ -25,8 +28,13 @@ router.put('/content/:id', updateContent);
 router.delete('/content/:id', deleteContent);
 router.patch('/content/:id/status', toggleStatus);
 
-// ─── Image Upload ─────────────────────────────────────────────────────────────
+// ─── User Management ─────────────────────────────────────────────────────────
+router.get('/users', listUsers);
+router.patch('/users/:id/role', updateUserRole);
+
+// ─── Image Upload & System ──────────────────────────────────────────────────
 router.post('/upload', uploadImage);
+router.get('/status', getSystemStatus);
 
 // ─── Analytics ────────────────────────────────────────────────────────────────
 router.get('/analytics', getAnalytics);
