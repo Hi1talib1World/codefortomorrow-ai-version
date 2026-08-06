@@ -54,6 +54,8 @@ export interface Lesson {
   challengeDescriptionKey: string;
   /** Translation key for the concept explanation shown in the theory card. */
   explanationKey?: string;
+  /** Custom introduction paragraph / theory explanation for this lesson. */
+  introduction?: string;
   /** Pre-filled code shown in the editor when the lesson opens. */
   starterCode: string;
   /** The exact code that produces the expected output (used internally). */
@@ -182,7 +184,7 @@ export interface Badge {
 }
 
 export type ProgrammingPath = {
-  id: 'block_coding' | 'python' | 'javascript' | 'lua' | 'web_dev' | 'c++' | 'c_sharp' | 'java' | 'kotlin' | 'swift' | 'go' | 'rust' | 'php' | 'ruby' | 'typescript' | 'sql' | 'r' | 'dart' | 'scala' | 'math' | 'shell' | 'ai_ml' | 'cybersecurity' | 'assembly';
+  id: 'block_coding' | 'python' | 'javascript' | 'lua' | 'web_dev' | 'c++' | 'c_sharp' | 'java' | 'kotlin' | 'swift' | 'go' | 'rust' | 'php' | 'ruby' | 'typescript' | 'sql' | 'r' | 'dart' | 'scala' | 'math' | 'shell' | 'ai_ml' | 'cybersecurity' | 'assembly' | 'ai_engineering';
   titleKey: string;
   descriptionKey: string;
   icon: string;
