@@ -17,8 +17,7 @@ import {
   Check,
   ExternalLink,
   X,
-  Link,
-  Sparkles
+  Link
 } from 'lucide-react';
 
 interface FeedScreenProps {
