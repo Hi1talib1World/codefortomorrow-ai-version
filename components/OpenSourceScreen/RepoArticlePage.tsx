@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowLeft, Star, GitFork, Github, ExternalLink, Share2, Twitter, Facebook, Linkedin, Link2, X, Clock, Calendar, Shield, Sparkles, Terminal, Copy, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Star, GitFork, Github, ExternalLink, Share2, Twitter, Facebook, Linkedin, Link2, X, Clock, Calendar, Shield, Bot, Terminal, Copy, CheckCircle2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useToast } from '../ToastNotification';
@@ -117,7 +117,7 @@ export default function RepoArticlePage() {
   }
 
   const accent = resolvedCategory === 'ai' || (repo && (repo.language === 'Python' || repo.language === 'TypeScript'))
-    ? { bg: 'bg-purple-500', bgLight: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400', textBright: 'text-purple-300', icon: Sparkles }
+    ? { bg: 'bg-purple-500', bgLight: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400', textBright: 'text-purple-300', icon: Bot }
     : { bg: 'bg-[#111827]', bgLight: 'bg-[#111827]/10', border: 'border-[#111827]/20', text: 'text-emerald-400', textBright: 'text-emerald-300', icon: Shield };
 
   const articleUrl = window.location.href;
