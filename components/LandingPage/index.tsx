@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { User } from '../../types';
 import { motion, useInView, useAnimation } from 'motion/react';
-import { Terminal, Play, CheckCircle, Menu, X, ArrowRight, BookOpen, Layers, Users, Star, MessageSquare, ChevronUp, Sparkles, Check, Zap, ShieldCheck, Building2 } from 'lucide-react';
+import { Terminal, Play, CheckCircle, Menu, X, ArrowRight, BookOpen, Layers, Users, Star, MessageSquare, ChevronUp, Check, Zap, ShieldCheck, Building2 } from 'lucide-react';
 import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { RadialOrbitalTimelineDemo } from '@/components/ui/demo';
