@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import AgentPanel, { AgentLogEntry, AgentState } from './AgentPanel';
 import ReportFeed, { GlobalAgentLogEntry } from './ReportFeed';
 import api from '../services/api';
-import { Code2, Brain, Bot, Sparkles, Activity, ShieldCheck, RefreshCw } from 'lucide-react';
+import { Code2, Brain, Bot, Activity, ShieldCheck, RefreshCw } from 'lucide-react';
 
 const AGENT_TABS = [
   { id: 'curriculum-factory', label: 'Curriculum Factory Agent', icon: Code2, desc: 'Automated lesson creation & localization' },
@@ -129,7 +129,7 @@ const AgentsPage: React.FC = () => {
         {/* Top Header Title */}
         <div className="relative z-10 text-center max-w-2xl mx-auto space-y-2 mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-400 text-xs font-extrabold uppercase tracking-widest backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5" />
+            <Activity className="w-3.5 h-3.5" />
             <span>Autonomous Intelligence Grid</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
