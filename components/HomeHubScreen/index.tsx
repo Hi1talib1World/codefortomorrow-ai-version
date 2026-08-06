@@ -7,7 +7,7 @@ import { User as UserType } from '../../types';
 import api from '../../services/api';
 import { useToast } from '../ToastNotification';
 import { PATHS, LESSONS_BY_PATH } from '../../constants';
-import { Sparkles, Flame, Trophy, Target, Compass, BookOpen, ArrowRight, Zap } from 'lucide-react';
+import { Flame, Trophy, Target, Compass, BookOpen, ArrowRight, Zap } from 'lucide-react';
 
 interface HomeHubScreenProps {
     onNavigate: (view: DashboardView) => void;
@@ -248,78 +248,91 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
     };
 
     const renderSuggestedCourses = () => {
-        const suggestedPaths = PATHS.filter(p => p.isAvailable && p.id !== currentPath && p.id !== 'math').slice(0, 3);
+        const suggestedPaths = PATHS.filter(p => p.isAvailable && p.id !== currentPath && p.id !== 'math').slice(0, 6);
 
         if (suggestedPaths.length === 0) return null;
 
         return (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {suggestedPaths.map(path => {
-                    const pathSections = LESSONS_BY_PATH[path.id] || [];
-                    const totalLessons = pathSections.reduce((sum, sec) => sum + sec.lessons.length, 0);
-                    const completedLessonIds = progress.completedLessons?.[path.id] || [];
-                    const completedLessonsCount = completedLessonIds.length;
-                    const completionPercent = totalLessons > 0 ? Math.round((completedLessonsCount / totalLessons) * 100) : 0;
-                    
-                    const isEmoji = !path.icon.startsWith('/');
+            <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {suggestedPaths.map(path => {
+                        const pathSections = LESSONS_BY_PATH[path.id] || [];
+                        const totalLessons = pathSections.reduce((sum, sec) => sum + sec.lessons.length, 0);
+                        const completedLessonIds = progress.completedLessons?.[path.id] || [];
+                        const completedLessonsCount = completedLessonIds.length;
+                        const completionPercent = totalLessons > 0 ? Math.round((completedLessonsCount / totalLessons) * 100) : 0;
+                        
+                        const isEmoji = !path.icon.startsWith('/');
 
-                    return (
-                        <div
-                            key={path.id}
-                            id={`suggested-course-card-${path.id}`}
-                            data-agent-track={`suggested_course_click_${path.id}`}
-                            data-sync-metric="curriculum_selection"
-                            onClick={() => navigate(`/dashboard/learn/${path.id}`)}
-                            className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer flex flex-col justify-between h-full"
-                        >
-                            <div className="aspect-[16/10] w-full bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center relative overflow-hidden">
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-[#FBBF24]/5 to-brand-500/5 transition-opacity duration-300"></div>
-                                <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center shadow-sm transform group-hover:scale-110 transition-transform duration-500">
-                                    {isEmoji ? (
-                                        <span className="text-3xl select-none">{path.icon}</span>
-                                    ) : (
-                                        <img src={path.icon} alt={t(path.titleKey as any)} className="w-10 h-10 object-contain select-none" />
-                                    )}
+                        return (
+                            <div
+                                key={path.id}
+                                id={`suggested-course-card-${path.id}`}
+                                data-agent-track={`suggested_course_click_${path.id}`}
+                                data-sync-metric="curriculum_selection"
+                                onClick={() => navigate(`/dashboard/learn/${path.id}`)}
+                                className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer flex flex-col justify-between h-full"
+                            >
+                                <div className="aspect-[16/10] w-full bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center relative overflow-hidden">
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-[#FBBF24]/5 to-brand-500/5 transition-opacity duration-300"></div>
+                                    <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center shadow-sm transform group-hover:scale-110 transition-transform duration-500">
+                                        {isEmoji ? (
+                                            <span className="text-3xl select-none">{path.icon}</span>
+                                        ) : (
+                                            <img src={path.icon} alt={t(path.titleKey as any)} className="w-10 h-10 object-contain select-none" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+                                        )}
+                                    </div>
+                                </div>
+                                
+                                <div className="p-4 flex flex-col justify-between flex-1">
+                                    <div>
+                                        <h4 className="text-sm font-bold text-slate-800 dark:text-white group-hover:text-[#FBBF24] transition-colors">
+                                            {t(path.titleKey as any) || path.titleKey}
+                                        </h4>
+                                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 min-h-[2rem]">
+                                            {t(path.descriptionKey as any) || path.descriptionKey}
+                                        </p>
+                                        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
+                                            {completionPercent > 0 ? (
+                                                <div className="flex flex-col w-full gap-1">
+                                                    <div className="flex items-center justify-between text-[9px] font-bold text-slate-400 uppercase">
+                                                        <span>{t('completed') || 'Completed'}</span>
+                                                        <span>{completionPercent}%</span>
+                                                    </div>
+                                                    <div className="w-full bg-slate-200 dark:bg-slate-700 h-1 rounded-full overflow-hidden">
+                                                        <div 
+                                                            className="h-full bg-gradient-to-r from-[#FBBF24] to-[#111827] rounded-full"
+                                                            style={{ width: `${completionPercent}%` }}
+                                                        ></div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <span className="text-[10px] bg-[#FBBF24]/20 text-[#111827] dark:text-[#FBBF24] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                                        {t('new' as any)}
+                                                    </span>
+                                                    <div className="w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all">
+                                                        <span className="text-xs">→</span>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <div className="p-4 flex flex-col justify-between flex-1">
-                                <div>
-                                    <h4 className="text-sm font-bold text-slate-800 dark:text-white group-hover:text-[#FBBF24] transition-colors">
-                                        {t(path.titleKey as any) || path.titleKey}
-                                    </h4>
-                                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 min-h-[2rem]">
-                                        {t(path.descriptionKey as any) || path.descriptionKey}
-                                    </p>
-                                              <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
-                                    {completionPercent > 0 ? (
-                                        <div className="flex flex-col w-full gap-1">
-                                            <div className="flex items-center justify-between text-[9px] font-bold text-slate-400 uppercase">
-                                                <span>{t('completed') || 'Completed'}</span>
-                                                <span>{completionPercent}%</span>
-                                            </div>
-                                            <div className="w-full bg-slate-200 dark:bg-slate-700 h-1 rounded-full overflow-hidden">
-                                                <div 
-                                                    className="h-full bg-gradient-to-r from-[#FBBF24] to-[#111827] rounded-full"
-                                                    style={{ width: `${completionPercent}%` }}
-                                                ></div>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <span className="text-[10px] bg-[#FBBF24]/20 text-[#111827] dark:text-[#FBBF24] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
-                                                {t('new' as any)}
-                                            </span>
-                                            <div className="w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all">
-                                                <span className="text-xs">→</span>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>                         </div>
-                            </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </div>
+
+                <div className="pt-2 flex justify-center">
+                    <button
+                        onClick={() => navigate('/dashboard/learn')}
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 hover:border-[#FBBF24] dark:hover:border-[#FBBF24] text-slate-800 dark:text-white font-extrabold text-xs uppercase tracking-wider shadow-sm hover:shadow-md transition-all cursor-pointer group"
+                    >
+                        <span>Load More Courses</span>
+                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-[#FBBF24] group-hover:translate-x-1 transition-all" />
+                    </button>
+                </div>
             </div>
         );
     };
@@ -333,7 +346,6 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             <div className="flex flex-wrap items-center gap-3">
                                 <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-12 w-auto object-contain" />
                                 <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center flex-wrap gap-2">
-                                    <Sparkles className="w-6 h-6 text-amber-500" />
                                     <span>Hello, {userName}!</span>
                                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black bg-blue-500/10 text-blue-600 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-500/20 select-none">
                                         Level {Math.floor(xp / 100) + 1}
