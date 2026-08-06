@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowLeft, Star, GitFork, Github, ExternalLink, CheckCircle2, Bookmark, Share2, Twitter, Facebook, Linkedin, Link2, X, Sparkles, FileText } from 'lucide-react';
+import { ArrowLeft, Star, GitFork, Github, ExternalLink, CheckCircle2, Bookmark, Share2, Twitter, Facebook, Linkedin, Link2, X, Bot, FileText } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { User } from '../../types';
@@ -327,7 +327,7 @@ export const RepoDetails: React.FC<RepoDetailsProps> = ({ repo, onBack, currentU
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Sparkles className="w-4 h-4 text-brand-400 fill-brand-400/20" />
+            <Bot className="w-4 h-4 text-brand-400 fill-brand-400/20" />
             <span>{t('details.aiBeginnerGuide')}</span>
           </button>
           <button
