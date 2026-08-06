@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Search, ChevronDown, CheckCircle2, Star, GitFork, Bookmark, Share2, Sparkles } from 'lucide-react';
+import { Search, ChevronDown, CheckCircle2, Star, GitFork, Bookmark, Share2 } from 'lucide-react';
 import { RepoDetails } from './RepoDetails';
 import { User } from '../../types';
 import api from '../../services/api';
