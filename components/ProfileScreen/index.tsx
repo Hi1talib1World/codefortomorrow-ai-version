@@ -5,7 +5,7 @@ import { BADGES_BY_PATH } from '../../constants';
 import { useLanguage } from '../../contexts/LanguageContext';
 import EditProfileModal from '../EditProfileModal';
 import api from '../../services/api';
-import { Sparkles, Target, Zap, Brain, Plus, Pencil, Award, BookOpen, Shield, Bot, BarChart3, Github, Linkedin, Globe, MapPin, Camera } from 'lucide-react';
+import { Target, Zap, Brain, Plus, Pencil, Award, BookOpen, Shield, Bot, BarChart3, Github, Linkedin, Globe, MapPin, Camera } from 'lucide-react';
 import AnimatedCounter from '../AnimatedCounter';
 import { AvatarPreview } from '../StoreScreen';
 
@@ -424,7 +424,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                 <Brain className="w-20 h-20 text-[#FBBF24]" />
               </div>
               <div className="w-9 h-9 rounded-lg bg-[#FBBF24]/10 flex items-center justify-center text-[#FBBF24] shrink-0 select-none">
-                <Sparkles className="w-5 h-5 animate-pulse" />
+                <Brain className="w-5 h-5 animate-pulse" />
               </div>
               <div className="text-left">
                 <h4 className="text-[10px] font-black text-[#0a66c2] dark:text-[#70b5f9] uppercase tracking-wider">AI Coach Advisor</h4>
@@ -502,7 +502,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ currentUser, onUpdateUser
                   <div key={idx} className="pb-4 border-b border-slate-850 last:border-0 last:pb-0 text-left">
                     <p className="text-sm font-black text-white uppercase tracking-wider">{skill}</p>
                     <p className="text-[10px] font-bold text-[#FBBF24] mt-1.5 flex items-center gap-1.5 select-none">
-                      <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+                      <Brain className="w-3.5 h-3.5 animate-pulse" />
                       <span>Endorsed by Code for Tomorrow AI Mentor</span>
                     </p>
                   </div>
