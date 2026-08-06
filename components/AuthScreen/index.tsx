@@ -295,7 +295,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess, skipAuth, role }
         {/* Photo Background */}
         <div 
           className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-105"
-          style={{ backgroundImage: `url('/login_classroom_banner.jpg')` }}
+          style={{ backgroundImage: `url('/multi_age_coding_banner.jpg')` }}
         />
         {/* Soft Vignette Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/40" />
