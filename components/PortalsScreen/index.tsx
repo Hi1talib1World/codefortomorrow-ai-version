@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ExternalLink, Sparkles, Terminal } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Terminal } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function PortalsScreen() {
@@ -392,7 +392,7 @@ export default function PortalsScreen() {
 
       {/* Footer Info */}
       <footer className="w-full py-8 text-center text-slate-650 text-xs font-mono border-t border-slate-850/50 z-10 max-w-[1296px] mx-auto px-[72px]">
-        <p>© 2026 Code for Tomorrow. All platforms are seamlessly interconnected.</p>
+        <p>© Code for Tomorrow. All platforms are seamlessly interconnected.</p>
       </footer>
     </div>
   );
