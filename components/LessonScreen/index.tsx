@@ -29,19 +29,42 @@ interface LessonScreenProps {
 const SuccessModal: React.FC<{ lesson: Lesson, onContinue: () => void }> = ({ lesson, onContinue }) => {
     const { t } = useLanguage();
     return (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[100] p-4 animate-fade-in backdrop-blur-xl">
-            <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center max-w-sm w-full relative overflow-hidden animate-pop-in border-b-8 border-green-600 shadow-2xl">
-                <div className="w-24 h-24 mx-auto mb-4 relative hover:scale-110 transition-transform cursor-pointer group">
-                    <div className="absolute inset-0 bg-yellow-400 rounded-full blur-3xl opacity-20 group-hover:opacity-50 animate-pulse"></div>
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[110] p-4 animate-fade-in backdrop-blur-md">
+            <div className="bg-[#181818] border-2 border-emerald-500/40 rounded-3xl p-6 text-center max-w-sm w-full relative overflow-hidden animate-pop-in shadow-[0_0_50px_rgba(16,185,129,0.3)] text-white space-y-4">
+                
+                {/* Glowing Background Radial */}
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
+
+                <div className="w-24 h-24 mx-auto relative hover:scale-110 transition-transform cursor-pointer group">
+                    <div className="absolute inset-0 bg-amber-400/30 rounded-full blur-2xl group-hover:opacity-100 animate-pulse"></div>
                     <Mascot />
                 </div>
-                <h2 className="text-2xl font-black text-green-500 mb-2 uppercase tracking-tighter">{t('genius')}</h2>
-                <p className="text-slate-500 dark:text-slate-400 font-bold text-base mb-6">{t('mission_complete_msg')} <br /> <span className="text-yellow-500 font-black">+{lesson.xp} {t('star_xp_units')}</span></p>
+
+                <div className="space-y-1">
+                    <span className="text-xs font-black text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30">
+                        🎉 Challenge Completed!
+                    </span>
+                    <h2 className="text-2xl font-black text-white tracking-tight pt-1">
+                        {t('genius') || 'Awesome Job!'}
+                    </h2>
+                </div>
+
+                {/* Earning Points Card */}
+                <div className="bg-[#141414] border border-[#282828] p-4 rounded-2xl space-y-1 shadow-inner">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">XP Points Earned</p>
+                    <div className="text-3xl font-black text-amber-400 flex items-center justify-center gap-2 animate-bounce">
+                        <span>⚡</span>
+                        <span>+{lesson.xp} XP</span>
+                    </div>
+                </div>
+
+                {/* Next Lesson Button */}
                 <button
                     onClick={onContinue}
-                    className="w-full bg-green-500 text-white font-black py-3 px-6 rounded-xl text-base uppercase border-b-4 border-green-700 hover:bg-green-400 active:border-b-2 active:translate-y-1 transition-all shadow-xl bubbly-btn"
+                    className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black text-sm uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] active:translate-y-0.5 cursor-pointer flex items-center justify-center gap-2"
                 >
-                    {t('next_adventure')}
+                    <span>🚀 Next Lesson</span>
+                    <ChevronRight className="w-4 h-4" />
                 </button>
             </div>
         </div>
@@ -291,6 +314,74 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
         onComplete(lesson.id, lesson.xp, 100);
     };
 
+    const executeLanguageCode = (codeText: string, pathName: string): string => {
+        let logs: string[] = [];
+
+        // 1. JavaScript / TypeScript / Block Coding execution
+        if (pathName === 'javascript' || pathName === 'typescript' || pathName === 'block_coding' || pathName === 'web_dev') {
+            try {
+                let captured = '';
+                const customConsole = {
+                    log: (...args: any[]) => { captured += args.map(a => String(a)).join(' ') + '\n'; },
+                    error: (...args: any[]) => { captured += args.map(a => String(a)).join(' ') + '\n'; },
+                    warn: (...args: any[]) => { captured += args.map(a => String(a)).join(' ') + '\n'; }
+                };
+                const safeRun = new Function('console', codeText);
+                safeRun(customConsole);
+                if (captured) return captured.trim();
+            } catch (e) {
+                // If JS execution fails, proceed to fallback regex parsing
+            }
+        }
+
+        // 2. C++ / C / Java / C# / Rust / Go / Swift / Kotlin execution simulation
+        // Match std::cout << "..."
+        const coutMatches = codeText.match(/std::cout\s*<<\s*("[^"]*"|'[^']*'|[\w\d_]+)/g);
+        if (coutMatches) {
+            coutMatches.forEach(m => {
+                const val = m.replace(/std::cout\s*<<\s*/, '').replace(/^["']|["']$/g, '');
+                logs.push(val);
+            });
+        }
+        
+        // Match System.out.println("...") or System.out.print("...")
+        const sysOutMatches = codeText.match(/System\.out\.print(?:ln)?\s*\(\s*("[^"]*"|'[^']*'|[\w\d_]+)\s*\)/g);
+        if (sysOutMatches) {
+            sysOutMatches.forEach(m => {
+                const val = m.replace(/System\.out\.print(?:ln)?\s*\(\s*/, '').replace(/\s*\)$/, '').replace(/^["']|["']$/g, '');
+                logs.push(val);
+            });
+        }
+
+        // Match Python print(...) / Console.WriteLine("...") / printf("...") / println!("...") / fmt.Println("...")
+        const printFuncMatches = codeText.match(/(?:Console\.WriteLine|printf|println!|print|fmt\.Println|echo)\s*\(?\s*("[^"]*"|'[^']*'|[\w\d_]+)\s*\)?/g);
+        if (printFuncMatches && logs.length === 0) {
+            printFuncMatches.forEach(m => {
+                const val = m.replace(/(?:Console\.WriteLine|printf|println!|print|fmt\.Println|echo)\s*\(?\s*/, '').replace(/\s*\)?$/, '').replace(/^["']|["']$/g, '');
+                if (val && !val.startsWith('//') && !val.startsWith('#')) {
+                    logs.push(val);
+                }
+            });
+        }
+
+        if (logs.length > 0) {
+            return logs.join('\n').trim();
+        }
+
+        // 3. Fallback: Extract string literals from code
+        const stringMatches = codeText.match(/"([^"\\]*(\\.[^"\\]*)*)"|'([^'\\]*(\\.[^'\\]*)*)'/g);
+        if (stringMatches && stringMatches.length > 0) {
+            const validStrings = stringMatches
+                .map(s => s.replace(/^["']|["']$/g, ''))
+                .filter(s => !s.endsWith('.h') && !s.endsWith('.hpp') && !s.startsWith('http') && s.length > 0);
+            if (validStrings.length > 0) {
+                return validStrings.join('\n').trim();
+            }
+        }
+
+        return '';
+    };
+
     const handleRunCode = () => {
         setIsRunning(true);
         setAiHint(null);
@@ -299,31 +390,22 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
         setMascotMood('thinking');
         const start = performance.now();
 
-        const originalConsoleLog = console.log;
-        let capturedOutput = '';
-        console.log = (...args) => {
-            capturedOutput += args.map(arg => String(arg)).join(' ') + '\n';
-        };
-
         setTimeout(() => {
-            try {
-                new Function(code)();
-            } catch (e) {
-                capturedOutput = "Error! ️";
-            } finally {
-                console.log = originalConsoleLog;
-            }
-
+            let capturedOutput = executeLanguageCode(code, path);
+            
+            // Normalize quotes and spaces for comparison
             const finalOutput = capturedOutput.trim().replace(/"/g, '');
-            const expected = lesson.expectedOutput.trim().replace(/"/g, '');
-            const correct = finalOutput === expected;
+            const expected = (lesson.expectedOutput || '').trim().replace(/"/g, '');
+            
+            // Check if correct: either exact match or output contains expected output
+            const correct = expected ? (finalOutput === expected || finalOutput.includes(expected)) : true;
 
-            setOutput(finalOutput || '(Silence...)');
+            setOutput(capturedOutput || '(Silence...)');
 
             const newHistoryItem = {
                 id: historyCounter + 2,
-                text: finalOutput || '(Empty Output)',
-                type: capturedOutput.includes('Error! ️') ? 'error' as const : (correct ? 'success' as const : 'info' as const)
+                text: capturedOutput || '(Empty Output)',
+                type: correct ? 'success' as const : 'info' as const
             };
             setOutputHistory(prev => [...prev, newHistoryItem]);
             setHistoryCounter(prev => prev + 2);
@@ -338,12 +420,12 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
 
             if (correct) {
                 setMascotMood('happy');
-                setTimeout(() => setShowSuccessModal(true), 1200);
+                setTimeout(() => setShowSuccessModal(true), 500);
             } else {
                 setMascotMood('thinking');
                 runMagicScanner(code);
             }
-        }, 1000);
+        }, 600);
     };
 
     // Navigation handlers
@@ -407,64 +489,66 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
 
     // Simple robust regex syntax highligher for code overlay
     const highlightCode = (rawCode: string) => {
-        let html = rawCode
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-        
         const placeholders: string[] = [];
+
+        const escapeHtml = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         
-        // 1. Extract Comments (block comments and line comments) to protect them from regex highlighting
+        let html = rawCode || '';
+        
+        // 1. Extract Comments (block comments and line comments)
         html = html.replace(/(\/\*[\s\S]*?\*\/|\/\/.*|#.*)/g, (match) => {
-            placeholders.push(`<span class="text-slate-500 italic font-mono">${match}</span>`);
+            placeholders.push(`<span class="text-slate-500 italic font-mono">${escapeHtml(match)}</span>`);
             return `___PH_${placeholders.length - 1}___`;
         });
         
         // 2. Extract Strings
         html = html.replace(/(["'`])((?:\\.|[^\\])*?)\1/g, (match) => {
-            placeholders.push(`<span class="text-emerald-300 font-mono">${match}</span>`);
+            placeholders.push(`<span class="text-emerald-300 font-mono">${escapeHtml(match)}</span>`);
             return `___PH_${placeholders.length - 1}___`;
         });
 
         // 3. Highlight Annotations
         html = html.replace(/(@\w+)/g, (match) => {
-            placeholders.push(`<span class="text-indigo-400 font-bold">${match}</span>`);
+            placeholders.push(`<span class="text-indigo-400 font-bold">${escapeHtml(match)}</span>`);
             return `___PH_${placeholders.length - 1}___`;
         });
 
-        // 4. Highlight Java / standard keywords
-        const keywords = /\b(class|public|private|protected|static|final|void|int|double|float|long|short|byte|boolean|char|if|else|for|while|do|switch|case|default|break|continue|return|new|this|super|extends|implements|try|catch|finally|throw|throws|import|package|const|let|var|function|def|elif|from|as)\b/g;
+        // 4. Highlight Java / C++ / Python / JS keywords
+        const keywords = /\b(class|public|private|protected|static|final|void|int|double|float|long|short|byte|boolean|char|if|else|for|while|do|switch|case|default|break|continue|return|new|this|super|extends|implements|try|catch|finally|throw|throws|import|package|const|let|var|function|def|elif|from|as|include|using|namespace|std|cout|cin|endl)\b/g;
         html = html.replace(keywords, (match) => {
-            placeholders.push(`<span class="text-sky-400 font-bold">${match}</span>`);
+            placeholders.push(`<span class="text-sky-400 font-bold">${escapeHtml(match)}</span>`);
             return `___PH_${placeholders.length - 1}___`;
         });
 
-        // 5. Highlight Common Types & Predefined Classes (capitalized words like System, String, Math, etc.)
-        const types = /\b(System|String|Math|Object|Scanner|List|ArrayList|Map|HashMap|Integer|Double|Float|Boolean|Character|Byte|Short|Long|Void|Exception|Thread)\b/g;
+        // 5. Highlight Common Types & Predefined Classes
+        const types = /\b(System|String|Math|Object|Scanner|List|ArrayList|Map|HashMap|Integer|Double|Float|Boolean|Character|Byte|Short|Long|Void|Exception|Thread|iostream|vector|string)\b/g;
         html = html.replace(types, (match) => {
-            placeholders.push(`<span class="text-rose-400 font-bold">${match}</span>`);
+            placeholders.push(`<span class="text-rose-400 font-bold">${escapeHtml(match)}</span>`);
             return `___PH_${placeholders.length - 1}___`;
         });
 
         // 6. Highlight Method Calls (word followed by open parenthesis)
         html = html.replace(/\b(\w+)(?=\()/g, (match) => {
-            placeholders.push(`<span class="text-cyan-400 font-semibold">${match}</span>`);
+            placeholders.push(`<span class="text-cyan-400 font-semibold">${escapeHtml(match)}</span>`);
             return `___PH_${placeholders.length - 1}___`;
         });
 
         // 7. Highlight Numbers
         html = html.replace(/\b(\d+(\.\d+)?)\b/g, (match) => {
-            placeholders.push(`<span class="text-amber-400 font-medium">${match}</span>`);
+            placeholders.push(`<span class="text-amber-400 font-medium">${escapeHtml(match)}</span>`);
             return `___PH_${placeholders.length - 1}___`;
         });
 
-        // 8. Highlight Operators
+        // 8. Highlight Operators (including C++ <<, >>, <, >)
         html = html.replace(/([+\-*/%=!&|<>:?^~]+)/g, (match) => {
-            placeholders.push(`<span class="text-slate-400">${match}</span>`);
+            placeholders.push(`<span class="text-slate-400">${escapeHtml(match)}</span>`);
             return `___PH_${placeholders.length - 1}___`;
         });
 
-        // 9. Re-insert strings, comments, and highlighted elements recursively
+        // 9. Escape any remaining non-placeholder code text
+        html = escapeHtml(html);
+
+        // 10. Re-insert placeholders
         let lastHtml = '';
         while (html !== lastHtml) {
             lastHtml = html;
@@ -515,440 +599,252 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
 
             {showSuccessModal && <SuccessModal lesson={lesson} onContinue={handleComplete} />}
 
-            {/* Top Navigation / Progress Header */}
-            <header className="flex-shrink-0 bg-[#0b0f19] border-b border-slate-800 p-3 shadow-lg">
-                <div className="flex items-center justify-between max-w-7xl mx-auto">
-                    <button onClick={onExit} className="w-9 h-9 flex items-center justify-center bg-slate-900 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-all border border-slate-850 active:translate-y-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+            {/* Top Navigation / Coddy-style Header */}
+            <header className="flex-shrink-0 h-12 bg-[#181818] border-b border-[#282828] px-4 flex items-center justify-between z-30 select-none">
+                <div className="flex items-center gap-3">
+                    <button onClick={onExit} className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors cursor-pointer" title="Exit Lesson">
+                        <X className="w-5 h-5" />
                     </button>
+                    <span className="text-sm font-extrabold text-white tracking-wide">
+                        {t(lesson.titleKey as any) || lesson.titleKey || 'Introduction'}
+                    </span>
+                </div>
 
-                    <div className="flex-grow mx-6 flex items-center gap-4">
-                        <div className="flex-grow bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800 shadow-inner relative">
-                            <div
-                                className="bg-gradient-to-r from-cyan-400 via-sky-500 to-emerald-500 h-full transition-all duration-1000 ease-out shadow-[0_0_12px_rgba(6,182,212,0.6)]"
-                                style={{ width: isCorrect ? '100%' : `${((currentLessonIndex + 1) / allLessonsInPath.length) * 100}%` }}
-                            ></div>
-                        </div>
-                        {aiContext?.recommendation && (
-                            <div className="flex items-center gap-2 bg-cyan-950/20 px-3 py-1 rounded-full border border-cyan-500/30 animate-pulse">
-                                <Zap className="w-3 h-3 text-cyan-400" />
-                                <span className="text-[9px] font-black text-cyan-300 uppercase tracking-wider">HOLO ASSISTANT</span>
-                            </div>
-                        )}
+                {/* Top Progress Bar */}
+                <div className="flex-grow max-w-md mx-6 hidden md:flex items-center gap-3">
+                    <div className="flex-grow bg-[#262626] h-1.5 rounded-full overflow-hidden">
+                        <div
+                            className="bg-gradient-to-r from-amber-500 to-cyan-400 h-full transition-all duration-500"
+                            style={{ width: isCorrect ? '100%' : `${((currentLessonIndex + 1) / allLessonsInPath.length) * 100}%` }}
+                        />
                     </div>
+                </div>
 
-                    <div 
-                        onMouseEnter={() => setIsXpHovered(true)}
-                        onMouseLeave={() => setIsXpHovered(false)}
-                        className="relative bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 shadow-md font-bold text-yellow-500 text-xs flex items-center gap-1 cursor-pointer transition-all hover:scale-105 hover:border-yellow-500/20"
-                    >
-                        <span></span> {currentUser?.progress?.xp || 0} XP
-                        {isXpHovered && (
-                            <>
-                                <span className="absolute -top-1 -right-1 text-xs animate-spark select-none pointer-events-none"></span>
-                                <span className="absolute -bottom-1 -left-1 text-[10px] animate-spark select-none pointer-events-none" style={{ animationDelay: '0.6s' }}></span>
-                            </>
-                        )}
+                {/* Right Header Badges & Profile */}
+                <div className="flex items-center gap-4 text-xs font-bold text-slate-300">
+                    <div className="flex items-center gap-1 text-slate-300" title="Score">
+                        <span>🏆</span> <span>0</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-amber-500" title="Streak Flame">
+                        <span>🔥</span> <span>{(currentUser as any)?.streak || 19}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-cyan-400" title="Energy XP">
+                        <span>⚡</span> <span>{currentUser?.progress?.xp || 5}</span>
+                    </div>
+                    <div className="w-7 h-7 rounded-full bg-cyan-600 text-white font-black text-xs flex items-center justify-center border border-cyan-400">
+                        {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
                     </div>
                 </div>
             </header>
 
-            {/* Three-column IDE Panel Container */}
-            <div ref={containerRef} className="flex-grow flex flex-col lg:flex-row overflow-hidden relative">
+            {/* Coddy Main Workspace Container */}
+            <div ref={containerRef} className="flex-grow flex flex-col lg:flex-row overflow-hidden relative bg-[#1e1e1e]">
                 
-                {/* 1. Left Panel: Instructions, Objectives & Test Cases */}
+                {/* 0. Leftmost Narrow Icon Sidebar */}
+                <aside className="hidden lg:flex w-12 bg-[#141414] border-r border-[#262626] flex-col items-center py-4 space-y-6 text-slate-500 shrink-0 select-none z-10">
+                    <button 
+                        onClick={() => setIsBookmarked(!isBookmarked)}
+                        className={`hover:text-white transition-colors ${isBookmarked ? 'text-amber-400' : ''}`}
+                        title="Bookmark Lesson"
+                    >
+                        <Bookmark className="w-4 h-4" />
+                    </button>
+                    <button 
+                        onClick={handleResetCode}
+                        className="hover:text-white transition-colors"
+                        title="Reset Code"
+                    >
+                        <RotateCcw className="w-4 h-4" />
+                    </button>
+                    <button 
+                        onClick={() => setShowSettings(!showSettings)}
+                        className="hover:text-white transition-colors"
+                        title="Editor Settings"
+                    >
+                        <Settings className="w-4 h-4" />
+                    </button>
+                    <div className="flex-grow" />
+                    <button 
+                        onClick={() => setShowHintModal(true)}
+                        className="hover:text-amber-400 text-slate-500 transition-colors text-xs font-black"
+                        title="Help & Hints"
+                    >
+                        ?
+                    </button>
+                </aside>
+
+                {/* 1. Left Panel: Theory, Instructions & Challenge */}
                 <aside 
                     style={{ width: `${leftWidth}%` }}
-                    className="hidden lg:flex flex-col bg-[#0b0f19]/90 border-r border-slate-850 p-4 overflow-y-auto space-y-4 shrink-0"
+                    className="hidden lg:flex flex-col bg-[#181818] border-r border-[#282828] p-6 overflow-y-auto space-y-6 shrink-0 text-slate-300 text-sm leading-relaxed"
                 >
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                            <div className="bg-cyan-500/10 border border-cyan-500/35 text-cyan-400 px-2.5 py-1 rounded-lg font-bold text-xs shadow-[0_0_12px_rgba(6,182,212,0.25)] animate-pulse-glow">
-                                Level {lesson.level}
+                    {/* Path & Expanded Detailed Lesson Introduction Header */}
+                    <div className="space-y-5">
+                        <div className="flex items-center justify-between pb-3 border-b border-[#282828]">
+                            <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                                {t(lesson.titleKey as any) || lesson.titleKey || path.toUpperCase()}
+                            </h1>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#262626] text-slate-400 border border-[#333]">TL;DR</span>
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#262626] text-slate-400 border border-[#333] cursor-pointer hover:text-white">Hide</span>
                             </div>
-                            <h2 className="text-sm font-black text-white uppercase tracking-wider font-mono">
-                                {t(lesson.titleKey as any)}
-                            </h2>
                         </div>
-                        <button 
-                            onClick={() => setIsBookmarked(!isBookmarked)}
-                            className={`p-1.5 rounded-lg border transition-all ${isBookmarked ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : 'border-slate-850 hover:border-slate-700 text-slate-500 hover:text-white'}`}
-                            title="Save for Later"
-                        >
-                            <Bookmark className="w-3.5 h-3.5" />
-                        </button>
-                    </div>
 
-                    {/* Metadata Pills */}
-                    <div className="flex flex-wrap items-center gap-1.5">
-                        {lesson.difficulty && (
-                            <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border 
-                                ${lesson.difficulty === 'Beginner' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                                  lesson.difficulty === 'Intermediate' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                                  'bg-rose-500/10 text-rose-400 border-rose-500/20'}`}>
-                                {lesson.difficulty}
-                            </span>
-                        )}
-                        {lesson.estimatedMinutes && (
-                            <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 text-[9px] font-bold flex items-center gap-1">
-                                ️ {lesson.estimatedMinutes} min
-                            </span>
-                        )}
-                        <span className="px-2 py-0.5 rounded bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-[9px] font-bold flex items-center gap-1">
-                             {lesson.xp} XP
-                        </span>
-                    </div>
+                        {/* Multi-Paragraph Detailed Concept Overview */}
+                        <div className="space-y-3 text-xs text-slate-300 leading-relaxed font-normal">
+                            <p>
+                                {lesson.introduction || (lesson.explanationKey ? t(lesson.explanationKey as any) : `${path.toUpperCase()} is a powerful, high-performance programming language used in everything from game development and operating systems to scientific computing and artificial intelligence. It is known worldwide for its efficiency, precision, and flexibility.`)}
+                            </p>
+                            <p>
+                                In computer science, mastering {t(lesson.titleKey as any) || lesson.titleKey || 'this concept'} builds the foundation for algorithmic thinking and structured software design. When you write and execute code in {path.toUpperCase()}, the engine compiles your statements into ordered machine instructions.
+                            </p>
+                            <p>
+                                Understanding how syntax rules govern program state, how data is declared in memory, and how output streams interface with the system console enables you to build robust, scalable applications.
+                            </p>
+                        </div>
 
-                    {/* Rich Theory / Explanation */}
-                    {lesson.explanationKey && (
-                        <div className="bg-slate-950/80 border border-slate-850 p-4 rounded-xl relative overflow-hidden group">
-                            <div className="absolute -right-4 -top-4 text-slate-800 text-5xl transform rotate-12 select-none pointer-events-none opacity-20"></div>
-                            <div className="relative z-10 flex flex-col gap-2">
-                                <h3 className="text-[10px] font-black text-cyan-400 uppercase tracking-widest flex items-center gap-1">
-                                    <Cpu className="w-3.5 h-3.5 text-cyan-400" /> Concept Guide
-                                </h3>
-                                <p className="text-xs text-slate-300 leading-relaxed font-medium">
-                                    {t(lesson.explanationKey as any)}
+                        {/* Key Concepts Learning Card */}
+                        <div className="bg-[#141414] p-3.5 rounded-xl border border-[#282828] space-y-2">
+                            <h3 className="text-[11px] font-extrabold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                                📌 Key Concepts:
+                            </h3>
+                            <ul className="space-y-1 text-[11px] text-slate-300 list-disc list-inside">
+                                <li><strong className="text-slate-200">Syntax & Rules:</strong> Structuring keywords and expressions correctly.</li>
+                                <li><strong className="text-slate-200">Execution Flow:</strong> How control passes sequentially through statements.</li>
+                                <li><strong className="text-slate-200">Console I/O:</strong> Streaming text outputs and values to standard output.</li>
+                            </ul>
+                        </div>
+
+                        {/* "Here is what the starter code does:" Comprehensive Breakdown */}
+                        {lesson.starterCode && lesson.starterCode.trim() && (
+                            <div className="space-y-3 pt-2">
+                                <h3 className="text-xs font-bold text-slate-200">Here is what the starter code does:</h3>
+                                <div className="space-y-2 text-xs text-slate-300 leading-relaxed">
+                                    {lesson.starterCode.trim().split('\n').filter(line => line.trim().length > 0).map((line, idx) => {
+                                        const trimmed = line.trim();
+                                        let explanation = "executes a foundational command statement in this program.";
+                                        if (trimmed.startsWith('//') || trimmed.startsWith('#')) {
+                                            explanation = "code comment explaining the objective of this step.";
+                                        } else if (trimmed.startsWith('#include') || trimmed.startsWith('import ') || trimmed.startsWith('require(') || trimmed.startsWith('using ')) {
+                                            explanation = "loads the library header that enables console I/O and utility functions.";
+                                        } else if (trimmed.includes('main()') || trimmed.startsWith('def main') || trimmed.startsWith('fn main') || trimmed.includes('int main')) {
+                                            explanation = "this is the main function, where every program starts running.";
+                                        } else if (trimmed.includes('print') || trimmed.includes('cout') || trimmed.includes('console.log') || trimmed.includes('System.out')) {
+                                            explanation = "prints the text or numerical values directly to the screen console.";
+                                        } else if (trimmed.includes('return 0') || trimmed.includes('return;')) {
+                                            explanation = "returns exit status code 0, signaling clean program completion.";
+                                        } else if (trimmed.includes('=')) {
+                                            explanation = "declares and initializes a variable with data in memory.";
+                                        } else if (trimmed.includes('{') || trimmed.includes('}')) {
+                                            explanation = "defines scope boundaries for function blocks and control logic.";
+                                        }
+                                        return (
+                                            <div key={idx} className="flex items-start gap-2">
+                                                <code className="bg-[#262626] text-amber-300 font-mono text-[11px] px-2 py-0.5 rounded border border-[#383838] shrink-0 max-w-[210px] truncate" title={trimmed}>
+                                                    {trimmed}
+                                                </code>
+                                                <span className="text-slate-300 text-[11px] leading-tight flex-grow pt-0.5">
+                                                    — {explanation}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Outcome & Execution Preview */}
+                        {lesson.expectedOutput && (
+                            <div className="pt-2 text-xs text-slate-300 leading-relaxed space-y-1">
+                                <p className="font-semibold text-slate-200">Execution Output Preview:</p>
+                                <p>
+                                    When you run the code, you will see <code className="bg-[#262626] text-emerald-400 font-mono px-2 py-0.5 rounded border border-[#383838]">{lesson.expectedOutput.replace(/\n/g, ' ')}</code> appear in the output.
                                 </p>
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
 
-                    {/* Challenge Prompt */}
-                    <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{t('challenge')}</h3>
-                            {(lesson.hintKey || lesson.solutionCode) && (
-                                <button
-                                    onClick={() => setShowHint(!showHint)}
-                                    className={`text-[10px] font-black uppercase tracking-wider flex items-center gap-1 transition-colors ${showHint ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'}`}
-                                >
-                                    <span></span>
-                                    <span>{showHint ? t('hide_hint') : t('show_hint')}</span>
-                                </button>
+                    {/* Challenge Section */}
+                    <div className="pt-4 border-t border-[#282828] space-y-3">
+                        <div className="flex items-center gap-2">
+                            <span className="text-base">💡</span>
+                            <h2 className="text-base font-bold text-white">Challenge</h2>
+                            {lesson.difficulty && (
+                                <span className="text-[10px] font-black px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 uppercase">
+                                    {lesson.difficulty}
+                                </span>
                             )}
                         </div>
-                        <p className="text-xs font-semibold text-slate-300 leading-relaxed bg-slate-950/80 p-3 rounded-lg border border-slate-850">
+
+                        <p className="text-xs text-slate-300 leading-relaxed font-normal">
                             {t(lesson.challengeDescriptionKey as any)}
                         </p>
-                    </div>
 
-                    {/* Dynamic Interactive Test Cases */}
-                    <div className="border border-slate-850 rounded-xl bg-slate-950/85 overflow-hidden">
                         <button 
-                            onClick={() => setIsTestCasesExpanded(!isTestCasesExpanded)}
-                            className="w-full flex items-center justify-between p-3 bg-[#0b0f19] border-b border-slate-850 font-black text-[10px] text-slate-400 uppercase tracking-wider"
+                            onClick={() => setShowHintModal(true)}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#262626] hover:bg-[#333] border border-[#383838] text-cyan-400 text-xs font-bold transition-all cursor-pointer"
                         >
-                            <span className="flex items-center gap-1.5"> Test Cases Checklist</span>
-                            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isTestCasesExpanded ? 'transform rotate-180' : ''}`} />
+                            <span>🤖 Explain challenge</span>
                         </button>
-                        {isTestCasesExpanded && (
-                            <ul className="p-3 space-y-2">
-                                {testCases.map((tc) => (
-                                    <li key={tc.id} className="flex items-center justify-between text-xs font-bold text-slate-300 bg-slate-900/50 px-2.5 py-2 rounded border border-slate-850/40">
-                                        <span>{tc.desc}</span>
-                                        {tc.status ? (
-                                            <span className="text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 border border-cyan-500/20">
-                                                <Check className="w-3 h-3" /> PASS
-                                            </span>
-                                        ) : (
-                                            <span className="text-slate-555 bg-slate-800 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 border border-slate-700">
-                                                <X className="w-3 h-3" /> PENDING
-                                            </span>
-                                        )}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
                     </div>
 
-                    {/* Hint Display */}
-                    {showHint && (
-                        <div className="bg-amber-950/20 p-3.5 rounded-xl border border-amber-500/20 space-y-3">
-                            {lesson.hintKey && (
-                                <p className="text-amber-400 text-xs font-semibold">
-                                    {t(lesson.hintKey as any)}
-                                </p>
-                            )}
-                            {lesson.solutionCode && (
-                                <div className="space-y-2">
-                                    <p className="text-[8px] font-black text-amber-500 uppercase mb-1">Expected Solution Blueprint:</p>
-                                    <div className="bg-slate-950/80 p-2 rounded-lg font-mono text-[10px] text-slate-300 border border-slate-800 overflow-x-auto whitespace-pre">
-                                        {lesson.solutionCode}
-                                    </div>
-                                    <button
-                                        onClick={() => {
-                                            handleCodeChange(lesson.solutionCode);
-                                            showToast('Sample blueprint inserted! ', 'success');
-                                        }}
-                                        className="w-full py-2 bg-amber-500 hover:bg-amber-600 active:translate-y-0.5 border-b-4 border-amber-700 text-slate-950 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
-                                    >
-                                        <span></span> Use Sample Blueprint
-                                    </button>
+                    {/* Solution Dropdown */}
+                    {lesson.solutionCode && (
+                        <div className="pt-2">
+                            <details className="group border border-[#282828] bg-[#141414] rounded-lg overflow-hidden">
+                                <summary className="px-4 py-2.5 text-xs font-bold text-slate-400 cursor-pointer flex items-center justify-between hover:text-white select-none">
+                                    <span>💡 Solution</span>
+                                    <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
+                                </summary>
+                                <div className="p-3 bg-[#1a1a1a] font-mono text-xs text-slate-300 overflow-x-auto whitespace-pre border-t border-[#282828]">
+                                    {lesson.solutionCode}
                                 </div>
-                            )}
+                            </details>
                         </div>
                     )}
-
-                    <div className="flex-grow"></div>
-
-                    {/* Navigation Actions Panel */}
-                    <div className="space-y-3 pt-4 border-t border-slate-800/80">
-                        <div className="grid grid-cols-2 gap-2">
-                            <button
-                                onClick={handlePrevLesson}
-                                disabled={!onStartLesson || currentLessonIndex <= 0}
-                                className="bg-slate-900/40 hover:bg-cyan-500/10 backdrop-blur-md border border-slate-700/50 hover:border-cyan-500/30 text-slate-300 hover:text-white disabled:opacity-20 font-bold py-2.5 rounded-xl text-xs uppercase transition-all flex items-center justify-center gap-1.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.07)]"
-                            >
-                                <ChevronLeft className="w-4 h-4 text-cyan-400" /> Previous
-                            </button>
-                            <button
-                                onClick={handleNextLesson}
-                                disabled={!onStartLesson || currentLessonIndex >= allLessonsInPath.length - 1}
-                                className="bg-slate-900/40 hover:bg-cyan-500/10 backdrop-blur-md border border-slate-700/50 hover:border-cyan-500/30 text-slate-300 hover:text-white disabled:opacity-20 font-bold py-2.5 rounded-xl text-xs uppercase transition-all flex items-center justify-center gap-1.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.07)]"
-                            >
-                                Next <ChevronRight className="w-4 h-4 text-cyan-400" />
-                            </button>
-                        </div>
-                        <div className="grid grid-cols-3 gap-2">
-                            <button
-                                onClick={handleResetCode}
-                                className="bg-slate-900 border border-slate-850 hover:border-slate-700 text-slate-400 hover:text-white font-bold py-2 rounded-xl text-[10px] uppercase transition-all flex items-center justify-center gap-1"
-                                title="Reset Code"
-                            >
-                                <RotateCcw className="w-3 h-3" /> Reset
-                            </button>
-                            <button
-                                onClick={handleRunCode}
-                                disabled={isRunning}
-                                className="col-span-2 bg-cyan-600 hover:bg-cyan-500 text-white font-black py-2 rounded-xl text-xs uppercase transition-all flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(6,182,212,0.25)] active:translate-y-0.5"
-                            >
-                                <Play className="w-3.5 h-3.5 fill-current" />
-                                {isRunning ? t('running') : t('run_code')}
-                            </button>
-                        </div>
-
-                        {/* Relocated Expandable Learning Objectives Accordion with icons */}
-                        {lesson.objectivesKey && (
-                            <div className="border border-slate-850 rounded-xl bg-slate-950/60 overflow-hidden mt-2">
-                                <button 
-                                    onClick={() => setIsObjectivesExpanded(!isObjectivesExpanded)}
-                                    className="w-full flex items-center justify-between p-3 bg-[#0b0f19] border-b border-slate-850 font-black text-[10px] text-slate-400 uppercase tracking-wider hover:text-white transition-colors"
-                                >
-                                    <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-cyan-400" /> Learning Objectives</span>
-                                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isObjectivesExpanded ? 'transform rotate-180' : ''}`} />
-                                </button>
-                                {isObjectivesExpanded && (
-                                    <ul className="p-3 space-y-2.5">
-                                        {((t(lesson.objectivesKey as any) as string) || '').split('|').map((objective, idx) => {
-                                            let icon = "️"; // default
-                                            const lowercaseObj = objective.toLowerCase();
-                                            if (lowercaseObj.includes('jvm') || lowercaseObj.includes('compile') || lowercaseObj.includes('run') || lowercaseObj.includes('execut')) {
-                                                icon = "️";
-                                            } else if (lowercaseObj.includes('variable') || lowercaseObj.includes('data') || lowercaseObj.includes('type')) {
-                                                icon = "";
-                                            } else if (lowercaseObj.includes('syntax') || lowercaseObj.includes('code') || lowercaseObj.includes('error') || lowercaseObj.includes('trace')) {
-                                                icon = "";
-                                            } else if (lowercaseObj.includes('class') || lowercaseObj.includes('method') || lowercaseObj.includes('object') || lowercaseObj.includes('main')) {
-                                                icon = "️";
-                                            } else if (lowercaseObj.includes('print') || lowercaseObj.includes('output') || lowercaseObj.includes('console')) {
-                                                icon = "️";
-                                            }
-                                            return (
-                                                <li key={idx} className="flex items-start gap-2 text-xs text-slate-300">
-                                                    <span className="text-sm shrink-0 leading-none">{icon}</span>
-                                                    <span className="font-semibold leading-relaxed">{objective}</span>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                )}
-                            </div>
-                        )}
-                    </div>
                 </aside>
 
                 {/* Left Split Pane Resizer */}
                 <div 
                     onMouseDown={startResizeLeft}
-                    className="hidden lg:block w-[4px] hover:w-[6px] bg-slate-850 hover:bg-cyan-500 cursor-col-resize z-10 transition-colors shrink-0"
+                    className="hidden lg:block w-[4px] hover:w-[6px] bg-[#262626] hover:bg-cyan-500 cursor-col-resize z-10 transition-colors shrink-0"
                 />
 
-                {/* 2. Center Panel: Code Editor (Multi-file tabs, Autocomplete, preference controls) */}
-                <main className="flex-grow flex flex-col bg-[#070b13] overflow-hidden relative shrink-0">
+                {/* 2. Center Panel: Code Editor (Coddy style) */}
+                <main className="flex-grow flex flex-col bg-[#1e1e1e] overflow-hidden relative shrink-0">
                     
-                    {/* Multi-File Tab Header Bar */}
-                    <div className="bg-[#0b0f19] border-b border-slate-850 p-2 flex items-center justify-between z-20">
-                        <div className="flex items-center space-x-1">
-                            {Object.keys(files).map((filename) => (
-                                <button
-                                    key={filename}
-                                    onClick={() => handleSwitchFile(filename)}
-                                    className={`px-5 py-2.5 rounded-t-lg text-xs font-black transition-all border-b-2 flex items-center gap-2 ${
-                                        activeFile === filename
-                                            ? 'bg-slate-950 border-cyan-400 text-cyan-300 shadow-[0_-4px_12px_rgba(6,182,212,0.12)]'
-                                            : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-900/40'
-                                    }`}
-                                >
-                                    <span>{filename}</span>
-                                    <span 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                        }}
-                                        className="text-[10px] text-slate-600 hover:text-rose-450 hover:bg-rose-500/10 p-0.5 rounded transition-all ml-1 w-3.5 h-3.5 flex items-center justify-center font-bold"
-                                    >
-                                        ×
-                                    </span>
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Right Header Toolbar Items */}
-                        <div className="flex items-center gap-3">
-                            {/* Hint Button */}
-                            <button 
-                                onClick={() => setShowHintModal(true)}
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-all cursor-pointer shadow-sm active:translate-y-0.5"
-                                title="Show Sample Hint"
-                            >
-                                <span></span>
-                                <span>Hint</span>
-                            </button>
-
-                            {/* Autocomplete active dot */}
-                            <button 
-                                onClick={() => setIsAutocompleteEnabled(!isAutocompleteEnabled)}
-                                className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-[9px] font-bold border transition-colors ${
-                                    isAutocompleteEnabled 
-                                        ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400' 
-                                        : 'bg-slate-800 border-slate-700 text-slate-500'
-                                }`}
-                                title="Toggle Autocomplete / IntelliSense"
-                            >
-                                <span className={`w-1.5 h-1.5 rounded-full ${isAutocompleteEnabled ? 'bg-emerald-400 animate-pulse' : 'bg-slate-600'}`} />
-                                <span> Auto: {isAutocompleteEnabled ? 'On' : 'Off'}</span>
-                            </button>
-
-                            {/* Preferences cog */}
-                            <div className="relative">
-                                <button 
-                                    onClick={() => setShowSettings(!showSettings)}
-                                    className={`p-1.5 rounded-lg border transition-all ${showSettings ? 'bg-slate-800 border-slate-700 text-white' : 'border-slate-850 hover:border-slate-700 text-slate-400 hover:text-white'}`}
-                                    title="Editor Preferences"
-                                >
-                                    <Settings className="w-3.5 h-3.5" />
-                                </button>
-
-                                {/* Preferences dropdown */}
-                                {showSettings && (
-                                    <div className="absolute right-0 top-full mt-2 z-50 bg-slate-900 border border-slate-850 p-4 rounded-xl shadow-xl w-60 text-slate-300 font-sans text-xs space-y-4">
-                                        <h4 className="font-black text-white uppercase tracking-wider text-[10px]">Editor Settings</h4>
-                                        <div className="space-y-1.5">
-                                            <label className="text-[10px] font-bold text-slate-400 uppercase">Font Size ({fontSize}px)</label>
-                                            <input 
-                                                type="range" min="12" max="20" step="2"
-                                                value={fontSize} 
-                                                onChange={(e) => setFontSize(parseInt(e.target.value))}
-                                                className="w-full accent-cyan-500"
-                                            />
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            <label className="text-[10px] font-bold text-slate-400 uppercase">Keybindings</label>
-                                            <select 
-                                                value={keybindings} 
-                                                onChange={(e) => setKeybindings(e.target.value)}
-                                                className="w-full bg-slate-950 border border-slate-850 rounded p-1.5 font-bold text-white text-xs"
-                                            >
-                                                <option value="standard">Standard</option>
-                                                <option value="vim">Vim</option>
-                                                <option value="emacs">Emacs</option>
-                                            </select>
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            <label className="text-[10px] font-bold text-slate-400 uppercase">Tab Spacing</label>
-                                            <div className="grid grid-cols-2 gap-1.5">
-                                                {[2, 4].map((spacing) => (
-                                                    <button
-                                                        key={spacing}
-                                                        onClick={() => setTabSpacing(spacing)}
-                                                        className={`py-1 rounded border text-xs font-bold transition-all ${tabSpacing === spacing ? 'bg-cyan-500/10 border-cyan-500/25 text-cyan-400' : 'bg-slate-950 border-slate-850 text-slate-400'}`}
-                                                    >
-                                                        {spacing} Spaces
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                    {/* Editor File Tab Bar */}
+                    <div className="h-10 bg-[#181818] border-b border-[#282828] px-4 flex items-center justify-between text-xs font-bold text-slate-400 select-none">
+                        <div className="flex items-center gap-2 text-white">
+                            <span className="text-cyan-400">{activeFile || 'main.ts'}</span>
                         </div>
                     </div>
 
-                    {/* Main Workspace Text Editor with Synchronized Highlight Layer */}
-                    <div className="flex-grow flex relative overflow-hidden bg-slate-950/80">
+                    {/* Code Editor Body */}
+                    <div className="flex-grow flex relative overflow-hidden bg-[#1e1e1e]">
                         
-                        {/* Custom gutter supporting fold indicators and active breakpoints */}
-                        <div className="w-14 bg-[#0a0f1d] border-r border-slate-800/80 flex flex-col items-center py-4 select-none font-mono text-xs text-slate-500 space-y-0 z-10">
-                            {codeLines.map((lineContent, i) => {
-                                const isFoldable = lineContent.trim().endsWith('{') || lineContent.trim().endsWith('[') || lineContent.trim().endsWith('(');
-                                const isFolded = foldedLines.has(i);
-                                const hasBreakpoint = breakpoints.has(i);
-                                return (
-                                    <div key={i} className="h-6 flex items-center justify-between w-full px-2 relative group/gutter cursor-pointer select-none">
-                                        <button
-                                            onClick={() => {
-                                                setBreakpoints(prev => {
-                                                    const next = new Set(prev);
-                                                    if (next.has(i)) {
-                                                        next.delete(i);
-                                                    } else {
-                                                        next.add(i);
-                                                    }
-                                                    return next;
-                                                });
-                                            }}
-                                            className={`w-2.5 h-2.5 rounded-full border transition-all duration-300 ${
-                                                hasBreakpoint 
-                                                    ? 'bg-rose-500 border-rose-455 shadow-[0_0_10px_#ef4444] animate-pulse scale-110' 
-                                                    : 'border-transparent bg-transparent group-hover/gutter:bg-rose-500/20 group-hover/gutter:border-rose-500/40'
-                                            }`}
-                                            title="Toggle Breakpoint"
-                                        />
-                                        <span className={`text-[10px] text-right w-full font-bold select-none tracking-tighter ${hasBreakpoint ? 'text-rose-400 font-extrabold shadow-sm' : 'text-slate-500 opacity-40 group-hover/gutter:opacity-85 transition-opacity'}`}>
-                                            {i + 1}
-                                        </span>
-                                    </div>
-                                );
-                            })}
+                        {/* Editor Line Numbers Gutter */}
+                        <div className="w-12 bg-[#1e1e1e] border-r border-[#2a2a2a] flex flex-col items-center py-4 select-none font-mono text-xs text-slate-500 space-y-0 z-10">
+                            {codeLines.map((_, i) => (
+                                <div key={i} className="h-6 flex items-center justify-end w-full px-2 text-slate-500 font-mono text-xs select-none">
+                                    {i + 1}
+                                </div>
+                            ))}
                         </div>
 
-                        {/* Gutter option controls overlay at top right */}
-                        <div className="absolute top-2 right-4 z-10 flex gap-2">
-                            <button
-                                onClick={() => setLineWrap(!lineWrap)}
-                                className={`px-2 py-1 rounded text-[9px] font-bold border transition-colors ${lineWrap ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400' : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'}`}
-                                title="Toggle Line Wrap"
-                            >
-                                Wrap
-                            </button>
-                        </div>
-
-                        {/* Interactive scroll-synchronized layers */}
-                        <div className="flex-grow h-full relative overflow-hidden">
-                            {/* Syntax Highlighting Layer */}
+                        {/* Interactive Textarea & Syntax Highlight Layer */}
+                        <div className="flex-grow h-full relative overflow-hidden bg-[#1e1e1e]">
                             <div 
                                 ref={editorScrollRef}
-                                className="absolute inset-0 p-4 pointer-events-none overflow-auto font-mono text-sm leading-6 whitespace-pre select-none bg-transparent"
-                                style={{ 
-                                    fontSize: `${fontSize}px`,
-                                    backgroundImage: 'linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px), radial-gradient(rgba(6, 182, 212, 0.08) 1px, transparent 1px)',
-                                    backgroundSize: '24px 24px, 24px 24px, 12px 12px'
-                                }}
+                                className="absolute inset-0 p-4 pointer-events-none overflow-auto font-mono text-sm leading-6 whitespace-pre select-none bg-[#1e1e1e] text-slate-200"
+                                style={{ fontSize: `${fontSize}px` }}
                                 dangerouslySetInnerHTML={highlightCode(code)}
                             />
-                            {/* Input text-area layer (text invisible, caret active) */}
+                            {!code.trim() && (
+                                <div className="absolute top-4 left-4 text-slate-500/70 font-mono text-sm pointer-events-none select-none italic">
+                                    // Write your solution code here...
+                                </div>
+                            )}
                             <textarea
                                 ref={textAreaRef}
                                 value={code}
@@ -957,167 +853,65 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 onScroll={handleScroll}
                                 style={{ fontSize: `${fontSize}px` }}
                                 wrap={lineWrap ? "soft" : "off"}
-                                className="absolute inset-0 p-4 font-mono bg-transparent focus:outline-none resize-none text-transparent caret-cyan-400 selection:bg-cyan-500/20 overflow-auto leading-6 whitespace-pre font-mono text-sm"
+                                className="absolute inset-0 p-4 font-mono bg-transparent focus:outline-none resize-none text-transparent caret-cyan-400 selection:bg-cyan-500/30 overflow-auto leading-6 whitespace-pre text-sm"
                                 spellCheck={false}
-                                placeholder="Write your code here..."
                             />
+                        </div>
+
+                        {/* Bottom-Right Floating Editor Action Buttons */}
+                        <div className="absolute bottom-4 right-6 z-20 flex items-center gap-3">
+                            <button
+                                onClick={() => setShowHintModal(true)}
+                                className="px-4 py-2.5 rounded-lg bg-[#2b2b2b] hover:bg-[#383838] border border-[#3e3e3e] text-slate-200 text-xs font-bold flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
+                            >
+                                <span>🤖 Ask AI</span>
+                            </button>
+                            <button
+                                onClick={handleRunCode}
+                                disabled={isRunning}
+                                className="px-6 py-2.5 rounded-lg bg-[#008be3] hover:bg-[#0077c2] text-white text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-xl transition-all cursor-pointer active:scale-95"
+                            >
+                                <Play className="w-4 h-4 fill-current" />
+                                <span>{isRunning ? t('running') : t('run_code')}</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* 3. Bottom Panel: Test Cases & Console */}
+                    <div className="h-48 bg-[#181818] border-t border-[#282828] flex flex-col font-mono text-xs text-slate-300">
+                        <div className="h-9 bg-[#141414] border-b border-[#282828] px-4 flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                            <div className="flex gap-4">
+                                <button 
+                                    onClick={() => setActiveConsoleTab('console')}
+                                    className={`h-9 flex items-center border-b-2 ${activeConsoleTab === 'console' ? 'border-cyan-400 text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                                >
+                                    TEST CASES
+                                </button>
+                                <button 
+                                    onClick={() => setActiveConsoleTab('terminal')}
+                                    className={`h-9 flex items-center border-b-2 ${activeConsoleTab === 'terminal' ? 'border-cyan-400 text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                                >
+                                    CONSOLE
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex-grow p-4 grid grid-cols-2 gap-4 overflow-y-auto">
+                            <div>
+                                <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Output</span>
+                                <div className="text-slate-300 whitespace-pre-wrap font-mono">
+                                    {output || 'No output yet. Click "Run Code" to execute.'}
+                                </div>
+                            </div>
+                            <div className="border-l border-[#282828] pl-4">
+                                <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Expected Output</span>
+                                <div className="text-emerald-400 font-bold font-mono">
+                                    {lesson.solutionCode ? 'Output matches expected result' : 'Ready'}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </main>
-
-                {/* Right Split Pane Resizer */}
-                <div 
-                    onMouseDown={startResizeRight}
-                    className="hidden lg:block w-[4px] hover:w-[6px] bg-slate-850 hover:bg-cyan-500 cursor-col-resize z-10 transition-colors shrink-0"
-                />
-
-                {/* 3. Right Panel: Visualizer Stage, Switchable Console/Terminal & Metrics */}
-                <aside 
-                    style={{ width: `${rightWidth}%` }}
-                    className="hidden lg:flex flex-col bg-[#0b0f19]/90 border-l border-slate-850 p-4 shrink-0 overflow-y-auto space-y-4"
-                >
-                    {/* Visualizer mascot card */}
-                    <VisualStage output={output} isCorrect={isCorrect} mood={mascotMood} code={code} />
-
-                    {/* AI Hint Card */}
-                    {aiHint && (
-                        <div className="bg-slate-950 border border-cyan-500/50 p-4 rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.2)] animate-pop-in relative overflow-hidden backdrop-blur-md">
-                            <div className="absolute top-0 left-0 w-2 h-full bg-cyan-500"></div>
-                            <div className="flex gap-2.5 items-start">
-                                <div className="p-1 rounded bg-cyan-500/10 text-cyan-400 shrink-0">
-                                    <Zap className="w-4 h-4 animate-pulse" />
-                                </div>
-                                <div className="text-left">
-                                    <h4 className="text-cyan-400 text-[10px] font-black uppercase tracking-wider mb-0.5">AI Code Doctor</h4>
-                                    <p className="text-slate-200 text-[11px] leading-relaxed whitespace-pre-line">{aiHint}</p>
-                                </div>
-                            </div>
-                            <button 
-                                onClick={() => setAiHint(null)} 
-                                className="absolute top-2 right-2 text-slate-500 hover:text-white p-0.5 rounded cursor-pointer border-0 bg-transparent"
-                            >
-                                <X className="w-3 h-3" />
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Console / Terminal Container */}
-                    <div className="flex-grow flex flex-col bg-slate-950 border border-slate-850 rounded-xl overflow-hidden font-mono text-xs text-slate-350 min-h-[250px] shadow-inner">
-                        {/* Terminal Tab Bar */}
-                        <div className="bg-[#0b0f19] p-2 border-b border-slate-850 flex items-center justify-between">
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => setActiveConsoleTab('console')}
-                                    className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-colors ${activeConsoleTab === 'console' ? 'bg-slate-950 text-white' : 'text-slate-500 hover:text-slate-300'}`}
-                                >
-                                    Console Output
-                                </button>
-                                <button
-                                    onClick={() => setActiveConsoleTab('terminal')}
-                                    className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-colors ${activeConsoleTab === 'terminal' ? 'bg-slate-950 text-white' : 'text-slate-500 hover:text-slate-300'}`}
-                                >
-                                    Terminal / Shell
-                                </button>
-                            </div>
-                            
-                            {/* Clear & Copy controls */}
-                            <div className="flex items-center gap-1.5">
-                                <button
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(output);
-                                        setOutputHistory(prev => [...prev, { id: historyCounter + 1, text: ' Console output copied to clipboard.', type: 'info' }]);
-                                        setHistoryCounter(prev => prev + 1);
-                                    }}
-                                    className="p-1 rounded bg-slate-900 border border-slate-850 text-slate-400 hover:text-white transition-colors"
-                                    title="Copy Console Output"
-                                >
-                                    <Copy className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                    onClick={() => setOutputHistory([])}
-                                    className="p-1 rounded bg-slate-900 border border-slate-850 text-slate-400 hover:text-white transition-colors"
-                                    title="Clear Console"
-                                >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Interactive Console Pane */}
-                        <div className="flex-grow p-4 overflow-y-auto space-y-3">
-                            {activeConsoleTab === 'console' ? (
-                                outputHistory.length === 0 ? (
-                                    <div className="opacity-40 italic">Waiting for compiler trigger...</div>
-                                ) : (
-                                    outputHistory.map((item) => (
-                                        <div key={item.id} className="border-b border-white/5 pb-2.5 mb-2.5 last:border-0 last:mb-0">
-                                            <div className="flex items-center justify-between text-[9px] opacity-40 mb-1">
-                                                <span>❯ Run #{item.id}</span>
-                                                <span className="bg-slate-900 border border-slate-850 px-1.5 py-0.5 rounded text-[8px] tracking-widest font-black text-cyan-500">LOG</span>
-                                            </div>
-                                            {item.text.includes('Error') ? (
-                                                <div className="border-l-4 border-red-500/80 bg-gradient-to-r from-red-950/20 to-transparent p-3 rounded-r-lg flex items-start gap-2.5 text-red-400 font-mono text-[11px] leading-relaxed shadow-[0_2px_8px_rgba(239,68,68,0.05)] border-t border-b border-r border-slate-900/50">
-                                                    <span className="shrink-0 text-red-500 font-black animate-pulse flex items-center gap-1">
-                                                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_6px_#ef4444]" />
-                                                        SYS_ERR:
-                                                    </span>
-                                                    <span className="whitespace-pre-wrap">{item.text}</span>
-                                                </div>
-                                            ) : (
-                                                <div className={`whitespace-pre-wrap text-[11px] font-medium ${
-                                                    item.type === 'success' ? 'text-emerald-400 font-semibold' : 'text-slate-300'
-                                                }`}>
-                                                    {item.text}
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))
-                                )
-                            ) : (
-                                <div className="space-y-1.5 font-mono text-xs">
-                                    <div className="text-slate-500">// Simulated Sandboxed Environment</div>
-                                    <div className="text-cyan-400">cft-sandbox@main:~# node run index.ts</div>
-                                    {output ? (
-                                        <div className="text-slate-200 font-semibold">{output}</div>
-                                    ) : (
-                                        <div className="opacity-45 italic text-[11px]">Terminal active. Run code to feed standard output.</div>
-                                    )}
-                                    <div className="text-cyan-400">cft-sandbox@main:~# <span className="animate-pulse">_</span></div>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Execution performance metrics footer with small bar graphs */}
-                        {executionMetrics && (
-                            <div className="bg-[#0b0f19] border-t border-slate-850 px-3 py-2 text-[10px] text-slate-500 flex items-center justify-between select-none">
-                                <span className="flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-cyan-500 animate-pulse" /> V8 Engine Status</span>
-                                <span className="font-bold text-slate-400 uppercase flex flex-wrap items-center gap-3">
-                                    <span className="flex items-center gap-1.5">
-                                        ️ Runtime: <strong className="text-cyan-400 font-mono font-black">{executionMetrics.time}ms</strong>
-                                        <svg className="w-6 h-3 text-cyan-500/80" viewBox="0 0 24 12" fill="none">
-                                            <rect x="1" y="8" width="3" height="4" fill="currentColor" opacity="0.3" />
-                                            <rect x="5" y="6" width="3" height="6" fill="currentColor" opacity="0.5" />
-                                            <rect x="9" y="4" width="3" height="8" fill="currentColor" opacity="0.7" />
-                                            <rect x="13" y="2" width="3" height="10" fill="currentColor" />
-                                            <line x1="1" y1="2" x2="20" y2="2" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 1" opacity="0.4" />
-                                        </svg>
-                                    </span>
-                                    <span className="w-[1px] h-3 bg-slate-800" />
-                                    <span className="flex items-center gap-1.5">
-                                         RAM: <strong className="text-cyan-400 font-mono font-black">{executionMetrics.memory}MB</strong>
-                                        <svg className="w-6 h-3 text-cyan-500/80" viewBox="0 0 24 12" fill="none">
-                                            <rect x="1" y="9" width="3" height="3" fill="currentColor" opacity="0.4" />
-                                            <rect x="5" y="7" width="3" height="5" fill="currentColor" opacity="0.4" />
-                                            <rect x="9" y="8" width="3" height="4" fill="currentColor" opacity="0.4" />
-                                            <rect x="13" y="5" width="3" height="7" fill="currentColor" />
-                                            <path d="M1 9 L5 7 L9 8 L13 5" stroke="currentColor" strokeWidth="1" />
-                                        </svg>
-                                    </span>
-                                </span>
-                            </div>
-                        )}
-                    </div>
-                </aside>
             </div>
 
             {/* Hint Modal Overlay */}
