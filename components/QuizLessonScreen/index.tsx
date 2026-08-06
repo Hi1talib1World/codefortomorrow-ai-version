@@ -161,21 +161,34 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
             exit={{ opacity: 0, y: -20 }}
             className="flex flex-col gap-5 pb-6"
         >
-            {/* Concept */}
-            {lesson.explanationKey && (
-                <div className="bg-[#2E2FCE]/5 dark:bg-[#2E2FCE]/10 p-6 rounded-3xl border border-[#2E2FCE]/20 dark:border-[#2E2FCE]/30 shadow-sm relative overflow-hidden group">
-                    <div className="absolute -right-4 -top-4 text-[#2E2FCE]/10 dark:text-[#2E2FCE]/20 text-7xl transform rotate-12 group-hover:scale-110 transition-transform"></div>
-                    <div className="relative z-10">
-                        <h3 className="text-xs font-bold text-[#2E2FCE] dark:text-[#a3aaeb] uppercase tracking-wide mb-3 flex items-center gap-2">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            Concept
-                        </h3>
-                        <p className="text-sm font-medium text-slate-700 dark:text-slate-200 leading-relaxed">
-                            {t(lesson.explanationKey as any)}
-                        </p>
+            {/* Expanded Multi-Paragraph Detailed Concept Introduction */}
+            <div className="bg-[#2E2FCE]/5 dark:bg-[#2E2FCE]/10 p-6 rounded-3xl border border-[#2E2FCE]/20 dark:border-[#2E2FCE]/30 shadow-sm relative overflow-hidden group">
+                <div className="relative z-10 space-y-4">
+                    <h3 className="text-xs font-bold text-[#2E2FCE] dark:text-[#a3aaeb] uppercase tracking-wide flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Comprehensive Concept Introduction
+                    </h3>
+                    
+                    <p className="text-sm font-medium text-slate-700 dark:text-slate-200 leading-relaxed">
+                        {lesson.introduction || (lesson.explanationKey ? t(lesson.explanationKey as any) : `Welcome to ${t(lesson.titleKey as any) || lesson.titleKey || 'this lesson'}. Mastering this concept is critical for building efficient, well-structured programs.`)}
+                    </p>
+
+                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+                        In modern engineering, understanding how computational statements execute, how memory handles variables, and how logic branches operate ensures your code runs predictably and efficiently.
+                    </p>
+
+                    <div className="bg-white/80 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 mt-2">
+                        <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                            📌 Key Takeaways to Remember:
+                        </h4>
+                        <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 list-disc list-inside">
+                            <li>Review language syntax rules and keyword definitions carefully.</li>
+                            <li>Observe how data flows between function calls and control blocks.</li>
+                            <li>Apply these principles to answer the upcoming quiz questions accurately.</li>
+                        </ul>
                     </div>
                 </div>
-            )}
+            </div>
 
             {/* Objectives */}
             {lesson.objectivesKey && (
