@@ -18,6 +18,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import LessonNode from '../LessonNode';
 import { Search, X, Lock, ChevronRight, ArrowLeftRight } from 'lucide-react';
+import { AiEngineeringRoadmapView } from './AiEngineeringRoadmapView';
 
 interface LearnScreenProps {
   completedLessons: number[];
@@ -83,11 +84,11 @@ const ProgressHeader: React.FC<{
 }> = ({ completed, total, pathLabel, pathIcon, onBackToSelection }) => {
   const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
   return (
-    <div className="px-4 pt-4 pb-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-100 dark:border-slate-700 transition-colors">
-      <div className="flex items-center justify-between mb-3 max-w-md mx-auto">
+    <div className="px-6 py-4 bg-[#0b0f19]/90 border-b border-slate-800 backdrop-blur-md sticky top-0 z-20 transition-all shadow-xl">
+      <div className="flex items-center justify-between mb-3 max-w-2xl mx-auto">
         <div className="flex items-center space-x-3">
           {pathIcon && (
-            <div className="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-700 rounded-xl p-1.5 shadow-sm border border-slate-200 dark:border-slate-600">
+            <div className="w-10 h-10 flex items-center justify-center bg-slate-900 rounded-xl p-1.5 shadow-md border border-slate-800">
               {pathIcon.startsWith('http') || pathIcon.startsWith('/') ? (
                 <img src={pathIcon} alt="" className="w-7 h-7 object-contain" referrerPolicy="no-referrer" />
               ) : (
@@ -96,22 +97,22 @@ const ProgressHeader: React.FC<{
             </div>
           )}
           <div className="flex flex-col">
-            <span className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-wide leading-none">{pathLabel}</span>
+            <span className="text-sm font-black text-white uppercase tracking-wide leading-none">{pathLabel}</span>
             <span className="text-[10px] font-bold text-slate-400 mt-1.5 uppercase tracking-wider">{completed}/{total} Lessons</span>
           </div>
         </div>
 
         <button
           onClick={onBackToSelection}
-          className="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border border-slate-200/50 dark:border-slate-700/50 shadow-sm"
+          className="flex items-center space-x-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white px-3.5 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all border border-slate-800 shadow-sm cursor-pointer active:translate-y-0.5"
         >
-          <ArrowLeftRight className="w-3.5 h-3.5 text-[#2E2FCE]" />
+          <ArrowLeftRight className="w-3.5 h-3.5 text-cyan-400" />
           <span>Switch Path</span>
         </button>
       </div>
-      <div className="h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden max-w-md mx-auto">
+      <div className="h-2 bg-slate-950 rounded-full overflow-hidden max-w-2xl mx-auto border border-slate-800">
         <motion.div
-          className="h-full bg-gradient-to-r from-[#2E2FCE] to-[#34A853] rounded-full"
+          className="h-full bg-gradient-to-r from-cyan-500 via-sky-500 to-emerald-500 rounded-full shadow-[0_0_12px_rgba(6,182,212,0.6)]"
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -265,8 +266,12 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ completedLessons, onStartLess
     </div>
   );
 
+  if (path === 'ai_engineering') {
+    return <AiEngineeringRoadmapView onStartLesson={onStartLesson} />;
+  }
+
   return (
-    <div className="w-full min-h-full bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 transition-colors pb-28">
+    <div className="w-full min-h-full bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-900 transition-colors pb-28">
 
       <ProgressHeader
         completed={completedLessons.length}
