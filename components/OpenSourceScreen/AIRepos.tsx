@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Search, CheckCircle2, Star, GitFork, ExternalLink, Sparkles } from 'lucide-react';
+import { Search, CheckCircle2, Star, GitFork, ExternalLink, Bot } from 'lucide-react';
 import { AI_REPOS_DATA } from './aiReposData';
 import { useI18n } from './i18n';
 import { GITHUB_FALLBACK_AVATAR } from './utils';
@@ -115,7 +115,7 @@ export const AIRepos: React.FC = () => {
     <div className="space-y-8">
       <div>
         <div className="flex items-center gap-3 mb-2">
-          <Sparkles className="w-8 h-8 text-purple-400" />
+          <Bot className="w-8 h-8 text-purple-400" />
           <h1 className="text-3xl font-black text-white tracking-tight">{t('aiRepos.title')}</h1>
         </div>
         <p className="text-slate-400 text-sm font-medium mb-8">{t('aiRepos.subtitle')}</p>
