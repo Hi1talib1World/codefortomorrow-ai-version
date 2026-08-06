@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  LayoutDashboard, FileText, BarChart3, Settings,
-  PlusCircle, LogOut, ChevronRight, ChevronLeft, Menu, X, Shield, Bot, Terminal
+  LayoutDashboard, FileText, BarChart3, Settings, Users,
+  PlusCircle, LogOut, ChevronRight, ChevronLeft, Menu, X, Shield, Bot, Globe
 } from 'lucide-react';
+import AdminOverview from './AdminOverview';
 import ContentTable from './ContentTable';
 import ContentEditor from './ContentEditor';
+import UsersPanel from './UsersPanel';
+import SettingsPanel from './SettingsPanel';
 import AnalyticsPanel from './AnalyticsPanel';
 import { AdminPanel as OpenSourceAdmin } from '../OpenSourceScreen/AdminPanel';
 import AgentsPage from '../AgentsPage';
@@ -17,10 +20,12 @@ interface AdminDashboardProps {
 }
 
 const NAV_ITEMS = [
-  { id: 'content', label: 'Content', icon: FileText, path: '/admin' },
-  { id: 'opensource', label: 'Open Source', icon: Settings, path: '/admin/opensource' },
+  { id: 'overview', label: 'Overview', icon: LayoutDashboard, path: '/admin' },
+  { id: 'content', label: 'Content & Blog', icon: FileText, path: '/admin/content' },
+  { id: 'users', label: 'User Accounts', icon: Users, path: '/admin/users' },
+  { id: 'opensource', label: 'Open Source', icon: Globe, path: '/admin/opensource' },
   { id: 'analytics', label: 'Analytics', icon: BarChart3, path: '/admin/analytics' },
-  { id: 'agents', label: 'Agents', icon: Bot, path: '/admin/agents' },
+  { id: 'agents', label: 'AI Agents', icon: Bot, path: '/admin/agents' },
   { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings' },
 ];
 
@@ -38,12 +43,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="px-6 py-5 border-b border-slate-800 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-[#facc15]/10 border border-[#facc15]/30 flex items-center justify-center">
+        <div className="w-9 h-9 rounded-xl bg-[#facc15]/10 border border-[#facc15]/30 flex items-center justify-center shadow-inner">
           <Shield className="w-4 h-4 text-[#facc15]" />
         </div>
         <div>
-          <div className="text-xs font-black tracking-widest text-[#facc15] uppercase">Admin</div>
-          <div className="text-[10px] text-slate-500 font-mono">Control Panel</div>
+          <div className="text-xs font-black tracking-widest text-[#facc15] uppercase">Admin Hub</div>
+          <div className="text-[10px] text-slate-500 font-mono">Code for Tomorrow</div>
         </div>
       </div>
 
@@ -55,9 +60,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
             <button
               key={item.id}
               onClick={() => { navigate(item.path); setIsSidebarOpen(false); }}
-              className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-semibold transition-all
+              className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer
                 ${active
-                  ? 'bg-[#facc15]/10 text-[#facc15] border border-[#facc15]/20'
+                  ? 'bg-[#facc15]/10 text-[#facc15] border border-[#facc15]/20 shadow-sm'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
                 }`}
             >
@@ -75,28 +80,28 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
       <div className="px-3 pb-4">
         <button
           onClick={() => { navigate('/admin/new'); setIsSidebarOpen(false); }}
-          className="w-full flex items-center justify-center gap-2 bg-[#facc15] hover:bg-yellow-400 text-black font-bold text-sm py-2.5 rounded-lg transition-colors"
+          className="w-full flex items-center justify-center gap-2 bg-[#facc15] hover:bg-yellow-400 text-slate-950 font-bold text-sm py-2.5 rounded-xl transition-colors shadow-lg shadow-yellow-500/10 cursor-pointer"
         >
-          <PlusCircle className="w-4 h-4" /> New Post
+          <PlusCircle className="w-4 h-4" /> New Article
         </button>
       </div>
 
       {/* User */}
-      <div className="px-4 py-4 border-t border-slate-800">
+      <div className="px-4 py-4 border-t border-slate-800 bg-[#09090b]">
         <div className="flex items-center gap-3 mb-3">
           <img
-            src={currentUser?.profilePictureUrl}
+            src={currentUser?.profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.name || 'Admin')}&background=random`}
             alt={currentUser?.name}
             className="w-8 h-8 rounded-full border border-slate-700 object-cover"
           />
-          <div className="min-w-0">
-            <div className="text-sm font-semibold text-white truncate">{currentUser?.name}</div>
-            <div className="text-[10px] text-[#facc15] font-mono">Admin</div>
+          <div className="min-w-0 flex-1">
+            <div className="text-sm font-semibold text-white truncate">{currentUser?.name || 'Administrator'}</div>
+            <div className="text-[10px] text-[#facc15] font-mono font-bold">Owner & Admin</div>
           </div>
         </div>
         <button
           onClick={onLogout}
-          className="w-full flex items-center gap-2 text-xs text-slate-500 hover:text-red-400 transition-colors py-1"
+          className="w-full flex items-center gap-2 text-xs text-slate-500 hover:text-red-400 transition-colors py-1 cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5" /> Sign out
         </button>
@@ -107,7 +112,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
   return (
     <div className="min-h-screen bg-[#09090b] text-slate-100 flex font-sans">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 border-r border-slate-800 bg-[#0a0a0d] shrink-0 sticky top-0 h-screen">
+      <aside className="hidden md:flex flex-col w-64 border-r border-slate-800/80 bg-[#0a0a0d] shrink-0 sticky top-0 h-screen">
         <SidebarContent />
       </aside>
 
@@ -135,38 +140,52 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
       {/* Main */}
       <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
         {/* Top bar */}
-        <header className="h-14 border-b border-slate-800 flex items-center justify-between px-6 bg-[#09090b] sticky top-0 z-40">
+        <header className="h-14 border-b border-slate-800/80 flex items-center justify-between px-6 bg-[#09090b] sticky top-0 z-40">
           <div className="flex items-center gap-4">
             <button onClick={() => setIsSidebarOpen(true)} className="md:hidden text-slate-400 hover:text-white">
               <Menu className="w-5 h-5" />
             </button>
             {location.pathname !== '/admin' && location.pathname !== '/admin/' && (
-              <button onClick={() => navigate(-1)} className="text-slate-400 hover:text-white mr-2">
+              <button onClick={() => navigate(-1)} className="text-slate-400 hover:text-white mr-2 cursor-pointer">
                 <ChevronLeft className="w-5 h-5" />
               </button>
             )}
             <div className="flex items-center gap-2 text-xs text-slate-500 font-mono">
-              <span className="text-[#facc15]">CFTOS</span>
-              <ChevronRight className="w-3 h-3" />
-              <span className="text-white">
+              <span className="text-[#facc15] font-bold">Admin</span>
+              <ChevronRight className="w-3 h-3 text-slate-600" />
+              <span className="text-white font-semibold">
                 {location.pathname === '/admin' || location.pathname === '/admin/'
-                  ? 'Content'
+                  ? 'Overview'
+                  : location.pathname.includes('/content')
+                  ? 'Content & Blog'
+                  : location.pathname.includes('/users')
+                  ? 'User Accounts'
                   : location.pathname.includes('/analytics')
                   ? 'Analytics'
                   : location.pathname.includes('/opensource')
                   ? 'Open Source'
                   : location.pathname.includes('/agents')
-                  ? 'Agents'
+                  ? 'AI Agents'
                   : location.pathname.includes('/new')
-                  ? 'New Post'
+                  ? 'New Article'
                   : location.pathname.includes('/edit')
-                  ? 'Edit Post'
-                  : 'Admin'}
+                  ? 'Edit Article'
+                  : location.pathname.includes('/settings')
+                  ? 'Settings'
+                  : 'Control Panel'}
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="px-2 py-1 bg-[#facc15]/10 border border-[#facc15]/20 text-[#facc15] text-[10px] font-bold rounded-md uppercase tracking-widest">
+          <div className="flex items-center gap-3">
+            <a
+              href="/blog"
+              target="_blank"
+              rel="noreferrer"
+              className="text-xs text-slate-400 hover:text-[#facc15] font-semibold transition-colors hidden sm:inline-block"
+            >
+              View Blog ↗
+            </a>
+            <span className="px-2.5 py-1 bg-[#facc15]/10 border border-[#facc15]/20 text-[#facc15] text-[10px] font-extrabold rounded-lg uppercase tracking-wider">
               Owner
             </span>
           </div>
@@ -177,24 +196,22 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.2 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.18 }}
               className="p-6 md:p-8 max-w-7xl mx-auto w-full"
             >
               <Routes>
-                <Route path="/" element={<ContentTable />} />
+                <Route path="/" element={<AdminOverview />} />
+                <Route path="/content" element={<ContentTable />} />
+                <Route path="/users" element={<UsersPanel />} />
                 <Route path="/new" element={<ContentEditor />} />
                 <Route path="/edit/:id" element={<ContentEditor />} />
                 <Route path="/analytics" element={<AnalyticsPanel />} />
                 <Route path="/opensource" element={<OpenSourceAdmin />} />
                 <Route path="/agents" element={<AgentsPage />} />
-                <Route path="/settings" element={
-                  <div className="text-slate-400 font-mono text-sm p-8 text-center">
-                    Settings panel coming soon.
-                  </div>
-                } />
+                <Route path="/settings" element={<SettingsPanel />} />
               </Routes>
             </motion.div>
           </AnimatePresence>
