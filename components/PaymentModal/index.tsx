@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, CreditCard, ShieldCheck, Lock, CheckCircle2, Sparkles, AlertCircle, ArrowRight, Zap, RefreshCw } from 'lucide-react';
+import { X, CreditCard, ShieldCheck, Lock, CheckCircle2, AlertCircle, ArrowRight, Zap, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import api from '../../services/api';
 
