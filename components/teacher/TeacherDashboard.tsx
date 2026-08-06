@@ -21,7 +21,6 @@ import {
   Trash2,
   Clock,
   CheckCircle,
-  Sparkles,
   ListChecks,
   MessageSquare,
   X,
@@ -149,7 +148,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
     { id: 'students', icon: Users, label: 'Students' },
     { id: 'classes', icon: BookOpen, label: 'My Classes' },
     { id: 'assignments', icon: ListChecks, label: 'Quizzes' },
-    { id: 'activities', icon: Sparkles, label: 'Activities' },
+    { id: 'activities', icon: Zap, label: 'Activities' },
     { id: 'planner', icon: Calendar, label: 'Lesson Planner' },
     { id: 'gradebook', icon: GraduationCap, label: 'Gradebook' },
     { id: 'messages', icon: MessageSquare, label: 'Messages' },
@@ -167,7 +166,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
               {[
                 { label: 'Total Students', value: '124', icon: Users, color: 'text-brand-600', bg: 'bg-brand-50' },
                 { label: 'Active Classes', value: '6', icon: BookOpen, color: 'text-purple-600', bg: 'bg-purple-50' },
-                { label: 'Activities', value: activities.length.toString(), icon: Sparkles, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+                { label: 'Activities', value: activities.length.toString(), icon: Zap, color: 'text-emerald-600', bg: 'bg-emerald-50' },
                 { label: 'Quizzes', value: quizzes.length.toString(), icon: Calendar, color: 'text-orange-600', bg: 'bg-orange-50' },
               ].map((stat, i) => (
                 <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center space-x-4 hover:-translate-y-1 transition-transform cursor-pointer">
@@ -265,7 +264,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                   <button
                     onClick={() => setIsCreatingActivity(true)}
                     className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase tracking-widest shadow-lg hover:bg-emerald-500 transition-all flex items-center justify-center space-x-2">
-                    <Sparkles className="w-5 h-5" />
+                    <Zap className="w-5 h-5" />
                     <span>Prepare Activity</span>
                   </button>
                 </div>
@@ -454,7 +453,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
             ) : activities.length === 0 ? (
               <div className="bg-white dark:bg-slate-800 p-20 rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center text-center space-y-4">
                 <div className="w-20 h-20 bg-emerald-50 dark:bg-emerald-900/30 rounded-3xl flex items-center justify-center text-emerald-300">
-                  <Sparkles className="w-10 h-10" />
+                  <Zap className="w-10 h-10" />
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase">No activities yet</h3>
@@ -628,11 +627,14 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
         });
 
         const getWeekDateRange = (offset: number) => {
-          const baseDate = new Date('2026-03-09T00:00:00'); // Base Monday
+          const now = new Date();
+          const day = now.getDay();
+          const diffToMonday = now.getDate() - day + (day === 0 ? -6 : 1);
+          const baseDate = new Date(now.setDate(diffToMonday));
           baseDate.setDate(baseDate.getDate() + (offset * 7));
           const endDate = new Date(baseDate);
           endDate.setDate(endDate.getDate() + 4); // Friday
-          return `Week of ${baseDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+          return `Week of ${baseDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
         };
 
         const handleAddLesson = () => {
@@ -920,7 +922,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
               </select>
             </div>
             <div className="flex items-center space-x-2 bg-brand-50 dark:bg-brand-900/30 px-4 py-2 rounded-xl">
-              <Sparkles className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+              <Zap className="w-5 h-5 text-brand-600 dark:text-brand-400" />
               <span className="text-xs font-black text-brand-700 dark:text-brand-300 uppercase">AI Powered</span>
             </div>
           </div>
@@ -984,7 +986,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                     onClick={() => setSelectedStrugglingStudent(student)}
                     className="p-2 bg-white dark:bg-slate-800 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-xl shadow-sm text-red-600 transition-colors group relative"
                   >
-                    <Sparkles className="w-4 h-4" />
+                    <Zap className="w-4 h-4" />
                     <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                       AI Intervention
                     </span>
@@ -1008,7 +1010,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
               <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-start bg-slate-50 dark:bg-slate-800">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white shadow-lg">
-                    <Sparkles className="w-6 h-6" />
+                    <Zap className="w-6 h-6" />
                   </div>
                   <div>
                     <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">AI Intervention Plan</h2>
@@ -1044,7 +1046,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
                       }}
                       className="mt-4 px-8 py-3 bg-brand-600 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-brand-500 transition-all flex items-center gap-2 mx-auto"
                     >
-                      <Sparkles className="w-4 h-4" /> Start AI Analysis
+                      <Zap className="w-4 h-4" /> Start AI Analysis
                     </button>
                   </div>
                 ) : (
@@ -1339,7 +1341,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
               {/* Quick Stats Grid */}
               <div className="grid grid-cols-4 gap-4">
                 {[
-                  { label: 'Total XP', value: selectedStudent.xp, icon: Sparkles, color: 'text-yellow-500' },
+                  { label: 'Total XP', value: selectedStudent.xp, icon: Zap, color: 'text-yellow-500' },
                   { label: 'Streak', value: `${selectedStudent.streak} Days`, icon: Clock, color: 'text-orange-500' },
                   { label: 'Last Quiz', value: `${selectedStudent.lastQuiz}%`, icon: BookOpen, color: 'text-brand-500' },
                   { label: 'Progress', value: `${selectedStudent.progress}%`, icon: BarChart3, color: 'text-emerald-500' },
