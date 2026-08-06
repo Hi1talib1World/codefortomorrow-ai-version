@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Brain, Zap, Trophy, Flame, Sparkles, CheckCircle2, Lock, Star, Shield, Code, Calculator, Globe, Search, X } from 'lucide-react';
+import { ArrowLeft, Brain, Zap, Trophy, Flame, CheckCircle2, Lock, Star, Shield, Code, Calculator, Globe, Search, X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 export interface ChallengeItem {
