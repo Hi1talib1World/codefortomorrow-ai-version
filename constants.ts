@@ -25,6 +25,14 @@ import { LessonSection, Badge, ProgrammingPath, Module, Level } from './types';
 // Unavailable paths are shown on the path selection screen but cannot be started.
 export const PATHS: ProgrammingPath[] = [
   {
+    id: 'ai_engineering',
+    titleKey: 'ai_engineering',
+    descriptionKey: 'ai_engineering_desc',
+    icon: '/assets/images/ai_logo.png',
+    color: 'bg-amber-500',
+    isAvailable: true
+  },
+  {
     id: 'block_coding',
     titleKey: 'block_coding',
     descriptionKey: 'block_coding_desc',
@@ -2056,6 +2064,18 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       ],
     },
   ],
+  ai_engineering: [
+    {
+      id: 'ai_eng_foundations',
+      titleKey: 'ai_eng_foundations_title',
+      lessons: [
+        { id: 1, level: 1, titleKey: 'ai_eng_intro', icon: 'brain', xp: 25, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'ai_eng_chal_1', starterCode: 'console.log("Prompt Engineering 101: System Prompts Defined");\n', solutionCode: 'console.log("Prompt Engineering 101: System Prompts Defined");', expectedOutput: 'Prompt Engineering 101: System Prompts Defined' },
+        { id: 2, level: 2, titleKey: 'ai_eng_embeddings', icon: 'brain', xp: 30, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'ai_eng_chal_2', starterCode: 'console.log("Embedding Dim: 1536 Vector Created");\n', solutionCode: 'console.log("Embedding Dim: 1536 Vector Created");', expectedOutput: 'Embedding Dim: 1536 Vector Created' },
+        { id: 3, level: 3, titleKey: 'ai_eng_rag_pipeline', icon: 'star', xp: 35, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'ai_eng_chal_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'ai_eng_agentic_flow', icon: 'trophy', xp: 75, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'ai_eng_chal_4', starterCode: 'console.log("AI Agent Orchestration Complete");\n', solutionCode: 'console.log("AI Agent Orchestration Complete");', expectedOutput: 'AI Agent Orchestration Complete' },
+      ],
+    },
+  ],
 };
 
 export const BADGES_BY_PATH: { [key: string]: Badge[] } = {
@@ -2202,6 +2222,12 @@ export const BADGES_BY_PATH: { [key: string]: Badge[] } = {
     { id: 'asm_badge2', lessonId: 2, icon: '📼', titleKey: 'asm_badge_reg' },
     { id: 'asm_badge3', lessonId: 3, icon: '💾', titleKey: 'asm_badge_mem' },
     { id: 'asm_badge4', lessonId: 4, icon: '🏆', titleKey: 'asm_badge_cpu' },
+  ],
+  ai_engineering: [
+    { id: 'ai_eng_badge1', lessonId: 1, icon: '🤖', titleKey: 'ai_eng_badge_prompt' },
+    { id: 'ai_eng_badge2', lessonId: 2, icon: '📐', titleKey: 'ai_eng_badge_vec' },
+    { id: 'ai_eng_badge3', lessonId: 3, icon: '🔍', titleKey: 'ai_eng_badge_rag' },
+    { id: 'ai_eng_badge4', lessonId: 4, icon: '🏆', titleKey: 'ai_eng_badge_agent' },
   ],
 };
 
