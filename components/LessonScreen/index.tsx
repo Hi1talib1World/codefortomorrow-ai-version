@@ -600,38 +600,40 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
             {showSuccessModal && <SuccessModal lesson={lesson} onContinue={handleComplete} />}
 
             {/* Top Navigation / Coddy-style Header */}
-            <header className="flex-shrink-0 h-12 bg-[#181818] border-b border-[#282828] px-4 flex items-center justify-between z-30 select-none">
+            <header className="flex-shrink-0 h-14 bg-white dark:bg-[#181818] border-b-3 border-slate-900 dark:border-[#282828] px-4 flex items-center justify-between z-30 select-none shadow-[0_4px_0_0_#0F172A]">
                 <div className="flex items-center gap-3">
-                    <button onClick={onExit} className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors cursor-pointer" title="Exit Lesson">
-                        <X className="w-5 h-5" />
+                    <button onClick={onExit} className="bg-rose-100 hover:bg-rose-200 border-2 border-slate-900 text-slate-900 p-1.5 rounded-full shadow-[2px_2px_0px_0px_#0F172A] transition-all cursor-pointer" title="Exit Lesson">
+                        <X className="w-4 h-4 stroke-[3]" />
                     </button>
-                    <span className="text-sm font-extrabold text-white tracking-wide">
+                    <span className="bg-[#FFE87C] border-2 border-slate-900 text-slate-900 text-xs font-black px-3 py-1 rounded-full shadow-[2px_2px_0px_0px_#0F172A] flex items-center gap-1.5">
+                        <span>⚡ +{lesson.xp || 150} XP</span>
+                        <span>•</span>
+                        <span>{path.toUpperCase()} Path</span>
+                    </span>
+                    <span className="text-sm font-black text-slate-900 dark:text-white tracking-wide hidden sm:inline">
                         {t(lesson.titleKey as any) || lesson.titleKey || 'Introduction'}
                     </span>
                 </div>
 
                 {/* Top Progress Bar */}
                 <div className="flex-grow max-w-md mx-6 hidden md:flex items-center gap-3">
-                    <div className="flex-grow bg-[#262626] h-1.5 rounded-full overflow-hidden">
+                    <div className="flex-grow bg-slate-100 dark:bg-[#262626] border-2 border-slate-900 h-3 rounded-full overflow-hidden shadow-[2px_2px_0px_0px_#0F172A]">
                         <div
-                            className="bg-gradient-to-r from-amber-500 to-cyan-400 h-full transition-all duration-500"
+                            className="bg-[#00D2D3] h-full transition-all duration-500 border-r-2 border-slate-900"
                             style={{ width: isCorrect ? '100%' : `${((currentLessonIndex + 1) / allLessonsInPath.length) * 100}%` }}
                         />
                     </div>
                 </div>
 
                 {/* Right Header Badges & Profile */}
-                <div className="flex items-center gap-4 text-xs font-bold text-slate-300">
-                    <div className="flex items-center gap-1 text-slate-300" title="Score">
-                        <span>🏆</span> <span>0</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-amber-500" title="Streak Flame">
+                <div className="flex items-center gap-3 text-xs font-black text-slate-900 dark:text-slate-200">
+                    <div className="flex items-center gap-1 bg-amber-100 border-2 border-slate-900 px-2.5 py-0.5 rounded-full shadow-[2px_2px_0px_0px_#0F172A]" title="Streak Flame">
                         <span>🔥</span> <span>{(currentUser as any)?.streak || 19}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-cyan-400" title="Energy XP">
+                    <div className="flex items-center gap-1 bg-cyan-100 border-2 border-slate-900 px-2.5 py-0.5 rounded-full shadow-[2px_2px_0px_0px_#0F172A]" title="Energy XP">
                         <span>⚡</span> <span>{currentUser?.progress?.xp || 5}</span>
                     </div>
-                    <div className="w-7 h-7 rounded-full bg-cyan-600 text-white font-black text-xs flex items-center justify-center border border-cyan-400">
+                    <div className="w-8 h-8 rounded-full bg-[#FFE87C] border-2 border-slate-900 text-slate-900 font-black text-xs flex items-center justify-center shadow-[2px_2px_0px_0px_#0F172A]">
                         {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
                     </div>
                 </div>
@@ -862,16 +864,16 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         <div className="absolute bottom-4 right-6 z-20 flex items-center gap-3">
                             <button
                                 onClick={() => setShowHintModal(true)}
-                                className="px-4 py-2.5 rounded-lg bg-[#2b2b2b] hover:bg-[#383838] border border-[#3e3e3e] text-slate-200 text-xs font-bold flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
+                                className="px-4 py-2.5 rounded-xl bg-white text-slate-900 border-2 border-slate-900 text-xs font-black flex items-center gap-1.5 shadow-[3px_3px_0px_0px_#0F172A] hover:bg-[#FFE87C] transition-all cursor-pointer"
                             >
-                                <span>🤖 Ask AI</span>
+                                <span>💡 Need a hint?</span>
                             </button>
                             <button
                                 onClick={handleRunCode}
                                 disabled={isRunning}
-                                className="px-6 py-2.5 rounded-lg bg-[#008be3] hover:bg-[#0077c2] text-white text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-xl transition-all cursor-pointer active:scale-95"
+                                className="px-6 py-2.5 rounded-xl bg-[#00D2D3] hover:bg-[#00c0c1] text-slate-900 border-2 border-slate-900 text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-[4px_4px_0px_0px_#0F172A] transition-all cursor-pointer active:translate-x-[2px] active:translate-y-[2px] active:shadow-none disabled:opacity-50"
                             >
-                                <Play className="w-4 h-4 fill-current" />
+                                <Play className="w-4 h-4 fill-current stroke-[2.5]" />
                                 <span>{isRunning ? t('running') : t('run_code')}</span>
                             </button>
                         </div>

@@ -7,12 +7,15 @@ import { User as UserType } from '../../types';
 import api from '../../services/api';
 import { useToast } from '../ToastNotification';
 import { PATHS, LESSONS_BY_PATH } from '../../constants';
-import { Flame, Trophy, Target, Compass, BookOpen, ArrowRight, Zap } from 'lucide-react';
+import { Flame, Trophy, Target, Compass, BookOpen, ArrowRight, Zap, ChevronDown } from 'lucide-react';
+
+import { Lesson } from '../../types';
 
 interface HomeHubScreenProps {
     onNavigate: (view: DashboardView) => void;
     currentUser: UserType;
     onUpdateUser: (updatedData: Partial<UserType>) => void;
+    onStartLesson?: (lesson: Lesson) => void;
 }
 
 const FloatingStat: React.FC<{ icon: string, value: string | number, label: string, color: string }> = ({ icon, value, label, color }) => (
@@ -25,10 +28,12 @@ const FloatingStat: React.FC<{ icon: string, value: string | number, label: stri
     </div>
 );
 
-const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, onUpdateUser }) => {
+const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, onUpdateUser, onStartLesson }) => {
     const { t, language } = useLanguage();
     const navigate = useNavigate();
     const { showToast } = useToast();
+    const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+    const [isQuestsExpanded, setIsQuestsExpanded] = useState(false);
 
     const howToLearnTexts = {
         en: {
@@ -89,10 +94,12 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
     // Trigger auto-initialization of daily quests if not present for today
     useEffect(() => {
         if (dailyQuestsDate !== todayStr || dailyQuests.length === 0) {
-            const initialQuests: Array<{ id: string; type: 'lesson' | 'xp' | 'quiz'; targetValue: number; currentValue: number; titleKey: string; xpReward: number }> = [
+            const initialQuests: Array<{ id: string; type: string; targetValue: number; currentValue: number; titleKey: string; xpReward: number }> = [
                 { id: 'q1', type: 'lesson', targetValue: 1, currentValue: 0, titleKey: 'quest_lesson', xpReward: 15 },
                 { id: 'q2', type: 'xp', targetValue: 30, currentValue: 0, titleKey: 'quest_xp', xpReward: 20 },
                 { id: 'q3', type: 'quiz', targetValue: 1, currentValue: 0, titleKey: 'quest_quiz', xpReward: 15 },
+                { id: 'q4', type: 'ai_tool', targetValue: 1, currentValue: 0, titleKey: 'quest_ai_tool', xpReward: 25 },
+                { id: 'q5', type: 'code_editor', targetValue: 3, currentValue: 0, titleKey: 'quest_code_editor', xpReward: 20 },
             ];
             
             const updatedProgress = {
@@ -129,56 +136,126 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
         }
     };
 
+    const handleClaimChest = () => {
+        if (chestOpenedToday) return;
+
+        const bonusXp = 50;
+        const updatedProgress = {
+            ...progress,
+            xp: xp + bonusXp,
+            skillGraph: {
+                ...skillGraph,
+                chestOpenedToday: true,
+            }
+        };
+
+        if (currentUser._id.startsWith('guest_')) {
+            onUpdateUser({ ...currentUser, progress: updatedProgress });
+        } else {
+            api.updateUserProgress(updatedProgress).then(() => {
+                onUpdateUser({ ...currentUser, progress: updatedProgress });
+            }).catch(err => console.error('Failed to claim chest:', err));
+        }
+
+        showToast(`🎉 Daily Bonus Claimed! +${bonusXp} XP Stars!`, 'success');
+    };
+
     // Render Daily Quests HUD Component
     const renderDailyQuestsHUD = () => {
+        const questTitles: Record<string, string> = {
+            quest_lesson: t('quest_lesson' as any) || 'Complete 1 Lesson',
+            quest_xp: t('quest_xp' as any) || 'Earn 30 XP',
+            quest_quiz: t('quest_quiz' as any) || 'Pass 1 Quiz',
+            quest_ai_tool: 'Utiliser 1 outil IA / Générateur',
+            quest_code_editor: 'Exécuter 3 fois du code dans l\'éditeur',
+        };
+
+        const allCompleted = dailyQuests.length > 0 && dailyQuests.every((q: any) => q.currentValue >= q.targetValue);
+        const visibleQuests = isQuestsExpanded ? dailyQuests : dailyQuests.slice(0, 1);
+
         return (
-            <div className="bg-white dark:bg-slate-800 rounded-[2rem] p-6 border-2 border-[#111827]/10 dark:border-[#FBBF24]/20 shadow-md transition-colors relative overflow-hidden text-center flex flex-col justify-between">
-                <div>
-                    <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-sm font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wider flex items-center gap-2">
-                            <span></span> {t('daily_quests_title') || 'Daily Quests'}
-                        </h3>
-                        <span className="text-[9px] bg-[#FBBF24]/20 text-[#111827] dark:text-[#FBBF24] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
-                            Resets Daily
+            <div className="relative bg-white dark:bg-slate-900 border-3 border-slate-900 dark:border-cyan-400 rounded-3xl p-6 shadow-[5px_5px_0px_0px_#0f172a] dark:shadow-[5px_5px_0px_0px_#06b6d4] space-y-5 overflow-visible text-left">
+                
+                {/* Floating Corner Sticker */}
+                <div className="absolute -top-3.5 -right-3.5 bg-[#FFE87C] border-2 border-slate-900 rounded-full w-9 h-9 flex items-center justify-center text-sm shadow-[2px_2px_0px_0px_#0f172a] rotate-12 z-20">
+                    🎯
+                </div>
+
+                <div className="flex items-center justify-between border-b-2 border-slate-900/10 dark:border-slate-800 pb-3">
+                    <div className="flex items-center gap-2">
+                        <span className="bg-[#FFE87C] text-slate-900 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border border-slate-900 shadow-[1px_1px_0px_0px_#0f172a]">
+                            DAILY HUD
                         </span>
+                        <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                            {t('daily_quests_title' as any) || 'Daily Quests'}
+                        </h3>
                     </div>
-                    
-                    <div className="space-y-3.5">
-                        {dailyQuests.map((quest: any) => {
-                            const isDone = quest.currentValue >= quest.targetValue;
-                            const pct = Math.min(100, Math.round((quest.currentValue / quest.targetValue) * 100));
-                            
-                            return (
-                                <div key={quest.id} className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-950 flex flex-col gap-2">
-                                    <div className="flex items-start justify-between">
-                                        <div className="text-left">
-                                            <p className="text-xs font-black text-slate-800 dark:text-slate-200">
-                                                {t(quest.titleKey) || quest.titleKey}
-                                            </p>
-                                            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold mt-0.5">
-                                                {quest.currentValue} / {quest.targetValue}
-                                            </p>
-                                        </div>
-                                        <div className="flex items-center gap-1.5 shrink-0">
-                                            <span className="text-[10px] bg-[#FBBF24]/25 text-[#111827] dark:text-[#FBBF24] font-black px-2 py-0.5 rounded-lg">
-                                                +{quest.xpReward} XP
-                                            </span>
-                                            {isDone && (
-                                                <span className="text-xs bg-[#111827] text-white rounded-full w-4.5 h-4.5 flex items-center justify-center font-bold">✓</span>
-                                            )}
-                                        </div>
+
+                    {allCompleted && !chestOpenedToday && (
+                        <button
+                            onClick={handleClaimChest}
+                            className="bg-[#00D2D3] hover:bg-[#FFE87C] text-slate-900 font-black text-xs px-3 py-1 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] transition-all cursor-pointer animate-bounce flex items-center gap-1"
+                        >
+                            <span>🎁 Réclamer +50 XP</span>
+                        </button>
+                    )}
+                </div>
+
+                <div className="space-y-3.5">
+                    {visibleQuests.map((quest: any) => {
+                        const isDone = quest.currentValue >= quest.targetValue;
+                        const pct = Math.min(100, Math.round((quest.currentValue / quest.targetValue) * 100));
+
+                        return (
+                            <div key={quest.id} className="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-2xl border-2 border-slate-900 dark:border-slate-800 shadow-[2.5px_2.5px_0px_0px_#0f172a] flex flex-col gap-2">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-xs font-black text-slate-900 dark:text-slate-100">
+                                            {questTitles[quest.titleKey] || quest.titleKey}
+                                        </p>
+                                        <p className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 mt-0.5">
+                                            {quest.currentValue} / {quest.targetValue}
+                                        </p>
                                     </div>
-                                    <div className="w-full bg-slate-200 dark:bg-slate-850 h-2 rounded-full overflow-hidden">
-                                        <div 
-                                            className={`h-full rounded-full transition-all duration-500 ${isDone ? 'bg-[#111827]' : 'bg-[#FBBF24] animate-pulse'}`}
-                                            style={{ width: `${pct}%` }}
-                                        ></div>
+                                    <div className="flex items-center gap-1.5 shrink-0">
+                                        <span className="text-[10px] bg-[#FFE87C] text-slate-900 font-black px-2 py-0.5 rounded-md border border-slate-900 shadow-[1px_1px_0px_0px_#0f172a]">
+                                            +{quest.xpReward} XP
+                                        </span>
+                                        {isDone && (
+                                            <span className="text-xs bg-[#00D2D3] text-slate-900 font-black border border-slate-900 rounded-full w-5 h-5 flex items-center justify-center shadow-[1px_1px_0px_0px_#0f172a]">
+                                                ✓
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
-                            );
-                        })}
-                    </div>
+                                <div className="w-full bg-white dark:bg-slate-900 border-2 border-slate-900 h-3 rounded-full overflow-hidden shadow-[1.5px_1.5px_0px_0px_#0f172a]">
+                                    <div 
+                                        className={`h-full rounded-full transition-all duration-500 ${isDone ? 'bg-[#00D2D3]' : 'bg-[#FFE87C]'}`}
+                                        style={{ width: `${pct}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
+
+                {dailyQuests.length > 1 && (
+                    <button
+                        onClick={() => setIsQuestsExpanded(!isQuestsExpanded)}
+                        className="w-full py-2.5 px-4 rounded-2xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-2 border-slate-900 font-black text-xs uppercase tracking-wider shadow-[2.5px_2.5px_0px_0px_#0f172a] hover:bg-[#FFE87C] hover:text-slate-900 transition-all cursor-pointer flex items-center justify-center gap-2"
+                    >
+                        <span>{isQuestsExpanded ? 'Réduire' : `Voir toutes les quêtes (${dailyQuests.length})`}</span>
+                        <ChevronDown className={`w-4 h-4 stroke-[3] transition-transform duration-300 ${isQuestsExpanded ? 'rotate-180' : ''}`} />
+                    </button>
+                )}
+
+                {allCompleted && (
+                    <div className="pt-1">
+                        <div className="p-3 rounded-2xl bg-[#FFE87C] border-2 border-slate-900 text-slate-900 text-xs font-black text-center shadow-[3px_3px_0px_0px_#0f172a] flex items-center justify-center gap-2">
+                            <span>🎉 All Daily Quests Completed! Bonus Claimed!</span>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     };
@@ -482,6 +559,70 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                         <span className="text-[10px] font-black text-[#111827] dark:text-[#FBBF24] uppercase tracking-wider mt-1 group-hover:underline flex items-center justify-center gap-1">
                                             View Full Profile <span>→</span>
                                         </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* AI Personalized Quest Card - Neo-Brutalism & Bento Floating UI Collage */}
+                            <div className="space-y-4">
+                                <h2 className="text-xs font-black text-slate-800 dark:text-cyan-300 uppercase tracking-widest flex items-center gap-2">
+                                    <span className="w-2.5 h-2.5 bg-yellow-400 border-2 border-slate-900 rounded-sm"></span>
+                                    AI Custom Generator
+                                </h2>
+                                
+                                <div 
+                                    onClick={() => navigate('/dashboard/ai-tools')}
+                                    className="group relative bg-[#FFE500] dark:bg-[#0d1527] border-3 border-slate-900 dark:border-cyan-400 rounded-2xl p-5 shadow-[6px_6px_0px_0px_#0f172a] dark:shadow-[6px_6px_0px_0px_#06b6d4] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#0f172a] dark:hover:shadow-[8px_8px_0px_0px_#06b6d4] transition-all duration-200 cursor-pointer overflow-hidden"
+                                >
+                                    {/* Decorative Dotted Grid Pattern Background */}
+                                    <div className="absolute inset-0 opacity-15 dark:opacity-20 pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] dark:bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]"></div>
+
+                                    {/* Bento Floating Collage Items */}
+                                    <div className="relative z-10 space-y-4">
+                                        
+                                        {/* Top Collage Row: Neo-Brutalist Badges */}
+                                        <div className="flex items-center justify-between gap-2">
+                                            <span className="text-[10px] font-black uppercase text-slate-900 dark:text-slate-950 bg-cyan-400 dark:bg-cyan-400 px-3 py-1 rounded-md border-2 border-slate-900 dark:border-cyan-200 shadow-[2px_2px_0px_0px_#0f172a] tracking-wider">
+                                                COFOTO AI
+                                            </span>
+
+                                            {/* Floating Micro Sticker Pill */}
+                                            <div className="hidden sm:flex items-center gap-1.5 text-[9px] font-mono font-bold bg-white dark:bg-slate-900 text-slate-900 dark:text-cyan-300 px-2.5 py-1 rounded-md border-2 border-slate-900 dark:border-cyan-400 shadow-[2px_2px_0px_0px_#0f172a] group-hover:rotate-1 transition-transform">
+                                                <span>def quest()</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Title & Description */}
+                                        <div className="space-y-1.5">
+                                            <h3 className="text-lg font-black text-slate-900 dark:text-white tracking-tight leading-tight group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
+                                                Generate Custom Lesson with COFOTO
+                                            </h3>
+                                            <p className="text-xs font-bold text-slate-800 dark:text-slate-300 leading-snug">
+                                                Personalized AI challenges built live from your favorite topics (Game Dev, Robotics, Space, Cybersecurity).
+                                            </p>
+                                        </div>
+
+                                        {/* Bento Grid Mini Interactive Floating Chips Collage */}
+                                        <div className="grid grid-cols-3 gap-1.5 pt-1">
+                                            <div className="bg-emerald-400 dark:bg-emerald-500/20 text-slate-950 dark:text-emerald-300 text-[10px] font-black px-2 py-1.5 rounded-lg border-2 border-slate-900 dark:border-emerald-400 shadow-[2px_2px_0px_0px_#0f172a] text-center truncate">
+                                                🎮 Game Dev
+                                            </div>
+                                            <div className="bg-pink-400 dark:bg-pink-500/20 text-slate-950 dark:text-pink-300 text-[10px] font-black px-2 py-1.5 rounded-lg border-2 border-slate-900 dark:border-pink-400 shadow-[2px_2px_0px_0px_#0f172a] text-center truncate">
+                                                🤖 Robotics
+                                            </div>
+                                            <div className="bg-sky-400 dark:bg-sky-500/20 text-slate-950 dark:text-sky-300 text-[10px] font-black px-2 py-1.5 rounded-lg border-2 border-slate-900 dark:border-sky-400 shadow-[2px_2px_0px_0px_#0f172a] text-center truncate">
+                                                🚀 Space
+                                            </div>
+                                        </div>
+
+                                        {/* Neo-Brutalist Call To Action Button */}
+                                        <div className="pt-2">
+                                            <div className="w-full py-2.5 px-4 rounded-xl bg-slate-900 dark:bg-cyan-400 text-white dark:text-slate-950 font-black text-xs uppercase tracking-wider border-2 border-slate-900 dark:border-cyan-300 shadow-[3px_3px_0px_0px_#FFE500] dark:shadow-[3px_3px_0px_0px_#0f172a] flex items-center justify-between group-hover:bg-cyan-400 dark:group-hover:bg-cyan-300 group-hover:text-slate-950 transition-all">
+                                                <span>Start Generator</span>
+                                                <span className="font-extrabold text-sm group-hover:translate-x-1 transition-transform">→</span>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

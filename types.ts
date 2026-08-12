@@ -161,7 +161,7 @@ export interface UserProgress {
     chestOpenedToday?: boolean;
     dailyQuests?: Array<{
       id: string;
-      type: 'lesson' | 'xp' | 'quiz';
+      type: 'lesson' | 'xp' | 'quiz' | 'ai_tool' | 'code_editor' | string;
       targetValue: number;
       currentValue: number;
       titleKey: string;

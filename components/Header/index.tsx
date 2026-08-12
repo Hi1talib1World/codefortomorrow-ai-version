@@ -8,7 +8,7 @@ import { PATHS, MODULES_BY_PATH, LESSONS_BY_PATH } from '../../constants';
 import DbSetupGuide from '../DbSetupGuide';
 import { useSync } from '../../contexts/SyncContext';
 import { DashboardView } from '../Dashboard';
-import { Bell, BookOpen, Compass, Trophy, Play, Home, Target, Zap, Folder, Award, ShoppingBag, FileText, MessageSquare, Settings, ChevronDown, ExternalLink, LogOut, Flame, Unlock, Trash2, CheckCircle, Share2, Bot } from 'lucide-react';
+import { Bell, BookOpen, Compass, Trophy, Play, Home, Target, Zap, Folder, Award, ShoppingBag, FileText, MessageSquare, Settings, ChevronDown, ExternalLink, LogOut, Flame, Unlock, Trash2, CheckCircle, Share2, Bot, User as UserIcon, X } from 'lucide-react';
 import api from '../../services/api';
 import { useToast } from '../ToastNotification';
 
@@ -37,6 +37,12 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const [isExploreOpen, setIsExploreOpen] = useState(false);
   const exploreRef = useRef<HTMLDivElement>(null);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  const [showNotifSubmenu, setShowNotifSubmenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const { showToast } = useToast();
 
@@ -207,6 +213,112 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
     };
   }, [currentPath, currentUser.progress?.completedLessons]);
 
+  const searchResults = React.useMemo(() => {
+    if (!searchQuery || typeof searchQuery !== 'string' || !searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase().trim();
+    const results: Array<{
+      type: 'path' | 'lesson';
+      id: string | number;
+      title: string;
+      subtitle: string;
+      pathId: ProgrammingPath['id'];
+      lessonObj?: Lesson;
+      icon?: string;
+    }> = [];
+
+    try {
+      // 1. Search Paths safely
+      if (Array.isArray(PATHS)) {
+        PATHS.forEach(p => {
+          if (!p) return;
+          const rawTitle = p.titleKey ? String(t(p.titleKey as any) || '') : '';
+          const title = rawTitle || String(p.id || '');
+          const desc = p.descriptionKey ? String(t(p.descriptionKey as any) || '') : '';
+          
+          if (
+            title.toLowerCase().includes(q) ||
+            String(p.id).toLowerCase().includes(q) ||
+            desc.toLowerCase().includes(q)
+          ) {
+            results.push({
+              type: 'path',
+              id: p.id,
+              title,
+              subtitle: 'Course Path',
+              pathId: p.id,
+              icon: p.icon
+            });
+          }
+        });
+      }
+
+      // 2. Search Lessons across LESSONS_BY_PATH safely
+      if (LESSONS_BY_PATH && typeof LESSONS_BY_PATH === 'object') {
+        Object.entries(LESSONS_BY_PATH).forEach(([pathKey, sections]) => {
+          if (!Array.isArray(sections)) return;
+          sections.forEach(sec => {
+            if (!sec || !Array.isArray(sec.lessons)) return;
+            sec.lessons.forEach(l => {
+              if (!l) return;
+              const rawLTitle = l.titleKey ? String(t(l.titleKey as any) || '') : '';
+              const lTitle = rawLTitle || String(l.titleKey || 'Lesson');
+              const hasMatchingTag = Array.isArray(l.tags) && l.tags.some(tag => typeof tag === 'string' && tag.toLowerCase().includes(q));
+
+              if (lTitle.toLowerCase().includes(q) || hasMatchingTag) {
+                results.push({
+                  type: 'lesson',
+                  id: `${pathKey}_sec_${l.id}_${Math.random()}`,
+                  title: lTitle,
+                  subtitle: `${pathKey.toUpperCase()} • Level ${l.level || 1} • +${l.xp || 10} XP`,
+                  pathId: pathKey as any,
+                  lessonObj: l,
+                  icon: l.icon || '📖'
+                });
+              }
+            });
+          });
+        });
+      }
+
+      // 3. Search Lessons across MODULES_BY_PATH safely
+      if (MODULES_BY_PATH && typeof MODULES_BY_PATH === 'object') {
+        Object.entries(MODULES_BY_PATH).forEach(([pathKey, modules]) => {
+          if (!Array.isArray(modules)) return;
+          modules.forEach(mod => {
+            if (!mod || !Array.isArray(mod.levels)) return;
+            mod.levels.forEach(lvl => {
+              if (!lvl || !Array.isArray(lvl.lessons)) return;
+              lvl.lessons.forEach(l => {
+                if (!l) return;
+                const rawLTitle = l.titleKey ? String(t(l.titleKey as any) || '') : '';
+                const lTitle = rawLTitle || String(l.titleKey || 'Lesson');
+                const hasMatchingTag = Array.isArray(l.tags) && l.tags.some(tag => typeof tag === 'string' && tag.toLowerCase().includes(q));
+
+                if (lTitle.toLowerCase().includes(q) || hasMatchingTag) {
+                  if (!results.some(r => r.type === 'lesson' && r.title === lTitle)) {
+                    results.push({
+                      type: 'lesson',
+                      id: `${pathKey}_mod_${l.id}_${Math.random()}`,
+                      title: lTitle,
+                      subtitle: `${pathKey.toUpperCase()} • Level ${l.level || 1} • +${l.xp || 10} XP`,
+                      pathId: pathKey as any,
+                      lessonObj: l,
+                      icon: l.icon || '📖'
+                    });
+                  }
+                }
+              });
+            });
+          });
+        });
+      }
+    } catch (err) {
+      console.error('Error computing search results:', err);
+    }
+
+    return results.slice(0, 8);
+  }, [searchQuery, t]);
+
   const localizedTexts = {
     en: {
       notifications: "Notifications",
@@ -312,6 +424,12 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
       }
       if (exploreRef.current && !exploreRef.current.contains(event.target as Node)) {
         setIsExploreOpen(false);
+      }
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setIsProfileMenuOpen(false);
+      }
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearchOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -544,67 +662,110 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
           )}
         </div>
 
-        {/* Center: Search Bar (Coursera Styled) */}
-        <div className="flex-1 max-w-md mx-6 hidden md:block">
+        {/* Center: Search Bar (Interactive & Coursera Styled) */}
+        <div ref={searchRef} className="flex-1 max-w-md mx-6 hidden md:block relative">
           <div className="relative flex items-center w-full bg-slate-950/60 border border-slate-800 rounded-full py-1.5 pl-4 pr-10 shadow-inner group focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-300">
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setIsSearchOpen(true);
+              }}
+              onFocus={() => setIsSearchOpen(true)}
               placeholder="Search C4T courses, lessons and skills..."
-              className="w-full bg-transparent text-sm text-slate-100 placeholder-slate-500 focus:outline-none font-medium pr-2 border-none ring-0 outline-none"
+              className="w-full bg-transparent text-sm text-slate-100 placeholder-slate-500 focus:outline-none font-medium pr-6 border-none ring-0 outline-none"
             />
-            <button className="absolute right-1 w-8 h-8 rounded-full bg-[#0056D2] hover:bg-[#00419e] text-white flex items-center justify-center transition-colors cursor-pointer shadow active:scale-95">
+            {searchQuery && (
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setIsSearchOpen(false);
+                }}
+                className="absolute right-10 text-slate-400 hover:text-white cursor-pointer p-1"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+            <button 
+              onClick={() => setIsSearchOpen(prev => !prev)}
+              className="absolute right-1 w-8 h-8 rounded-full bg-[#0056D2] hover:bg-[#00419e] text-white flex items-center justify-center transition-colors cursor-pointer shadow active:scale-95"
+            >
               <svg className="w-3.5 h-3.5 stroke-current fill-none" viewBox="0 0 24 24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
             </button>
           </div>
+
+          {/* Search Results Dropdown Panel */}
+          {isSearchOpen && searchQuery.trim().length > 0 && (
+            <div className="absolute top-full mt-2 left-0 right-0 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-3 z-50 animate-[fade-in_0.2s_ease-out] overflow-hidden">
+              <div className="flex items-center justify-between px-3 py-1.5 border-b border-slate-800 mb-2">
+                <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
+                  Search Results ({searchResults.length})
+                </span>
+              </div>
+
+              {searchResults.length > 0 ? (
+                <div className="flex flex-col gap-1 max-h-72 overflow-y-auto">
+                  {searchResults.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setIsSearchOpen(false);
+                        setSearchQuery('');
+                        if (item.type === 'path') {
+                          onSwitchPath(item.pathId);
+                          navigate(`/dashboard/learn/${item.pathId}`);
+                        } else if (item.type === 'lesson' && item.lessonObj) {
+                          onSwitchPath(item.pathId);
+                          if (onStartLesson) {
+                            onStartLesson(item.lessonObj);
+                          } else {
+                            navigate(`/dashboard/learn/${item.pathId}`);
+                          }
+                        }
+                      }}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all hover:bg-slate-800/80 cursor-pointer group"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-sm shrink-0 group-hover:border-blue-500/50">
+                        {item.icon?.startsWith('/') ? (
+                          <img src={item.icon} alt="" className="w-5 h-5 object-contain" />
+                        ) : (
+                          <span>{item.icon || (item.type === 'path' ? '🚀' : '📖')}</span>
+                        )}
+                      </div>
+                      <div className="flex flex-col min-w-0 flex-1">
+                        <span className="text-xs font-bold text-white group-hover:text-blue-400 transition-colors truncate">
+                          {item.title}
+                        </span>
+                        <span className="text-[10px] font-medium text-slate-400 truncate mt-0.5">
+                          {item.subtitle}
+                        </span>
+                      </div>
+                      <span className={`text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider ${
+                        item.type === 'path' ? 'bg-blue-500/20 text-blue-400' : 'bg-emerald-500/20 text-emerald-400'
+                      }`}>
+                        {item.type}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="px-4 py-6 text-center text-xs text-slate-500 font-semibold select-none">
+                  No courses or lessons matching "<span className="text-slate-300">{searchQuery}</span>"
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center space-x-3 sm:space-x-6 rtl:space-x-reverse">
 
-          {/* Network / Sync Status Indicator */}
-          <div className="flex items-center gap-2 border-r border-[#1f2937] dark:border-slate-700 pr-3 sm:pr-4">
-            <div
-              className={`w-2.5 h-2.5 rounded-full shadow-sm ${
-                !isOnline ? 'bg-amber-500 animate-pulse' :
-                syncPending ? 'bg-cyan-500 animate-spin border border-dashed border-cyan-400' : 'bg-emerald-500'
-              }`}
-              title={
-                !isOnline ? 'Offline - Progress cached locally' :
-                syncPending ? 'Unsynced actions pending' : 'Synced & Online'
-              }
-            />
-            <span className="text-[10px] font-black uppercase text-slate-500 select-none">
-              {!isOnline ? 'Offline' : syncPending ? 'Sync Pending' : 'Online'}
-            </span>
-            {syncPending && isOnline && (
-              <button
-                onClick={triggerSync}
-                className="text-[8px] font-black text-cyan-500 hover:text-cyan-600 transition-colors uppercase border border-cyan-500/20 px-2 py-0.5 rounded-full hover:bg-cyan-500/5 cursor-pointer ml-1"
-              >
-                Sync
-              </button>
-            )}
-          </div>
 
-          {/* DB Status Indicator */}
-          <div className="flex items-center gap-2">
-            <div
-              className={`w-3 h-3 rounded-full shadow-sm ${dbStatus === 'connected' ? 'bg-green-500 animate-pulse' :
-                dbStatus === 'loading' ? 'bg-yellow-400 animate-spin' : 'bg-red-500'
-                }`}
-              title={dbStatus === 'connected' ? 'Database Connected' : 'Database Disconnected - Check IP Whitelist'}
-            ></div>
-            {dbStatus === 'disconnected' && (
-              <button
-                onClick={() => setIsDbGuideOpen(true)}
-                className="text-[10px] font-black text-red-500 uppercase hover:underline cursor-pointer"
-              >
-                Fix Connection
-              </button>
-            )}
-          </div>
+
+
 
           {/* Theme Toggle — Animated Pill */}
           <button
@@ -666,209 +827,6 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
             </div>
           </button>
 
-          {/* Messaging Shortcut Icon */}
-          <button
-            onClick={() => setActiveView && setActiveView('messages')}
-            className={`relative w-10 h-10 rounded-full transition-all flex items-center justify-center border cursor-pointer shrink-0 aspect-square ${
-              activeView === 'messages'
-                ? 'bg-[#FBBF24] text-slate-900 border-[#FBBF24]'
-                : 'bg-white/10 text-slate-200 hover:bg-white/20 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600 border-white/10 dark:border-slate-600'
-            }`}
-            aria-label="Messages"
-            title="Messages"
-          >
-            <MessageSquare className="h-5 w-5" />
-            {unreadMessagesCount > 0 && (
-              <span className="absolute -top-1 -right-1.5 min-w-5 h-5 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-[#111827] dark:border-slate-900 px-1 animate-pulse">
-                {unreadMessagesCount}
-              </span>
-            )}
-          </button>
-
-          {/* Notification Bell */}
-          <div ref={notificationRef} className="relative">
-            <button
-              onClick={() => setIsNotificationOpen(prev => !prev)}
-              className="relative w-10 h-10 rounded-full bg-white/10 text-slate-200 hover:bg-white/20 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600 transition-all flex items-center justify-center border border-white/10 dark:border-slate-600 cursor-pointer shrink-0 aspect-square"
-              aria-label="Notifications"
-              title={texts.notifications}
-            >
-              <Bell className="h-5 w-5" />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-5 h-5 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-[#111827] dark:border-slate-900 px-1 animate-pulse">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-
-            {isNotificationOpen && (
-              <div className={`absolute top-full mt-2 w-80 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-700/80 z-30 overflow-hidden origin-top-right transition-all duration-200 ${language === Language.AR ? 'left-0 right-auto origin-top-left' : ''}`}>
-                <div className="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
-                  <h3 className="font-extrabold text-slate-800 dark:text-white tracking-wide text-sm flex items-center gap-2">
-                    <Bell className="w-4 h-4 text-[#111827] dark:text-indigo-300" />
-                    <span>{texts.notifications}</span>
-                  </h3>
-                  {unreadCount > 0 && (
-                    <button
-                      onClick={handleMarkAllRead}
-                      className="text-[10px] font-black text-[#0a66c2] hover:text-blue-700 dark:text-[#70b5f9] dark:hover:text-blue-400 uppercase tracking-wider cursor-pointer"
-                    >
-                      Mark all read
-                    </button>
-                  )}
-                </div>
-
-                <div className="max-h-64 overflow-y-auto divide-y divide-slate-150 dark:divide-slate-700/50">
-                  {notifications.length > 0 ? (
-                    notifications.map((n) => (
-                      <div
-                        key={n._id}
-                        onClick={() => handleMarkAsRead(n._id)}
-                        className={`p-3.5 flex gap-3 items-start transition-all hover:bg-slate-50/80 dark:hover:bg-slate-700/40 cursor-pointer relative group ${!n.read ? 'bg-blue-50/15 dark:bg-blue-950/10' : ''}`}
-                      >
-                        {/* Unread indicator dot */}
-                        {!n.read && (
-                          <span className="absolute left-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-[#0a66c2] dark:bg-[#70b5f9] rounded-full" />
-                        )}
-                        
-                        <div className="mt-0.5 shrink-0">
-                          {getNotificationIcon(n.type)}
-                        </div>
-
-                        <div className="flex-1 min-w-0 pr-2">
-                          <h4 className={`text-xs font-bold text-slate-850 dark:text-white leading-tight ${!n.read ? 'font-extrabold' : ''}`}>
-                            {n.title}
-                          </h4>
-                          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold leading-relaxed mt-0.5 whitespace-pre-wrap">
-                            {n.message}
-                          </p>
-                          <span className="text-[9px] text-slate-400 dark:text-slate-500 font-bold block mt-1">
-                            {formatNotificationDate(n.createdAt)}
-                          </span>
-                        </div>
-
-                        <button
-                          onClick={(e) => handleDeleteNotification(n._id, e)}
-                          className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-all rounded cursor-pointer shrink-0"
-                          title="Delete notification"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="p-4 text-center text-xs text-slate-450 dark:text-slate-500 font-semibold select-none">
-                      {texts.noNotifications}
-                    </div>
-                  )}
-                </div>
-
-                {/* Recommendations fallback if notifications are empty */}
-                {notifications.length === 0 && (
-                  <div className="p-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50/30 dark:bg-slate-800/20">
-                    {/* Scenario 1: No Path Selected */}
-                    {!hasSelectedPath && (
-                      <div className="text-center">
-                        <div className="w-10 h-10 bg-[#111827]/10 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-2">
-                          <Compass className="w-5 h-5 text-[#111827] dark:text-indigo-300" />
-                        </div>
-                        <h4 className="font-bold text-slate-850 dark:text-white text-xs mb-0.5">{texts.choosePathTitle}</h4>
-                        <p className="text-slate-500 dark:text-slate-400 text-[10px] mb-3 leading-relaxed">{texts.choosePathDesc}</p>
-                        <button
-                          onClick={() => {
-                            setIsNotificationOpen(false);
-                            navigate('/dashboard/learn');
-                          }}
-                          className="w-full bg-[#111827] hover:bg-[#1f2937] text-white text-[10px] font-black uppercase tracking-widest py-2 px-3 rounded-lg transition-all shadow-sm flex items-center justify-center gap-1 cursor-pointer animate-[pulse_2s_infinite]"
-                        >
-                          <Compass className="w-3.5 h-3.5" />
-                          <span>{texts.choosePathBtn}</span>
-                        </button>
-                      </div>
-                    )}
-
-                    {/* Scenario 2: Path Completed */}
-                    {hasSelectedPath && isPathCompleted && (
-                      <div className="text-center">
-                        <div className="w-10 h-10 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                          <Trophy className="w-5 h-5 text-amber-500" />
-                        </div>
-                        <h4 className="font-bold text-slate-850 dark:text-white text-xs mb-0.5">{texts.congratsTitle}</h4>
-                        <p className="text-slate-500 dark:text-slate-400 text-[10px] mb-3 leading-relaxed">{texts.congratsDesc}</p>
-                        <button
-                          onClick={() => {
-                            setIsNotificationOpen(false);
-                            navigate('/dashboard/learn');
-                          }}
-                          className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-[10px] font-black uppercase tracking-widest py-2 px-3 rounded-lg transition-all shadow-sm flex items-center justify-center gap-1 cursor-pointer"
-                        >
-                          <Compass className="w-3.5 h-3.5" />
-                          <span>{texts.explorePathsBtn}</span>
-                        </button>
-                      </div>
-                    )}
-
-                    {/* Scenario 3: Next Lesson Available */}
-                    {hasSelectedPath && nextLesson && (
-                      <div className="space-y-2.5">
-                        <div className="p-2.5 bg-slate-50 dark:bg-slate-700/40 rounded-lg border border-slate-100 dark:border-slate-700/60 relative overflow-hidden group">
-                          <div className="flex items-start gap-2.5">
-                            <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white bg-gradient-to-br from-[#111827] to-[#111827] dark:from-slate-900 dark:to-slate-900 shadow mt-0.5">
-                              <BookOpen className="w-3.5 h-3.5" />
-                            </div>
-                            
-                            <div className="flex-1 min-w-0">
-                              <p className="text-[8px] font-black uppercase tracking-wider text-[#111827] dark:text-[#FBBF24] mb-0.5">{texts.nextUpTitle}</p>
-                              <h4 className="font-bold text-slate-800 dark:text-white text-xs truncate">
-                                {t(nextLesson.titleKey as any)}
-                              </h4>
-                            </div>
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={() => {
-                            setIsNotificationOpen(false);
-                            if (onStartLesson) {
-                              onStartLesson(nextLesson);
-                            }
-                          }}
-                          className="w-full bg-[#111827] hover:bg-[#1f2937] text-white text-[10px] font-black uppercase tracking-widest py-2 px-3 rounded-lg transition-all shadow-sm flex items-center justify-center gap-1 cursor-pointer"
-                        >
-                          <Play className="w-2.5 h-2.5 fill-current" />
-                          <span>{texts.resumeBtn}</span>
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-
-
-
-
-          {/* Premium Subscription Button */}
-          {currentUser?.isPremium ? (
-            <button
-              onClick={handlePremiumClick}
-              className="flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/25 px-4 py-2 rounded-full text-xs font-black tracking-wide transition-all animate-pulse cursor-pointer shrink-0"
-            >
-              <CheckCircle className="w-3.5 h-3.5 fill-current" />
-              <span>{language === Language.AR ? 'مميز نشط' : '✓ Premium Active'}</span>
-            </button>
-          ) : (
-            <button
-              onClick={handlePremiumClick}
-              className="flex items-center gap-1.5 bg-[#FBBF24]/15 border border-[#FBBF24]/30 text-amber-600 dark:text-amber-400 hover:bg-[#FBBF24]/25 px-4 py-2 rounded-full text-xs font-black tracking-wide transition-all cursor-pointer shrink-0"
-            >
-              <Zap className="w-3.5 h-3.5 fill-current" />
-              <span>{language === Language.AR ? 'ترقية مميز' : 'Go Premium'}</span>
-            </button>
-          )}
-
           <div className="relative group">
             <select
               value={language}
@@ -885,23 +843,155 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
             </div>
           </div>
 
-          {/* User Profile Avatar */}
-          <button
-            onClick={() => setActiveView && setActiveView('profile')}
-            className={`w-10 h-10 rounded-full overflow-hidden border-2 transition-all hover:scale-105 duration-200 cursor-pointer shrink-0 aspect-square ${
-              activeView === 'profile'
-                ? 'border-[#FBBF24] ring-2 ring-[#FBBF24]/20'
-                : 'border-white/10 hover:border-white/30 dark:border-slate-600 dark:hover:border-slate-500'
-            }`}
-            title="Profile"
-          >
-            <img
-              src={currentUser.profilePictureUrl || 'https://ui-avatars.com/api/?name=U&background=random'}
-              alt={currentUser.name || 'User'}
-              className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
-            />
-          </button>
+          {/* User Profile Avatar with Explore-styled Dropdown */}
+          <div ref={profileMenuRef} className="relative">
+            <button
+              onClick={() => setIsProfileMenuOpen(prev => !prev)}
+              className={`w-10 h-10 rounded-full overflow-hidden border-2 transition-all hover:scale-105 duration-200 cursor-pointer shrink-0 aspect-square ${
+                isProfileMenuOpen || activeView === 'profile'
+                  ? 'border-[#FBBF24] ring-2 ring-[#FBBF24]/20'
+                  : 'border-white/10 hover:border-white/30 dark:border-slate-600 dark:hover:border-slate-500'
+              }`}
+              title="Profile Menu"
+            >
+              <img
+                src={currentUser.profilePictureUrl || 'https://ui-avatars.com/api/?name=U&background=random'}
+                alt={currentUser.name || 'User'}
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            </button>
+
+            {isProfileMenuOpen && (
+              <div className={`absolute top-full mt-3 w-56 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-3 z-50 animate-[fade-in_0.2s_ease-out] ${language === Language.AR ? 'left-0 right-auto origin-top-left' : 'right-0 origin-top-right'}`}>
+                
+                {/* Header User Info */}
+                <div className="px-3 py-2 border-b border-slate-800 mb-2 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full overflow-hidden border border-slate-700 shrink-0">
+                    <img
+                      src={currentUser.profilePictureUrl || 'https://ui-avatars.com/api/?name=U&background=random'}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs font-black text-white truncate">{currentUser.name || 'Coder'}</span>
+                    <span className="text-[10px] font-bold text-slate-400 truncate">{currentUser.email || 'Student'}</span>
+                  </div>
+                </div>
+
+                {/* 3 Dropdown Items */}
+                <div className="flex flex-col gap-1">
+                  {/* 1. Profile */}
+                  <button
+                    onClick={() => {
+                      if (setActiveView) setActiveView('profile');
+                      setIsProfileMenuOpen(false);
+                    }}
+                    className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left text-sm font-bold transition-all w-full cursor-pointer hover:bg-slate-800/80 ${
+                      activeView === 'profile' ? 'text-blue-400 bg-slate-850' : 'text-slate-200 hover:text-white'
+                    }`}
+                  >
+                    <UserIcon className="w-4 h-4 text-blue-400" />
+                    <span>Profile</span>
+                  </button>
+
+                  {/* 2. Messages */}
+                  <button
+                    onClick={() => {
+                      if (setActiveView) setActiveView('messages');
+                      setIsProfileMenuOpen(false);
+                    }}
+                    className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-sm font-bold transition-all w-full cursor-pointer hover:bg-slate-800/80 ${
+                      activeView === 'messages' ? 'text-blue-400 bg-slate-850' : 'text-slate-200 hover:text-white'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <MessageSquare className="w-4 h-4 text-emerald-400" />
+                      <span>Messages</span>
+                    </div>
+                    {unreadMessagesCount > 0 && (
+                      <span className="bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">
+                        {unreadMessagesCount}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* 3. Notifications */}
+                  <div className="flex flex-col">
+                    <button
+                      onClick={() => setShowNotifSubmenu(prev => !prev)}
+                      className="flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-sm font-bold transition-all w-full cursor-pointer hover:bg-slate-800/80 text-slate-200 hover:text-white"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Bell className="w-4 h-4 text-purple-400" />
+                        <span>Notifications</span>
+                      </div>
+                      {unreadCount > 0 && (
+                        <span className="bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full animate-pulse">
+                          {unreadCount}
+                        </span>
+                      )}
+                    </button>
+
+                    {showNotifSubmenu && (
+                      <div className="mt-2 p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 space-y-2 max-h-56 overflow-y-auto">
+                        <div className="flex justify-between items-center pb-1.5 border-b border-slate-800">
+                          <span className="text-[10px] font-extrabold text-slate-400 uppercase">Notifications</span>
+                          {unreadCount > 0 && (
+                            <button
+                              onClick={handleMarkAllRead}
+                              className="text-[9px] font-black text-cyan-400 hover:underline cursor-pointer"
+                            >
+                              Mark all read
+                            </button>
+                          )}
+                        </div>
+
+                        {notifications.length > 0 ? (
+                          notifications.map((n) => (
+                            <div
+                              key={n._id}
+                              onClick={() => handleMarkAsRead(n._id)}
+                              className={`p-2 rounded-lg flex items-start gap-2 text-xs transition-colors hover:bg-slate-800/60 cursor-pointer relative ${!n.read ? 'bg-blue-950/20' : ''}`}
+                            >
+                              <div className="mt-0.5 shrink-0">
+                                {getNotificationIcon(n.type)}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-bold text-white text-[11px] leading-tight">{n.title}</p>
+                                <p className="text-[10px] text-slate-400 leading-tight mt-0.5">{n.message}</p>
+                              </div>
+                              <button
+                                onClick={(e) => handleDeleteNotification(n._id, e)}
+                                className="text-slate-500 hover:text-red-400 p-0.5 cursor-pointer shrink-0"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-[10px] text-slate-500 text-center py-2 select-none">No notifications</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 3. Go Premium */}
+                  <button
+                    onClick={() => {
+                      handlePremiumClick();
+                      setIsProfileMenuOpen(false);
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left text-sm font-bold transition-all w-full cursor-pointer hover:bg-amber-500/10 text-amber-400 hover:text-amber-300"
+                  >
+                    <Zap className="w-4 h-4 text-amber-400 fill-amber-400/20" />
+                    <span>{currentUser?.isPremium ? '✓ Premium Active' : 'Go Premium'}</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
 
         </div>

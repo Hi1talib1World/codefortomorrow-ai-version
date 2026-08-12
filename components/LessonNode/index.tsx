@@ -1,20 +1,14 @@
-
 /**
  * LessonNode/index.tsx
  * ─────────────────────
  * A single interactive node on the lesson roadmap.
- * Duolingo-style: large circle with progress ring, icon center.
- *
- * Visual states:
- *  - completed  → green circle with checkmark ✓ and full ring
- *  - next       → pulsing brand circle with "START" badge and partial ring
- *  - unlocked   → solid circle with lesson icon
- *  - locked     → grey circle with  icon
+ * Duolingo-style: large circle with progress ring + interactive popover tooltip card.
  */
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Lesson } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Lock, Play, RotateCcw } from 'lucide-react';
 
 interface LessonNodeProps {
   lesson: Lesson;
@@ -26,25 +20,42 @@ interface LessonNodeProps {
 
 /** Map from lesson.icon key → emoji for the node center. */
 const EMOJI_MAP: Record<string, string> = {
-  brain: '',
-  star: '',
-  trophy: '',
-  book: '',
-  code: '',
+  brain: '🧠',
+  star: '⭐',
+  trophy: '🏆',
+  book: '📚',
+  code: '💻',
   math: '∑',
-  web: '',
-  game: '',
-  camel: '',
-  tea: '',
-  zellige: '',
+  web: '🌐',
+  game: '🎮',
+  camel: '🐪',
+  tea: '🫖',
+  zellige: '🧱',
 };
 
 const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked, isNext, onStartLesson }) => {
   const { t } = useLanguage();
-  const emoji = EMOJI_MAP[lesson.icon] ?? '';
+  const [showTooltip, setShowTooltip] = useState(false);
+  const nodeRef = useRef<HTMLDivElement>(null);
 
-  // Circle colors: only completed lessons are green (in color).
-  // Next, unlocked, and locked are styled in clean gray/slate/neutral colors.
+  const emoji = EMOJI_MAP[lesson.icon] ?? '';
+  const lessonTitle = t(lesson.titleKey as any) || lesson.titleKey;
+
+  // Close tooltip when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (nodeRef.current && !nodeRef.current.contains(e.target as Node)) {
+        setShowTooltip(false);
+      }
+    };
+    if (showTooltip) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showTooltip]);
+
   const circleBg = isCompleted
     ? 'bg-[#58cc02]'
     : isNext
@@ -65,25 +76,34 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
         ? 'shadow-[0_6px_0_#cbd5e1] dark:shadow-[0_6px_0_#1e293b]'
         : 'shadow-[0_4px_0_#cbd5e1] dark:shadow-[0_4px_0_#1e293b]';
 
+  const handleNodeClick = () => {
+    setShowTooltip(prev => !prev);
+  };
+
+  const handleActionClick = () => {
+    if (isUnlocked) {
+      setShowTooltip(false);
+      onStartLesson(lesson);
+    }
+  };
+
   return (
-    <div className="relative flex flex-col items-center">
+    <div ref={nodeRef} className={`relative flex flex-col items-center select-text ${showTooltip ? 'z-[100]' : 'z-10'}`}>
 
       {/* "START" static badge above next lesson */}
       {isNext && (
         <div
-          className="absolute -top-7 left-1/2 -translate-x-1/2 z-20 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black px-3 py-1 rounded-lg shadow-md border border-slate-100 dark:border-slate-700 uppercase tracking-widest flex items-center gap-1 whitespace-nowrap animate-bounce"
+          className="absolute -top-7 left-1/2 -translate-x-1/2 z-20 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black px-3 py-1 rounded-lg shadow-md border border-slate-100 dark:border-slate-700 uppercase tracking-widest flex items-center gap-1 whitespace-nowrap animate-bounce select-none"
         >
-          START 
+          START 🚀
         </div>
       )}
 
       {/* Progress ring + circle button */}
       <div className="relative">
         {/* SVG progress ring */}
-        <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 72 72">
-          {/* Background track */}
+        <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 72 72">
           <circle cx="36" cy="36" r="32" fill="none" className="stroke-slate-100 dark:stroke-slate-700" strokeWidth="5" />
-          {/* Progress arc */}
           {(isCompleted || isNext) && (
             <circle
               cx="36" cy="36" r="32"
@@ -100,22 +120,20 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
 
         {/* Main circle button */}
         <motion.button
-          onClick={() => isUnlocked && onStartLesson(lesson)}
-          disabled={!isUnlocked}
-          whileHover={isUnlocked ? { scale: 1.05 } : {}}
-          whileTap={isUnlocked ? { scale: 0.95 } : {}}
+          onClick={handleNodeClick}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.94 }}
           className={`
             relative w-[68px] h-[68px] rounded-full flex items-center justify-center
             transition-all duration-200 font-black m-[2px]
             ${circleBg} ${shadowStyle}
-            ${isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}
+            cursor-pointer
           `}
         >
-          {/* Content */}
           {isCompleted ? (
             <span className="text-white text-3xl font-black drop-shadow-sm">✓</span>
           ) : !isUnlocked ? (
-            <span className="text-slate-400 text-2xl filter grayscale opacity-40"></span>
+            <Lock className="w-6 h-6 text-slate-400 opacity-60" />
           ) : emoji === '' ? (
             <img 
               src="/assets/images/trophy.png" 
@@ -135,6 +153,62 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
           <span className="text-yellow-400 text-[10px]">★</span>
         </div>
       )}
+
+      {/* ─── DUOLINGO-STYLE POPOVER TOOLTIP CARD (EVERYWHERE) ─── */}
+      <AnimatePresence>
+        {showTooltip && (
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-3.5 z-[100] w-64 bg-[#181D28] dark:bg-slate-900 border-2 border-slate-700 dark:border-slate-700 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.85)] text-left"
+          >
+            {/* Top Pointer Caret */}
+            <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[10px] border-b-[#181D28] dark:border-b-slate-900 z-10" />
+
+            <div className="space-y-3">
+              <div>
+                <h4 className="text-sm font-black text-white tracking-tight leading-snug">
+                  {lessonTitle}
+                </h4>
+                <p className="text-xs font-semibold text-slate-300 dark:text-slate-400 leading-relaxed mt-1">
+                  {!isUnlocked
+                    ? 'Complete the lesson above to unlock this!'
+                    : isCompleted
+                      ? 'You completed this lesson! Practice again to master it.'
+                      : 'Read theory & solve interactive coding tasks to master this lesson!'}
+                </p>
+              </div>
+
+              {/* Action Button inside Popover Card */}
+              {!isUnlocked ? (
+                <div className="w-full py-2.5 px-4 bg-[#2A303C] text-slate-400 font-black text-xs uppercase tracking-wider rounded-xl border border-slate-700 text-center select-none flex items-center justify-center gap-1.5 opacity-80 cursor-not-allowed">
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>LOCKED</span>
+                </div>
+              ) : isCompleted ? (
+                <button
+                  onClick={handleActionClick}
+                  className="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-cyan-300 font-black text-xs uppercase tracking-wider rounded-xl border-b-4 border-slate-950 transition cursor-pointer flex items-center justify-center gap-1.5 active:translate-y-0.5"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>REVIEW LESSON</span>
+                </button>
+              ) : (
+                <button
+                  onClick={handleActionClick}
+                  className="w-full py-2.5 px-4 bg-[#58cc02] hover:bg-[#46a302] text-white font-black text-xs uppercase tracking-wider rounded-xl border-b-4 border-[#46a302] transition cursor-pointer flex items-center justify-center gap-1.5 active:translate-y-0.5 shadow-md"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>START +{lesson.xp} XP</span>
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };

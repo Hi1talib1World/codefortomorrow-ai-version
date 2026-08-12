@@ -48,6 +48,22 @@ const connectDB = async () => {
   } catch (error) {
     const errorMessage = (error as Error).message;
     console.error(`Error connecting to MongoDB: ${errorMessage}`);
+    
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('Falling back to MongoMemoryServer for local development...');
+      try {
+        if (!memoryServer) {
+          memoryServer = await MongoMemoryServer.create();
+        }
+        mongoUri = memoryServer.getUri();
+        const conn = await mongoose.connect(mongoUri);
+        console.log(`MongoDB Connected (Memory Fallback): ${conn.connection.host}`);
+        return;
+      } catch (memErr) {
+        console.error('MongoMemoryServer fallback failed:', memErr);
+      }
+    }
+
     if (errorMessage.includes('IP isn\'t whitelisted') || errorMessage.includes('Could not connect to any servers')) {
       console.log('\n' + '='.repeat(80));
       console.log('HOW TO FIX THIS ERROR:');

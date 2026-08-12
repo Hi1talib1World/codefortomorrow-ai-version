@@ -147,3 +147,135 @@ export const getAIStatus = async (_req: Request, res: Response) => {
   const isSimulation = !apiKey || apiKey === 'your-gemini-api-key-here' || apiKey.startsWith('your-');
   res.json({ isSimulation });
 };
+
+export const generatePersonalizedContent = async (req: Request, res: Response) => {
+  try {
+    const { interest, pathId } = req.body;
+    const userId = (req as any).user?.id || (req as any).user?._id;
+    
+    let userProgressContext = {
+      xp: 0,
+      streak: 0,
+      currentPath: pathId || 'python',
+      completedLessonsCount: 0,
+    };
+
+    if (userId) {
+      const user = await User.findById(userId).populate('progress');
+      if (user && user.progress) {
+        const prog = user.progress as any;
+        userProgressContext = {
+          xp: prog.xp || 0,
+          streak: prog.streak || 0,
+          currentPath: pathId || user.currentPath || 'python',
+          completedLessonsCount: (Object.values(prog.completedLessons || {}) as any[]).reduce((acc: number, arr: any) => acc + (Array.isArray(arr) ? arr.length : 0), 0)
+        };
+      }
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY || '';
+    const isSimulation = !apiKey || apiKey === 'your-gemini-api-key-here' || apiKey.startsWith('your-');
+
+    const targetPath = userProgressContext.currentPath || 'python';
+    const topicTitle = interest || 'Coding Mastery';
+
+    if (isSimulation) {
+      const mockLesson = {
+        id: Math.floor(Math.random() * 90000) + 10000,
+        level: Math.max(1, Math.min(10, Math.floor(userProgressContext.xp / 100) + 1)),
+        titleKey: `AI Quest: ${topicTitle}`,
+        title: `AI Quest: ${topicTitle}`,
+        interest: topicTitle,
+        icon: '🚀',
+        xp: 30,
+        color: '#10B981',
+        type: 'lesson',
+        nodeType: 'standard',
+        difficulty: userProgressContext.xp > 200 ? 'Intermediate' : 'Beginner',
+        introduction: `Welcome to your personalized AI coding adventure on **${topicTitle}**!\n\nIn this custom mission, you will build a functional program step-by-step applying core programming concepts to solve a real-world scenario in **${topicTitle}**.\n\n### 📌 Key Concepts:\n1. **Data Formatting & Output**: Writing clean, readable stdout.\n2. **Logic Flow**: Structuring code execution sequentially.\n3. **Variable Assignment**: Storing and calculating dynamic values.`,
+        starterCode: targetPath === 'c++' 
+          ? `// AI Quest: ${topicTitle}\n#include <iostream>\n\nint main() {\n  std::cout << "${topicTitle} Ready!";\n  return 0;\n}`
+          : targetPath === 'javascript' || targetPath === 'web_dev'
+          ? `// AI Quest: ${topicTitle}\nconsole.log("${topicTitle} Ready!");`
+          : `# AI Quest: ${topicTitle}\nprint("${topicTitle} Ready!")`,
+        solutionCode: targetPath === 'c++' 
+          ? `#include <iostream>\n\nint main() {\n  std::cout << "${topicTitle} Ready!";\n  return 0;\n}`
+          : targetPath === 'javascript' || targetPath === 'web_dev'
+          ? `console.log("${topicTitle} Ready!");`
+          : `print("${topicTitle} Ready!")`,
+        expectedOutput: `${topicTitle} Ready!`,
+        challengeDescriptionKey: `Create a program that outputs "${topicTitle} Ready!"`,
+        challengeDescription: `Write code to print "${topicTitle} Ready!" to complete your custom AI mission.`
+      };
+      return res.json({ lesson: mockLesson, source: 'simulation' });
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
+    const model = "gemini-2.5-flash";
+
+    const prompt = `You are an expert AI Curriculum Designer for a student learning programming (${targetPath}).
+Student Context:
+- Student Interest: "${topicTitle}"
+- Programming Language: "${targetPath}"
+- Current XP: ${userProgressContext.xp}
+- Lessons Completed: ${userProgressContext.completedLessonsCount}
+
+Create a single personalized interactive coding lesson tailored to their interest. Return ONLY a valid JSON object matching this schema:
+{
+  "id": 99999,
+  "level": 1,
+  "title": "Short Catchy Title",
+  "titleKey": "Short Catchy Title",
+  "icon": "🚀",
+  "xp": 30,
+  "color": "#10B981",
+  "type": "lesson",
+  "nodeType": "standard",
+  "difficulty": "Beginner",
+  "introduction": "Multi-paragraph rich concept overview applying the interest to programming syntax.",
+  "starterCode": "// Starter code for language",
+  "solutionCode": "// Solution code",
+  "expectedOutput": "Exact expected output string",
+  "challengeDescription": "Task instructions for student"
+}`;
+
+    const response = await ai.models.generateContent({
+      model,
+      contents: prompt,
+      config: { responseMimeType: "application/json" }
+    });
+
+    const lessonData = JSON.parse(response.text || '{}');
+    return res.json({ lesson: lessonData, source: 'gemini' });
+  } catch (error) {
+    console.error("Personalized AI Generation Error:", error);
+    res.status(500).json({ message: 'Failed to generate personalized content' });
+  }
+};
+
+export const generateToolContent = async (req: Request, res: Response) => {
+  try {
+    const { toolId, input, pathId } = req.body;
+    const apiKey = process.env.GEMINI_API_KEY || '';
+    const isSimulation = !apiKey || apiKey === 'your-gemini-api-key-here' || apiKey.startsWith('your-');
+
+    if (isSimulation) {
+      return res.json({
+        toolId,
+        output: `⚡ Résultat Généré par l'IA (${toolId.toUpperCase()}) :\n\n📌 Sujet : ${input || 'Concepts & Pratique'}\n\n1. Aperçu Théorique :\nAnalyse structurée des concepts essentiels en ${pathId?.toUpperCase() || 'PYTHON'}.\n\n2. Consignes & Exercice :\nImplémenter un module fonctionnel gérant l'entrée de données et le traitement logique.\n\n3. Résultat Attendu :\nExécution fluide avec sortie console validée.`,
+        source: 'simulation'
+      });
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: `Tu es un assistant IA pédagogique expert pour des apprenants en programmation (${pathId || 'Python'}). Outil demandé : "${toolId}". Entrée utilisateur / Sujet : "${input}". Génère un contenu complet, clair et parfaitement structuré avec explications, consignes ou code.`
+    });
+
+    return res.json({ toolId, output: response.text || '', source: 'gemini' });
+  } catch (error) {
+    console.error("AI Tool Generation Error:", error);
+    res.status(500).json({ message: 'Failed to generate AI tool content' });
+  }
+};

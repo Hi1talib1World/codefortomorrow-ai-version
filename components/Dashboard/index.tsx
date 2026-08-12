@@ -20,9 +20,10 @@ import HowToLearnScreen from '../HowToLearnScreen';
 import PrivacyPolicyScreen from '../PrivacyPolicyScreen';
 import FeedScreen from '../FeedScreen';
 import AboutScreen from '../AboutScreen';
+import AIToolsHubScreen from '../AIToolsHubScreen';
 import { User, Lesson, ProgrammingPath } from '../../types';
 
-export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions' | 'how-to-learn' | 'privacy-policy' | 'feed' | 'about';
+export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions' | 'how-to-learn' | 'privacy-policy' | 'feed' | 'about' | 'ai-tools';
 
 // Map URL :view param → DashboardView enum
 const VIEW_MAP: Record<string, DashboardView> = {
@@ -40,6 +41,7 @@ const VIEW_MAP: Record<string, DashboardView> = {
   'how-to-learn': 'how-to-learn',
   'privacy-policy': 'privacy-policy',
   about: 'about',
+  'ai-tools': 'ai-tools',
 };
 
 interface DashboardProps {
@@ -154,6 +156,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
             onStartLesson={onStartLesson}
             path={pathId as ProgrammingPath['id']}
             onSwitchPath={(pId) => navigate(`/dashboard/learn/${pId}`)}
+            currentUser={currentUser}
           />
         );
       case 'feed':
@@ -186,12 +189,15 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
         return <PrivacyPolicyScreen />;
       case 'about':
         return <AboutScreen />;
+      case 'ai-tools':
+        return <AIToolsHubScreen currentUser={currentUser} onStartLesson={onStartLesson} onSwitchPath={(pId) => navigate(`/dashboard/learn/${pId}`)} />;
       default:
         return (
           <HomeHubScreen 
             onNavigate={setActiveView} 
             currentUser={currentUser} 
             onUpdateUser={onUpdateUser}
+            onStartLesson={onStartLesson}
           />
         );
     }
@@ -205,11 +211,11 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
   }, [location.pathname]);
 
   const mainContentBg = (activeView === 'learn' && (path || pathId))
-    ? 'bg-brand-50 dark:bg-slate-900'
-    : (activeView === 'home' ? 'bg-transparent' : 'bg-brand-50 dark:bg-slate-900');
+    ? 'bg-slate-50 dark:bg-slate-900'
+    : (activeView === 'home' ? 'bg-transparent' : 'bg-slate-50 dark:bg-slate-900');
 
   return (
-    <div className="flex flex-col h-screen bg-brand-50 dark:bg-slate-900 transition-colors duration-300">
+    <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header
           activeView={activeView}

@@ -7,7 +7,9 @@ import {
   generateQuiz,
   chatWithAssistant,
   generateHint,
-  getAIStatus
+  getAIStatus,
+  generatePersonalizedContent,
+  generateToolContent
 } from '../ai/ai.controller';
 import { protect } from '../../../src/core/permissions/auth.middleware';
 import rateLimit from 'express-rate-limit';
@@ -31,5 +33,7 @@ router.post('/generate-quiz', generateQuiz);
 router.post('/log-usage', logTokenUsage);
 router.post('/chat', chatWithAssistant);
 router.post('/generate-hint', generateHint);
+router.post('/generate-personalized-content', generatePersonalizedContent);
+router.post('/generate-tool-content', generateToolContent);
 
 export default router;
