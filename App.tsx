@@ -641,6 +641,8 @@ export default function App() {
             } />
           )}
 
+          <Route path="/smart-books" element={<Navigate to="/dashboard/smart-books" replace />} />
+          <Route path="/speaking-hub" element={<Navigate to="/dashboard/speaking-hub" replace />} />
           <Route path="/brain-training" element={
             <ProtectedRoute currentUser={currentUser}>
               <BrainTrainingScreen />

@@ -21,9 +21,11 @@ import PrivacyPolicyScreen from '../PrivacyPolicyScreen';
 import FeedScreen from '../FeedScreen';
 import AboutScreen from '../AboutScreen';
 import AIToolsHubScreen from '../AIToolsHubScreen';
+import SmartBooksScreen from '../SmartBooksScreen';
+import SpeakingHubScreen from '../SpeakingHubScreen';
 import { User, Lesson, ProgrammingPath } from '../../types';
 
-export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions' | 'how-to-learn' | 'privacy-policy' | 'feed' | 'about' | 'ai-tools';
+export type DashboardView = 'home' | 'learn' | 'profile' | 'creations' | 'leaderboard' | 'store' | 'settings' | 'messages' | 'docs' | 'ai-assistant' | 'missions' | 'how-to-learn' | 'privacy-policy' | 'feed' | 'about' | 'ai-tools' | 'smart-books' | 'speaking-hub';
 
 // Map URL :view param → DashboardView enum
 const VIEW_MAP: Record<string, DashboardView> = {
@@ -42,6 +44,8 @@ const VIEW_MAP: Record<string, DashboardView> = {
   'privacy-policy': 'privacy-policy',
   about: 'about',
   'ai-tools': 'ai-tools',
+  'smart-books': 'smart-books',
+  'speaking-hub': 'speaking-hub',
 };
 
 interface DashboardProps {
@@ -164,7 +168,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
       case 'profile':
         return <ProfileScreen currentUser={currentUser} onUpdateUser={onUpdateUser} />;
       case 'creations':
-        return <CreationsScreen />;
+        return <CreationsScreen currentUser={currentUser} />;
       case 'leaderboard':
         return <LeaderboardScreen currentUser={currentUser} />;
       case 'store':
@@ -191,6 +195,10 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
         return <AboutScreen />;
       case 'ai-tools':
         return <AIToolsHubScreen currentUser={currentUser} onStartLesson={onStartLesson} onSwitchPath={(pId) => navigate(`/dashboard/learn/${pId}`)} />;
+      case 'smart-books':
+        return <SmartBooksScreen currentUser={currentUser} onBack={() => navigate('/dashboard')} />;
+      case 'speaking-hub':
+        return <SpeakingHubScreen onBack={() => navigate('/dashboard')} />;
       default:
         return (
           <HomeHubScreen 

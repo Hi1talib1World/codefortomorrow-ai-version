@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Bookmark, ChevronRight, Search,
-  Play, Layers, X
+  Play, Layers, X, Bot, Terminal, Shield, Zap, Database, ArrowRight, CheckCircle2
 } from 'lucide-react';
 import { Lesson } from '../../types';
 import { useToast } from '../ToastNotification';
@@ -249,259 +249,190 @@ export const AI_ENGINEERING_MODULES: AiModule[] = [
     ],
   },
   {
-    id: 'observability',
+    id: 'llmops',
     number: 15,
-    title: 'Observability',
-    description: 'Trace LLM requests, track latency, monitor token costs, and capture production logs with OpenTelemetry & OpenInference.',
-    categoryGroup: 'Models & Infrastructure',
+    title: 'LLMOps & Observability',
+    description: 'Monitor LLM applications with tracing tools, cost tracking, latency metrics, dataset curation, and continuous deployment.',
+    categoryGroup: 'Ops, Security & Frameworks',
     subtopics: [
-      'Observability',
-      'Logging',
+      'LLMOps',
       'Tracing',
-      'Metrics',
-      'Latency Monitoring',
-      'Token Usage',
-      'Cost Analytics',
-      'Error Tracking',
+      'Observability',
+      'Cost Tracking',
+      'Latency Optimization',
+      'Dataset Curation',
+      'Continuous Deployment',
     ],
   },
   {
-    id: 'ai_security',
+    id: 'security_safety',
     number: 16,
-    title: 'AI Security',
-    description: 'Secure AI systems against prompt injection attacks, jailbreaks, PII leaks, and invalid model outputs using guardrails.',
+    title: 'Security & Safety',
+    description: 'Protect AI pipelines against prompt injection, jailbreaks, data leakage, and enforce safety guardrails.',
     categoryGroup: 'Ops, Security & Frameworks',
     subtopics: [
+      'AI Security',
+      'Prompt Injection',
+      'Jailbreaking',
+      'Data Leakage',
       'Guardrails',
-      'Prompt Injection Defense',
-      'Jailbreak Detection',
-      'Content Moderation',
-      'PII Detection',
-      'Secret Management',
-      'Output Validation',
+      'Output Moderation',
+      'Privacy',
     ],
   },
   {
-    id: 'data_engineering',
+    id: 'agent_frameworks',
     number: 17,
-    title: 'Data Engineering',
-    description: 'Prepare synthetic training datasets, ETL data pipelines, automated labeling, versioning, and cleaning workflows.',
+    title: 'Agent Frameworks',
+    description: 'Build agent orchestration logic using LangChain, LlamaIndex, CrewAI, AutoGen, and Semantic Kernel.',
     categoryGroup: 'Ops, Security & Frameworks',
-    subtopics: [
-      'Synthetic Data',
-      'Data Pipelines',
-      'ETL',
-      'Data Labeling',
-      'Dataset Versioning',
-      'Data Augmentation',
-      'Data Cleaning',
-    ],
-  },
-  {
-    id: 'knowledge_distillation',
-    number: 18,
-    title: 'Knowledge Distillation',
-    description: 'Compress large teacher LLMs into lightweight, fast student models using pruning and quantization.',
-    categoryGroup: 'Ops, Security & Frameworks',
-    subtopics: [
-      'Distillation',
-      'Teacher-Student Models',
-      'Model Compression',
-      'Pruning',
-      'Quantization',
-    ],
-  },
-  {
-    id: 'ai_infrastructure',
-    number: 19,
-    title: 'AI Infrastructure',
-    description: 'Scale AI API gateways, load balancing, multi-provider routing, and GPU scheduling across cloud environments.',
-    categoryGroup: 'Ops, Security & Frameworks',
-    subtopics: [
-      'AI Gateways',
-      'API Gateway',
-      'Load Balancing',
-      'Autoscaling',
-      'GPU Scheduling',
-      'Multi-Provider Routing',
-    ],
-  },
-  {
-    id: 'cost_optimization',
-    number: 20,
-    title: 'Cost Optimization',
-    description: 'Reduce LLM operational costs through prompt caching, response caching, token optimization, and dynamic model routing.',
-    categoryGroup: 'Ops, Security & Frameworks',
-    subtopics: [
-      'Cost Optimization',
-      'Prompt Caching',
-      'Response Caching',
-      'Dynamic Model Routing',
-      'Quantization',
-      'Token Optimization',
-    ],
-  },
-  {
-    id: 'deployment',
-    number: 21,
-    title: 'Deployment (MLOps / LLMOps)',
-    description: 'Deploy AI applications with Docker, Kubernetes, CI/CD pipelines, model registries, and A/B testing flags.',
-    categoryGroup: 'Ops, Security & Frameworks',
-    subtopics: [
-      'Docker',
-      'Kubernetes',
-      'CI/CD',
-      'Model Registry',
-      'A/B Testing',
-      'Canary Deployment',
-      'Feature Flags',
-      'Rollback',
-    ],
-  },
-  {
-    id: 'ai_frameworks',
-    number: 22,
-    title: 'AI Frameworks',
-    description: 'Orchestrate applications using modern frameworks like LangChain, LangGraph, LlamaIndex, CrewAI, AutoGen, and DSPy.',
-    categoryGroup: 'Ops, Security & Frameworks',
-    isNew: true,
     subtopics: [
       'LangChain',
-      'LangGraph',
       'LlamaIndex',
-      'Haystack',
       'CrewAI',
       'AutoGen',
       'Semantic Kernel',
-      'DSPy',
-      'PydanticAI',
-      'OpenAI Agents SDK',
-      'SmolAgents',
+      'Orchestration',
     ],
   },
   {
-    id: 'communication_protocols',
-    number: 23,
-    title: 'Communication Protocols',
-    description: 'Implement agent-to-agent (A2A) protocols, JSON Schema validation, gRPC, and REST communication standards.',
+    id: 'cloud_platforms',
+    number: 18,
+    title: 'Cloud Platforms',
+    description: 'Deploy AI infrastructure across AWS Bedrock, GCP Vertex AI, Azure OpenAI, Modal, RunPod, and Anyscale.',
     categoryGroup: 'Ops, Security & Frameworks',
     subtopics: [
-      'MCP',
-      'A2A (Agent-to-Agent)',
-      'OpenAPI',
-      'JSON Schema',
-      'OpenTelemetry',
-      'OpenInference',
-      'gRPC',
-      'REST',
-    ],
-  },
-  {
-    id: 'harness_testing',
-    number: 24,
-    title: 'Harness & Testing',
-    description: 'Build robust testing harnesses for prompt regression testing, unit tests, integration tests, and end-to-end agent evaluation.',
-    categoryGroup: 'Ops, Security & Frameworks',
-    subtopics: [
-      'Harness',
-      'Unit Testing',
-      'Integration Testing',
-      'End-to-End Testing',
-      'Prompt Testing',
-      'Agent Testing',
+      'AWS Bedrock',
+      'GCP Vertex AI',
+      'Azure OpenAI',
+      'Modal',
+      'RunPod',
+      'Anyscale',
+      'Serverless GPU',
     ],
   },
 ];
 
 interface AiEngineeringRoadmapViewProps {
-  onStartLesson?: (lesson: Lesson) => void;
+  onStartLesson: (lesson: Lesson) => void;
 }
 
 export const AiEngineeringRoadmapView: React.FC<AiEngineeringRoadmapViewProps> = ({ onStartLesson }) => {
   const { showToast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
-  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(['prompt_engineering', 'agent_engineering', 'rag']);
+  const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('c4t_aieng_bookmarks') || '[]');
+    } catch {
+      return [];
+    }
+  });
   const [activeModule, setActiveModule] = useState<AiModule | null>(null);
 
   const toggleBookmark = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    if (bookmarkedIds.includes(id)) {
-      setBookmarkedIds(bookmarkedIds.filter((b) => b !== id));
-      showToast('Removed from saved roadmaps', 'info');
-    } else {
-      setBookmarkedIds([...bookmarkedIds, id]);
-      showToast('Saved to your bookmarked roadmaps! 📌', 'success');
-    }
+    const updated = bookmarkedIds.includes(id)
+      ? bookmarkedIds.filter(b => b !== id)
+      : [...bookmarkedIds, id];
+    setBookmarkedIds(updated);
+    localStorage.setItem('c4t_aieng_bookmarks', JSON.stringify(updated));
+    showToast(bookmarkedIds.includes(id) ? 'Removed bookmark' : 'Saved to Agent Bookmarks', 'info');
   };
 
-  const filteredModules = AI_ENGINEERING_MODULES.filter((m) => {
-    if (!searchTerm.trim()) return true;
-    const term = searchTerm.toLowerCase();
-    return (
-      m.title.toLowerCase().includes(term) ||
-      m.description.toLowerCase().includes(term) ||
-      m.subtopics.some((s) => s.toLowerCase().includes(term))
-    );
+  const filteredModules = AI_ENGINEERING_MODULES.filter((mod) => {
+    const matchesSearch =
+      mod.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      mod.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      mod.subtopics.some(s => s.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const matchesCategory = activeCategory === 'All' || mod.categoryGroup === activeCategory;
+    return matchesSearch && matchesCategory;
   });
 
-  const launchLessonForModule = (mod: AiModule) => {
-    if (onStartLesson) {
-      const mockLesson: Lesson = {
-        id: mod.number,
-        level: mod.number,
-        titleKey: mod.title,
-        icon: 'brain',
-        xp: 50,
-        color: '#f59e0b',
-        type: 'lesson',
-        nodeType: 'standard',
-        challengeDescriptionKey: mod.description,
-        starterCode: `// 🤖 AI Engineering Lab: ${mod.title}\n// Goal: ${mod.description}\n\nconsole.log("Executing ${mod.title} Pipeline...");\n`,
-        solutionCode: `console.log("Executing ${mod.title} Pipeline...");`,
-        expectedOutput: `Executing ${mod.title} Pipeline...`,
-      };
-      onStartLesson(mockLesson);
-    }
+  const categories = ['All', 'Foundations & Prompting', 'Architecture & Memory', 'Models & Infrastructure', 'Ops, Security & Frameworks'];
+
+  const startModuleLesson = (mod: AiModule) => {
+    const mockLesson: Lesson = {
+      id: mod.number + 8000,
+      level: mod.number,
+      titleKey: mod.title,
+      icon: 'brain',
+      xp: 60,
+      color: '#1A73E8',
+      type: 'lesson',
+      nodeType: 'standard',
+      challengeDescriptionKey: mod.description,
+      starterCode: `// 🤖 Google AI Engineering & Swarm Agent Lab: ${mod.title}\n// Domain: ${mod.categoryGroup}\n\nconsole.log("Initializing ${mod.title} Agentic Pipeline...");\n`,
+      solutionCode: `console.log("Initializing ${mod.title} Agentic Pipeline...");`,
+      expectedOutput: `Initializing ${mod.title} Agentic Pipeline...`,
+    };
+    onStartLesson(mockLesson);
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-slate-900 dark:text-slate-100 font-sans pb-24 pt-6 px-4 md:px-8 transition-colors">
-      {/* Container */}
-      <div className="max-w-7xl mx-auto relative z-10 space-y-8">
+    <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#202124] text-[#202124] dark:text-[#E8EAED] font-sans pb-28 pt-6 px-4 md:px-8 transition-colors">
+      
+      {/* Main Container */}
+      <div className="max-w-7xl mx-auto space-y-8">
 
-        {/* Top Category Badge & Title */}
-        <div className="flex flex-col items-center justify-center text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 text-slate-600 dark:text-slate-400 text-xs font-semibold uppercase tracking-widest">
-            AI Engineering Roadmap
+        {/* Google Material 3 Header Banner */}
+        <div className="bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] rounded-3xl p-6 sm:p-8 shadow-[0_1px_3px_rgba(60,64,67,0.08)] relative overflow-hidden transition-all">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <div className="space-y-3">
+              {/* Google Gemini AI Badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-blue-500/20 text-[#1A73E8] dark:text-[#8AB4F8] text-xs font-medium">
+                <Bot className="w-3.5 h-3.5 text-[#1A73E8] dark:text-[#8AB4F8]" />
+                <span className="font-semibold tracking-wide">Google Agentic Systems</span>
+              </div>
+              
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-[#202124] dark:text-white tracking-tight">
+                AI Agent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1A73E8] via-[#8AB4F8] to-[#C58AF9]">Engineering</span>
+              </h1>
+              
+              <p className="text-[#5F6368] dark:text-[#9AA0A6] text-xs sm:text-sm max-w-xl font-normal leading-relaxed">
+                Step-by-step roadmap for building autonomous AI agents, RAG 2.0 hybrid retrieval, Model Context Protocol (MCP), and production LLMOps.
+              </p>
+            </div>
           </div>
-          
-          <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
-            AI Engineering <span className="text-slate-700 dark:text-slate-300">Mastery Curriculum</span>
-          </h1>
-
-          <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-2xl font-normal leading-relaxed">
-            Step-by-step interactive roadmap for AI Engineers covering Prompting, RAG 2.0, Agentic Workflows, Vector DBs, MCP, Fine-Tuning & LLMOps.
-          </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="max-w-xl mx-auto relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
-          <input
-            type="text"
-            placeholder="Search 24 domains or topics (e.g., RAG, LangGraph, vLLM, LoRA)..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/40 transition-all shadow-sm"
-          />
-          {searchTerm && (
-            <button onClick={() => setSearchTerm('')} className="absolute right-4 top-3.5 text-slate-400 hover:text-slate-600 dark:hover:text-white">
-              <X className="w-4 h-4" />
-            </button>
-          )}
+        {/* M3 Filters & Search */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
+                  activeCategory === cat
+                    ? 'bg-[#E8F0FE] dark:bg-[#3C4043] text-[#1A73E8] dark:text-[#8AB4F8] border border-[#1A73E8]/30 font-semibold'
+                    : 'bg-white dark:bg-[#292A2D] hover:bg-[#F1F3F4] dark:hover:bg-[#3C4043] text-[#5F6368] dark:text-[#9AA0A6] border border-[#E8EAED] dark:border-[#3C4043]'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="relative w-full md:w-72">
+            <Search className="w-4 h-4 text-[#5F6368] dark:text-[#9AA0A6] absolute left-3.5 top-3" />
+            <input
+              type="text"
+              placeholder="Search RAG, LangGraph, vLLM..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] focus:border-[#1A73E8] rounded-full text-xs text-[#202124] dark:text-white placeholder-[#5F6368] focus:outline-none transition-all shadow-sm"
+            />
+            {searchTerm && (
+              <button onClick={() => setSearchTerm('')} className="absolute right-3 top-3 text-[#5F6368] hover:text-[#202124] dark:hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* 24 Cards Grid Layout (Clean, Breathable Rhythm) */}
+        {/* 18 Domain Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredModules.map((mod) => {
             const isBookmarked = bookmarkedIds.includes(mod.id);
@@ -509,123 +440,122 @@ export const AiEngineeringRoadmapView: React.FC<AiEngineeringRoadmapViewProps> =
             return (
               <motion.div
                 key={mod.id}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -3 }}
+                whileHover={{ y: -2 }}
                 transition={{ duration: 0.2 }}
                 onClick={() => setActiveModule(mod)}
-                className="group relative bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/90 hover:border-amber-500/40 dark:hover:border-amber-500/40 rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 shadow-sm hover:shadow-[0_0_25px_rgba(245,158,11,0.08)] cursor-pointer"
+                className="group relative bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] hover:border-[#1A73E8]/50 rounded-2xl p-6 flex flex-col justify-between transition-all duration-200 shadow-[0_1px_2px_rgba(60,64,67,0.06)] hover:shadow-[0_4px_12px_rgba(60,64,67,0.12)] cursor-pointer"
               >
-                <div>
-                  {/* Top Bar inside Card: Softened low-contrast gray & purple tags */}
-                  <div className="flex items-start justify-between gap-3 mb-4">
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-200/60 dark:border-slate-700/60">
+                      <span className="text-xs font-mono font-medium text-[#5F6368] dark:text-[#9AA0A6] bg-[#F1F3F4] dark:bg-[#3C4043] px-2.5 py-0.5 rounded-full border border-[#E8EAED] dark:border-[#5F6368]">
                         #{mod.number}
                       </span>
                       {mod.isNew && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-purple-600/90 dark:text-purple-400/90 bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-500/20">
-                          <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" /> New
+                        <span className="inline-flex items-center gap-1 text-[10px] font-medium tracking-wider text-[#1A73E8] dark:text-[#8AB4F8] bg-[#E8F0FE] dark:bg-[#3C4043] px-2 py-0.5 rounded-full border border-[#1A73E8]/20">
+                          New
                         </span>
                       )}
                     </div>
 
-                    {/* Bookmark button: Amber reserved strictly for saved state */}
                     <button
                       onClick={(e) => toggleBookmark(e, mod.id)}
-                      className={`p-1.5 rounded-lg border transition-colors ${
+                      className={`p-1.5 rounded-full border transition-colors ${
                         isBookmarked
-                          ? 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400'
-                          : 'border-slate-200/80 dark:border-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white'
+                          ? 'bg-[#E8F0FE] dark:bg-[#3C4043] border-[#1A73E8]/40 text-[#1A73E8] dark:text-[#8AB4F8]'
+                          : 'border-[#E8EAED] dark:border-[#3C4043] text-[#5F6368] hover:text-[#202124] dark:hover:text-slate-300'
                       }`}
-                      title={isBookmarked ? 'Bookmarked' : 'Save Roadmap'}
                     >
-                      <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
+                      <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-current' : ''}`} />
                     </button>
                   </div>
 
-                  {/* Title: Crisp white / slate typography on hover */}
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white transition-colors mb-2.5 leading-snug">
+                  <h3 className="text-base font-bold text-[#202124] dark:text-white group-hover:text-[#1A73E8] dark:group-hover:text-[#8AB4F8] transition-colors leading-snug">
                     {mod.title}
                   </h3>
 
-                  {/* Module Description */}
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal mb-6">
+                  <p className="text-xs text-[#5F6368] dark:text-[#9AA0A6] leading-relaxed font-normal">
                     {mod.description}
                   </p>
                 </div>
 
-                {/* Cleaner Card Footer: Streamlined quiet single-line metadata */}
-                <div className="pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between mt-auto">
-                  <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">
-                    {mod.subtopics.length} concepts explored · View Details
+                <div className="pt-4 border-t border-[#F1F3F4] dark:border-[#3C4043] flex items-center justify-between mt-6">
+                  <span className="text-xs text-[#5F6368] dark:text-[#9AA0A6] font-normal">
+                    {mod.subtopics.length} Concepts
                   </span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors" />
+                  <div className="flex items-center gap-1 text-xs font-semibold text-[#1A73E8] dark:text-[#8AB4F8] group-hover:translate-x-0.5 transition-transform">
+                    <span>Explore</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </div>
                 </div>
               </motion.div>
             );
           })}
         </div>
 
+        {/* Active Module Detail Modal */}
+
         {/* Detailed Module Modal Drawer */}
         <AnimatePresence>
           {activeModule && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-black/70 backdrop-blur-sm">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-2xl w-full p-6 space-y-6 relative shadow-2xl overflow-hidden"
+                className="bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] rounded-3xl max-w-2xl w-full p-6 space-y-6 relative shadow-2xl overflow-hidden"
               >
-                {/* Header */}
-                <div className="flex items-start justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div className="flex items-start justify-between border-b border-[#F1F3F4] dark:border-[#3C4043] pb-4">
                   <div>
-                    <div className="text-xs font-mono text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider mb-1">
+                    <div className="text-xs font-mono text-[#1A73E8] dark:text-[#8AB4F8] font-medium uppercase tracking-wider mb-1">
                       Module #{activeModule.number} • {activeModule.categoryGroup}
                     </div>
-                    <h2 className="text-2xl font-black text-slate-900 dark:text-white">{activeModule.title}</h2>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-normal leading-relaxed">{activeModule.description}</p>
+                    <h2 className="text-xl font-bold text-[#202124] dark:text-white">{activeModule.title}</h2>
+                    <p className="text-xs text-[#5F6368] dark:text-[#9AA0A6] mt-1 font-normal leading-relaxed">{activeModule.description}</p>
                   </div>
                   <button
                     onClick={() => setActiveModule(null)}
-                    className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors shrink-0"
+                    className="p-2 rounded-full bg-[#F1F3F4] dark:bg-[#3C4043] text-[#5F6368] dark:text-[#9AA0A6] hover:text-[#202124] dark:hover:text-white transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
-                {/* Topics Overview inside Popup Window */}
                 <div>
-                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
-                    Curriculum Topics in this Module
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-64 overflow-y-auto pr-1">
-                    {activeModule.subtopics.map((st) => (
-                      <div
-                        key={st}
-                        className="p-3 rounded-xl border text-left flex items-center gap-2 text-xs font-medium bg-slate-50 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 border-slate-200/80 dark:border-slate-700/80"
+                  <h4 className="text-xs font-semibold text-[#5F6368] dark:text-[#9AA0A6] uppercase tracking-wider mb-3">Core Concepts</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {activeModule.subtopics.map((subtopic) => (
+                      <span
+                        key={subtopic}
+                        className="px-3 py-1.5 rounded-full bg-[#F8F9FA] dark:bg-[#202124] text-[#202124] dark:text-[#E8EAED] font-mono text-xs border border-[#E8EAED] dark:border-[#3C4043] flex items-center gap-1.5"
                       >
-                        <Layers className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
-                        <span>{st}</span>
-                      </div>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#34A853]" />
+                        {subtopic}
+                      </span>
                     ))}
                   </div>
                 </div>
 
-                {/* Footer Action */}
-                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                  <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
-                    Module #{activeModule.number} • {activeModule.subtopics.length} Interactive Topics
-                  </span>
+                <div className="flex gap-3 pt-2">
                   <button
                     onClick={() => {
                       const mod = activeModule;
                       setActiveModule(null);
-                      launchLessonForModule(mod);
+                      startModuleLesson(mod);
                     }}
-                    className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 font-bold text-sm px-6 py-2.5 rounded-xl transition-all cursor-pointer shadow-md"
+                    className="flex-1 py-3 bg-[#1A73E8] hover:bg-[#1557B0] text-white font-semibold text-xs uppercase tracking-wider rounded-full shadow-sm transition cursor-pointer flex items-center justify-center gap-2"
                   >
-                    <Play className="w-4 h-4 fill-current" /> Start
+                    <Play className="w-4 h-4" />
+                    <span>Launch Agentic Lab</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveModule(null)}
+                    className="py-3 px-6 bg-[#F1F3F4] dark:bg-[#3C4043] hover:bg-[#E8EAED] text-[#202124] dark:text-white font-semibold text-xs uppercase tracking-wider rounded-full transition cursor-pointer"
+                  >
+                    Close
                   </button>
                 </div>
               </motion.div>
@@ -637,5 +567,3 @@ export const AiEngineeringRoadmapView: React.FC<AiEngineeringRoadmapViewProps> =
     </div>
   );
 };
-
-export default AiEngineeringRoadmapView;

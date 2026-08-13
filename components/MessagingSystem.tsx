@@ -3,6 +3,7 @@ import { Send, Search, User as UserIcon, MessageSquare, ArrowLeft, MoreVertical,
 import { motion, AnimatePresence } from 'motion/react';
 import api from '../services/api';
 import { User } from '../types';
+import GuestLoginBanner from './GuestLoginBanner';
 
 interface MessagingSystemProps {
   currentUser: User;
@@ -160,8 +161,17 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
     c.user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const isGuest = !currentUser || currentUser._id.startsWith('guest_') || currentUser.email.includes('guest');
+
   return (
-    <div className="flex h-full bg-brand-50 dark:bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800">
+    <div className="flex flex-col space-y-4 w-full h-full">
+      {isGuest && (
+        <GuestLoginBanner 
+          title="Sign in to chat with classmates & mentors"
+          description="You are currently in Guest Mode. Log in or create a free account to send direct messages, start group chats, and contact mentors!"
+        />
+      )}
+      <div className="flex h-full bg-brand-50 dark:bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800">
       {/* Sidebar - Conversation List */}
       <div className={`w-full md:w-80 border-r border-slate-100 dark:border-slate-800 flex flex-col bg-white dark:bg-slate-900 ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
         <div className="p-6 border-b border-slate-100 dark:border-slate-800">
@@ -387,7 +397,8 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
         )}
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default MessagingSystem;

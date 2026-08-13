@@ -56,6 +56,29 @@ body:not(.dark) {
   border-bottom-width: 6px;
 }
 
+/* Subtle Google Gemini Halo Glow */
+.gemini-halo-subtle {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gemini-halo-subtle::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(26, 115, 232, 0.25), rgba(138, 180, 248, 0.15), rgba(197, 138, 249, 0.25));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.gemini-halo-subtle:hover {
+  box-shadow: 0 0 16px rgba(26, 115, 232, 0.14), 0 0 8px rgba(197, 138, 249, 0.12);
+}
+
 /* Custom scrollbar for kid-friendly look */
 ::-webkit-scrollbar {
   width: 10px;

@@ -13,6 +13,7 @@ import {
   TrendingUp,
   Award,
 } from 'lucide-react';
+import GuestLoginBanner from '../GuestLoginBanner';
 
 interface LeaderboardScreenProps {
   currentUser?: User | null;
@@ -54,7 +55,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
           const bios = [
             'Coding is my superpower! ',
             'Learning JavaScript and building mini games.',
-            'Future software engineer from Morocco. 🇲🇦',
+            'Future software engineer from Essaouira, Morocco. 🇲🇦',
             'Python enthusiast. Love data science!',
             'Building modern web projects with HTML & CSS.',
             'Code for Tomorrow student. Passionate about logic.',
@@ -178,8 +179,18 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
     );
   }
 
+  const isGuest = !currentUser || currentUser._id.startsWith('guest_') || currentUser.email.includes('guest');
+
   return (
     <div className="min-h-full p-4 md:p-8 bg-brand-50 dark:bg-slate-900 transition-colors">
+
+      {/* Guest Banner */}
+      {isGuest && (
+        <GuestLoginBanner 
+          title="Sign in to save your XP rank on the Leaderboard"
+          description="You are currently exploring in Guest Mode. Log in or create a free account to rank against classmates, earn trophies, and display your coding badges!"
+        />
+      )}
 
       {/* ─── Header ─── */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">

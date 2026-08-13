@@ -28,12 +28,12 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
   const localizedUI = {
     en: {
       title: "Documentation",
-      description: "Quick reference guides and cheat sheets for various languages.",
+      description: "Quick reference guides and cheat sheets for various programming languages.",
       languages: "Languages"
     },
     fr: {
       title: "Documentation",
-      description: "Guides de référence rapide et aide-mémoire pour divers langages.",
+      description: "Guides de référence rapide et aide-mémoire pour divers langages de programmation.",
       languages: "Langages"
     },
     ar: {
@@ -45,49 +45,18 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
 
   const ui = localizedUI[language as 'en' | 'fr' | 'ar'] || localizedUI.en;
 
-  // Runtime Optical Alignment
-  useEffect(() => {
-    const alignInk = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      document.querySelectorAll('.opt-align').forEach((el) => {
-        const htmlEl = el as HTMLElement;
-        htmlEl.style.marginLeft = '0px';
-        const style = window.getComputedStyle(htmlEl);
-        const char = (htmlEl.textContent || '').trim().charAt(0);
-        if (!char) return;
-
-        ctx.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-        ctx.textAlign = 'left';
-        const metrics = ctx.measureText(char);
-        const sideBearing = metrics.actualBoundingBoxLeft;
-
-        if (isFinite(sideBearing) && sideBearing > 0) {
-          htmlEl.style.marginLeft = `${sideBearing.toFixed(2)}px`;
-        }
-      });
-    };
-
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(alignInk);
-    }
-    alignInk();
-    window.addEventListener('resize', alignInk);
-    return () => window.removeEventListener('resize', alignInk);
-  }, []);
-
   return (
-    <div className="w-full flex flex-col py-6">
+    <div className="w-full flex flex-col py-6 space-y-8">
       {/* Intro Header */}
-      <div className="grid grid-cols-12 w-full mb-12">
-        <div className="col-span-12 flex flex-col text-left space-y-2">
-          <span className="mono-label opt-align font-mono text-xs uppercase tracking-wider text-[#FBBF24]">REFERENCE RESOURCES</span>
-          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mt-2 opt-align">
-            <span>{ui.title}</span>
+      <div className="bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] rounded-3xl p-6 sm:p-8 shadow-[0_1px_3px_rgba(60,64,67,0.08)] relative overflow-hidden transition-all gemini-halo-subtle">
+        <div className="space-y-2 text-left">
+          <span className="font-mono text-xs uppercase tracking-wider text-[#1A73E8] dark:text-[#8AB4F8] font-bold">
+            REFERENCE RESOURCES
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#202124] dark:text-white tracking-tight">
+            {ui.title}
           </h1>
-          <p className="text-slate-400 font-semibold text-sm">
+          <p className="text-[#5F6368] dark:text-[#9AA0A6] text-xs sm:text-sm font-normal">
             {ui.description}
           </p>
         </div>
@@ -97,17 +66,19 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
         {/* Sidebar / Path selector */}
         <div className="col-span-12 lg:col-span-3">
-          <div className="bg-slate-900/30 rounded-[2rem] p-5 shadow-xl sticky top-24">
-            <h2 className="text-xs font-black uppercase text-slate-500 tracking-wider mb-4">{ui.languages}</h2>
+          <div className="bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] rounded-3xl p-5 shadow-[0_1px_3px_rgba(60,64,67,0.08)] sticky top-24 space-y-3">
+            <h2 className="text-xs font-bold uppercase text-[#5F6368] dark:text-[#9AA0A6] tracking-wider px-2">
+              {ui.languages}
+            </h2>
             <div className="space-y-1">
               {PATHS.filter(p => p.isAvailable || LANGUAGE_DOCS[p.id]).map(path => (
                 <button
                   key={path.id}
                   onClick={() => setSelectedPath(path.id)}
-                  className={`w-full text-left px-3 py-2.5 rounded-xl font-bold text-sm transition-colors cursor-pointer flex items-center gap-2.5 ${
+                  className={`w-full text-left px-3.5 py-2.5 rounded-2xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-3 ${
                     selectedPath === path.id
-                      ? 'bg-[#FBBF24]/10 text-[#FBBF24]'
-                      : 'text-slate-300 hover:bg-slate-850 hover:text-white'
+                      ? 'bg-[#E8F0FE] dark:bg-[#3C4043] text-[#1A73E8] dark:text-[#8AB4F8] border border-[#1A73E8]/30 font-semibold'
+                      : 'text-[#5F6368] dark:text-[#9AA0A6] hover:bg-[#F1F3F4] dark:hover:bg-[#3C4043] hover:text-[#202124] dark:hover:text-white'
                   }`}
                 >
                   <span className="inline-flex items-center justify-center w-5 h-5 shrink-0">
@@ -126,27 +97,27 @@ const DocumentationScreen: React.FC<DocumentationScreenProps> = ({ currentUser }
 
         {/* Documentation Content */}
         <div className="col-span-12 lg:col-span-9">
-          <div className="bg-slate-900/30 border border-slate-800 rounded-[2rem] p-6 md:p-8 shadow-xl">
-            <div className="mb-8 border-b border-slate-850 pb-6 text-left">
-              <h2 className="text-3xl font-black text-white mt-1">
+          <div className="bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] rounded-3xl p-6 md:p-8 shadow-[0_1px_3px_rgba(60,64,67,0.08)] space-y-8">
+            <div className="border-b border-[#F1F3F4] dark:border-[#3C4043] pb-6 text-left space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#202124] dark:text-white">
                 {doc.title}
               </h2>
-              <p className="text-slate-400 font-semibold text-base mt-3">
+              <p className="text-[#5F6368] dark:text-[#9AA0A6] font-normal text-xs sm:text-sm leading-relaxed">
                 {doc.description}
               </p>
             </div>
 
-            <div className="space-y-10">
+            <div className="space-y-6">
               {doc.sections.map((section, idx) => (
-                <div key={idx} className="bg-slate-950 rounded-2xl p-6 text-left">
-                  <h3 className="text-xl font-black text-white mb-4 capitalize">
+                <div key={idx} className="bg-[#F8F9FA] dark:bg-[#202124] border border-[#E8EAED] dark:border-[#3C4043] rounded-2xl p-6 text-left space-y-4">
+                  <h3 className="text-base sm:text-lg font-bold text-[#202124] dark:text-white capitalize">
                     {section.title}
                   </h3>
                   
                   {section.isCode ? (
                     <CodeBlock code={section.content} language={selectedPath} />
                   ) : (
-                    <p className="text-slate-300 font-semibold text-sm leading-relaxed">
+                    <p className="text-[#202124] dark:text-[#E8EAED] font-normal text-xs sm:text-sm leading-relaxed">
                       {section.content}
                     </p>
                   )}

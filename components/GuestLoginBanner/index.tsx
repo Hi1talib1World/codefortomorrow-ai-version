@@ -1,0 +1,45 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LogIn, ShieldCheck, UserPlus } from 'lucide-react';
+
+interface GuestLoginBannerProps {
+  title?: string;
+  description?: string;
+}
+
+export const GuestLoginBanner: React.FC<GuestLoginBannerProps> = ({
+  title = "You are currently browsing as a Guest",
+  description = "Log in or create a free account to save your learning progress, earn XP rewards, send messages, and climb the leaderboard!"
+}) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="bg-[#E8F0FE] dark:bg-[#3C4043]/60 border border-[#1A73E8]/30 dark:border-[#8AB4F8]/30 rounded-3xl p-6 shadow-sm mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all">
+      <div className="flex items-start gap-4 text-left">
+        <div className="p-3 bg-[#1A73E8] text-white rounded-2xl shrink-0 shadow-sm">
+          <ShieldCheck className="w-6 h-6" />
+        </div>
+        <div className="space-y-1">
+          <h3 className="text-base font-bold text-[#202124] dark:text-white">
+            {title}
+          </h3>
+          <p className="text-xs text-[#5F6368] dark:text-[#9AA0A6] font-normal leading-relaxed max-w-xl">
+            {description}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
+        <button
+          onClick={() => navigate('/auth')}
+          className="w-full sm:w-auto px-5 py-2.5 bg-[#1A73E8] hover:bg-[#1557B0] text-white rounded-full text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-sm transition"
+        >
+          <LogIn className="w-4 h-4" />
+          <span>Log In / Create Account</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default GuestLoginBanner;

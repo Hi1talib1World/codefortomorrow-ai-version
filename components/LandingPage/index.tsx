@@ -297,16 +297,20 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
         </AnimatedSection>
       </section>
 
-      {/* AI Agents Presentation */}
+      {/* 24/7 AI Agents Presentation */}
       <section className="pt-16 pb-8 bg-[#060814] text-white overflow-hidden relative border-t border-[#111827]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.05)_0%,transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-6 max-w-6xl relative z-10">
           <AnimatedSection className="text-center mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-black uppercase tracking-widest mb-4">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Running 24/7 Every Single Day</span>
+            </div>
             <h2 className="text-4xl md:text-5xl font-black mb-6">
               Powered by <span className="text-[#FBBF24]">3 Specialized AI Agents</span>
             </h2>
             <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl leading-relaxed">
-              Explore how our autonomous multi-agent mesh optimizes every step of the learning, content synthesis, and school partnering process.
+              Our autonomous AI agents work non-stop 24 hours a day, 7 days a week, 365 days a year to personalize learning, synthesize curriculum, and support school partners every single day.
             </p>
           </AnimatedSection>
 

@@ -6,6 +6,7 @@ import QuestionLabScreen from '../QuestionLabScreen';
 import SmartBooksScreen from '../SmartBooksScreen';
 import SpeakingHubScreen from '../SpeakingHubScreen';
 import QuizPlayScreen from '../QuizPlayScreen';
+import GuestLoginBanner from '../GuestLoginBanner';
 import { Creation } from '../../types';
 
 interface CreationToolCardProps {
@@ -39,8 +40,12 @@ const CreationToolCard: React.FC<CreationToolCardProps> = ({ tool, onClick }) =>
             <div className="absolute -bottom-8 -left-4 w-32 h-32 bg-white/10 rounded-full blur-xl group-hover:scale-110"></div>
 
             <div className="flex-grow z-10">
-                <div className="w-16 h-16 bg-white/20 rounded-2xl mb-4 flex items-center justify-center shadow-sm backdrop-blur-sm border border-white/20 relative">
-                    <span className="text-3xl relative z-10">{tool.icon}</span>
+                <div className="w-16 h-16 bg-white/20 rounded-2xl mb-4 flex items-center justify-center shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                    {tool.image ? (
+                        <img src={tool.image} alt="" className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-300" />
+                    ) : (
+                        <span className="text-3xl relative z-10">{tool.icon}</span>
+                    )}
                 </div>
                 <h3 className="text-xl font-bold tracking-tight">{t(tool.titleKey as any)}</h3>
                 <p className="text-sm opacity-90 mt-2 font-medium leading-snug text-white/90">{t(tool.descriptionKey as any)}</p>
@@ -131,12 +136,14 @@ const RecentContentDetails = ({ item, onOpen }: { item: Creation, onOpen: () => 
     )
 }
 
-const CreationsScreen: React.FC = () => {
+const CreationsScreen: React.FC<{ currentUser?: any }> = ({ currentUser }) => {
     const { t } = useLanguage();
     const [activeTool, setActiveTool] = useState<string | null>(null);
     const [creations, setCreations] = useState<Creation[]>([]);
     const [selectedCreationId, setSelectedCreationId] = useState<string | null>(null);
     const [viewingCreation, setViewingCreation] = useState<Creation | null>(null);
+
+    const isGuest = !currentUser || (currentUser._id && currentUser._id.startsWith('guest_')) || (currentUser.email && currentUser.email.includes('guest'));
 
     useEffect(() => {
         const stored = localStorage.getItem('user_creations');
@@ -156,11 +163,11 @@ const CreationsScreen: React.FC = () => {
     };
 
     const creationTools = [
-        { id: 'game_studio', titleKey: 'game_studio', descriptionKey: 'game_studio_desc', buttonTextKey: 'create', color: 'purple', icon: '', status: 'active' },
-        { id: 'question_lab', titleKey: 'question_lab', descriptionKey: 'question_lab_desc', buttonTextKey: 'generate', color: 'green', icon: '', status: 'active' },
-        { id: 'smart_books', titleKey: 'smart_books', descriptionKey: 'smart_books_desc', buttonTextKey: 'open', color: 'pink', icon: '', status: 'active' },
-        { id: 'scientific_inquiry', titleKey: 'scientific_inquiry', descriptionKey: 'scientific_inquiry_desc', buttonTextKey: 'coming_soon', color: 'orange', icon: '', status: 'coming_soon' },
-        { id: 'speaking_hub', titleKey: 'speaking_hub', descriptionKey: 'speaking_hub_desc', buttonTextKey: 'start_speaking', color: 'blue', icon: '', status: 'active' },
+        { id: 'game_studio', titleKey: 'game_studio', descriptionKey: 'game_studio_desc', buttonTextKey: 'create', color: 'purple', icon: '🎮', image: '/brain_training_workouts.png', status: 'active' },
+        { id: 'question_lab', titleKey: 'question_lab', descriptionKey: 'question_lab_desc', buttonTextKey: 'generate', color: 'green', icon: '🧪', image: '/brain_training_challenges.png', status: 'active' },
+        { id: 'smart_books', titleKey: 'smart_books', descriptionKey: 'smart_books_desc', buttonTextKey: 'open', color: 'pink', icon: '📚', image: '/esl_books.png', status: 'active' },
+        { id: 'scientific_inquiry', titleKey: 'scientific_inquiry', descriptionKey: 'scientific_inquiry_desc', buttonTextKey: 'coming_soon', color: 'orange', icon: '🔬', image: '/discover_learn.png', status: 'coming_soon' },
+        { id: 'speaking_hub', titleKey: 'speaking_hub', descriptionKey: 'speaking_hub_desc', buttonTextKey: 'start_speaking', color: 'blue', icon: '🗣️', image: '/speaking_practice.png', status: 'active' },
     ];
 
     const selectedCreation = creations.find(c => c.id === selectedCreationId) || creations[0];
@@ -187,6 +194,12 @@ const CreationsScreen: React.FC = () => {
 
     return (
         <div className="bg-brand-50 dark:bg-slate-900 min-h-full pb-10 p-4 md:p-8 transition-colors">
+            {isGuest && (
+                <GuestLoginBanner 
+                    title="Sign in to save & publish your AI creations"
+                    description="You are currently in Guest Mode. Log in or create a free account to generate games, create quizzes, and save your custom content!"
+                />
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                 {creationTools.map(tool =>
                     <CreationToolCard

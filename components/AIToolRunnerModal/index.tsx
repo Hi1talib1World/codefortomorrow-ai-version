@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { User, ProgrammingPath } from '../../types';
 import api from '../../services/api';
 import { useToast } from '../ToastNotification';
-import { X, Sparkles, Copy, Check, Play, Send, Zap, BookOpen, Layers, Loader2 } from 'lucide-react';
+import { X, Copy, Check, Play, Send, Zap, BookOpen, Layers, Loader2 } from 'lucide-react';
 import { AIToolCard } from '../AIToolsHubScreen';
 
 interface AIToolRunnerModalProps {
@@ -148,7 +148,7 @@ const AIToolRunnerModal: React.FC<AIToolRunnerModalProps> = ({
           <div className="bg-[#FFF8D6] dark:bg-slate-950 border-3 border-slate-900 rounded-2xl p-5 space-y-3.5 animate-fade-in shadow-[4px_4px_0px_0px_#0F172A] relative">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-black uppercase text-slate-900 bg-[#00D2D3] px-2.5 py-0.5 rounded-full border border-slate-900 shadow-[1px_1px_0px_0px_#0F172A] flex items-center gap-1">
-                <Sparkles className="w-3 h-3 fill-current" />
+                <Zap className="w-3 h-3 fill-current" />
                 {outputSource === 'gemini' ? 'Généré par Gemini 2.5 Flash' : 'Mode Hors Ligne (Simulé)'}
               </span>
 

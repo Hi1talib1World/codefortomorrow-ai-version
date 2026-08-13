@@ -4,7 +4,7 @@ import { PATHS } from '../../constants';
 import api from '../../services/api';
 import { useToast } from '../ToastNotification';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { Sparkles, X, Play, Cpu, Shield, Rocket, Gamepad2, Globe, Star } from 'lucide-react';
+import { X, Play, Cpu, Shield, Rocket, Gamepad2, Globe, Star } from 'lucide-react';
 
 interface PersonalizedContentModalProps {
   isOpen: boolean;

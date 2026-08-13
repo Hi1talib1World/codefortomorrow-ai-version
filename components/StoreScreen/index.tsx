@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { User as UserType } from '../../types';
 import api from '../../services/api';
-import { Zap, Tag, Palette, User, Coins } from 'lucide-react';
+import { Zap, Tag, Palette, User, Coins, Search, ShoppingBag, Check } from 'lucide-react';
+import GuestLoginBanner from '../GuestLoginBanner';
 
-const TokenIcon = () => <Coins className="w-4 h-4 text-[#FBBF24] inline-block drop-shadow-sm align-middle" />;
+const TokenIcon = () => <Coins className="w-4 h-4 text-[#FBBC04] inline-block drop-shadow-sm align-middle" />;
 
 interface StoreTabsProps {
     activeTab: string;
@@ -14,26 +15,36 @@ interface StoreTabsProps {
 
 const StoreTabsCount: React.FC<StoreTabsProps> = ({ activeTab, setActiveTab, counts }) => {
     const tabs = [
-        { id: 'Boosters', label: 'Boosters', icon: <Zap className="w-5 h-5" /> },
-        { id: 'Titles', label: 'Titles', icon: <Tag className="w-5 h-5" /> },
-        { id: 'Themes', label: 'Themes', icon: <Palette className="w-5 h-5" /> },
-        { id: 'Avatar', label: 'Avatar', icon: <User className="w-5 h-5" /> },
+        { id: 'Boosters', label: 'Boosters', icon: <Zap className="w-4 h-4" /> },
+        { id: 'Titles', label: 'Titles', icon: <Tag className="w-4 h-4" /> },
+        { id: 'Themes', label: 'Themes', icon: <Palette className="w-4 h-4" /> },
+        { id: 'Avatar', label: 'Avatar', icon: <User className="w-4 h-4" /> },
     ];
     return (
-        <div className="grid grid-cols-12 w-full mb-8 border-b border-slate-850">
-            <div className="col-span-12 flex space-x-2 sm:space-x-8 overflow-x-auto no-scrollbar">
+        <div className="w-full mb-8 border-b border-[#E8EAED] dark:border-[#3C4043]">
+            <div className="flex space-x-2 sm:space-x-8 overflow-x-auto no-scrollbar pb-1">
                 {tabs.map(tab => (
                     <button
                         key={tab.id}
                         type="button"
                         onClick={() => setActiveTab(tab.id)}
-                        className={`py-4 px-2 font-black text-sm sm:text-base transition-all relative flex items-center space-x-2 cursor-pointer bg-transparent border-none ${activeTab === tab.id ? 'text-[#FBBF24]' : 'text-slate-400 hover:text-slate-200'}`}
+                        className={`py-3 px-3 font-bold text-xs sm:text-sm transition-all relative flex items-center space-x-2 cursor-pointer bg-transparent border-none ${
+                          activeTab === tab.id 
+                            ? 'text-[#1A73E8] dark:text-[#8AB4F8]' 
+                            : 'text-[#5F6368] dark:text-[#9AA0A6] hover:text-[#202124] dark:hover:text-white'
+                        }`}
                     >
                         <span>{tab.icon}</span>
-                        <span className="tracking-wider">{tab.label.toUpperCase()}</span>
-                        <span className="ml-1.5 px-2 py-0.5 bg-slate-800 rounded-lg text-[10px] text-slate-300 opacity-70">{counts[tab.id] || 0}</span>
+                        <span className="uppercase tracking-wider">{tab.label}</span>
+                        <span className={`ml-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono ${
+                          activeTab === tab.id
+                            ? 'bg-[#E8F0FE] text-[#1A73E8] dark:bg-[#3C4043] dark:text-[#8AB4F8]'
+                            : 'bg-[#F1F3F4] text-[#5F6368] dark:bg-[#3C4043] dark:text-[#9AA0A6]'
+                        }`}>
+                          {counts[tab.id] || 0}
+                        </span>
                         {activeTab === tab.id && (
-                            <div className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#FBBF24] rounded-full"></div>
+                            <div className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-[#1A73E8] dark:bg-[#8AB4F8] rounded-full"></div>
                         )}
                     </button>
                 ))}
@@ -51,10 +62,10 @@ interface StoreItemProps {
 
 const StoreItem: React.FC<StoreItemProps> = ({ item, isUnlocked, isEquipped, onAction }) => {
     const renderButton = () => {
-        const baseClasses = "text-xs font-black py-3 px-5 rounded-xl transition-all uppercase tracking-wider active:scale-95 transform cursor-pointer border-none";
+        const baseClasses = "text-xs font-semibold py-2.5 px-4 rounded-full transition-all uppercase tracking-wider cursor-pointer border-none shadow-sm";
         
         if (item.type === 'free') {
-            return <button onClick={onAction} className={`${baseClasses} bg-green-500 text-white hover:bg-green-400`}>OPEN</button>;
+            return <button onClick={onAction} className={`${baseClasses} bg-[#34A853] text-white hover:bg-[#2D9247]`}>OPEN</button>;
         }
 
         if (isUnlocked) {
@@ -64,42 +75,44 @@ const StoreItem: React.FC<StoreItemProps> = ({ item, isUnlocked, isEquipped, onA
                         onClick={onAction} 
                         className={`${baseClasses} ${
                             isEquipped 
-                                ? 'bg-red-500 text-white hover:bg-red-600' 
-                                : 'bg-[#FBBF24] text-slate-950 hover:bg-[#f59e0b]'
+                                ? 'bg-[#EA4335] text-white hover:bg-[#D93025]' 
+                                : 'bg-[#1A73E8] text-white hover:bg-[#1557B0]'
                         }`}
                     >
                         {isEquipped ? 'UNEQUIP' : 'EQUIP'}
                     </button>
                 );
             }
-            return <button disabled className={`${baseClasses} bg-slate-800 text-slate-500 cursor-not-allowed`}>UNLOCKED</button>;
+            return <button disabled className={`${baseClasses} bg-[#F1F3F4] dark:bg-[#3C4043] text-[#5F6368] dark:text-[#9AA0A6] cursor-not-allowed shadow-none`}>UNLOCKED</button>;
         }
 
         return (
-            <button onClick={onAction} className={`${baseClasses} bg-[#FBBF24] text-slate-950 hover:bg-[#f59e0b] flex items-center space-x-2`}>
+            <button onClick={onAction} className={`${baseClasses} bg-[#1A73E8] text-white hover:bg-[#1557B0] flex items-center space-x-2`}>
                 <span>BUY</span>
-                <span className="text-slate-950 ml-1.5 flex items-center gap-0.5">{item.cost} <TokenIcon /></span>
+                <span className="ml-1.5 flex items-center gap-1 font-mono font-bold">{item.cost} <TokenIcon /></span>
             </button>
         );
     };
 
     return (
-        <div className="flex items-center space-x-6 p-5 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-[#FBBF24] bg-slate-950/20 transition-all duration-300 group animate-pop-in">
-            <div className="text-4xl flex-shrink-0 w-16 h-16 flex items-center justify-center bg-slate-950 rounded-[1.25rem] group-hover:scale-110 transition-transform shadow-md border border-slate-850">{item.icon}</div>
+        <div className="flex items-center space-x-5 p-5 border border-[#E8EAED] dark:border-[#3C4043] rounded-2xl hover:border-[#1A73E8]/50 bg-[#F8F9FA] dark:bg-[#202124] transition-all duration-300 group">
+            <div className="text-3xl flex-shrink-0 w-14 h-14 flex items-center justify-center bg-white dark:bg-[#292A2D] rounded-2xl group-hover:scale-105 transition-transform shadow-sm border border-[#E8EAED] dark:border-[#3C4043]">
+              {item.icon}
+            </div>
             <div className="flex-grow min-w-0 text-left">
                 <div className="flex items-center gap-2">
-                    <h3 className="font-black text-white text-lg tracking-tight leading-snug group-hover:text-[#FBBF24] transition-colors">{item.title}</h3>
+                    <h3 className="font-bold text-[#202124] dark:text-white text-base tracking-tight leading-snug group-hover:text-[#1A73E8] dark:group-hover:text-[#8AB4F8] transition-colors">{item.title}</h3>
                     {item.rarity && (
-                        <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full border ${
-                            item.rarity === 'Legendary' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' :
-                            item.rarity === 'Epic' ? 'bg-purple-500/10 text-purple-500 border-purple-500/20' :
-                            'bg-slate-800 text-slate-400 border-slate-700/50'
+                        <span className={`text-[9px] font-semibold uppercase px-2.5 py-0.5 rounded-full border border-[#E8EAED] dark:border-[#3C4043] ${
+                            item.rarity === 'Legendary' ? 'bg-[#FEF7E0] text-[#B06000] dark:bg-[#3C4043] dark:text-[#FDD663]' :
+                            item.rarity === 'Epic' ? 'bg-[#F3E8FD] text-[#8E24AA] dark:bg-[#3C4043] dark:text-[#C58AF9]' :
+                            'bg-[#F1F3F4] text-[#5F6368] dark:bg-[#3C4043] dark:text-[#9AA0A6]'
                         }`}>
                             {item.rarity}
                         </span>
                     )}
                 </div>
-                <p className="text-slate-400 font-bold uppercase tracking-widest text-[9px] mt-1.5 leading-normal">{item.description}</p>
+                <p className="text-[#5F6368] dark:text-[#9AA0A6] font-normal text-xs mt-1 leading-normal">{item.description}</p>
             </div>
             <div className="flex-shrink-0">{renderButton()}</div>
         </div>
@@ -113,18 +126,17 @@ const TokenPurchaseSection = () => {
         { icon: '🔮', title: 'Token Vault', amount: '2000', price: '199 DH' },
     ];
     return (
-        <div className="col-span-12 bg-slate-900/30 border border-slate-800 rounded-[2rem] p-8 md:p-10 mt-16 shadow-xl relative overflow-hidden group flex flex-col">
-            <div className="absolute -right-8 -top-8 w-32 h-32 bg-yellow-400/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
-            <h2 className="text-3xl font-black text-white uppercase tracking-tighter text-center mb-10 relative z-10">Magic Bank</h2>
+        <div className="col-span-12 bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] rounded-3xl p-8 sm:p-10 shadow-[0_1px_3px_rgba(60,64,67,0.08)] relative overflow-hidden flex flex-col">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#202124] dark:text-white tracking-tight text-center mb-8">Token Market</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center relative z-10 w-full">
                 {items.map(item => (
-                    <div key={item.title} className="group/item cursor-pointer bg-slate-950/40 p-6 rounded-[2rem] border border-slate-850 hover:border-[#FBBF24] hover:-translate-y-1 transition-all flex flex-col justify-between min-h-[260px]">
-                        <div className="text-6xl mb-4 transform transition-transform group-hover/item:scale-115 group-hover/item:rotate-6 drop-shadow-xl">{item.icon}</div>
+                    <div key={item.title} className="group/item cursor-pointer bg-[#F8F9FA] dark:bg-[#202124] p-6 rounded-3xl border border-[#E8EAED] dark:border-[#3C4043] hover:border-[#1A73E8] hover:-translate-y-1 transition-all flex flex-col justify-between min-h-[240px]">
+                        <div className="text-5xl mb-3 transform transition-transform group-hover/item:scale-110 drop-shadow-sm">{item.icon}</div>
                         <div>
-                            <p className="font-black text-white text-xl uppercase tracking-tight">{item.title}</p>
-                            <p className="text-[#FBBF24] font-black text-2xl mt-1 tracking-tighter flex items-center justify-center gap-1">{item.amount} <TokenIcon /></p>
+                            <p className="font-bold text-[#202124] dark:text-white text-lg">{item.title}</p>
+                            <p className="text-[#1A73E8] dark:text-[#8AB4F8] font-bold text-xl mt-1 tracking-tight flex items-center justify-center gap-1 font-mono">{item.amount} <TokenIcon /></p>
                         </div>
-                        <button className="mt-8 w-full bg-[#FBBF24] hover:bg-[#f59e0b] text-slate-950 font-black py-3.5 px-6 rounded-xl shadow-md text-xs tracking-widest uppercase cursor-pointer border-none active:scale-95 transition-all">
+                        <button className="mt-6 w-full bg-[#1A73E8] hover:bg-[#1557B0] text-white font-semibold py-2.5 px-4 rounded-full shadow-sm text-xs uppercase tracking-wider cursor-pointer border-none transition-all">
                             {item.price}
                         </button>
                     </div>
@@ -141,9 +153,7 @@ export const AvatarPreview: React.FC<{ equipped: number[]; className?: string }>
     const hasArm = equipped.includes(304);
 
     return (
-        <div className={`relative bg-slate-950 border border-slate-850 rounded-2xl flex items-center justify-center shadow-md overflow-hidden select-none group ${className || 'w-16 h-16 text-3xl'}`}>
-            <div className="absolute inset-0 bg-gradient-to-t from-[#FBBF24]/5 via-transparent to-transparent opacity-60"></div>
-            
+        <div className={`relative bg-[#F8F9FA] dark:bg-[#202124] border border-[#E8EAED] dark:border-[#3C4043] rounded-2xl flex items-center justify-center shadow-sm overflow-hidden select-none group ${className || 'w-14 h-14 text-2xl'}`}>
             <div className="relative group-hover:scale-105 transition-transform duration-300">
                 {hasHat && (
                     <div className="absolute -top-[55%] left-1/2 -translate-x-1/2 text-[0.7em] z-10">
@@ -259,77 +269,59 @@ const StoreScreen: React.FC<{ currentUser: UserType; onUpdateUser: (updatedData:
         return acc;
     }, {} as Record<string, number>);
 
-    // Runtime Optical Alignment
-    useEffect(() => {
-        const alignInk = () => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-
-            document.querySelectorAll('.opt-align').forEach((el) => {
-                const htmlEl = el as HTMLElement;
-                htmlEl.style.marginLeft = '0px';
-                const style = window.getComputedStyle(htmlEl);
-                const char = (htmlEl.textContent || '').trim().charAt(0);
-                if (!char) return;
-
-                ctx.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-                ctx.textAlign = 'left';
-                const metrics = ctx.measureText(char);
-                const sideBearing = metrics.actualBoundingBoxLeft;
-
-                if (isFinite(sideBearing) && sideBearing > 0) {
-                    htmlEl.style.marginLeft = `${sideBearing.toFixed(2)}px`;
-                }
-            });
-        };
-
-        if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(alignInk);
-        }
-        alignInk();
-        window.addEventListener('resize', alignInk);
-        return () => window.removeEventListener('resize', alignInk);
-    }, []);
+    const isGuest = !currentUser || currentUser._id.startsWith('guest_') || currentUser.email.includes('guest');
 
     return (
-        <div className="w-full flex flex-col py-6">
-            {/* Header (columns 1 / 13) */}
-            <div className="grid grid-cols-12 w-full gap-6 mb-12 border-b border-slate-850 pb-6 items-center">
-                <div className="col-span-12 lg:col-span-6 flex flex-col text-left space-y-2">
-                    <span className="mono-label opt-align font-mono text-xs uppercase tracking-wider text-[#FBBF24]">WORKSPACE MARKETPLACE</span>
-                    <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mt-2 opt-align">
-                        {t('store')}
-                    </h1>
-                </div>
-                
-                <div className="col-span-12 lg:col-span-6 flex flex-wrap items-center justify-start lg:justify-end gap-4">
-                    {/* Avatar Customizer HUD */}
-                    <div className="flex items-center gap-3 bg-slate-900/30 border border-slate-800 px-4 py-3 rounded-2xl shadow-md text-left">
-                        <AvatarPreview equipped={equipped} />
-                        <div className="text-left max-w-[150px]">
-                            <h4 className="text-[10px] font-black text-[#FBBF24] uppercase tracking-widest leading-none">Coding Bot</h4>
-                            <p className="text-[9px] text-slate-400 font-bold mt-1.5 uppercase leading-tight">Equip custom accessories!</p>
-                        </div>
-                    </div>
+        <div className="w-full flex flex-col py-6 space-y-8">
+            {/* Guest Banner */}
+            {isGuest && (
+                <GuestLoginBanner 
+                    title="Sign in to save your XP purchases & avatar items"
+                    description="You are currently in Guest Mode. Log in or create a free account to unlock items, customize your avatar, and keep your inventory items across sessions!"
+                />
+            )}
 
-                    {/* Search and Balance */}
-                    <div className="flex items-center gap-3">
-                        <div className="relative w-44 sm:w-52">
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Search items..."
-                                className="w-full bg-slate-950 border border-slate-800 focus:border-[#FBBF24] rounded-2xl py-3 pl-11 pr-4 text-xs font-bold transition-all shadow-sm text-white focus:outline-none"
-                            />
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
+            {/* Header */}
+            <div className="bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] rounded-3xl p-6 sm:p-8 shadow-[0_1px_3px_rgba(60,64,67,0.08)] relative overflow-hidden transition-all gemini-halo-subtle">
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                    <div className="space-y-2 text-left">
+                        <span className="font-mono text-xs uppercase tracking-wider text-[#1A73E8] dark:text-[#8AB4F8] font-bold">
+                            WORKSPACE MARKETPLACE
+                        </span>
+                        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#202124] dark:text-white tracking-tight">
+                            {t('store')}
+                        </h1>
+                        <p className="text-[#5F6368] dark:text-[#9AA0A6] text-xs sm:text-sm font-normal">
+                            Unlock boosters, profile titles, and avatar items with your earned XP!
+                        </p>
+                    </div>
+                    
+                    <div className="flex flex-wrap items-center gap-4">
+                        {/* Avatar Customizer HUD */}
+                        <div className="flex items-center gap-3 bg-[#F8F9FA] dark:bg-[#202124] border border-[#E8EAED] dark:border-[#3C4043] px-4 py-2.5 rounded-2xl text-left">
+                            <AvatarPreview equipped={equipped} />
+                            <div className="text-left">
+                                <h4 className="text-xs font-bold text-[#1A73E8] dark:text-[#8AB4F8]">Coding Bot</h4>
+                                <p className="text-[10px] text-[#5F6368] dark:text-[#9AA0A6] font-normal">Custom accessories</p>
+                            </div>
                         </div>
-                        <div className="bg-slate-900/30 border border-slate-800 px-5 py-3 rounded-2xl flex items-center space-x-2.5 shadow-md text-white">
-                            <span className="text-xl font-black text-white leading-none">{progress.xp}</span>
-                            <TokenIcon />
+
+                        {/* Search and Balance */}
+                        <div className="flex items-center gap-3">
+                            <div className="relative w-40 sm:w-48">
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder="Search store..."
+                                    className="w-full bg-[#F8F9FA] dark:bg-[#202124] border border-[#E8EAED] dark:border-[#3C4043] focus:border-[#1A73E8] rounded-2xl py-2.5 pl-10 pr-4 text-xs font-medium transition-all text-[#202124] dark:text-white focus:outline-none"
+                                />
+                                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#5F6368] dark:text-[#9AA0A6]" />
+                            </div>
+                            <div className="bg-[#F8F9FA] dark:bg-[#202124] border border-[#E8EAED] dark:border-[#3C4043] px-4 py-2.5 rounded-2xl flex items-center space-x-2 text-[#202124] dark:text-white font-mono font-bold text-sm">
+                                <span>{progress.xp}</span>
+                                <TokenIcon />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -338,33 +330,32 @@ const StoreScreen: React.FC<{ currentUser: UserType; onUpdateUser: (updatedData:
             <StoreTabsCount activeTab={activeTab} setActiveTab={setActiveTab} counts={categoryCounts} />
 
             {/* Store items Grid */}
-            <div className="grid grid-cols-12 w-full mb-12">
-                <div className="col-span-12 bg-slate-900/30 border border-slate-800 rounded-[2rem] p-6 sm:p-8 shadow-xl relative flex flex-col">
-                    {filteredItems.length > 0 ? (
-                        <div className="grid grid-cols-1 gap-4 w-full">
-                            {filteredItems.map(item => (
-                                <StoreItem 
-                                    key={item.id} 
-                                    item={item} 
-                                    isUnlocked={unlocked.includes(item.id) || (item as any).type === 'free'}
-                                    isEquipped={equipped.includes(item.id)}
-                                    onAction={() => handleAction(item)}
-                                />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-center py-20 animate-pop-in">
-                            <h2 className="text-2xl font-black text-white uppercase tracking-tight">No items found</h2>
-                            <p className="text-slate-400 font-bold mt-2">Try searching for something else!</p>
-                            <button
-                                onClick={() => setSearchQuery('')}
-                                className="mt-8 px-8 py-3 bg-slate-800 text-slate-350 rounded-xl font-black uppercase tracking-wider hover:bg-slate-700 transition-colors cursor-pointer border-none active:scale-95"
-                            >
-                                Clear Search
-                            </button>
-                        </div>
-                    )}
-                </div>
+            <div className="bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] rounded-3xl p-6 sm:p-8 shadow-[0_1px_3px_rgba(60,64,67,0.08)]">
+                {filteredItems.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-4 w-full">
+                        {filteredItems.map(item => (
+                            <StoreItem 
+                                key={item.id} 
+                                item={item} 
+                                isUnlocked={unlocked.includes(item.id) || (item as any).type === 'free'}
+                                isEquipped={equipped.includes(item.id)}
+                                onAction={() => handleAction(item)}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-16 space-y-4">
+                        <ShoppingBag className="w-12 h-12 text-[#5F6368] dark:text-[#9AA0A6] mx-auto" />
+                        <h2 className="text-xl font-bold text-[#202124] dark:text-white">No items found</h2>
+                        <p className="text-xs text-[#5F6368] dark:text-[#9AA0A6]">Try searching for something else!</p>
+                        <button
+                            onClick={() => setSearchQuery('')}
+                            className="px-5 py-2.5 bg-[#1A73E8] text-white rounded-full font-semibold text-xs cursor-pointer hover:bg-[#1557B0]"
+                        >
+                            Clear Search
+                        </button>
+                    </div>
+                )}
             </div>
 
             <TokenPurchaseSection />

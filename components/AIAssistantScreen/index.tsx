@@ -6,6 +6,7 @@ import api from '../../services/api';
 import { useToast } from '../ToastNotification';
 import { useLanguage } from '../../contexts/LanguageContext';
 import ChooseBuddyScreen, { BUDDIES, BUDDY_INFOS } from '../ChooseBuddyScreen';
+import GuestLoginBanner from '../GuestLoginBanner';
 
 interface Message {
   text: string;
@@ -367,8 +368,17 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser, onUp
     return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
   };
 
+  const isGuest = !currentUser || (currentUser._id && currentUser._id.startsWith('guest_')) || (currentUser.email && currentUser.email.includes('guest'));
+
   return (
-    <div className="flex h-[calc(100vh-12rem)] md:h-[calc(100vh-10rem)] bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden relative transition-colors duration-300">
+    <div className="flex flex-col space-y-4 w-full h-full">
+      {isGuest && (
+        <GuestLoginBanner 
+          title="Sign in for unlimited AI coding assistance & conversation history"
+          description="You are currently using AI Assistant in Guest Mode. Log in or create a free account to save your chat sessions, unlock unlimited prompts, and personalize your AI learning buddy!"
+        />
+      )}
+      <div className="flex h-[calc(100vh-12rem)] md:h-[calc(100vh-10rem)] bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden relative transition-colors duration-300">
 
       {/* ─── Sidebar: Chat History ─── */}
       <div className={`${sidebarOpen ? 'w-72' : 'w-0'} flex-shrink-0 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 flex flex-col transition-all duration-300 overflow-hidden`}>
@@ -665,7 +675,8 @@ const AIAssistantScreen: React.FC<AIAssistantScreenProps> = ({ currentUser, onUp
         />
       )}
     </div>
-  );
+  </div>
+);
 };
 
 export default AIAssistantScreen;
