@@ -185,12 +185,37 @@ function triggerAgentCommand(agentId: string, command: string) {
       });
 
       // Optimized performance response delivery
-      setTimeout(() => {
+      setTimeout(async () => {
         const current = agentStateMap.get(agentId);
         if (current && current.status === 'Working' && current.activeTask === activeTaskName) {
           current.processedJobs += 1;
           updateAgentStatus(agentId, 'Idle', null);
           appendAgentLog(agentId, `${result.response}`, 'success');
+
+          // Log execution to MongoDB for cost & executions tracking
+          try {
+            const AgentExecution = (await import('../../models/agentExecution.model')).default;
+            await AgentExecution.create({
+              executionId: `exec_cmd_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+              agentId,
+              agentName: current.name,
+              task: command,
+              status: 'success',
+              inputData: { command },
+              outputData: { response: result.response },
+              startedAt: new Date(Date.now() - delay),
+              completedAt: new Date(),
+              latencyMs: delay,
+              aiModel: 'gemini-2.5-flash',
+              inputTokens: Math.ceil(command.length / 4),
+              outputTokens: Math.ceil(result.response.length / 4),
+              totalTokens: Math.ceil((command.length + result.response.length) / 4),
+              estimatedCostUsd: 0.0001,
+              logs: [{ timestamp: new Date(), message: `Command executed: ${command}`, level: 'info' }]
+            });
+          } catch (dbErr) {
+            console.error('[AgentMonitorService] DB execution log error:', dbErr);
+          }
         }
       }, delay);
       

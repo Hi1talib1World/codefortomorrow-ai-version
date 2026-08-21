@@ -20,7 +20,7 @@ export type AnalyticsInput = z.infer<typeof AnalyticsInputSchema>;
 export const AnalyticsOutputSchema = z.object({
   student_id: z.string(),
   student_name: z.string(),
-  mastery: z.record(z.number()),
+  mastery: z.record(z.string(), z.number()),
   strengths: z.array(z.string()),
   weaknesses: z.array(z.string()),
   knowledge_gaps: z.array(z.string()),
@@ -56,7 +56,7 @@ export class StudentAnalyticsAgent
   public validateInput(input: AnalyticsInput) {
     const result = AnalyticsInputSchema.safeParse(input);
     if (!result.success) {
-      return { valid: false, errors: result.error.errors.map(e => `${e.path.join('.')}: ${e.message}`) };
+      return { valid: false, errors: result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`) };
     }
     return { valid: true };
   }
@@ -64,7 +64,7 @@ export class StudentAnalyticsAgent
   public validateOutput(output: AnalyticsOutput) {
     const result = AnalyticsOutputSchema.safeParse(output);
     if (!result.success) {
-      return { valid: false, errors: result.error.errors.map(e => `${e.path.join('.')}: ${e.message}`) };
+      return { valid: false, errors: result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`) };
     }
     return { valid: true };
   }
@@ -82,7 +82,6 @@ export class StudentAnalyticsAgent
 
     addLog(`StudentAnalyticsAgent inspecting performance metrics for student...`);
 
-    // 1. Deterministic DB Fetch via StudentProfileTool
     const profileTool = new StudentProfileTool();
     const profileResult = await profileTool.run({
       studentId: input.studentId,
@@ -122,7 +121,6 @@ Based strictly on this data, construct the analytics summary containing:
         }
       );
 
-      // Ensure DB student ID is preserved
       aiResponse.content.student_id = profileResult.studentId;
       aiResponse.content.student_name = profileResult.name;
 

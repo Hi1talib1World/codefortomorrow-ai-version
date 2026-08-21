@@ -282,7 +282,7 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
     );
 
     return (
-        <div className="min-h-screen bg-[#0a0f1d] font-sans text-white selection:bg-[#FBBF24]/30 selection:text-white muller-grid-root">
+        <div className="min-h-screen bg-[#060b19] text-white flex flex-col font-sans relative overflow-hidden selection:bg-sky-500/30 selection:text-white muller-grid-root">
             <style>{`
                 .muller-grid-root {
                     --cols: 12;
@@ -293,15 +293,15 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
                     --pad: 96px;
                     --maxw: 1296px;
                     
-                    --paper: #0a0f1d;
+                    --paper: #060b19;
                     --ink: #ffffff;
                     --ink-soft: #94a3b8;
-                    --accent: #FBBF24;
+                    --accent: #38bdf8;
                     
-                    --g-col: rgba(251, 191, 36, 0.03);
-                    --g-edge: rgba(251, 191, 36, 0.2);
-                    --g-base: rgba(99, 102, 241, 0.15);
-                    --g-base-min: rgba(99, 102, 241, 0.05);
+                    --g-col: rgba(56, 189, 248, 0.03);
+                    --g-edge: rgba(56, 189, 248, 0.2);
+                    --g-base: rgba(14, 165, 233, 0.15);
+                    --g-base-min: rgba(14, 165, 233, 0.05);
 
                     background-color: var(--paper);
                     color: var(--ink);
@@ -432,14 +432,14 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
                 }
 
                 .muller-grid-root .pill-card {
-                    border: 1px solid rgba(255, 255, 255, 0.08);
-                    background: rgba(255, 255, 255, 0.01);
+                    border: 1px solid rgba(56, 189, 248, 0.15);
+                    background: rgba(11, 19, 43, 0.8);
                     padding: 24px;
                     transition: all 0.2s ease;
                 }
                 .muller-grid-root .pill-card:hover {
                     border-color: var(--accent);
-                    background: rgba(251, 191, 36, 0.02);
+                    background: rgba(56, 189, 248, 0.05);
                 }
 
                 @media (max-width: 992px) {
@@ -470,7 +470,7 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
             <AuthPromptModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
             
             {/* Header */}
-            <header className="fixed top-0 left-0 right-0 bg-[#0a0f1d]/90 backdrop-blur-md z-50 border-b border-slate-800 transition-all duration-300">
+            <header className="fixed top-0 left-0 right-0 bg-[#060b19]/90 backdrop-blur-md z-50 border-b border-sky-900/30 transition-all duration-300">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         <button 
@@ -483,39 +483,40 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
                             </svg>
                         </button>
                         <div 
-                            className="flex items-center cursor-pointer shrink-0" 
+                            className="flex items-center cursor-pointer shrink-0 gap-3" 
                             onClick={() => navigate('/welcome')}
                         >
-                            <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-8 w-auto object-contain" />
+                            <img src="/assets/code-for-tomorrow-logo.png" alt="Code for Tomorrow" className="w-8 h-8 object-contain" />
+                            <span className="font-extrabold text-lg text-white">Code for Tomorrow</span>
                         </div>
                     </div>
 
                     <nav className={`hidden lg:flex items-center gap-6 ${isRtl ? 'flex-row-reverse' : ''}`}>
-                        <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+                        <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-white hover:text-sky-400 transition-colors text-xs font-bold uppercase tracking-wider">
                             Academy
                         </a>
                         <div className="w-[1px] h-3 bg-slate-800 self-center" />
-                        <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+                        <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-white hover:text-sky-400 transition-colors text-xs font-bold uppercase tracking-wider">
                             Open Source
                         </a>
                         <div className="w-[1px] h-3 bg-slate-800 self-center" />
-                        <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+                        <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-sky-400 transition-colors text-xs font-bold uppercase tracking-wider">
                             Docs & Blog
                         </a>
                         <div className="w-[1px] h-3 bg-slate-800 self-center" />
-                        <a href="/about" className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+                        <a href="/about" className="text-white hover:text-sky-400 transition-colors text-xs font-bold uppercase tracking-wider">
                             About
                         </a>
                     </nav>
 
                     <div className="hidden md:flex items-center">
-                        <button onClick={onGetStarted} className="bg-[#FBBF24] text-[#111827] font-bold text-xs uppercase tracking-wider px-6 py-3 rounded hover:bg-[#f59e0b] transition-all flex items-center gap-2 active:scale-95 shadow-md shadow-[#FBBF24]/20">
+                        <button onClick={onGetStarted} className="bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 text-white font-bold text-xs uppercase tracking-wider px-6 py-2.5 rounded-full hover:brightness-110 transition-all flex items-center gap-2 active:scale-95 shadow-lg shadow-sky-500/25 cursor-pointer">
                             Launch Ecosystem
                         </button>
                     </div>
 
                     <div className="flex lg:hidden items-center">
-                        <button className="p-1 text-white hover:text-[#FBBF24] bg-transparent border-none cursor-pointer" onClick={() => setIsMenuOpen(true)}>
+                        <button className="p-1 text-white hover:text-sky-400 bg-transparent border-none cursor-pointer" onClick={() => setIsMenuOpen(true)}>
                             <Menu className="w-6 h-6" />
                         </button>
                     </div>
@@ -524,16 +525,16 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
 
             {/* Mobile Menu */}
             {isMenuOpen && (
-                <div className="fixed inset-0 bg-[#111827]/95 z-50 md:hidden flex flex-col p-8">
-                    <button onClick={() => setIsMenuOpen(false)} className="absolute top-6 right-6 p-1 text-white hover:text-[#FBBF24] bg-transparent border-none cursor-pointer">
+                <div className="fixed inset-0 bg-[#060b19]/95 z-50 md:hidden flex flex-col p-8">
+                    <button onClick={() => setIsMenuOpen(false)} className="absolute top-6 right-6 p-1 text-white hover:text-sky-400 bg-transparent border-none cursor-pointer">
                         <X className="w-8 h-8" />
                     </button>
                     <nav className="flex flex-col space-y-6 mt-16 text-center">
-                        <a href={getPlatformHref('academy', '/dashboard')} className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">Academy</a>
-                        <a href={getPlatformHref('os', '/cftos')} className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">Open Source</a>
-                        <a href={getPlatformHref('docs', '/blog')} className="text-xl font-black uppercase text-[#FBBF24]">Docs & Blog</a>
-                        <a href="/about" className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">About</a>
-                        <button onClick={onGetStarted} className="mt-8 bg-[#FBBF24] text-[#111827] font-bold px-8 py-4 rounded text-lg hover:bg-[#f59e0b]">
+                        <a href={getPlatformHref('academy', '/dashboard')} className="text-xl font-black uppercase text-white hover:text-sky-400">Academy</a>
+                        <a href={getPlatformHref('os', '/cftos')} className="text-xl font-black uppercase text-white hover:text-sky-400">Open Source</a>
+                        <a href={getPlatformHref('docs', '/blog')} className="text-xl font-black uppercase text-sky-400">Docs & Blog</a>
+                        <a href="/about" className="text-xl font-black uppercase text-white hover:text-sky-400">About</a>
+                        <button onClick={onGetStarted} className="mt-8 bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 text-white font-bold px-8 py-4 rounded-full text-lg hover:brightness-110 shadow-lg shadow-sky-500/25">
                             Launch Ecosystem
                         </button>
                     </nav>
@@ -549,13 +550,13 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
                             <div style={{ gridColumn: '1 / 13' }}>
                                 <button 
                                     onClick={() => navigate(-1)} 
-                                    className="flex items-center gap-2 text-slate-450 hover:text-[#FBBF24] font-bold mb-8 transition-colors text-xs uppercase tracking-wider bg-transparent border-none cursor-pointer"
+                                    className="flex items-center gap-2 text-slate-400 hover:text-sky-400 font-bold mb-8 transition-colors text-xs uppercase tracking-wider bg-transparent border-none cursor-pointer"
                                 >
                                     <ArrowLeft className="w-4 h-4" /> Back
                                 </button>
                                 <span className="mono-label opt-align">CFT PUBLICATION</span>
                                 <h1 className="masthead opt-align mt-2">Our Blog</h1>
-                                <p className="text-slate-400 text-base font-semibold mt-4 max-w-2xl leading-relaxed">
+                                <p className="text-slate-300 text-base font-semibold mt-4 max-w-2xl leading-relaxed">
                                     News, updates, and educational insights from the Code for Tomorrow team.
                                 </p>
                             </div>
@@ -583,16 +584,16 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
                                         key={post.id} 
                                         onClick={() => navigate(`/blog/${getPostSlug(post)}`)}
                                         style={{ gridColumn: colSpan }}
-                                        className="pill-card rounded-[2rem] overflow-hidden group flex flex-col cursor-pointer"
+                                        className="pill-card rounded-[2rem] overflow-hidden group flex flex-col cursor-pointer hover:shadow-2xl hover:shadow-sky-500/10"
                                     >
-                                        <div className="relative h-48 overflow-hidden bg-slate-900 border-b border-slate-800">
+                                        <div className="relative h-48 overflow-hidden bg-[#0b132b] border-b border-slate-800">
                                             <img 
                                                 src={post.image} 
                                                 alt={post.title} 
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                             />
                                             <div className="absolute top-4 left-4 flex gap-2">
-                                                <div className="bg-[#0a0f1d]/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-[#FBBF24] border border-[#FBBF24]/30 shadow-sm">
+                                                <div className="bg-[#060b19]/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-sky-400 border border-sky-400/30 shadow-sm">
                                                     {post.category}
                                                 </div>
                                             </div>
@@ -600,36 +601,36 @@ export default function BlogScreen({ currentUser, updateUser }: BlogScreenProps)
                                                 <button
                                                     onClick={(e) => handleShareBlogPost(e, post)}
                                                     title="Share / Copy Link"
-                                                    className="p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm border bg-[#0a0f1d]/95 border-slate-800 text-slate-400 hover:text-[#FBBF24] hover:border-[#FBBF24] cursor-pointer"
+                                                    className="p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm border bg-[#060b19]/95 border-slate-800 text-slate-400 hover:text-sky-400 hover:border-sky-400 cursor-pointer"
                                                 >
                                                     {copiedBlogPostId === post.id ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4" />}
                                                 </button>
                                                 <button
                                                     onClick={(e) => handleSavePost(e, post.id)}
                                                     title="Save Article"
-                                                    className={`p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm border ${currentUser?.savedPosts?.includes(post.id) ? 'bg-[#FBBF24] border-[#FBBF24] text-slate-950' : 'bg-[#0a0f1d]/95 border-slate-800 text-slate-400 hover:text-[#FBBF24]'}`}
+                                                    className={`p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm border ${currentUser?.savedPosts?.includes(post.id) ? 'bg-gradient-to-r from-blue-600 to-sky-500 border-sky-400 text-white' : 'bg-[#060b19]/95 border-slate-800 text-slate-400 hover:text-sky-400'}`}
                                                 >
                                                     <Bookmark className={`w-4 h-4 ${currentUser?.savedPosts?.includes(post.id) ? 'fill-current' : ''}`} />
                                                 </button>
                                             </div>
                                         </div>
                                         <div className="pt-6 flex flex-col flex-1">
-                                            <h2 className="text-xl font-bold text-white mb-3 line-clamp-2 transition-colors group-hover:text-[#FBBF24]">
+                                            <h2 className="text-xl font-bold text-white mb-3 line-clamp-2 transition-colors group-hover:text-sky-400">
                                                 {post.title}
                                             </h2>
-                                            <p className="text-slate-400 text-sm mb-6 line-clamp-3 leading-relaxed font-semibold flex-1">
+                                            <p className="text-slate-300 text-sm mb-6 line-clamp-3 leading-relaxed font-semibold flex-1">
                                                 {post.excerpt}
                                             </p>
                                             <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-800">
                                                 <div className="flex flex-col gap-1">
-                                                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
-                                                        <User className="w-3.5 h-3.5" /> {post.author}
+                                                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400">
+                                                        <User className="w-3.5 h-3.5 text-sky-400" /> {post.author}
                                                     </div>
-                                                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-semibold">
+                                                    <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-semibold">
                                                         <Calendar className="w-3.5 h-3.5" /> {post.date}
                                                     </div>
                                                 </div>
-                                                <button className="w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center group-hover:bg-[#FBBF24] group-hover:text-slate-950 transition-colors border-none cursor-pointer">
+                                                <button className="w-10 h-10 rounded-full bg-[#0b132b] text-slate-300 flex items-center justify-center group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-sky-400 group-hover:text-white transition-colors border border-sky-500/20 cursor-pointer">
                                                     <ChevronRight className="w-5 h-5" />
                                                 </button>
                                             </div>

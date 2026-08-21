@@ -366,15 +366,15 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
           --pad: 96px;
           --maxw: 1296px;
           
-          --paper: #0a0f1d;
+          --paper: #060b19;
           --ink: #ffffff;
           --ink-soft: #94a3b8;
-          --accent: #FBBF24;
+          --accent: #38bdf8;
           
-          --g-col: rgba(251, 191, 36, 0.03);
-          --g-edge: rgba(251, 191, 36, 0.2);
-          --g-base: rgba(99, 102, 241, 0.15);
-          --g-base-min: rgba(99, 102, 241, 0.05);
+          --g-col: rgba(56, 189, 248, 0.03);
+          --g-edge: rgba(56, 189, 248, 0.2);
+          --g-base: rgba(14, 165, 233, 0.15);
+          --g-base-min: rgba(14, 165, 233, 0.05);
           
           background-color: var(--paper);
           color: var(--ink);
@@ -409,7 +409,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
         .muller-grid-root .spread {
           position: relative;
           width: 100%;
-          border-bottom: 1px solid rgba(17, 19, 21, 0.08);
+          border-bottom: 1px solid rgba(56, 189, 248, 0.08);
         }
 
         .muller-grid-root .wrap {
@@ -538,7 +538,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
 
         body.grid-on .grid-sizzle-toggle {
           background: var(--accent);
-          color: #111827;
+          color: #060b19;
           border-color: var(--accent);
         }
 
@@ -551,7 +551,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
         }
 
         body.grid-on .grid-sizzle-toggle .dot {
-          background: #111827;
+          background: #060b19;
         }
 
         /* Typography & Layout snapping */
@@ -623,58 +623,59 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
         .muller-grid-root .hr-grid {
           grid-column: 1 / -1;
           height: 1px;
-          background: rgba(255, 255, 255, 0.12);
+          background: rgba(56, 189, 248, 0.12);
           margin: 0;
           border: none;
         }
 
         /* Tabs & interactive cards */
         .muller-grid-root .pill-card {
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          background: rgba(255, 255, 255, 0.01);
+          border: 1px solid rgba(56, 189, 248, 0.15);
+          background: rgba(11, 19, 43, 0.8);
           padding: 24px;
           transition: all 0.2s ease;
         }
         .muller-grid-root .pill-card:hover {
           border-color: var(--accent);
-          background: rgba(251, 191, 36, 0.02);
+          background: rgba(56, 189, 248, 0.05);
         }
       `}</style>
 
       {/* 1. Floating Header (grotesque alignment) */}
       {!isDashboard && (
-        <header className="fixed top-0 left-0 right-0 bg-[#0a0f1d]/90 backdrop-blur-md z-50 border-b border-slate-800 transition-all duration-300">
+        <header className="fixed top-0 left-0 right-0 bg-[#060b19]/90 backdrop-blur-md z-50 border-b border-sky-900/30 transition-all duration-300">
           <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div className="flex items-center cursor-pointer shrink-0" onClick={() => navigate('/')}>
-              <img src="/assets/images/logo.png" alt="Code for Tomorrow" className="h-8 w-auto object-contain" />
+            <div className="flex items-center cursor-pointer shrink-0 gap-3" onClick={() => navigate('/')}>
+              <img src="/assets/code-for-tomorrow-logo.png" alt="Code for Tomorrow" className="w-8 h-8 object-contain" />
+              <span className="font-extrabold text-lg text-white">Code for Tomorrow</span>
             </div>
 
             <nav className={`hidden lg:flex items-center gap-6 ${isRtl ? 'flex-row-reverse' : ''}`}>
-              <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+              <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-white hover:text-sky-400 transition-colors text-xs font-bold uppercase tracking-wider">
                 Academy
               </a>
-              <div className="w-[1px] h-3 bg-slate-350 self-center" />
-              <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+              <div className="w-[1px] h-3 bg-slate-800 self-center" />
+              <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-white hover:text-sky-400 transition-colors text-xs font-bold uppercase tracking-wider">
                 Open Source
               </a>
-              <div className="w-[1px] h-3 bg-slate-350 self-center" />
-              <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-white hover:text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+              <div className="w-[1px] h-3 bg-slate-800 self-center" />
+              <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-white hover:text-sky-400 transition-colors text-xs font-bold uppercase tracking-wider">
                 Docs & Blog
               </a>
-              <div className="w-[1px] h-3 bg-slate-350 self-center" />
-              <a href="/about" className="text-[#FBBF24] transition-colors text-xs font-bold uppercase tracking-wider">
+              <div className="w-[1px] h-3 bg-slate-800 self-center" />
+              <a href="/about" className="text-sky-400 transition-colors text-xs font-bold uppercase tracking-wider">
                 About
               </a>
             </nav>
 
             <div className="hidden md:flex items-center">
-              <button onClick={onGetStarted} className="bg-[#FBBF24] text-[#111827] font-bold text-xs uppercase tracking-wider px-6 py-3 rounded hover:bg-[#f59e0b] transition-all flex items-center gap-2 active:scale-95 shadow-md shadow-[#FBBF24]/20">
+              <button onClick={onGetStarted} className="bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 text-white font-bold text-xs uppercase tracking-wider px-6 py-2.5 rounded-full hover:brightness-110 transition-all flex items-center gap-2 active:scale-95 shadow-lg shadow-sky-500/25 cursor-pointer">
                 Launch Ecosystem
               </button>
             </div>
 
             <div className="flex md:hidden items-center">
-              <button className="p-1 text-white hover:text-[#FBBF24]" onClick={() => setIsMenuOpen(true)}>
+              <button className="p-1 text-white hover:text-sky-400" onClick={() => setIsMenuOpen(true)}>
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
               </button>
             </div>
@@ -684,16 +685,16 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
 
       {/* Mobile Menu */}
       {!isDashboard && isMenuOpen && (
-        <div className="fixed inset-0 bg-[#111827]/95 z-50 md:hidden flex flex-col p-8">
-          <button onClick={() => setIsMenuOpen(false)} className="absolute top-6 right-6 p-1 text-white hover:text-[#FBBF24]">
+        <div className="fixed inset-0 bg-[#060b19]/95 z-50 md:hidden flex flex-col p-8">
+          <button onClick={() => setIsMenuOpen(false)} className="absolute top-6 right-6 p-1 text-white hover:text-sky-400">
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
           <nav className="flex flex-col space-y-6 mt-16 text-center">
-            <a href={getPlatformHref('academy', '/dashboard')} className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">Academy</a>
-            <a href={getPlatformHref('os', '/cftos')} className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">Open Source</a>
-            <a href={getPlatformHref('docs', '/blog')} className="text-xl font-black uppercase text-white hover:text-[#FBBF24]">Docs & Blog</a>
-            <a href="/about" className="text-xl font-black uppercase text-[#FBBF24]">About</a>
-            <button onClick={onGetStarted} className="mt-8 bg-[#FBBF24] text-[#111827] font-bold px-8 py-4 rounded text-lg hover:bg-[#f59e0b]">
+            <a href={getPlatformHref('academy', '/dashboard')} className="text-xl font-black uppercase text-white hover:text-sky-400">Academy</a>
+            <a href={getPlatformHref('os', '/cftos')} className="text-xl font-black uppercase text-white hover:text-sky-400">Open Source</a>
+            <a href={getPlatformHref('docs', '/blog')} className="text-xl font-black uppercase text-white hover:text-sky-400">Docs & Blog</a>
+            <a href="/about" className="text-xl font-black uppercase text-sky-400">About</a>
+            <button onClick={onGetStarted} className="mt-8 bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 text-white font-bold px-8 py-4 rounded-full text-lg hover:brightness-110 shadow-lg shadow-sky-500/25">
               Launch Ecosystem
             </button>
           </nav>
@@ -723,7 +724,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
                 {tContent.tagline}
               </p>
               <div style={{ gridColumn: '8 / 13' }} className="flex justify-center items-center">
-                <img src="/assets/images/logo.png" alt="Logo" className="h-12 w-auto opacity-75" />
+                <img src="/assets/code-for-tomorrow-logo.png" alt="Logo" className="h-16 w-auto object-contain opacity-85 drop-shadow-md" />
               </div>
             </div>
           </div>
@@ -742,7 +743,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
             
             <div className="band mt-8">
               <div style={{ gridColumn: '1 / 6' }} className="pill-card">
-                <div className="w-8 h-8 flex items-center justify-center text-[#FBBF24] mb-4">
+                <div className="w-8 h-8 flex items-center justify-center text-sky-400 mb-4">
                   <Target className="w-5 h-5" />
                 </div>
                 <h3 className="text-lg font-black uppercase text-white mb-3">{tContent.our_mission}</h3>
@@ -750,7 +751,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
               </div>
 
               <div style={{ gridColumn: '7 / 12' }} className="pill-card">
-                <div className="w-8 h-8 flex items-center justify-center text-[#FBBF24] mb-4">
+                <div className="w-8 h-8 flex items-center justify-center text-sky-400 mb-4">
                   <Eye className="w-5 h-5" />
                 </div>
                 <h3 className="text-lg font-black uppercase text-white mb-3">{tContent.our_vision}</h3>
@@ -773,19 +774,19 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
 
             <div className="band mt-8">
               <div style={{ gridColumn: '1 / 5' }} className="pill-card">
-                <div className="w-8 h-8 text-[#FBBF24] mb-4"><GraduationCap className="w-5 h-5" /></div>
+                <div className="w-8 h-8 text-sky-400 mb-4"><GraduationCap className="w-5 h-5" /></div>
                 <h4 className="text-base font-black uppercase text-white mb-2">{tContent.pillar_students_title}</h4>
                 <p className="body-text">{tContent.pillar_students_desc}</p>
               </div>
 
               <div style={{ gridColumn: '5 / 9' }} className="pill-card">
-                <div className="w-8 h-8 text-[#FBBF24] mb-4"><Users className="w-5 h-5" /></div>
+                <div className="w-8 h-8 text-sky-400 mb-4"><Users className="w-5 h-5" /></div>
                 <h4 className="text-base font-black uppercase text-white mb-2">{tContent.pillar_teachers_title}</h4>
                 <p className="body-text">{tContent.pillar_teachers_desc}</p>
               </div>
 
               <div style={{ gridColumn: '9 / 13' }} className="pill-card">
-                <div className="w-8 h-8 text-[#FBBF24] mb-4"><Network className="w-5 h-5" /></div>
+                <div className="w-8 h-8 text-sky-400 mb-4"><Network className="w-5 h-5" /></div>
                 <h4 className="text-base font-black uppercase text-white mb-2">{tContent.pillar_community_title}</h4>
                 <p className="body-text">{tContent.pillar_community_desc}</p>
               </div>
@@ -802,15 +803,15 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
               </div>
 
               <div style={{ gridColumn: '6 / 13' }} className="pill-card">
-                <div className="flex gap-2 mb-6 border-b border-slate-200 pb-3 justify-start">
+                <div className="flex gap-2 mb-6 border-b border-slate-800 pb-3 justify-start">
                   {[4, 5, 9, 10].map((num) => (
                     <button
                       key={num}
                       onClick={() => setActiveSdg(num)}
                       className={`px-3 py-1.5 rounded text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
                         activeSdg === num
-                          ? 'bg-[#FBBF24] text-slate-950'
-                          : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+                          ? 'bg-gradient-to-r from-blue-600 to-sky-500 text-white'
+                          : 'bg-[#060b19] text-slate-400 hover:text-slate-200 border border-slate-800'
                       }`}
                     >
                       SDG {num}
@@ -878,16 +879,16 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
             <div className="band mt-8">
               <div style={{ gridColumn: '1 / 7' }}>
                 <h3 className="text-xl font-black uppercase text-white mb-4 flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-[#FBBF24]" />
+                  <MapPin className="w-5 h-5 text-sky-400" />
                   {tContent.moroccan_context_title}
                 </h3>
                 <p className="body-text mb-4">{tContent.moroccan_context_desc1}</p>
                 <p className="body-text">{tContent.moroccan_context_desc2}</p>
               </div>
 
-              <div style={{ gridColumn: '8 / 13' }} className="pill-card border-l-4 border-l-[#FBBF24]">
+              <div style={{ gridColumn: '8 / 13' }} className="pill-card border-l-4 border-l-sky-400">
                 <h3 className="text-base font-black uppercase text-white mb-3 flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-[#FBBF24]" />
+                  <Zap className="w-4 h-4 text-sky-400" />
                   {tContent.offline_tech_title}
                 </h3>
                 <p className="body-text">{tContent.offline_tech_desc}</p>
@@ -920,7 +921,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
                 { title: tContent.meth_3_title, desc: tContent.meth_3_desc, span: '9 / 13', icon: Target }
               ].map((m, i) => (
                 <div key={i} style={{ gridColumn: m.span }} className="pill-card">
-                  <div className="w-8 h-8 rounded bg-slate-800/40 flex items-center justify-center text-[#FBBF24] mb-4">
+                  <div className="w-8 h-8 rounded bg-[#060b19] border border-sky-500/20 flex items-center justify-center text-sky-400 mb-4">
                     <m.icon className="w-5 h-5" />
                   </div>
                   <h3 className="text-base font-black text-white mb-2">{m.title}</h3>
@@ -954,14 +955,14 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
                   key={idx}
                   style={{ gridColumn: img.span }}
                   onClick={() => setSelectedPhotoIndex(idx)}
-                  className="relative aspect-[4/3] rounded overflow-hidden border border-slate-200 shadow-md group cursor-pointer"
+                  className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-sky-500/20 shadow-md group cursor-pointer"
                 >
                   <img 
                     src={img.src} 
                     alt={img.alt} 
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
                   />
-                  <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                  <div className="absolute inset-0 bg-[#060b19]/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <span className="text-[10px] font-bold text-white tracking-wide uppercase">{img.alt}</span>
                   </div>
                 </div>
@@ -982,7 +983,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
                 onClick={() => {
                   window.location.href = isDashboard ? '/dashboard' : '/';
                 }}
-                className="bg-[#FBBF24] text-slate-950 font-black text-xs uppercase tracking-wider px-8 py-3 rounded hover:bg-[#f59e0b] active:scale-95 transition-all shadow-md flex items-center gap-2 mx-auto cursor-pointer"
+                className="bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 text-white font-black text-xs uppercase tracking-wider px-8 py-3.5 rounded-full hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-sky-500/25 flex items-center gap-2 mx-auto cursor-pointer"
               >
                 {isRtl ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
                 {tContent.back_button}

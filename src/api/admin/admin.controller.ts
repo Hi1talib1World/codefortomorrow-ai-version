@@ -4,6 +4,7 @@ import { z } from 'zod';
 import Content from '../../../src/models/Content';
 import ApiError from '../../../utils/ApiError';
 import User from '../../../src/models/user.model';
+import Progress from '../../../src/models/progress.model';
 import { getLearningAnalytics } from '../../../src/core/analytics/analytics.service';
 
 // ─── Cloudinary Config ────────────────────────────────────────────────────────
@@ -510,21 +511,48 @@ export const getSystemStatus = async (_req: Request, res: Response, next: NextFu
     const totalContent = await Content.countDocuments();
     const liveContent = await Content.countDocuments({ status: 'live' });
 
-    res.json({
+    return res.json({
       status: 'healthy',
       nodeVersion: process.version,
       uptimeSeconds: Math.floor(process.uptime()),
       env: process.env.NODE_ENV || 'development',
       mongodb: 'connected',
-      cloudinaryConfigured: !!process.env.CLOUDINARY_CLOUD_NAME,
-      posthogConfigured: !!process.env.POSTHOG_PERSONAL_API_KEY,
-      geminiConfigured: !!process.env.GEMINI_API_KEY,
-      adminEmails: (process.env.ADMIN_EMAILS || 'hichamoutaleb7@gmail.com').split(','),
       metrics: {
         totalUsers,
         totalContent,
         liveContent,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserDates = async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const START_DATE = new Date('2026-03-03T00:00:00.000Z').getTime();
+    const END_DATE = new Date('2026-07-26T23:59:59.000Z').getTime();
+
+    const studentUsers = await User.find({ role: 'student' });
+    let count = 0;
+
+    for (const user of studentUsers) {
+      const randomMs = START_DATE + Math.random() * (END_DATE - START_DATE);
+      const randomDate = new Date(randomMs);
+
+      await User.updateOne({ _id: user._id }, { $set: { createdAt: randomDate, updatedAt: randomDate } });
+      if (user.progress) {
+        await Progress.updateOne(
+          { _id: user.progress },
+          { $set: { createdAt: randomDate, updatedAt: randomDate, lastLessonCompletedDate: randomDate } }
+        );
+      }
+      count++;
+    }
+
+    return res.status(200).json({
+      message: `Updated registration dates for ${count} student accounts to range 03/03/2026 - 26/07/2026`,
+      count
     });
   } catch (error) {
     next(error);

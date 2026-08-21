@@ -6,7 +6,7 @@ const CurriculumToolInput = z.object({
   action: z.enum(['get_by_subject', 'create_patch', 'validate_objectives']),
   subject: z.string(),
   grade: z.string().optional(),
-  patchData: z.record(z.any()).optional()
+  patchData: z.record(z.string(), z.any()).optional()
 });
 
 const CurriculumToolOutput = z.object({

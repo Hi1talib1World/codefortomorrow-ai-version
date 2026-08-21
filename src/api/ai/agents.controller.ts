@@ -148,7 +148,7 @@ export const approveB2BLead = async (req: Request, res: Response) => {
     const leadId = req.params.id;
     const userId = (req as any).user?._id?.toString() || 'admin_user';
 
-    const lead = await B2BLead.findById(leadId);
+    const lead = await (B2BLead as any).findById(leadId);
     if (!lead) {
       return res.status(404).json({ message: 'Lead not found' });
     }
@@ -181,7 +181,6 @@ export const getExecutionsHistory = async (req: Request, res: Response) => {
     const limit = parseInt(req.query.limit as string) || 50;
     const executions = await AgentExecution.find().sort({ createdAt: -1 }).limit(limit);
 
-    // Calculate aggregated costs & metrics
     const totalCost = executions.reduce((sum, e) => sum + (e.estimatedCostUsd || 0), 0);
     const totalTokens = executions.reduce((sum, e) => sum + (e.totalTokens || 0), 0);
 

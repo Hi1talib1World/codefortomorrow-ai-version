@@ -467,6 +467,78 @@ const api = {
     return data;
   },
 
+  orchestrateTask: async (payload: { agentId?: string; taskIntent?: string; inputData: any }): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/agents/orchestrate`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Orchestration request failed.');
+    return data;
+  },
+
+  generateCurriculum: async (inputData: any): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/agents/curriculum/generate`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(inputData)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Curriculum generation failed.');
+    return data;
+  },
+
+  analyzeStudent: async (inputData: any): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/agents/analytics/analyze`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(inputData)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Student analytics analysis failed.');
+    return data;
+  },
+
+  processB2BLead: async (inputData: any): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/agents/b2b/leads`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(inputData)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'B2B Lead processing failed.');
+    return data;
+  },
+
+  getB2BLeads: async (): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/agents/b2b/leads`, {
+      headers: getAuthHeaders()
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to fetch B2B leads.');
+    return data;
+  },
+
+  approveB2BLead: async (leadId: string): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/agents/b2b/leads/${leadId}/approve`, {
+      method: 'POST',
+      headers: getAuthHeaders()
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to approve B2B lead.');
+    return data;
+  },
+
+  getAgentExecutionsHistory: async (): Promise<any> => {
+    const response = await customFetch(`${API_BASE_URL}/agents/executions`, {
+      headers: getAuthHeaders()
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to fetch agent executions history.');
+    return data;
+  },
+
   getStudentProgress: async (userId: string): Promise<any> => {
     const response = await customFetch(`${API_BASE_URL}/progress/${userId}`, {
       headers: getAuthHeaders(),

@@ -561,8 +561,13 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
           </button>
 
           {/* Logo */}
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveView && setActiveView('home')}>
-            <h1 className="text-2xl font-bold text-white dark:text-white leading-none tracking-tight">C4T</h1>
+          <div className="flex items-center gap-3 cursor-pointer group shrink-0" onClick={() => setActiveView && setActiveView('home')}>
+            <img 
+              src="/assets/code-for-tomorrow-logo.png" 
+              alt="Code for Tomorrow" 
+              className="w-[42px] h-[42px] object-contain block shrink-0 transition-transform group-hover:scale-105" 
+            />
+            <span className="text-xl font-extrabold text-white leading-none tracking-tight group-hover:text-sky-300 transition-colors">Code for Tomorrow</span>
           </div>
 
           {/* Explore Dropdown */}

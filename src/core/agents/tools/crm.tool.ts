@@ -50,7 +50,7 @@ export class CRMTool extends BaseTool<
       if (input.action === 'upsert_lead' && input.leadData) {
         let lead = null;
         if (input.leadData.contactEmail) {
-          lead = await B2BLead.findOne({ contactEmail: input.leadData.contactEmail });
+          lead = await (B2BLead as any).findOne({ contactEmail: input.leadData.contactEmail });
         }
 
         if (lead) {
@@ -78,7 +78,7 @@ export class CRMTool extends BaseTool<
       }
 
       if (input.action === 'save_outreach_draft' && input.leadId && input.outreachDraft) {
-        const lead = await B2BLead.findById(input.leadId);
+        const lead = await (B2BLead as any).findById(input.leadId);
         if (!lead) {
           return { success: false, message: 'Lead not found in CRM.' };
         }
@@ -112,7 +112,7 @@ export class CRMTool extends BaseTool<
       }
 
       if (input.action === 'approve_outreach' && input.leadId) {
-        const lead = await B2BLead.findById(input.leadId);
+        const lead = await (B2BLead as any).findById(input.leadId);
         if (!lead) {
           return { success: false, message: 'Lead not found.' };
         }

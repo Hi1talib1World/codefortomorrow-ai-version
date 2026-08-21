@@ -37,7 +37,6 @@ export class AIOrchestrator {
       return 'b2b_sales';
     }
 
-    // Default fallback
     return 'curriculum_factory';
   }
 
@@ -72,10 +71,8 @@ export class AIOrchestrator {
       userRole: request.userRole || 'guest'
     };
 
-    // Execute agent
     const result = await agent.execute(request.inputData, context);
 
-    // Persist Execution Record to MongoDB for Observability & Cost Tracking
     try {
       await AgentExecution.create({
         executionId: result.executionId,
@@ -89,7 +86,7 @@ export class AIOrchestrator {
         startedAt: new Date(result.startedAt),
         completedAt: new Date(result.completedAt),
         latencyMs: result.latencyMs,
-        model: 'gemini-2.5-flash',
+        aiModel: 'gemini-2.5-flash',
         inputTokens: result.tokensUsed.inputTokens,
         outputTokens: result.tokensUsed.outputTokens,
         totalTokens: result.tokensUsed.totalTokens,

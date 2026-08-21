@@ -167,13 +167,18 @@ export default function RadialOrbitalTimeline({
             transform: `translate(${centerOffset.x}px, ${centerOffset.y}px)`,
           }}
         >
-          <div className="absolute w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 animate-pulse flex items-center justify-center z-10">
-            <div className="absolute w-20 h-20 rounded-full border border-white/20 animate-ping opacity-70"></div>
+          {/* Central Logo Node */}
+          <div className="absolute w-20 h-20 flex items-center justify-center z-10">
+            <div className="absolute w-24 h-24 rounded-full border border-sky-400/30 animate-ping opacity-70 pointer-events-none"></div>
             <div
-              className="absolute w-24 h-24 rounded-full border border-white/10 animate-ping opacity-50"
+              className="absolute w-28 h-28 rounded-full border border-cyan-400/20 animate-ping opacity-50 pointer-events-none"
               style={{ animationDelay: "0.5s" }}
             ></div>
-            <div className="w-8 h-8 rounded-full bg-white/80 backdrop-blur-md"></div>
+            <img
+              src="/assets/code-for-tomorrow-logo.png"
+              alt="Code for Tomorrow Core"
+              className="w-16 h-16 object-contain drop-shadow-[0_0_20px_rgba(56,189,248,0.6)] animate-pulse animate-[spin_12s_linear_infinite]"
+            />
           </div>
 
           <div className="absolute w-96 h-96 rounded-full border border-white/10"></div>

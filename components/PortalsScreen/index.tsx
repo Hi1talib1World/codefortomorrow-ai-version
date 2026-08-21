@@ -74,8 +74,8 @@ export default function PortalsScreen() {
       route: '/dashboard',
       colSpan: '1 / 5',
       icon: (
-        <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center p-2 shadow-inner">
-          <img src="/assets/images/logo.png" alt="CFT Academy" className="w-full h-full object-contain" />
+        <div className="w-12 h-12 rounded-xl bg-[#0b132b] border border-sky-500/20 flex items-center justify-center p-2 shadow-inner">
+          <img src="/assets/code-for-tomorrow-logo.png" alt="CFT Academy" className="w-full h-full object-contain" />
         </div>
       )
     },
@@ -89,8 +89,8 @@ export default function PortalsScreen() {
       route: '/cftos',
       colSpan: '5 / 9',
       icon: (
-        <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center p-1.5 shadow-inner relative overflow-hidden">
-          <span className="text-[10px] font-black text-[#FBBF24] font-mono tracking-tighter">CFTOS</span>
+        <div className="w-12 h-12 rounded-xl bg-[#0b132b] border border-sky-500/20 flex items-center justify-center p-1.5 shadow-inner relative overflow-hidden">
+          <span className="text-[10px] font-black text-sky-400 font-mono tracking-tighter">CFTOS</span>
         </div>
       )
     },
@@ -104,7 +104,7 @@ export default function PortalsScreen() {
       route: '/blog',
       colSpan: '9 / 13',
       icon: (
-        <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-[#FBBF24] shadow-inner">
+        <div className="w-12 h-12 rounded-xl bg-[#0b132b] border border-sky-500/20 flex items-center justify-center text-sky-400 shadow-inner">
           <Terminal className="w-5 h-5" />
         </div>
       )
@@ -127,7 +127,7 @@ export default function PortalsScreen() {
   );
 
   return (
-    <div className="min-h-screen bg-[#0a0f1d] text-white flex flex-col font-sans relative overflow-hidden selection:bg-[#FBBF24]/30 selection:text-white muller-grid-root">
+    <div className="min-h-screen bg-[#060b19] text-white flex flex-col font-sans relative overflow-hidden selection:bg-sky-500/30 selection:text-white muller-grid-root">
       <style>{`
         .muller-grid-root {
           --cols: 12;
@@ -138,15 +138,15 @@ export default function PortalsScreen() {
           --pad: 96px;
           --maxw: 1296px;
           
-          --paper: #0a0f1d;
+          --paper: #060b19;
           --ink: #ffffff;
           --ink-soft: #94a3b8;
-          --accent: #FBBF24;
+          --accent: #38bdf8;
           
-          --g-col: rgba(251, 191, 36, 0.03);
-          --g-edge: rgba(251, 191, 36, 0.2);
-          --g-base: rgba(99, 102, 241, 0.15);
-          --g-base-min: rgba(99, 102, 241, 0.05);
+          --g-col: rgba(56, 189, 248, 0.03);
+          --g-edge: rgba(56, 189, 248, 0.2);
+          --g-base: rgba(14, 165, 233, 0.15);
+          --g-base-min: rgba(14, 165, 233, 0.05);
 
           background-color: var(--paper);
           color: var(--ink);
@@ -277,14 +277,14 @@ export default function PortalsScreen() {
         }
 
         .muller-grid-root .pill-card {
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          background: rgba(255, 255, 255, 0.01);
+          border: 1px solid rgba(56, 189, 248, 0.15);
+          background: rgba(11, 19, 43, 0.8);
           padding: 32px;
           transition: all 0.2s ease;
         }
         .muller-grid-root .pill-card:hover {
           border-color: var(--accent);
-          background: rgba(251, 191, 36, 0.02);
+          background: rgba(56, 189, 248, 0.05);
         }
 
         @media (max-width: 992px) {
@@ -312,14 +312,19 @@ export default function PortalsScreen() {
         }
       `}</style>
 
+      {/* Ambient Orbs */}
+      <div className="absolute top-1/4 left-1/4 w-[450px] h-[450px] bg-blue-600/15 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-cyan-400/10 rounded-full blur-[120px] pointer-events-none" />
+
       {/* Header */}
-      <header className="w-full max-w-[1296px] mx-auto px-[72px] h-20 flex items-center justify-between z-10 transition-all duration-300">
-        <div className="flex items-center gap-2">
+      <header className="w-full max-w-[1296px] mx-auto px-[72px] h-20 flex items-center justify-between z-10 transition-all duration-300 border-b border-sky-900/20">
+        <div className="flex items-center gap-3">
+          <img src="/assets/code-for-tomorrow-logo.png" alt="Code for Tomorrow" className="w-7 h-7 object-contain" />
           <span className="font-mono font-black text-lg tracking-wider text-white">C4T ECOSYSTEM</span>
         </div>
         <button 
           onClick={() => navigate(-1)} 
-          className="flex items-center gap-2 text-slate-400 hover:text-[#FBBF24] transition-colors bg-transparent border-none font-bold text-xs uppercase tracking-wider cursor-pointer"
+          className="flex items-center gap-2 text-slate-400 hover:text-sky-400 transition-colors bg-transparent border-none font-bold text-xs uppercase tracking-wider cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>{isAr ? 'العودة' : 'Back'}</span>
@@ -334,13 +339,13 @@ export default function PortalsScreen() {
             {/* Intro Text Block (columns 1 / 13) */}
             <div className="band mb-16">
               <div style={{ gridColumn: '1 / 13' }} className="space-y-4">
-                <div className="inline-flex items-center px-3 py-1 bg-[#FBBF24]/10 border border-[#FBBF24]/20 text-[#FBBF24] text-[10px] font-bold rounded uppercase tracking-wider mb-2">
+                <div className="inline-flex items-center px-3 py-1 bg-sky-500/10 border border-sky-500/30 text-sky-400 text-[10px] font-bold rounded uppercase tracking-wider mb-2">
                   <span>{isAr ? 'بوابات التعلم والتطوير' : 'Unified Workspace Portals'}</span>
                 </div>
                 <h1 className="masthead opt-align">
                   {isAr ? 'اختر وجهتك المفضلة' : 'Select Your Destination'}
                 </h1>
-                <p className="text-slate-400 text-base md:text-lg font-semibold max-w-2xl leading-relaxed">
+                <p className="text-slate-300 text-base md:text-lg font-semibold max-w-2xl leading-relaxed">
                   {isAr 
                     ? 'تنقل بسهولة بين أكاديمية التعلم والمنصة المفتوحة ومدونة المطورين لدينا.'
                     : 'Easily transition between our gamified learning portal, open-source AI playground, and engineering documentation.'}
@@ -355,27 +360,27 @@ export default function PortalsScreen() {
                   key={portal.id}
                   onClick={() => navigate(portal.route)}
                   style={{ gridColumn: portal.colSpan }}
-                  className="group pill-card rounded-[2rem] overflow-hidden transition-all duration-300 hover:shadow-2xl flex flex-col h-full cursor-pointer"
+                  className="group pill-card rounded-[2rem] overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-sky-500/10 flex flex-col h-full cursor-pointer"
                 >
                   <div className="flex flex-col h-full space-y-6">
                     <div className="flex items-center justify-between">
                       {portal.icon}
-                      <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1">
+                      <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1 group-hover:text-sky-400 group-hover:border-sky-500/30">
                         <ExternalLink className="w-4 h-4" />
                       </div>
                     </div>
 
                     <div className="space-y-3 flex-1">
-                      <h3 className="text-2xl font-bold tracking-tight text-white group-hover:text-[#FBBF24] transition-colors">
+                      <h3 className="text-2xl font-bold tracking-tight text-white group-hover:text-sky-400 transition-colors">
                         {portal.title}
                       </h3>
-                      <p className="text-slate-450 text-sm leading-relaxed font-semibold">
+                      <p className="text-slate-300 text-sm leading-relaxed font-semibold">
                         {portal.description}
                       </p>
                     </div>
 
-                    <div className="pt-4 border-t border-slate-800">
-                      <div className="w-full py-3.5 px-6 rounded-xl font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 bg-[#FBBF24] text-slate-950 hover:bg-[#f59e0b] transition-all">
+                    <div className="pt-4 border-t border-slate-800/80">
+                      <div className="w-full py-3.5 px-6 rounded-xl font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 text-white hover:brightness-110 transition-all shadow-lg shadow-sky-500/20">
                         <span>{portal.actionText}</span>
                         <span className="text-sm leading-none group-hover:translate-x-1 transition-transform">→</span>
                       </div>
@@ -391,7 +396,7 @@ export default function PortalsScreen() {
       </section>
 
       {/* Footer Info */}
-      <footer className="w-full py-8 text-center text-slate-650 text-xs font-mono border-t border-slate-850/50 z-10 max-w-[1296px] mx-auto px-[72px]">
+      <footer className="w-full py-8 text-center text-slate-400 text-xs font-mono border-t border-slate-800/50 z-10 max-w-[1296px] mx-auto px-[72px]">
         <p>© Code for Tomorrow. All platforms are seamlessly interconnected.</p>
       </footer>
     </div>

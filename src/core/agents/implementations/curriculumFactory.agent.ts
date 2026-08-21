@@ -85,7 +85,7 @@ export class CurriculumFactoryAgent
   public validateInput(input: CurriculumInput) {
     const result = CurriculumInputSchema.safeParse(input);
     if (!result.success) {
-      return { valid: false, errors: result.error.errors.map(e => `${e.path.join('.')}: ${e.message}`) };
+      return { valid: false, errors: result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`) };
     }
     return { valid: true };
   }
@@ -93,7 +93,7 @@ export class CurriculumFactoryAgent
   public validateOutput(output: CurriculumOutput) {
     const result = CurriculumOutputSchema.safeParse(output);
     if (!result.success) {
-      return { valid: false, errors: result.error.errors.map(e => `${e.path.join('.')}: ${e.message}`) };
+      return { valid: false, errors: result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`) };
     }
     return { valid: true };
   }

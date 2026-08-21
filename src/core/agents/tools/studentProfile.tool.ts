@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { BaseTool } from './tool.interface';
 import User from '../../../models/user.model';
-import StudentProgress from '../../../models/studentProgress.model';
 
 const StudentProfileInput = z.object({
   studentId: z.string().optional(),
@@ -15,7 +14,7 @@ const StudentProfileOutput = z.object({
   name: z.string(),
   xp: z.number(),
   streak: z.number(),
-  skillMastery: z.record(z.number()),
+  skillMastery: z.record(z.string(), z.number()),
   strengths: z.array(z.string()),
   weaknesses: z.array(z.string()),
   completedLessonsCount: z.number(),
@@ -45,7 +44,6 @@ export class StudentProfileTool extends BaseTool<
       if (input.studentId) query._id = input.studentId;
       else if (input.email) query.email = input.email;
       else {
-        // Fallback: get first active student
         query.role = 'student';
       }
 

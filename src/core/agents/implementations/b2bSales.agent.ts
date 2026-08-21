@@ -66,7 +66,7 @@ export class B2BSalesAgent
   public validateInput(input: B2BSalesInput) {
     const result = B2BSalesInputSchema.safeParse(input);
     if (!result.success) {
-      return { valid: false, errors: result.error.errors.map(e => `${e.path.join('.')}: ${e.message}`) };
+      return { valid: false, errors: result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`) };
     }
     return { valid: true };
   }
@@ -74,7 +74,7 @@ export class B2BSalesAgent
   public validateOutput(output: B2BSalesOutput) {
     const result = B2BSalesOutputSchema.safeParse(output);
     if (!result.success) {
-      return { valid: false, errors: result.error.errors.map(e => `${e.path.join('.')}: ${e.message}`) };
+      return { valid: false, errors: result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`) };
     }
     return { valid: true };
   }
@@ -111,7 +111,6 @@ export class B2BSalesAgent
     }
 
     try {
-      // 1. Save or update lead in database via CRMTool
       const crmTool = new CRMTool();
       const upsertResult = await crmTool.run({
         action: 'upsert_lead',
@@ -121,7 +120,6 @@ export class B2BSalesAgent
       const leadId = upsertResult.lead?._id?.toString() || 'lead_temp_id';
       addLog(`Upserted lead in CRM database (ID: ${leadId})...`);
 
-      // 2. Generate personalized outreach draft using AIProvider
       const prompt = `
 You are the B2B Sales Agent for Code for Tomorrow.
 Generate a professional partnership outreach draft for:
@@ -144,13 +142,11 @@ Produce a score (0-100), qualification notes, priority (low, medium, or high), a
         }
       );
 
-      // Force human approval safety guard
       aiResponse.content.lead_id = leadId;
       aiResponse.content.human_approval_required = true;
       aiResponse.content.status = 'outreach_drafted';
       aiResponse.content.next_action = 'Human Review & Approval Required';
 
-      // 3. Persist outreach draft in CRM
       await crmTool.run({
         action: 'save_outreach_draft',
         leadId: leadId,

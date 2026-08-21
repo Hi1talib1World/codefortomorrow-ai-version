@@ -2602,13 +2602,164 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
   ],
   ai_ml: [
     {
-      id: 'ai_ml_basics',
-      titleKey: 'ai_ml_basics_title',
+      id: 'ai_ml_quiz_expl_sec',
+      titleKey: 'ai_quiz_explication_sec_title',
       lessons: [
-        { id: 1, level: 1, titleKey: 'ai_intro', icon: 'brain', xp: 20, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'ai_chal_1', starterCode: 'print("Model trained: 98% accuracy")\n', solutionCode: 'print("Model trained: 98% accuracy")', expectedOutput: 'Model trained: 98% accuracy' },
-        { id: 1, level: 2, titleKey: 'ai_linear_regression', icon: 'brain', xp: 25, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'ai_chal_2', starterCode: 'x = 5\ny = 2 * x + 1\nprint(y)\n', solutionCode: 'x = 5\ny = 2 * x + 1\nprint(y)', expectedOutput: '11' },
-        { id: 1, level: 3, titleKey: 'ai_classification', icon: 'star', xp: 30, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'ai_chal_3', starterCode: '', solutionCode: '', expectedOutput: '' },
-        { id: 1, level: 4, titleKey: 'ai_bot_project', icon: 'trophy', xp: 60, color: '#047857', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'ai_chal_4', starterCode: 'print("Cat")\n', solutionCode: 'print("Cat")', expectedOutput: 'Cat' },
+        {
+          id: 1, level: 101, titleKey: 'ai_nn_quiz_title', icon: 'brain', xp: 35, color: '#059669', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'ai_nn_quiz_chal_desc',
+          explanationKey: 'ai_nn_quiz_explain',
+          objectivesKey: 'ai_nn_quiz_obj',
+          proTipKey: 'ai_nn_quiz_tip',
+          estimatedMinutes: 8,
+          difficulty: 'Intermediate',
+          tags: ['Neural Networks', 'Deep Learning', 'PyTorch'],
+          starterCode: '', solutionCode: '', expectedOutput: '',
+          questions: [
+            {
+              questionKey: 'ai_nn_q1_q',
+              optionKeys: ['ai_nn_q1_a', 'ai_nn_q1_b', 'ai_nn_q1_c', 'ai_nn_q1_d'],
+              correctIndex: 1,
+              feedbackKey: 'ai_nn_q1_fb'
+            },
+            {
+              questionKey: 'ai_nn_q2_q',
+              optionKeys: ['ai_nn_q2_a', 'ai_nn_q2_b', 'ai_nn_q2_c', 'ai_nn_q2_d'],
+              correctIndex: 2,
+              feedbackKey: 'ai_nn_q2_fb'
+            },
+            {
+              questionKey: 'ai_nn_q3_q',
+              optionKeys: ['ai_nn_q3_a', 'ai_nn_q3_b', 'ai_nn_q3_c', 'ai_nn_q3_d'],
+              correctIndex: 2,
+              feedbackKey: 'ai_nn_q3_fb'
+            }
+          ]
+        },
+        {
+          id: 1, level: 102, titleKey: 'ai_paradigms_quiz_title', icon: 'star', xp: 30, color: '#059669', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'ai_paradigms_quiz_chal_desc',
+          explanationKey: 'ai_paradigms_quiz_explain',
+          objectivesKey: 'ai_paradigms_quiz_obj',
+          proTipKey: 'ai_paradigms_quiz_tip',
+          estimatedMinutes: 6,
+          difficulty: 'Beginner',
+          tags: ['ML Fundamentals', 'Supervised Learning', 'RL'],
+          starterCode: '', solutionCode: '', expectedOutput: '',
+          questions: [
+            {
+              questionKey: 'ai_paradigms_q1_q',
+              optionKeys: ['ai_paradigms_q1_a', 'ai_paradigms_q1_b', 'ai_paradigms_q1_c', 'ai_paradigms_q1_d'],
+              correctIndex: 1,
+              feedbackKey: 'ai_paradigms_q1_fb'
+            },
+            {
+              questionKey: 'ai_paradigms_q2_q',
+              optionKeys: ['ai_paradigms_q2_a', 'ai_paradigms_q2_b', 'ai_paradigms_q2_c', 'ai_paradigms_q2_d'],
+              correctIndex: 2,
+              feedbackKey: 'ai_paradigms_q2_fb'
+            },
+            {
+              questionKey: 'ai_paradigms_q3_q',
+              optionKeys: ['ai_paradigms_q3_a', 'ai_paradigms_q3_b', 'ai_paradigms_q3_c', 'ai_paradigms_q3_d'],
+              correctIndex: 1,
+              feedbackKey: 'ai_paradigms_q3_fb'
+            }
+          ]
+        },
+        {
+          id: 1, level: 103, titleKey: 'ai_llms_quiz_title', icon: 'brain', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'ai_llms_quiz_chal_desc',
+          explanationKey: 'ai_llms_quiz_explain',
+          objectivesKey: 'ai_llms_quiz_obj',
+          proTipKey: 'ai_llms_quiz_tip',
+          estimatedMinutes: 10,
+          difficulty: 'Advanced',
+          tags: ['LLM', 'Transformers', 'Prompting', 'RAG'],
+          starterCode: '', solutionCode: '', expectedOutput: '',
+          questions: [
+            {
+              questionKey: 'ai_llms_q1_q',
+              optionKeys: ['ai_llms_q1_a', 'ai_llms_q1_b', 'ai_llms_q1_c', 'ai_llms_q1_d'],
+              correctIndex: 2,
+              feedbackKey: 'ai_llms_q1_fb'
+            },
+            {
+              questionKey: 'ai_llms_q2_q',
+              optionKeys: ['ai_llms_q2_a', 'ai_llms_q2_b', 'ai_llms_q2_c', 'ai_llms_q2_d'],
+              correctIndex: 1,
+              feedbackKey: 'ai_llms_q2_fb'
+            },
+            {
+              questionKey: 'ai_llms_q3_q',
+              optionKeys: ['ai_llms_q3_a', 'ai_llms_q3_b', 'ai_llms_q3_c', 'ai_llms_q3_d'],
+              correctIndex: 1,
+              feedbackKey: 'ai_llms_q3_fb'
+            }
+          ]
+        },
+        {
+          id: 1, level: 104, titleKey: 'ai_cv_quiz_title', icon: 'star', xp: 35, color: '#059669', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'ai_cv_quiz_chal_desc',
+          explanationKey: 'ai_cv_quiz_explain',
+          objectivesKey: 'ai_cv_quiz_obj',
+          proTipKey: 'ai_cv_quiz_tip',
+          estimatedMinutes: 8,
+          difficulty: 'Intermediate',
+          tags: ['Computer Vision', 'CNN', 'Image AI'],
+          starterCode: '', solutionCode: '', expectedOutput: '',
+          questions: [
+            {
+              questionKey: 'ai_cv_q1_q',
+              optionKeys: ['ai_cv_q1_a', 'ai_cv_q1_b', 'ai_cv_q1_c', 'ai_cv_q1_d'],
+              correctIndex: 1,
+              feedbackKey: 'ai_cv_q1_fb'
+            },
+            {
+              questionKey: 'ai_cv_q2_q',
+              optionKeys: ['ai_cv_q2_a', 'ai_cv_q2_b', 'ai_cv_q2_c', 'ai_cv_q2_d'],
+              correctIndex: 1,
+              feedbackKey: 'ai_cv_q2_fb'
+            },
+            {
+              questionKey: 'ai_cv_q3_q',
+              optionKeys: ['ai_cv_q3_a', 'ai_cv_q3_b', 'ai_cv_q3_c', 'ai_cv_q3_d'],
+              correctIndex: 1,
+              feedbackKey: 'ai_cv_q3_fb'
+            }
+          ]
+        },
+        {
+          id: 1, level: 105, titleKey: 'ai_ethics_quiz_title', icon: 'brain', xp: 30, color: '#059669', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: 'ai_ethics_quiz_chal_desc',
+          explanationKey: 'ai_ethics_quiz_explain',
+          objectivesKey: 'ai_ethics_quiz_obj',
+          proTipKey: 'ai_ethics_quiz_tip',
+          estimatedMinutes: 6,
+          difficulty: 'Beginner',
+          tags: ['AI Safety', 'Ethics', 'System Design'],
+          starterCode: '', solutionCode: '', expectedOutput: '',
+          questions: [
+            {
+              questionKey: 'ai_ethics_q1_q',
+              optionKeys: ['ai_ethics_q1_a', 'ai_ethics_q1_b', 'ai_ethics_q1_c', 'ai_ethics_q1_d'],
+              correctIndex: 1,
+              feedbackKey: 'ai_ethics_q1_fb'
+            },
+            {
+              questionKey: 'ai_ethics_q2_q',
+              optionKeys: ['ai_ethics_q2_a', 'ai_ethics_q2_b', 'ai_ethics_q2_c', 'ai_ethics_q2_d'],
+              correctIndex: 1,
+              feedbackKey: 'ai_ethics_q2_fb'
+            },
+            {
+              questionKey: 'ai_ethics_q3_q',
+              optionKeys: ['ai_ethics_q3_a', 'ai_ethics_q3_b', 'ai_ethics_q3_c', 'ai_ethics_q3_d'],
+              correctIndex: 1,
+              feedbackKey: 'ai_ethics_q3_fb'
+            }
+          ]
+        }
       ],
     },
     {

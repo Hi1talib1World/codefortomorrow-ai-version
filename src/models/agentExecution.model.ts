@@ -12,7 +12,7 @@ export interface IAgentExecution extends Document {
   startedAt: Date;
   completedAt?: Date;
   latencyMs: number;
-  model: string;
+  aiModel: string;
   inputTokens: number;
   outputTokens: number;
   totalTokens: number;
@@ -42,7 +42,7 @@ const AgentExecutionSchema: Schema = new Schema(
     startedAt: { type: Date, default: Date.now },
     completedAt: { type: Date },
     latencyMs: { type: Number, default: 0 },
-    model: { type: String, default: 'gemini-2.5-flash' },
+    aiModel: { type: String, default: 'gemini-2.5-flash' },
     inputTokens: { type: Number, default: 0 },
     outputTokens: { type: Number, default: 0 },
     totalTokens: { type: Number, default: 0 },

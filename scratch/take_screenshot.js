@@ -1,60 +1,23 @@
 import { chromium } from '@playwright/test';
-import fs from 'fs';
 import path from 'path';
 
-async function run() {
-  const browser = await chromium.launch({ headless: true });
-  // Create browser context
-  const context = await browser.newContext({
-    viewport: { width: 1440, height: 900 }
-  });
-  const page = await context.newPage();
-  
-  page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-  page.on('pageerror', err => console.error('PAGE ERROR:', err.message));
-  
+(async () => {
   try {
-    console.log("Navigating to http://localhost:3000/ to set localStorage...");
-    await page.goto("http://localhost:3000/");
+    const browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const page = await context.newPage();
     
-    // Set localStorage parameters so we skip language selection screen
-    await page.evaluate(() => {
-      localStorage.setItem('appLanguageSelected', 'true');
-      localStorage.setItem('appLanguage', 'en');
-    });
-
-    console.log("Navigating to http://localhost:3000/auth...");
-    await page.goto("http://localhost:3000/auth");
-
-    console.log("Logging in as Guest...");
-    // Wait for guest login button and click it
-    await page.waitForSelector('button:has-text("Continue as Guest")');
-    await page.click('button:has-text("Continue as Guest")');
-
-    console.log("Waiting for dashboard to load...");
-    await page.waitForURL('**/dashboard', { timeout: 10000 });
+    console.log('Navigating to http://127.0.0.1:3000/dashboard...');
+    await page.goto('http://127.0.0.1:3000/dashboard', { waitUntil: 'networkidle' });
+    await page.waitForTimeout(3000);
     
-    // Wait for some time to let layout settle and any queries finish
-    await page.waitForTimeout(6000);
-
-    // Take the screenshot
-    const screenshotPath = path.resolve('public/assets/images/dashboard-screenshot.png');
-    console.log(`Taking screenshot to ${screenshotPath}...`);
-    await page.screenshot({ path: screenshotPath });
-    console.log("Done!");
-
-  } catch (err) {
-    console.error("Error during execution:", err);
-    const debugPath = path.resolve('public/assets/images/debug-screenshot.png');
-    console.log(`Taking debug screenshot to ${debugPath} at current URL: ${page.url()}`);
-    await page.screenshot({ path: debugPath });
-    throw err;
-  } finally {
+    const targetPath = path.resolve(process.cwd(), 'public/assets/images/dashboard-screenshot.png');
+    await page.screenshot({ path: targetPath });
+    console.log('Screenshot successfully saved to:', targetPath);
+    
     await browser.close();
+  } catch (err) {
+    console.error('Error capturing screenshot:', err);
+    process.exit(1);
   }
-}
-
-run().catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+})();

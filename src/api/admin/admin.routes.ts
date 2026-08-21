@@ -13,6 +13,7 @@ import {
   listUsers,
   updateUserRole,
   getSystemStatus,
+  updateUserDates
 } from '../admin/admin.controller';
 
 const router = express.Router();
@@ -31,6 +32,7 @@ router.patch('/content/:id/status', toggleStatus);
 // ─── User Management ─────────────────────────────────────────────────────────
 router.get('/users', listUsers);
 router.patch('/users/:id/role', updateUserRole);
+router.post('/update-user-dates', updateUserDates);
 
 // ─── Image Upload & System ──────────────────────────────────────────────────
 router.post('/upload', uploadImage);

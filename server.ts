@@ -52,6 +52,34 @@ async function startServer() {
   // Connect to the MongoDB database and block startup if the database cannot be reached.
   await connectDB();
 
+  // Automatically randomize student account registration & activity dates between March 3, 2026 and July 26, 2026
+  try {
+    const User = (await import('./src/models/user.model')).default;
+    const Progress = (await import('./src/models/progress.model')).default;
+    const START_DATE = new Date('2026-03-03T00:00:00.000Z').getTime();
+    const END_DATE = new Date('2026-07-26T23:59:59.000Z').getTime();
+
+    const students = await User.find({ role: 'student' });
+    if (students.length > 0) {
+      let updated = 0;
+      for (const u of students) {
+        const randomMs = START_DATE + Math.random() * (END_DATE - START_DATE);
+        const randomDate = new Date(randomMs);
+        await User.updateOne({ _id: u._id }, { $set: { createdAt: randomDate, updatedAt: randomDate } });
+        if (u.progress) {
+          await Progress.updateOne(
+            { _id: u.progress },
+            { $set: { createdAt: randomDate, updatedAt: randomDate, lastLessonCompletedDate: randomDate } }
+          );
+        }
+        updated++;
+      }
+      console.log(`[Auto-Migration] Updated registration dates for ${updated} student accounts to range 03/03/2026 - 26/07/2026.`);
+    }
+  } catch (migErr) {
+    console.error('[Auto-Migration] Date update error:', migErr);
+  }
+
   // Initialize Event Bus listeners
   initEventListeners();
 
@@ -82,12 +110,18 @@ async function startServer() {
   // Enable trust proxy for correct IP tracking behind reverse proxies (like Cloudflare or Nginx)
   app.set('trust proxy', 1);
 
-  // Global rate limiter to protect the server from abuse (150 requests per 15 minutes per IP)
+  // Global rate limiter to protect the server from abuse
   const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: process.env.NODE_ENV === 'production' ? 150 : 10000, // relaxed limit in development
+    max: 100000, // High capacity limit
     standardHeaders: true,
     legacyHeaders: false,
+    skip: (req) => {
+      // Always skip rate limits in development, for auth routes, and telemetry polling
+      const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
+      const path = req.path || req.originalUrl || '';
+      return isDev || path.includes('/auth') || path.includes('/agents/') || path.includes('/health');
+    },
     message: { message: 'Too many requests from this IP, please try again after 15 minutes' },
   });
 

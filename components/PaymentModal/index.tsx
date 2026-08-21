@@ -84,9 +84,16 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
     }
   };
 
-  // Price Calculation
+  // Price & Currency Symbol Calculation
   const baseNumericPrice = parseFloat(planPrice.replace(/[^0-9.]/g, '')) || 19;
-  const finalPrice = Math.max(0, baseNumericPrice * (1 - appliedDiscount)).toFixed(2);
+  const numFinalPrice = Math.max(0, baseNumericPrice * (1 - appliedDiscount));
+  const currencySymbol = planPrice.includes('DH') || planPrice.includes('MAD') ? 'DH' : planPrice.includes('€') ? '€' : '$';
+  const displayAmount = currencySymbol === 'DH' || currencySymbol === '€' 
+    ? `${Math.round(numFinalPrice)} ${currencySymbol}` 
+    : `$${numFinalPrice.toFixed(2)}`;
+  const displayOriginalAmount = currencySymbol === 'DH' || currencySymbol === '€' 
+    ? `${baseNumericPrice} ${currencySymbol}` 
+    : `$${baseNumericPrice}`;
 
   // Handle Checkout Submission
   const handlePay = async (e: React.FormEvent) => {
@@ -95,7 +102,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
     try {
       // Trigger backend Express payment checkout endpoint
-      await api.processPayment(planName, `$${finalPrice}`, selectedMethod);
+      await api.processPayment(planName, displayAmount, selectedMethod);
     } catch (err) {
       console.warn("Backend payment check:", err);
     }
@@ -105,7 +112,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
       const receipt = {
         transactionId: `CFT-PAY-${Math.floor(100000 + Math.random() * 900000)}`,
         plan: planName,
-        amount: `$${finalPrice}`,
+        amount: displayAmount,
         date: new Date().toLocaleDateString(),
         method: selectedMethod.toUpperCase(),
         cardBrand: getCardBrand(),
@@ -206,9 +213,9 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                   <h4 className="text-base font-black text-slate-900 dark:text-white mt-0.5">{planName} ({planInterval})</h4>
                 </div>
                 <div className="text-right">
-                  <span className="text-2xl font-black text-blue-600 dark:text-blue-400">${finalPrice}</span>
+                  <span className="text-2xl font-black text-blue-600 dark:text-blue-400">{displayAmount}</span>
                   {appliedDiscount > 0 && (
-                    <span className="text-xs text-slate-400 line-through block">${baseNumericPrice}</span>
+                    <span className="text-xs text-slate-400 line-through block">{displayOriginalAmount}</span>
                   )}
                 </div>
               </div>
@@ -360,7 +367,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                       <span>🇲🇦 CMI Moroccan Bank Gateway</span>
                     </div>
                     <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                      Supports all major Moroccan bank cards (Attijariwafa, BMCE, CIH, BCP, Credit du Maroc). Total: <span className="font-bold text-slate-900 dark:text-white">{(parseFloat(finalPrice) * 10.2).toFixed(2)} MAD</span>
+                      Supports all major Moroccan bank cards (Attijariwafa, BMCE, CIH, BCP, Credit du Maroc). Total: <span className="font-bold text-slate-900 dark:text-white">{displayAmount}</span>
                     </p>
                   </div>
                 )}
@@ -401,7 +408,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                   ) : (
                     <>
                       <Lock className="w-5 h-5" />
-                      <span>Pay ${finalPrice} & Confirm</span>
+                      <span>Pay {displayAmount} & Confirm</span>
                     </>
                   )}
                 </button>

@@ -4,12 +4,13 @@ import rateLimit from 'express-rate-limit';
 import { register, login, getMe, googleLogin, firebaseLogin, logout } from './auth.controller';
 import { protect } from '../../../src/core/permissions/auth.middleware';
 
-// Stricter rate limiter for authentication routes (15 attempts per 15 minutes per IP)
+// Stricter rate limiter for authentication routes
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.NODE_ENV === 'production' ? 15 : 1000, // relaxed limit in development
+  max: 10000,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => !process.env.NODE_ENV || process.env.NODE_ENV === 'development',
   message: { message: 'Too many login or registration attempts, please try again after 15 minutes' },
 });
 

@@ -4,9 +4,18 @@ import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 
 export function HeroScrollDemo() {
   return (
-    <div className="flex flex-col overflow-hidden pb-12 pt-4 bg-slate-900 text-white">
+    <div className="flex flex-col overflow-hidden pb-12 pt-4 bg-[#060b19] text-white">
       <ContainerScroll
-        titleComponent={""}
+        titleComponent={
+          <div className="mb-6 md:mb-12">
+            <h1 className="text-3xl md:text-5xl font-semibold text-slate-300">
+              Unleash the power of <br />
+              <span className="text-4xl md:text-[5.5rem] font-bold mt-2 leading-none text-[#38bdf8]">
+                Scroll Animations
+              </span>
+            </h1>
+          </div>
+        }
       >
         <img
           src="/assets/images/dashboard-screenshot.png"
@@ -20,3 +29,4 @@ export function HeroScrollDemo() {
 }
 
 export default HeroScrollDemo;
+
