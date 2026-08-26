@@ -30,6 +30,8 @@ const FloatingStat: React.FC<{ icon: string, value: string | number, label: stri
 
 const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, onUpdateUser, onStartLesson }) => {
     const { t, language } = useLanguage();
+    const isAr = language === 'ar';
+    const isFr = language === 'fr';
     const navigate = useNavigate();
     const { showToast } = useToast();
     const [isAIModalOpen, setIsAIModalOpen] = useState(false);
@@ -162,32 +164,35 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
     // Render Daily Quests HUD Component
     const renderDailyQuestsHUD = () => {
+        const isAr = language === 'ar';
+        const isFr = language === 'fr';
+
         const questTitles: Record<string, string> = {
-            quest_lesson: t('quest_lesson' as any) || 'Complete 1 Lesson',
-            quest_xp: t('quest_xp' as any) || 'Earn 30 XP',
-            quest_quiz: t('quest_quiz' as any) || 'Pass 1 Quiz',
-            quest_ai_tool: 'Utiliser 1 outil IA / Générateur',
-            quest_code_editor: 'Exécuter 3 fois du code dans l\'éditeur',
+            quest_lesson: isAr ? 'أكمل درساً واحداً' : isFr ? 'Terminer 1 leçon' : (t('quest_lesson' as any) || 'Complete 1 Lesson'),
+            quest_xp: isAr ? 'اكسب 30 نقطة خبرة XP' : isFr ? 'Gagner 30 XP' : (t('quest_xp' as any) || 'Earn 30 XP'),
+            quest_quiz: isAr ? 'اجتز اختباراً قصيراً واحداً' : isFr ? 'Réussir 1 quiz' : (t('quest_quiz' as any) || 'Pass 1 Quiz'),
+            quest_ai_tool: isAr ? 'استخدم أداة ذكاء اصطناعي واحدة' : isFr ? 'Utiliser 1 outil IA / Générateur' : 'Use 1 AI Tool / Generator',
+            quest_code_editor: isAr ? 'نفذ الكود 3 مرات في المحرر' : isFr ? 'Exécuter 3 fois du code' : 'Run code 3 times in editor',
         };
 
         const allCompleted = dailyQuests.length > 0 && dailyQuests.every((q: any) => q.currentValue >= q.targetValue);
         const visibleQuests = isQuestsExpanded ? dailyQuests : dailyQuests.slice(0, 1);
 
         return (
-            <div className="relative bg-white dark:bg-slate-900 border-3 border-slate-900 dark:border-cyan-400 rounded-3xl p-6 shadow-[5px_5px_0px_0px_#0f172a] dark:shadow-[5px_5px_0px_0px_#06b6d4] space-y-5 overflow-visible text-left">
+            <div className="relative bg-white dark:bg-slate-900 border-3 border-slate-900 dark:border-cyan-400 rounded-3xl p-6 shadow-[5px_5px_0px_0px_#0f172a] dark:shadow-[5px_5px_0px_0px_#06b6d4] space-y-5 overflow-visible text-left" dir={isAr ? 'rtl' : 'ltr'}>
                 
                 {/* Floating Corner Sticker */}
-                <div className="absolute -top-3.5 -right-3.5 bg-[#FFE87C] border-2 border-slate-900 rounded-full w-9 h-9 flex items-center justify-center text-sm shadow-[2px_2px_0px_0px_#0f172a] rotate-12 z-20">
+                <div className={`absolute -top-3.5 ${isAr ? '-left-3.5' : '-right-3.5'} bg-[#FFE87C] border-2 border-slate-900 rounded-full w-9 h-9 flex items-center justify-center text-sm shadow-[2px_2px_0px_0px_#0f172a] rotate-12 z-20`}>
                     🎯
                 </div>
 
                 <div className="flex items-center justify-between border-b-2 border-slate-900/10 dark:border-slate-800 pb-3">
                     <div className="flex items-center gap-2">
                         <span className="bg-[#FFE87C] text-slate-900 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border border-slate-900 shadow-[1px_1px_0px_0px_#0f172a]">
-                            DAILY HUD
+                            {isAr ? 'المهام اليومية' : 'DAILY HUD'}
                         </span>
                         <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
-                            {t('daily_quests_title' as any) || 'Daily Quests'}
+                            {t('daily_quests_title' as any) || (isAr ? 'المهام اليومية' : isFr ? 'Quêtes Quotidiennes' : 'Daily Quests')}
                         </h3>
                     </div>
 
@@ -196,7 +201,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                             onClick={handleClaimChest}
                             className="bg-[#00D2D3] hover:bg-[#FFE87C] text-slate-900 font-black text-xs px-3 py-1 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] transition-all cursor-pointer animate-bounce flex items-center gap-1"
                         >
-                            <span>🎁 Réclamer +50 XP</span>
+                            <span>🎁 {isAr ? 'استلام +50 XP' : isFr ? 'Réclamer +50 XP' : 'Claim +50 XP'}</span>
                         </button>
                     )}
                 </div>
@@ -244,7 +249,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                         onClick={() => setIsQuestsExpanded(!isQuestsExpanded)}
                         className="w-full py-2.5 px-4 rounded-2xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-2 border-slate-900 font-black text-xs uppercase tracking-wider shadow-[2.5px_2.5px_0px_0px_#0f172a] hover:bg-[#FFE87C] hover:text-slate-900 transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
-                        <span>{isQuestsExpanded ? 'Réduire' : `Voir toutes les quêtes (${dailyQuests.length})`}</span>
+                        <span>{isQuestsExpanded ? (isAr ? 'تقليص' : isFr ? 'Réduire' : 'Show less') : (isAr ? `عرض جميع المهام (${dailyQuests.length})` : isFr ? `Voir toutes les quêtes (${dailyQuests.length})` : `Show all quests (${dailyQuests.length})`)}</span>
                         <ChevronDown className={`w-4 h-4 stroke-[3] transition-transform duration-300 ${isQuestsExpanded ? 'rotate-180' : ''}`} />
                     </button>
                 )}
@@ -252,7 +257,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                 {allCompleted && (
                     <div className="pt-1">
                         <div className="p-3 rounded-2xl bg-[#FFE87C] border-2 border-slate-900 text-slate-900 text-xs font-black text-center shadow-[3px_3px_0px_0px_#0f172a] flex items-center justify-center gap-2">
-                            <span>🎉 All Daily Quests Completed! Bonus Claimed!</span>
+                            <span>🎉 {isAr ? 'اكتملت جميع المهام اليومية! تم استلام المكافأة!' : isFr ? 'Toutes les quêtes quotidiennes sont terminées ! Bonus réclamé !' : 'All Daily Quests Completed! Bonus Claimed!'}</span>
                         </div>
                     </div>
                 )}
@@ -650,9 +655,11 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                         </div>
                                     </div>
                                     <div className="p-4 flex items-center justify-between">
-                                        <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Play MentalUP</p>
+                                        <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                                            {isAr ? 'لعبة MentalUP لتمارين العقل' : isFr ? 'Jouer à MentalUP' : 'Play MentalUP'}
+                                        </p>
                                         <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#2E2FCE] group-hover:text-white group-hover:border-[#2E2FCE] transition-all shadow-sm">
-                                            <span className="text-lg">→</span>
+                                            <span className={`text-lg ${isAr ? 'rotate-180' : ''}`}>→</span>
                                         </div>
                                     </div>
                                 </button>
@@ -662,7 +669,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                     {/* Math Games Section */}
                     <div className="space-y-4">
-                        <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">Math Games</h2>
+                        <h2 className={`text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide ${isAr ? 'text-right' : 'text-left'}`}>
+                            {isAr ? 'ألعاب الرياضيات التفاعلية' : isFr ? 'Jeux de Mathématiques' : 'Math Games'}
+                        </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <button 
                                 id="btn-math-pick"
@@ -670,6 +679,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 data-sync-metric="math_game_select"
                                 onClick={() => navigate('/dashboard/learn/math')} 
                                 className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
+                                dir={isAr ? 'rtl' : 'ltr'}
                             >
                                 <div className="aspect-[16/10] bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center p-8">
                                     <div className="grid grid-cols-2 gap-2 transform group-hover:scale-105 transition-transform">
@@ -680,9 +690,11 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     </div>
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
-                                    <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Pick & Play</p>
+                                    <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                                        {isAr ? 'اختر والعب' : isFr ? 'Choisir & Jouer' : 'Pick & Play'}
+                                    </p>
                                     <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
-                                        <span className="text-lg">→</span>
+                                        <span className={`text-lg ${isAr ? 'rotate-180' : ''}`}>→</span>
                                     </div>
                                 </div>
                             </button>
@@ -692,6 +704,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 data-sync-metric="math_game_select"
                                 onClick={() => navigate('/dashboard/learn/math')} 
                                 className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
+                                dir={isAr ? 'rtl' : 'ltr'}
                             >
                                 <div className="aspect-[16/10] bg-[#F8F9FA] dark:bg-slate-900/50 flex items-center justify-center p-6">
                                     <div className="relative flex items-center justify-center transform group-hover:scale-105 transition-transform">
@@ -707,9 +720,11 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     </div>
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
-                                    <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Quick Play</p>
+                                    <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                                        {isAr ? 'تحدي اللعب السريع' : isFr ? 'Jeu Rapide (30s)' : 'Quick Play'}
+                                    </p>
                                     <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
-                                        <span className="text-lg">→</span>
+                                        <span className={`text-lg ${isAr ? 'rotate-180' : ''}`}>→</span>
                                     </div>
                                 </div>
                             </button>
@@ -719,6 +734,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 data-sync-metric="math_game_select"
                                 onClick={() => navigate('/dashboard/learn/math')} 
                                 className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
+                                dir={isAr ? 'rtl' : 'ltr'}
                             >
                                 <div className="aspect-[16/10] bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center p-6">
                                     <div className="relative flex items-center justify-center transform group-hover:scale-105 transition-transform">
@@ -734,17 +750,22 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                     </div>
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
-                                    <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Math Arena</p>
+                                    <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                                        {isAr ? 'حلبة التنافس الرياضياتية' : isFr ? 'Arène de Mathématiques' : 'Math Arena'}
+                                    </p>
                                     <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
-                                        <span className="text-lg">→</span>
+                                        <span className={`text-lg ${isAr ? 'rotate-180' : ''}`}>→</span>
                                     </div>
                                 </div>
                             </button>
                         </div>
                     </div>
 
+                    {/* Books Section */}
                     <div className="space-y-4">
-                        <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">Books</h2>
+                        <h2 className={`text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide ${isAr ? 'text-right' : 'text-left'}`}>
+                            {isAr ? 'الكتب والقصص التفاعلية' : isFr ? 'Livres & Récits' : 'Books'}
+                        </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <button 
                                 id="btn-smart-books"
@@ -752,14 +773,17 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 data-sync-metric="books_nav"
                                 onClick={() => navigate('/smart-books')} 
                                 className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
+                                dir={isAr ? 'rtl' : 'ltr'}
                             >
                                 <div className="aspect-[16/10] overflow-hidden bg-[#fce4ec]">
                                     <img src="/esl_books.png" alt="ESL Books" className="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-500" />
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
-                                    <p className="text-sm font-bold text-[#111827] dark:text-indigo-300">ESL Books</p>
+                                    <p className="text-sm font-bold text-[#111827] dark:text-indigo-300">
+                                        {isAr ? 'كتب تعليم الإنجليزية ESL' : isFr ? 'Livres d\'apprentissage ESL' : 'ESL Books'}
+                                    </p>
                                     <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-[#111827] dark:text-indigo-300 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
-                                        <span className="text-lg">→</span>
+                                        <span className={`text-lg ${isAr ? 'rotate-180' : ''}`}>→</span>
                                     </div>
                                 </div>
                             </button>
@@ -768,7 +792,9 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
 
                     {/* Speaking Hub Section */}
                     <div className="space-y-4">
-                        <h2 className="text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide">Speaking Hub</h2>
+                        <h2 className={`text-base font-black text-[#111827] dark:text-indigo-200 uppercase tracking-wide ${isAr ? 'text-right' : 'text-left'}`}>
+                            {isAr ? 'مركز المحادثة والتحدث' : isFr ? 'Hub d\'Oral & Langues' : 'Speaking Hub'}
+                        </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <button 
                                 id="btn-speaking-hub"
@@ -776,24 +802,31 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                                 data-sync-metric="language_practice_nav"
                                 onClick={() => navigate('/speaking-hub')} 
                                 className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-700 text-left cursor-pointer"
+                                dir={isAr ? 'rtl' : 'ltr'}
                             >
                                 <div className="aspect-[16/10] overflow-hidden bg-[#e3f2fd]">
                                     <img src="/speaking_practice.png" alt="Practice a Language" className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500" />
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
-                                    <p className="text-sm font-bold text-[#111827] dark:text-indigo-300">Practice a Language</p>
+                                    <p className="text-sm font-bold text-[#111827] dark:text-indigo-300">
+                                        {isAr ? 'ممارسة اللغات بصوتك' : isFr ? 'Pratiquer une Langue à l\'Oral' : 'Practice a Language'}
+                                    </p>
                                     <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center text-[#111827] dark:text-indigo-300 group-hover:bg-[#111827] group-hover:text-white group-hover:border-[#111827] transition-all shadow-sm">
-                                        <span className="text-lg">→</span>
+                                        <span className={`text-lg ${isAr ? 'rotate-180' : ''}`}>→</span>
                                     </div>
                                 </div>
                             </button>
-                            <div className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 text-left opacity-75 cursor-default">
+                            <div className="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 text-left opacity-75 cursor-default" dir={isAr ? 'rtl' : 'ltr'}>
                                 <div className="aspect-[16/10] overflow-hidden bg-[#e3f2fd]">
                                     <img src="/discover_learn.png" alt="Discover & Learn" className="w-full h-full object-contain p-4" />
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
-                                    <p className="text-sm font-bold text-slate-400">Discover & Learn</p>
-                                    <span className="text-xs font-bold text-red-400">Coming soon</span>
+                                    <p className="text-sm font-bold text-slate-400">
+                                        {isAr ? 'اكتشف وتعلم' : isFr ? 'Découvrir & Apprendre' : 'Discover & Learn'}
+                                    </p>
+                                    <span className="text-xs font-bold text-red-400">
+                                        {isAr ? 'قريباً' : isFr ? 'Bientôt disponible' : 'Coming soon'}
+                                    </span>
                                 </div>
                             </div>
                         </div>

@@ -16,11 +16,23 @@ interface PersonalizedContentModalProps {
 }
 
 const INTEREST_PRESETS = [
-  { id: 'game_dev', label: '🎮 Game Dev', icon: Gamepad2, prompt: 'Game Physics & Mechanics' },
-  { id: 'ai_robotics', label: '🤖 AI & Robotics', icon: Cpu, prompt: 'AI & Autonomous Robotics' },
-  { id: 'space', label: '🚀 Space Science', icon: Rocket, prompt: 'Spacecraft Systems & Astronomy' },
-  { id: 'web_apps', label: '🌐 Web Apps', icon: Globe, prompt: 'Web Apps & APIs' },
-  { id: 'cybersecurity', label: '🔐 Cybersecurity', icon: Shield, prompt: 'Cybersecurity & Cryptography' },
+  { id: 'game_dev', label: '🎮 Game Combat', prompt: 'Game Combat & Enemy AI' },
+  { id: 'ai_robotics', label: '🤖 AI Robotics', prompt: 'AI & Autonomous Robotics' },
+  { id: 'space', label: '🚀 Space Navigation', prompt: 'Spacecraft Orbit & Navigation' },
+  { id: 'web_apps', label: '🌐 Web APIs', prompt: 'Web APIs & Realtime Apps' },
+  { id: 'cybersecurity', label: '🔐 Cybersecurity', prompt: 'Cybersecurity & Key Cipher' },
+  { id: 'python_logic', label: '🐍 Logic & Data', prompt: 'Data Analytics & Algorithm Logic' },
+];
+
+const SURPRISE_TOPICS = [
+  'Mars Rover Lander Physics',
+  'Cybersecurity Password Vault',
+  'Arcade Snake Game Engine',
+  'Smart Home IoT Controller',
+  'Neural Network Logic Gate',
+  'Crypto Token Exchange Calculator',
+  'Space Station Oxygen Telemetry',
+  'Autonomous Drone Pathfinding'
 ];
 
 const PersonalizedContentModal: React.FC<PersonalizedContentModalProps> = ({
@@ -31,7 +43,9 @@ const PersonalizedContentModal: React.FC<PersonalizedContentModalProps> = ({
   currentPath = 'python',
   initialTopic
 }) => {
-  const [selectedInterest, setSelectedInterest] = useState<string>(initialTopic || 'Game Physics & Mechanics');
+  const [selectedInterest, setSelectedInterest] = useState<string>(
+    initialTopic || INTEREST_PRESETS[Math.floor(Math.random() * INTEREST_PRESETS.length)].prompt
+  );
   const [customInterest, setCustomInterest] = useState<string>('');
   const [selectedPath, setSelectedPath] = useState<ProgrammingPath['id']>(currentPath);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -43,8 +57,18 @@ const PersonalizedContentModal: React.FC<PersonalizedContentModalProps> = ({
     if (initialTopic) {
       setSelectedInterest(initialTopic);
       setCustomInterest('');
+    } else if (isOpen) {
+      const randomPreset = INTEREST_PRESETS[Math.floor(Math.random() * INTEREST_PRESETS.length)].prompt;
+      setSelectedInterest(randomPreset);
     }
   }, [initialTopic, isOpen]);
+
+  const randomizeTopic = () => {
+    const randomPrompt = SURPRISE_TOPICS[Math.floor(Math.random() * SURPRISE_TOPICS.length)];
+    setSelectedInterest(randomPrompt);
+    setCustomInterest('');
+    showToast(`🎲 Selected Random Topic: "${randomPrompt}"`, 'info');
+  };
 
   if (!isOpen) return null;
 
@@ -147,6 +171,12 @@ const PersonalizedContentModal: React.FC<PersonalizedContentModalProps> = ({
                   </button>
                 );
               })}
+              <button
+                onClick={randomizeTopic}
+                className="px-3 py-2.5 rounded-2xl text-xs font-black transition-all border-2 text-left cursor-pointer flex items-center gap-2 bg-[#FFE87C] border-slate-900 text-slate-900 shadow-[3px_3px_0px_0px_#0F172A] hover:scale-105"
+              >
+                <span>🎲 Surprise Me!</span>
+              </button>
             </div>
           </div>
 

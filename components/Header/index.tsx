@@ -321,7 +321,20 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
 
   const localizedTexts = {
     en: {
+      explore: "Explore",
+      myLearning: "My Learning",
+      searchPlaceholder: "Search C4T courses, lessons and skills...",
+      searchResults: "Search Results",
+      noSearchResults: "No courses or lessons matching",
+      portals: "Portals",
+      resourcesAndMore: "Resources & More",
+      profile: "Profile",
+      messages: "Messages",
       notifications: "Notifications",
+      markAllRead: "Mark all read",
+      noNotifications: "No new notifications",
+      goPremium: "Go Premium",
+      premiumActive: "✓ Premium Active",
       nextSteps: "Next Steps",
       choosePathTitle: "Choose a Learning Path",
       choosePathDesc: "Select a coding path (Python, JavaScript, etc.) to start your learning journey!",
@@ -331,16 +344,31 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
       explorePathsBtn: "Explore Paths",
       nextUpTitle: "Next Lesson",
       resumeBtn: "Resume Learning",
-      noNotifications: "No new notifications",
       xpReward: "XP Reward",
       minutes: "mins",
       beginner: "Beginner",
       intermediate: "Intermediate",
       advanced: "Advanced",
       expert: "Expert",
+      showMore: "Show More",
+      showLess: "Show Less",
+      coursePath: "Course Path"
     },
     fr: {
+      explore: "Explorer",
+      myLearning: "Mon Apprentissage",
+      searchPlaceholder: "Rechercher des cours C4T, leçons et compétences...",
+      searchResults: "Résultats de recherche",
+      noSearchResults: "Aucun cours ou leçon ne correspond à",
+      portals: "Portails",
+      resourcesAndMore: "Ressources & plus",
+      profile: "Profil",
+      messages: "Messages",
       notifications: "Notifications",
+      markAllRead: "Tout marquer comme lu",
+      noNotifications: "Aucune nouvelle notification",
+      goPremium: "Passer au Premium",
+      premiumActive: "✓ Premium Actif",
       nextSteps: "Étapes Suivantes",
       choosePathTitle: "Choisir un Parcours",
       choosePathDesc: "Sélectionnez un parcours de code (Python, JavaScript, etc.) pour commencer votre apprentissage !",
@@ -350,16 +378,31 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
       explorePathsBtn: "Explorer les parcours",
       nextUpTitle: "Prochaine Leçon",
       resumeBtn: "Reprendre l'apprentissage",
-      noNotifications: "Aucune nouvelle notification",
       xpReward: "Récompense XP",
       minutes: "min",
       beginner: "Débutant",
       intermediate: "Intermédiaire",
       advanced: "Avancé",
       expert: "Expert",
+      showMore: "Voir plus",
+      showLess: "Voir moins",
+      coursePath: "Parcours de cours"
     },
     ar: {
+      explore: "استكشف",
+      myLearning: "تعليمي",
+      searchPlaceholder: "ابحث عن دورات C4T، والدروس، والمهارات...",
+      searchResults: "نتائج البحث",
+      noSearchResults: "لا توجد دورات أو دروس تطابق",
+      portals: "البوابات",
+      resourcesAndMore: "الموارد والمزيد",
+      profile: "الملف الشخصي",
+      messages: "الرسائل",
       notifications: "الإشعارات",
+      markAllRead: "تعليم الكل كقراءة",
+      noNotifications: "لا توجد إشعارات جديدة",
+      goPremium: "الانتقال إلى المميز",
+      premiumActive: "✓ العضوية المميزة مفعلة",
       nextSteps: "الخطوات التالية",
       choosePathTitle: "اختر مسارًا تعليميًا",
       choosePathDesc: "اختر مسارًا للبرمجة (بايثون، جافا سكريبت، إلخ) لبدء رحلة التعلم الخاصة بك!",
@@ -369,13 +412,15 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
       explorePathsBtn: "استكشف المسارات",
       nextUpTitle: "الدرس التالي",
       resumeBtn: "مواصلة التعلم",
-      noNotifications: "لا توجد إشعارات جديدة",
       xpReward: "نقاط خبرة",
       minutes: "دقائق",
       beginner: "مبتدئ",
       intermediate: "متوسط",
       advanced: "متقدم",
       expert: "خبير",
+      showMore: "عرض المزيد",
+      showLess: "عرض أقل",
+      coursePath: "مسار تعليمي"
     }
   };
 
@@ -577,7 +622,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                 onClick={() => setIsExploreOpen(!isExploreOpen)}
                 className="flex items-center gap-1.5 px-4 py-2 bg-[#0056D2] hover:bg-[#00419e] text-white rounded-lg font-bold text-sm transition-all cursor-pointer shadow-sm active:scale-95"
               >
-                <span>Explore</span>
+                <span>{texts.explore}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isExploreOpen ? 'rotate-180' : ''}`} />
               </button>
 
@@ -586,7 +631,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                   {/* Column 1: Ecosystem Portals */}
                   <div className="flex flex-col gap-3">
                     <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 border-b border-slate-800 pb-2">
-                      Portals
+                      {texts.portals}
                     </h3>
                     <div className="flex flex-col gap-1">
                       {primaryNavItems.map((item) => {
@@ -615,7 +660,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                   {/* Column 2: Platform & Settings */}
                   <div className="flex flex-col gap-3">
                     <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 border-b border-slate-800 pb-2">
-                      Resources & More
+                      {texts.resourcesAndMore}
                     </h3>
                     <div className="flex flex-col gap-1">
                       {secondaryNavItems.map((item) => {
@@ -662,7 +707,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                   : 'text-slate-300 hover:text-white hover:bg-white/10 dark:hover:bg-slate-800'
               }`}
             >
-              My Learning
+              {texts.myLearning}
             </button>
           )}
         </div>
@@ -678,7 +723,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                 setIsSearchOpen(true);
               }}
               onFocus={() => setIsSearchOpen(true)}
-              placeholder="Search C4T courses, lessons and skills..."
+              placeholder={texts.searchPlaceholder}
               className="w-full bg-transparent text-sm text-slate-100 placeholder-slate-500 focus:outline-none font-medium pr-6 border-none ring-0 outline-none"
             />
             {searchQuery && (
@@ -708,7 +753,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
             <div className="absolute top-full mt-2 left-0 right-0 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-3 z-50 animate-[fade-in_0.2s_ease-out] overflow-hidden">
               <div className="flex items-center justify-between px-3 py-1.5 border-b border-slate-800 mb-2">
                 <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
-                  Search Results ({searchResults.length})
+                  {texts.searchResults} ({searchResults.length})
                 </span>
               </div>
 
@@ -759,7 +804,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                 </div>
               ) : (
                 <div className="px-4 py-6 text-center text-xs text-slate-500 font-semibold select-none">
-                  No courses or lessons matching "<span className="text-slate-300">{searchQuery}</span>"
+                  {texts.noSearchResults} "<span className="text-slate-300">{searchQuery}</span>"
                 </div>
               )}
             </div>
@@ -898,7 +943,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                     }`}
                   >
                     <UserIcon className="w-4 h-4 text-blue-400" />
-                    <span>Profile</span>
+                    <span>{texts.profile}</span>
                   </button>
 
                   {/* 2. Messages */}
@@ -913,7 +958,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                   >
                     <div className="flex items-center gap-2.5">
                       <MessageSquare className="w-4 h-4 text-emerald-400" />
-                      <span>Messages</span>
+                      <span>{texts.messages}</span>
                     </div>
                     {unreadMessagesCount > 0 && (
                       <span className="bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">
@@ -930,7 +975,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                     >
                       <div className="flex items-center gap-2.5">
                         <Bell className="w-4 h-4 text-purple-400" />
-                        <span>Notifications</span>
+                        <span>{texts.notifications}</span>
                       </div>
                       {unreadCount > 0 && (
                         <span className="bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full animate-pulse">
@@ -942,13 +987,13 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                     {showNotifSubmenu && (
                       <div className="mt-2 p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 space-y-2 max-h-56 overflow-y-auto">
                         <div className="flex justify-between items-center pb-1.5 border-b border-slate-800">
-                          <span className="text-[10px] font-extrabold text-slate-400 uppercase">Notifications</span>
+                          <span className="text-[10px] font-extrabold text-slate-400 uppercase">{texts.notifications}</span>
                           {unreadCount > 0 && (
                             <button
                               onClick={handleMarkAllRead}
                               className="text-[9px] font-black text-cyan-400 hover:underline cursor-pointer"
                             >
-                              Mark all read
+                              {texts.markAllRead}
                             </button>
                           )}
                         </div>
@@ -976,7 +1021,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                             </div>
                           ))
                         ) : (
-                          <p className="text-[10px] text-slate-500 text-center py-2 select-none">No notifications</p>
+                          <p className="text-[10px] text-slate-500 text-center py-2 select-none">{texts.noNotifications}</p>
                         )}
                       </div>
                     )}
@@ -991,7 +1036,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                     className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left text-sm font-bold transition-all w-full cursor-pointer hover:bg-amber-500/10 text-amber-400 hover:text-amber-300"
                   >
                     <Zap className="w-4 h-4 text-amber-400 fill-amber-400/20" />
-                    <span>{currentUser?.isPremium ? '✓ Premium Active' : 'Go Premium'}</span>
+                    <span>{currentUser?.isPremium ? texts.premiumActive : texts.goPremium}</span>
                   </button>
                 </div>
               </div>
@@ -1070,7 +1115,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                 onClick={() => setShowAllLanguagesGrid(false)}
                 className="flex items-center gap-1 text-[11px] font-bold text-[#111827] dark:text-[#FBBF24] hover:underline cursor-pointer"
               >
-                <span>Show Less</span>
+                <span>{texts.showLess}</span>
                 <ChevronDown className="w-3.5 h-3.5 rotate-180" />
               </button>
             </div>
@@ -1150,7 +1195,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
               onClick={() => setShowAllLanguagesGrid(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800 text-[#111827] dark:text-[#FBBF24] hover:bg-slate-100 dark:hover:bg-slate-700/80 transition-all cursor-pointer font-extrabold shrink-0 border border-slate-200/50 dark:border-slate-700/50"
             >
-              <span>Show More</span>
+              <span>{texts.showMore}</span>
               <ChevronDown className="w-3.5 h-3.5" />
             </button>
           </div>

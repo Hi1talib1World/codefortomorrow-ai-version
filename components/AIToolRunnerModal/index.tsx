@@ -5,6 +5,33 @@ import { useToast } from '../ToastNotification';
 import { X, Copy, Check, Play, Send, Zap, BookOpen, Layers, Loader2 } from 'lucide-react';
 import { AIToolCard } from '../AIToolsHubScreen';
 
+import { useLanguage } from '../../contexts/LanguageContext';
+
+const TOOL_PRESETS: Record<string, { labelEn: string; labelAr: string; prompt: string }[]> = {
+  generate_custom_lesson: [
+    { labelEn: '🎮 Game Physics', labelAr: '🎮 فيزياء الألعاب', prompt: 'Game Physics & Collision Mechanics' },
+    { labelEn: '🤖 Space Robotics', labelAr: '🤖 روبوتات الفضاء', prompt: 'Space Robotics & Autonomous Loops' },
+    { labelEn: '🔐 Cybersecurity', labelAr: '🔐 الأمن السيبراني', prompt: 'Encryption Basics & Hashing' },
+    { labelEn: '🌐 Web Apps', labelAr: '🌐 تطبيقات الويب', prompt: 'Interactive Web Interfaces & APIs' },
+  ],
+  blooket_quiz_gen: [
+    { labelEn: '🐍 Python Basics', labelAr: '🐍 أساسيات بايثون', prompt: 'Python Variables & Control Flow Quiz' },
+    { labelEn: '⚡ Functions & Loops', labelAr: '⚡ الدوال والحلقات', prompt: 'Functions, Parameters & While Loops' },
+    { labelEn: '🌐 HTML & CSS', labelAr: '🌐 HTML و CSS', prompt: 'Web Layouts, Flexbox & HTML Tags' },
+    { labelEn: '🧠 Logic & Algorithms', labelAr: '🧠 الخوارزميات والمنطق', prompt: 'Algorithmic Thinking & Sorting' },
+  ],
+  teacher_assistant_bot: [
+    { labelEn: '🐞 Debug Error', labelAr: '🐞 تصحيح خطأ برمجي', prompt: 'Debug Syntax Error & Fix Exceptions' },
+    { labelEn: '💡 Explain Code', labelAr: '💡 شرح الكود', prompt: 'Explain line-by-line how this function works' },
+    { labelEn: '🚀 Optimize Performance', labelAr: '🚀 تحسين الأداء', prompt: 'Optimize loop efficiency & memory usage' },
+  ],
+  default: [
+    { labelEn: '🚀 Quick Starter', labelAr: '🚀 بداية سريعة', prompt: 'Generate interactive example with starter code' },
+    { labelEn: '💡 Beginner Friendly', labelAr: '💡 مناسب للمبتدئين', prompt: 'Step-by-step simple explanation with examples' },
+    { labelEn: '🎯 Core Concepts', labelAr: '🎯 المفاهيم الأساسية', prompt: 'Focus on main programming principles and best practices' },
+  ]
+};
+
 interface AIToolRunnerModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -20,6 +47,8 @@ const AIToolRunnerModal: React.FC<AIToolRunnerModalProps> = ({
   currentUser,
   currentPath = 'python'
 }) => {
+  const { language } = useLanguage();
+  const isAr = language === 'ar';
   const [inputText, setInputText] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [generatedOutput, setGeneratedOutput] = useState<string>('');
@@ -29,31 +58,36 @@ const AIToolRunnerModal: React.FC<AIToolRunnerModalProps> = ({
 
   if (!isOpen || !tool) return null;
 
-  const handleGenerate = async () => {
+  const toolTitle = isAr && tool.titleAr ? tool.titleAr : tool.title;
+  const toolDesc = isAr && tool.descriptionAr ? tool.descriptionAr : tool.description;
+  const toolHint = isAr && tool.hintAr ? tool.hintAr : tool.hint;
+
+  const handleGenerate = async (overridePrompt?: string | React.MouseEvent) => {
+    const promptStr = typeof overridePrompt === 'string' ? overridePrompt : undefined;
     setIsGenerating(true);
     setGeneratedOutput('');
     setOutputSource('');
 
     try {
-      const promptInput = inputText.trim() || tool.promptPreset || tool.title;
+      const promptInput = promptStr || inputText.trim() || tool.promptPreset || tool.title;
       const res = await api.generateToolContent(tool.id, promptInput, currentPath);
       if (res && res.output) {
         setGeneratedOutput(res.output);
         setOutputSource(res.source || 'gemini');
         if (res.source === 'client_fallback' || res.source === 'simulation') {
-          showToast(`⚡ ${tool.title} généré (Mode Hors Ligne / Simulée)!`, 'info');
+          showToast(`⚡ ${toolTitle} ${isAr ? 'تم الإنشاء (وضع أوفلاين/محاكاة)' : 'généré (Mode Hors Ligne)'}!`, 'info');
         } else {
-          showToast(`🎉 ${tool.title} généré avec l'IA Gemini!`, 'success');
+          showToast(`🎉 ${toolTitle} ${isAr ? 'تم الإنشاء بنجاح بواسطة الذكاء الاصطناعي!' : 'généré avec l\'IA Gemini!'}`, 'success');
         }
       } else {
         throw new Error('No output returned');
       }
     } catch (error) {
       console.error('Failed to run AI tool:', error);
-      const fallbackText = `⚡ Résultat généré pour ${tool.title} :\n\n📌 Sujet : ${inputText || tool.title}\n\n1. Concept clé : Analyse structurée des exigences en ${currentPath.toUpperCase()}.\n2. Instructions : Créer un module fonctionnel avec gestion d'erreurs.\n3. Prochaine étape : Valider et tester le code dans l'IDE.`;
+      const fallbackText = `⚡ ${isAr ? 'النتيجة المولدة لـ' : 'Résultat généré pour'} ${toolTitle} :\n\n📌 ${isAr ? 'الموضوع' : 'Sujet'} : ${inputText || toolTitle}\n\n1. ${isAr ? 'المفهوم الرئيسي' : 'Concept clé'} : ${isAr ? 'تحليل هيكلي للمطلوب بـ' : 'Analyse structurée des exigences en'} ${currentPath.toUpperCase()}.\n2. ${isAr ? 'التعليمات' : 'Instructions'} : ${isAr ? 'إنشاء وحدة برمجية مع معالجة الأخطاء' : 'Créer un module fonctionnel avec gestion d\'erreurs'}.\n3. ${isAr ? 'الخطوة التالية' : 'Prochaine étape'} : ${isAr ? 'اختبار الكود في بيئة التطوير' : 'Valider et tester le code dans l\'IDE'}.`;
       setGeneratedOutput(fallbackText);
       setOutputSource('client_fallback');
-      showToast(`⚡ ${tool.title} généré (Mode Hors Ligne)!`, 'info');
+      showToast(`⚡ ${toolTitle} ${isAr ? 'تم الإنشاء (وضع أوفلاين)' : 'généré (Mode Hors Ligne)'}!`, 'info');
     } finally {
       setIsGenerating(false);
     }
@@ -63,10 +97,12 @@ const AIToolRunnerModal: React.FC<AIToolRunnerModalProps> = ({
     if (generatedOutput) {
       navigator.clipboard.writeText(generatedOutput);
       setCopied(true);
-      showToast('Copié dans le presse-papier!', 'info');
+      showToast(isAr ? 'تم النسخ للحافظة!' : 'Copié dans le presse-papier!', 'info');
       setTimeout(() => setCopied(false), 2000);
     }
   };
+
+  const activePresets = TOOL_PRESETS[tool.id] || TOOL_PRESETS.default;
 
   return (
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[120] p-4 animate-fade-in overflow-y-auto select-none">
@@ -85,10 +121,10 @@ const AIToolRunnerModal: React.FC<AIToolRunnerModalProps> = ({
             </span>
             <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight pt-1 flex items-center gap-2">
               <span>{tool.icon}</span>
-              <span>{tool.title}</span>
+              <span>{toolTitle}</span>
             </h2>
             <p className="text-xs font-bold text-slate-600 dark:text-slate-400">
-              {tool.description}
+              {toolDesc}
             </p>
           </div>
           <button
@@ -99,18 +135,51 @@ const AIToolRunnerModal: React.FC<AIToolRunnerModalProps> = ({
           </button>
         </div>
 
-        {/* Form Input */}
+        {/* Form Input & Tool Hint */}
         <div className="space-y-4">
+          {/* Tool Hint Card inside Modal */}
+          {toolHint && (
+            <div className="bg-amber-500/10 border-2 border-slate-900 rounded-2xl p-3.5 space-y-1 text-xs shadow-[3px_3px_0px_0px_#0F172A]">
+              <span className="font-black uppercase tracking-wider block text-[11px] text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+                💡 {isAr ? 'تلميح وإرشادات الاستخدام:' : 'Tool Hint & Usage Tip:'}
+              </span>
+              <p className="text-slate-800 dark:text-amber-200 font-bold leading-relaxed">
+                {toolHint}
+              </p>
+            </div>
+          )}
+
+          {/* 1-Tap Quick Starters */}
           <div className="space-y-2">
+            <span className="text-xs font-black text-slate-900 dark:text-slate-200 uppercase tracking-wider block">
+              ⚡ {isAr ? 'اختر بنقرة واحدة بدون كتابة:' : '1-Tap Quick Starters:'}
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {activePresets.map((chip, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setInputText(chip.prompt);
+                    handleGenerate(chip.prompt);
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-[#FFE87C] hover:bg-[#00D2D3] border-2 border-slate-900 text-slate-900 text-xs font-black transition-all cursor-pointer shadow-[2px_2px_0px_0px_#0F172A] active:translate-x-[1px] active:translate-y-[1px]"
+                >
+                  {isAr ? chip.labelAr : chip.labelEn}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2 pt-1">
             <label className="text-xs font-black text-slate-900 dark:text-slate-200 uppercase tracking-wider block">
-              Entrez vos consignes ou le sujet souhaité :
+              {isAr ? 'أو أدخل التوجيهات المخصصة:' : 'Or enter custom instructions:'}
             </label>
             <textarea
-              rows={3}
+              rows={2}
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder={`Ex: Créer un contenu spécifique sur ${tool.promptPreset || 'un sujet de votre choix'}...`}
-              className="w-full bg-[#F4F1FA] dark:bg-slate-950 border-2 border-slate-900 rounded-2xl p-3.5 text-xs text-slate-900 dark:text-white placeholder-slate-500 font-extrabold focus:outline-none focus:ring-2 focus:ring-slate-900 transition-all shadow-[3px_3px_0px_0px_#0F172A] resize-none"
+              placeholder={isAr ? `مثال: إنشاء محتوى عن ${tool.promptPreset || 'موضوع من اختيارك'}...` : `Ex: Create custom content about ${tool.promptPreset || 'your topic'}...`}
+              className="w-full bg-[#F4F1FA] dark:bg-slate-950 border-2 border-slate-900 rounded-2xl p-3 text-xs text-slate-900 dark:text-white placeholder-slate-500 font-extrabold focus:outline-none focus:ring-2 focus:ring-slate-900 transition-all shadow-[3px_3px_0px_0px_#0F172A] resize-none"
             />
           </div>
 

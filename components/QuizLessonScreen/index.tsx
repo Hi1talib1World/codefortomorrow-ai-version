@@ -89,6 +89,8 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
     const [correctCount, setCorrectCount] = useState(0);
     /** Whether to show the final completion overlay. */
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    /** Whether to show the quiz hint toggle for current question. */
+    const [showQuizHint, setShowQuizHint] = useState(false);
 
     // ── Derived values ───────────────────────────────────────────────────────
     const questions = lesson.questions || [];
@@ -269,11 +271,32 @@ const QuizLessonScreen: React.FC<QuizLessonScreenProps> = ({ lesson, onComplete,
             </div>
 
             {/* Question Card */}
-            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
-                <div className="w-8 h-8 rounded-full bg-[#2E2FCE]/10 dark:bg-slate-700 flex items-center justify-center text-[#2E2FCE] dark:text-[#a3aaeb] font-bold text-sm mb-4 border border-[#2E2FCE]/20">Q</div>
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+                <div className="flex items-center justify-between">
+                    <div className="w-8 h-8 rounded-full bg-[#2E2FCE]/10 dark:bg-slate-700 flex items-center justify-center text-[#2E2FCE] dark:text-[#a3aaeb] font-bold text-sm border border-[#2E2FCE]/20">Q</div>
+                    <button
+                        onClick={() => setShowQuizHint(!showQuizHint)}
+                        className="px-3 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-bold transition-all border border-amber-500/30 flex items-center gap-1.5 cursor-pointer"
+                    >
+                        <span>💡 {showQuizHint ? 'Hide Hint' : 'Need a Hint?'}</span>
+                    </button>
+                </div>
                 <p className="text-lg font-bold text-slate-800 dark:text-white leading-relaxed">
                     {t(currentQuestion.questionKey as any)}
                 </p>
+
+                {showQuizHint && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        className="bg-amber-500/10 border border-amber-500/30 p-3.5 rounded-2xl text-xs space-y-1"
+                    >
+                        <span className="font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider block">💡 Quiz Hint:</span>
+                        <p className="text-amber-800 dark:text-amber-200 font-medium leading-relaxed">
+                            {t(currentQuestion.feedbackKey as any) || 'Think carefully about the syntax rules and concept definitions in the introduction section!'}
+                        </p>
+                    </motion.div>
+                )}
             </div>
 
             {/* Options */}

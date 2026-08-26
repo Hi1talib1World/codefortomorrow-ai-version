@@ -13,26 +13,30 @@ import SettingsPanel from './SettingsPanel';
 import AnalyticsPanel from './AnalyticsPanel';
 import { AdminPanel as OpenSourceAdmin } from '../OpenSourceScreen/AdminPanel';
 import AgentsPage from '../AgentsPage';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface AdminDashboardProps {
   currentUser: { name: string; email: string; profilePictureUrl: string } | null;
   onLogout: () => void;
 }
 
-const NAV_ITEMS = [
-  { id: 'overview', label: 'Overview', icon: LayoutDashboard, path: '/admin' },
-  { id: 'content', label: 'Content & Blog', icon: FileText, path: '/admin/content' },
-  { id: 'users', label: 'User Accounts', icon: Users, path: '/admin/users' },
-  { id: 'opensource', label: 'Open Source', icon: Globe, path: '/admin/opensource' },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3, path: '/admin/analytics' },
-  { id: 'agents', label: 'AI Agents', icon: Bot, path: '/admin/agents' },
-  { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings' },
-];
-
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { language } = useLanguage();
+  const isAr = language === 'ar';
+  const isFr = language === 'fr';
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const navItems = [
+    { id: 'overview', label: isAr ? 'نظرة عامة' : isFr ? 'Vue d\'ensemble' : 'Overview', icon: LayoutDashboard, path: '/admin' },
+    { id: 'content', label: isAr ? 'المحتوى والمدونة' : isFr ? 'Contenu & Blog' : 'Content & Blog', icon: FileText, path: '/admin/content' },
+    { id: 'users', label: isAr ? 'حسابات المستخدمين' : isFr ? 'Comptes Utilisateurs' : 'User Accounts', icon: Users, path: '/admin/users' },
+    { id: 'opensource', label: isAr ? 'المصدر المفتوح' : isFr ? 'Open Source' : 'Open Source', icon: Globe, path: '/admin/opensource' },
+    { id: 'analytics', label: isAr ? 'التحليلات' : isFr ? 'Analytiques' : 'Analytics', icon: BarChart3, path: '/admin/analytics' },
+    { id: 'agents', label: isAr ? 'وكلاء الذكاء الاصطناعي' : isFr ? 'Agents IA' : 'AI Agents', icon: Bot, path: '/admin/agents' },
+    { id: 'settings', label: isAr ? 'الإعدادات' : isFr ? 'Paramètres' : 'Settings', icon: Settings, path: '/admin/settings' },
+  ];
 
   const isActive = (path: string) => {
     if (path === '/admin') return location.pathname === '/admin' || location.pathname === '/admin/';
@@ -40,21 +44,21 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" dir={isAr ? 'rtl' : 'ltr'}>
       {/* Logo */}
       <div className="px-6 py-5 border-b border-slate-800 flex items-center gap-3">
         <div className="w-9 h-9 rounded-xl bg-[#facc15]/10 border border-[#facc15]/30 flex items-center justify-center shadow-inner">
           <Shield className="w-4 h-4 text-[#facc15]" />
         </div>
         <div>
-          <div className="text-xs font-black tracking-widest text-[#facc15] uppercase">Admin Hub</div>
+          <div className="text-xs font-black tracking-widest text-[#facc15] uppercase">{isAr ? 'مركز الإدارة' : 'Admin Hub'}</div>
           <div className="text-[10px] text-slate-500 font-mono">Code for Tomorrow</div>
         </div>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-6 space-y-1">
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const active = isActive(item.path);
           return (
             <button
@@ -70,7 +74,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
                 <item.icon className="w-4 h-4" />
                 {item.label}
               </div>
-              {active && <ChevronRight className="w-3.5 h-3.5" />}
+              {active && <ChevronRight className={`w-3.5 h-3.5 ${isAr ? 'rotate-180' : ''}`} />}
             </button>
           );
         })}
@@ -82,7 +86,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentUser, onLogout }
           onClick={() => { navigate('/admin/new'); setIsSidebarOpen(false); }}
           className="w-full flex items-center justify-center gap-2 bg-[#facc15] hover:bg-yellow-400 text-slate-950 font-bold text-sm py-2.5 rounded-xl transition-colors shadow-lg shadow-yellow-500/10 cursor-pointer"
         >
-          <PlusCircle className="w-4 h-4" /> New Article
+          <PlusCircle className="w-4 h-4" /> {isAr ? 'مقالة جديدة' : isFr ? 'Nouvel article' : 'New Article'}
         </button>
       </div>
 

@@ -584,16 +584,71 @@ const api = {
   },
 
   chatWithAssistant: async (message: string, history: any[], buddyId?: string): Promise<{ text: string }> => {
-    const response = await customFetch(`${API_BASE_URL}/ai/chat`, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ message, history, buddyId }),
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to chat with AI assistant.');
+    try {
+      const response = await customFetchWithTimeout(`${API_BASE_URL}/ai/chat`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ message, history, buddyId }),
+      }, 8000);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.text) return data;
+      }
+    } catch (e) {
+      console.warn("Backend AI Chat API request unavailable, using client buddy mascot fallback:", e);
     }
-    return data;
+
+    // Dynamic Client Buddy Mascot Fallback Generator
+    const lowerMsg = (message || '').toLowerCase();
+    const buddy = (buddyId || 'pina').toLowerCase();
+
+    const mascotResponses: Record<string, { intro: string; loop: string; array: string; debug: string; default: string }> = {
+      pina: {
+        intro: `Hoot hoot! 🦉 I'm **Pina**, your wise owl coding buddy! Let me help you break this down step by step:`,
+        loop: `Hoot hoot! 🌳 A **loop** repeats actions automatically. Here is a simple Python example:\n\n\`\`\`python\n# Repeat 5 times\nfor i in range(1, 6):\n    print(f"Hoot number {i}!")\n\`\`\`\n\n1. \`for\` starts the repetition.\n2. \`range(1, 6)\` counts 1 through 5.`,
+        array: `Hoot! 🦉 An **Array** (or List) is like a nest storing items in order:\n\n\`\`\`javascript\nlet fruits = ["Apple", "Banana", "Cherry"];\nconsole.log(fruits[0]); // "Apple"\n\`\`\``,
+        debug: `Hoot! 🦉 Debugging tip: Check your line numbers, quote marks \`""\`, and matching brackets \`()\`. Small details matter!`,
+        default: `Hoot hoot! 🦉 I'm right here to guide you. Try asking me about **loops**, **arrays**, **debugging**, or **variables**!`
+      },
+      rio: {
+        intro: `Yo! 🐒 **Rio** here, ready to swing into action with you!`,
+        loop: `Yo! 🐒 Check out how fast a loop repeats in code:\n\n\`\`\`python\nfor swing in range(1, 6):\n    print(f"Swing #{swing}! Yahoo!")\n\`\`\``,
+        array: `Yo! 🍌 An Array is like a bunch of bananas linked together!\n\n\`\`\`javascript\nconst inventory = ["Shield", "Potion", "Sword"];\nconsole.log(inventory[1]); // "Potion"\n\`\`\``,
+        debug: `Yo! 🐒 Got a bug? Don't panic! Check if your variables are spelled correctly or if you forgot a semicolon!`,
+        default: `Yo! 🐒 Let's level up your code! Ask me about **loops**, **arrays**, or **how to debug errors**!`
+      },
+      lumo: {
+        intro: `Initialising... 🤖 **Lumo** system active. Analysis of query: "${message}".`,
+        loop: `Execution sequence: Iteration logic.\n\n\`\`\`python\nfor step in range(1, 6):\n    print(f"Cycle execution: {step}")\n\`\`\``,
+        array: `Data structure: Array index mapping.\n\n\`\`\`javascript\nconst data = [10, 20, 30];\nconsole.log(data[0]); // Output: 10\n\`\`\``,
+        debug: `Diagnostic check: Verify syntax balance. Match all open braces \`{\` with closing braces \`}\`.`,
+        default: `System ready 🤖. Query topic categories: **loops**, **data structures**, or **syntax verification**.`
+      },
+      lina: {
+        intro: `A new code mystery! 🦊 I'm **Lina**, let's sniff out the clues together!`,
+        loop: `Here's a clue about loops! 🕵️‍♂️\n\n\`\`\`python\nfor clue in range(1, 6):\n    print(f"Clue #{clue} discovered!")\n\`\`\``,
+        array: `An array is a row of clue boxes! 🦊\n\n\`\`\`javascript\nlet clues = ["Footprint", "Key", "Map"];\nconsole.log(clues[0]);\n\`\`\``,
+        debug: `Detective Tip! 🦊 Print out variable values line by line to see where the secret bug is hiding!`,
+        default: `Ready for investigation! 🦊 Ask me about **loops**, **arrays**, or **how to solve code riddles**!`
+      },
+      kai: {
+        intro: `Peace... 🐢 **Kai** here. Take a deep breath, let's explore code peacefully.`,
+        loop: `Like ocean tides, loops roll in with calm rhythm: 🌊\n\n\`\`\`python\nfor wave in range(1, 6):\n    print(f"Wave {wave} rolls in...")\n\`\`\``,
+        array: `An array is like shells resting on the shore: 🐚\n\n\`\`\`javascript\nlet shells = ["Conch", "Pearl", "Coral"];\nconsole.log(shells[0]);\n\`\`\``,
+        debug: `Take your time... 🐢 Most mistakes are just missed quotation marks or small typos. Check line by line.`,
+        default: `Floating calmly in the code sea... 🐢 Ask me about **loops**, **arrays**, or **learning basics**!`
+      }
+    };
+
+    const buddyPack = mascotResponses[buddy] || mascotResponses.pina;
+    let replyText = buddyPack.default;
+
+    if (lowerMsg.includes('loop') || lowerMsg.includes('for') || lowerMsg.includes('while')) replyText = buddyPack.loop;
+    else if (lowerMsg.includes('array') || lowerMsg.includes('list') || lowerMsg.includes('index')) replyText = buddyPack.array;
+    else if (lowerMsg.includes('bug') || lowerMsg.includes('error') || lowerMsg.includes('debug') || lowerMsg.includes('fix')) replyText = buddyPack.debug;
+    else if (lowerMsg.length > 0) replyText = `${buddyPack.intro}\n\nTo build software with **${message}**, break your task into three parts:\n1. Declare variables to store data.\n2. Apply conditional logic or loops.\n3. Output the result cleanly to the console.`;
+
+    return { text: replyText };
   },
 
   generateHint: async (titleKey: string, expectedOutput: string, failedCode: string): Promise<{ hint: string }> => {
@@ -623,38 +678,106 @@ const api = {
         }
       }
     } catch (error) {
-      console.warn("Backend API request failed or timed out (5s), falling back to offline client lesson generator:", error);
+      console.warn("Backend API request failed or timed out (5s), falling back to dynamic client lesson generator:", error);
     }
 
-    // Client-side fallback generator so lesson generation NEVER fails even if backend is offline or API fails!
+    // Dynamic Client Fallback Generator with rich varied topics
     const targetPath = pathId || 'python';
-    const topicTitle = interest || 'Coding Quest';
+    const cleanTopic = (interest || 'Coding Quest').trim();
+    const lowerTopic = cleanTopic.toLowerCase();
+
+    // Select dynamic category template
+    let categoryKey = 'game';
+    if (lowerTopic.includes('robot') || lowerTopic.includes('ai') || lowerTopic.includes('autonomous')) categoryKey = 'robotics';
+    else if (lowerTopic.includes('space') || lowerTopic.includes('rocket') || lowerTopic.includes('astro')) categoryKey = 'space';
+    else if (lowerTopic.includes('cyber') || lowerTopic.includes('shield') || lowerTopic.includes('security') || lowerTopic.includes('crypto')) categoryKey = 'cybersecurity';
+    else if (lowerTopic.includes('web') || lowerTopic.includes('api') || lowerTopic.includes('app')) categoryKey = 'web';
+
+    const templates: Record<string, Array<{ subTitle: string; icon: string; intro: string; py: any; js: any; cpp: any }>> = {
+      game: [
+        {
+          subTitle: 'Player Health & Damage System',
+          icon: '🎮',
+          intro: `Welcome to **Player Health & Damage System**!\n\nIn video games, health systems track hit points (HP) when taking damage from obstacles or enemies.\n\n### 📌 Key Concepts:\n1. Initialize player HP variables.\n2. Subtract damage points.\n3. Output remaining HP.`,
+          py: { starter: `# Player Health & Damage System\nplayer_hp = 100\ndamage = 25\n\n# TODO: Calculate remaining_hp\nremaining_hp = player_hp - damage\n\nprint("Player HP:", remaining_hp)`, solution: `# Player Health & Damage System\nplayer_hp = 100\ndamage = 25\n\nremaining_hp = player_hp - damage\n\nprint("Player HP:", remaining_hp)`, expected: `Player HP: 75`, desc: `Subtract damage (25) from player_hp (100) and print "Player HP: 75".` },
+          js: { starter: `// Player Health & Damage System\nlet playerHp = 100;\nlet damage = 25;\n\n// TODO: Calculate remainingHp\nlet remainingHp = playerHp - damage;\n\nconsole.log("Player HP:", remainingHp);`, solution: `let playerHp = 100;\nlet damage = 25;\nlet remainingHp = playerHp - damage;\nconsole.log("Player HP:", remainingHp);`, expected: `Player HP: 75`, desc: `Calculate remainingHp (100 - 25) and log "Player HP: 75".` },
+          cpp: { starter: `#include <iostream>\n\nint main() {\n  int player_hp = 100;\n  int damage = 25;\n  int remaining_hp = player_hp - damage;\n  std::cout << "Player HP: " << remaining_hp;\n  return 0;\n}`, solution: `#include <iostream>\n\nint main() {\n  int player_hp = 100;\n  int damage = 25;\n  int remaining_hp = player_hp - damage;\n  std::cout << "Player HP: " << remaining_hp;\n  return 0;\n}`, expected: `Player HP: 75`, desc: `Print "Player HP: 75".` }
+        },
+        {
+          subTitle: 'Arcade Coin Streak Multiplier',
+          icon: '🪙',
+          intro: `Welcome to **Arcade Coin Streak Multiplier**!\n\nArcade games multiply coin values based on player streak combos.\n\n### 📌 Key Concepts:\n1. Define base coins and multiplier.\n2. Output total score.`,
+          py: { starter: `# Coin Score Multiplier\nbase_coins = 10\nstreak_multiplier = 3\n\n# TODO: Compute total_score = base_coins * streak_multiplier\ntotal_score = base_coins * streak_multiplier\n\nprint("Total Coins Earned:", total_score)`, solution: `# Coin Score Multiplier\nbase_coins = 10\nstreak_multiplier = 3\n\ntotal_score = base_coins * streak_multiplier\n\nprint("Total Coins Earned:", total_score)`, expected: `Total Coins Earned: 30`, desc: `Multiply base_coins (10) by streak_multiplier (3) to print "Total Coins Earned: 30".` },
+          js: { starter: `// Coin Score Multiplier\nlet baseCoins = 10;\nlet streakMultiplier = 3;\nlet totalScore = baseCoins * streakMultiplier;\nconsole.log("Total Coins Earned:", totalScore);`, solution: `let baseCoins = 10;\nlet streakMultiplier = 3;\nlet totalScore = baseCoins * streakMultiplier;\nconsole.log("Total Coins Earned:", totalScore);`, expected: `Total Coins Earned: 30`, desc: `Log "Total Coins Earned: 30".` },
+          cpp: { starter: `#include <iostream>\n\nint main() {\n  int base_coins = 10;\n  int streak_multiplier = 3;\n  int total_score = base_coins * streak_multiplier;\n  std::cout << "Total Coins Earned: " << total_score;\n  return 0;\n}`, solution: `#include <iostream>\n\nint main() {\n  int base_coins = 10;\n  int streak_multiplier = 3;\n  int total_score = base_coins * streak_multiplier;\n  std::cout << "Total Coins Earned: " << total_score;\n  return 0;\n}`, expected: `Total Coins Earned: 30`, desc: `Print "Total Coins Earned: 30".` }
+        }
+      ],
+      robotics: [
+        {
+          subTitle: 'Rover Distance Sonar Tracker',
+          icon: '🤖',
+          intro: `Welcome to **Rover Distance Sonar Tracker**!\n\nAutonomous rovers compute safety buffers using ultrasonic distance sensors.\n\n### 📌 Key Concepts:\n1. Read sensor distance.\n2. Calculate safety distance margin.`,
+          py: { starter: `# Autonomous Rover Sensor\nsensor_reading = 50\nsafety_buffer = 15\n\n# TODO: Calculate safety_margin = sensor_reading - safety_buffer\nsafety_margin = sensor_reading - safety_buffer\n\nprint("Safety Margin:", safety_margin, "cm")`, solution: `# Autonomous Rover Sensor\nsensor_reading = 50\nsafety_buffer = 15\n\nsafety_margin = sensor_reading - safety_buffer\n\nprint("Safety Margin:", safety_margin, "cm")`, expected: `Safety Margin: 35 cm`, desc: `Compute safety_margin (50 - 15) and print "Safety Margin: 35 cm".` },
+          js: { starter: `// Autonomous Rover Sensor\nlet sensorReading = 50;\nlet safetyBuffer = 15;\nlet safetyMargin = sensorReading - safetyBuffer;\nconsole.log("Safety Margin:", safetyMargin, "cm");`, solution: `let sensorReading = 50;\nlet safetyBuffer = 15;\nlet safetyMargin = sensorReading - safetyBuffer;\nconsole.log("Safety Margin:", safetyMargin, "cm");`, expected: `Safety Margin: 35 cm`, desc: `Log "Safety Margin: 35 cm".` },
+          cpp: { starter: `#include <iostream>\n\nint main() {\n  int sensor_reading = 50;\n  int safety_buffer = 15;\n  int safety_margin = sensor_reading - safety_buffer;\n  std::cout << "Safety Margin: " << safety_margin << " cm";\n  return 0;\n}`, solution: `#include <iostream>\n\nint main() {\n  int sensor_reading = 50;\n  int safety_buffer = 15;\n  int safety_margin = sensor_reading - safety_buffer;\n  std::cout << "Safety Margin: " << safety_margin << " cm";\n  return 0;\n}`, expected: `Safety Margin: 35 cm`, desc: `Print "Safety Margin: 35 cm".` }
+        }
+      ],
+      space: [
+        {
+          subTitle: 'Spacecraft Orbital Telemetry',
+          icon: '🚀',
+          intro: `Welcome to **Spacecraft Orbital Telemetry**!\n\nSpacecraft navigation computes altitude relative to planetary sea level.\n\n### 📌 Key Concepts:\n1. Read launch altitude and booster gains.\n2. Compute total orbital altitude.`,
+          py: { starter: `# Spacecraft Telemetry\nlaunch_alt = 120\nbooster_gain = 380\n\n# TODO: Calculate orbital_alt\norbital_alt = launch_alt + booster_gain\n\nprint("Orbital Telemetry:", orbital_alt, "km")`, solution: `# Spacecraft Telemetry\nlaunch_alt = 120\nbooster_gain = 380\n\norbital_alt = launch_alt + booster_gain\n\nprint("Orbital Telemetry:", orbital_alt, "km")`, expected: `Orbital Telemetry: 500 km`, desc: `Calculate 120 + 380 and print "Orbital Telemetry: 500 km".` },
+          js: { starter: `// Spacecraft Telemetry\nlet launchAlt = 120;\nlet boosterGain = 380;\nlet orbitalAlt = launchAlt + boosterGain;\nconsole.log("Orbital Telemetry:", orbitalAlt, "km");`, solution: `let launchAlt = 120;\nlet boosterGain = 380;\nlet orbitalAlt = launchAlt + boosterGain;\nconsole.log("Orbital Telemetry:", orbitalAlt, "km");`, expected: `Orbital Telemetry: 500 km`, desc: `Log "Orbital Telemetry: 500 km".` },
+          cpp: { starter: `#include <iostream>\n\nint main() {\n  int launch_alt = 120;\n  int booster_gain = 380;\n  int orbital_alt = launch_alt + booster_gain;\n  std::cout << "Orbital Telemetry: " << orbital_alt << " km";\n  return 0;\n}`, solution: `#include <iostream>\n\nint main() {\n  int launch_alt = 120;\n  int booster_gain = 380;\n  int orbital_alt = launch_alt + booster_gain;\n  std::cout << "Orbital Telemetry: " << orbital_alt << " km";\n  return 0;\n}`, expected: `Orbital Telemetry: 500 km`, desc: `Print "Orbital Telemetry: 500 km".` }
+        }
+      ],
+      cybersecurity: [
+        {
+          subTitle: 'Cipher Key Hash Encryption',
+          icon: '🔐',
+          intro: `Welcome to **Cipher Key Hash Encryption**!\n\nSecurity protocols shift numeric secret keys to encrypt payload bytes.\n\n### 📌 Key Concepts:\n1. Compute encrypted hash token.\n2. Output security verification.`,
+          py: { starter: `# Cipher Key Shift\nbase_token = 200\nshift_key = 15\n\n# TODO: Calculate encrypted_hash = base_token + shift_key\nencrypted_hash = base_token + shift_key\n\nprint("Encrypted Token:", encrypted_hash)`, solution: `# Cipher Key Shift\nbase_token = 200\nshift_key = 15\n\nencrypted_hash = base_token + shift_key\n\nprint("Encrypted Token:", encrypted_hash)`, expected: `Encrypted Token: 215`, desc: `Compute 200 + 15 and print "Encrypted Token: 215".` },
+          js: { starter: `// Cipher Key Shift\nlet baseToken = 200;\nlet shiftKey = 15;\nlet encryptedHash = baseToken + shiftKey;\nconsole.log("Encrypted Token:", encryptedHash);`, solution: `let baseToken = 200;\nlet shiftKey = 15;\nlet encryptedHash = baseToken + shiftKey;\nconsole.log("Encrypted Token:", encryptedHash);`, expected: `Encrypted Token: 215`, desc: `Log "Encrypted Token: 215".` },
+          cpp: { starter: `#include <iostream>\n\nint main() {\n  int base_token = 200;\n  int shift_key = 15;\n  int encrypted_hash = base_token + shift_key;\n  std::cout << "Encrypted Token: " << encrypted_hash;\n  return 0;\n}`, solution: `#include <iostream>\n\nint main() {\n  int base_token = 200;\n  int shift_key = 15;\n  int encrypted_hash = base_token + shift_key;\n  std::cout << "Encrypted Token: " << encrypted_hash;\n  return 0;\n}`, expected: `Encrypted Token: 215`, desc: `Print "Encrypted Token: 215".` }
+        }
+      ],
+      web: [
+        {
+          subTitle: 'Web API Quota Tracker',
+          icon: '🌐',
+          intro: `Welcome to **Web API Quota Tracker**!\n\nWeb servers track API request quotas to enforce rate limits.\n\n### 📌 Key Concepts:\n1. Define request limits and usage.\n2. Output remaining request credits.`,
+          py: { starter: `# API Quota Tracker\nmax_requests = 1000\nused_requests = 340\n\n# TODO: Calculate remaining = max_requests - used_requests\nremaining = max_requests - used_requests\n\nprint("API Requests Remaining:", remaining)`, solution: `# API Quota Tracker\nmax_requests = 1000\nused_requests = 340\n\nremaining = max_requests - used_requests\n\nprint("API Requests Remaining:", remaining)`, expected: `API Requests Remaining: 660`, desc: `Subtract 340 from 1000 and print "API Requests Remaining: 660".` },
+          js: { starter: `// API Quota Tracker\nlet maxRequests = 1000;\nlet usedRequests = 340;\nlet remaining = maxRequests - usedRequests;\nconsole.log("API Requests Remaining:", remaining);`, solution: `let maxRequests = 1000;\nlet usedRequests = 340;\nlet remaining = maxRequests - usedRequests;\nconsole.log("API Requests Remaining:", remaining);`, expected: `API Requests Remaining: 660`, desc: `Log "API Requests Remaining: 660".` },
+          cpp: { starter: `#include <iostream>\n\nint main() {\n  int max_requests = 1000;\n  int used_requests = 340;\n  int remaining = max_requests - used_requests;\n  std::cout << "API Requests Remaining: " << remaining;\n  return 0;\n}`, solution: `#include <iostream>\n\nint main() {\n  int max_requests = 1000;\n  int used_requests = 340;\n  int remaining = max_requests - used_requests;\n  std::cout << "API Requests Remaining: " << remaining;\n  return 0;\n}`, expected: `API Requests Remaining: 660`, desc: `Print "API Requests Remaining: 660".` }
+        }
+      ]
+    };
+
+    const categoryList = templates[categoryKey] || templates.game;
+    const selectedTemplate = categoryList[Math.floor(Math.random() * categoryList.length)];
+    const codeSpec = targetPath === 'c++' ? selectedTemplate.cpp : (targetPath === 'javascript' || targetPath === 'web_dev' ? selectedTemplate.js : selectedTemplate.py);
+
+    const titleText = cleanTopic.startsWith('AI Quest') ? cleanTopic : `AI Quest: ${cleanTopic} (${selectedTemplate.subTitle})`;
+
     const fallbackLesson = {
       id: Math.floor(Math.random() * 90000) + 10000,
       level: 1,
-      titleKey: topicTitle.startsWith('AI Quest') ? topicTitle : `AI Quest: ${topicTitle}`,
-      title: topicTitle.startsWith('AI Quest') ? topicTitle : `AI Quest: ${topicTitle}`,
-      interest: topicTitle,
-      icon: '🚀',
+      titleKey: titleText,
+      title: titleText,
+      interest: cleanTopic,
+      icon: selectedTemplate.icon,
       xp: 150,
       color: '#10B981',
       type: 'lesson',
       nodeType: 'standard',
       difficulty: 'Beginner',
-      introduction: `Welcome to your personalized AI coding quest on **${topicTitle}**!\n\nIn this custom mission, you will build a functional program step-by-step applying core programming concepts to solve a real-world scenario in **${topicTitle}**.\n\n### 📌 Key Concepts:\n1. **Data Formatting & Output**: Writing clean, readable stdout.\n2. **Logic Flow**: Structuring code execution sequentially.\n3. **Variable Assignment**: Storing and calculating dynamic values.`,
-      starterCode: targetPath === 'c++' 
-        ? `// AI Quest: ${topicTitle}\n#include <iostream>\n\nint main() {\n  std::cout << "${topicTitle} Ready!";\n  return 0;\n}`
-        : targetPath === 'javascript' || targetPath === 'web_dev'
-        ? `// AI Quest: ${topicTitle}\nconsole.log("${topicTitle} Ready!");`
-        : `# AI Quest: ${topicTitle}\ndef main():\n    print("${topicTitle} Ready!")\n\nif __name__ == "__main__":\n    main()`,
-      solutionCode: targetPath === 'c++' 
-        ? `#include <iostream>\n\nint main() {\n  std::cout << "${topicTitle} Ready!";\n  return 0;\n}`
-        : targetPath === 'javascript' || targetPath === 'web_dev'
-        ? `console.log("${topicTitle} Ready!");`
-        : `print("${topicTitle} Ready!")`,
-      expectedOutput: `${topicTitle} Ready!`,
-      challengeDescriptionKey: `Create a program that outputs "${topicTitle} Ready!"`,
-      challengeDescription: `Write code to print "${topicTitle} Ready!" to complete your custom AI mission.`
+      introduction: selectedTemplate.intro,
+      starterCode: codeSpec.starter,
+      solutionCode: codeSpec.solution,
+      expectedOutput: codeSpec.expected,
+      challengeDescriptionKey: codeSpec.desc,
+      challengeDescription: codeSpec.desc
     };
 
     return { lesson: fallbackLesson, source: 'client_fallback' };

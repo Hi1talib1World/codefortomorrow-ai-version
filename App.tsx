@@ -521,6 +521,47 @@ export default function App() {
     if (updatedUser) {
       try {
         await api.updateUserProgress((updatedUser as User).progress);
+
+        // Auto-save lesson completion milestone to Community Feed
+        try {
+          const lessonTitle = activeLesson?.titleKey || `Lesson #${lessonId}`;
+          const postText = `🎉 Completed lesson "${lessonTitle}" in ${currentUser.currentPath?.toUpperCase() || 'Coding'} track! Earned +${xpGained} XP!`;
+          const milestone = {
+            type: 'lesson' as const,
+            title: `Completed ${lessonTitle}`,
+            value: `+${xpGained} XP`
+          };
+
+          api.createPost(postText, milestone, 'milestone').then(feedPost => {
+            const storedFeed = localStorage.getItem('user_feed_posts');
+            const existingFeed = storedFeed ? JSON.parse(storedFeed) : [];
+            localStorage.setItem('user_feed_posts', JSON.stringify([feedPost, ...existingFeed]));
+          }).catch(() => {
+            const localPost = {
+              _id: `lesson_post_${Date.now()}`,
+              author: {
+                _id: currentUser._id,
+                name: currentUser.name,
+                profilePictureUrl: currentUser.profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}`,
+                role: currentUser.role || 'student',
+                professionalTitle: 'Student Coder'
+              },
+              content: postText,
+              tag: 'Milestones',
+              milestone,
+              likes: [],
+              comments: [],
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            };
+            const storedFeed = localStorage.getItem('user_feed_posts');
+            const existingFeed = storedFeed ? JSON.parse(storedFeed) : [];
+            localStorage.setItem('user_feed_posts', JSON.stringify([localPost, ...existingFeed]));
+          });
+        } catch (feedErr) {
+          console.warn("Auto-feed post on lesson complete warning:", feedErr);
+        }
+
       } catch (error) {
         console.error("Failed to save progress:", error);
       }

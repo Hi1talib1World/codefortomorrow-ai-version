@@ -177,35 +177,63 @@ export const generatePersonalizedContent = async (req: Request, res: Response) =
     const isSimulation = !apiKey || apiKey === 'your-gemini-api-key-here' || apiKey.startsWith('your-');
 
     const targetPath = userProgressContext.currentPath || 'python';
-    const topicTitle = interest || 'Coding Mastery';
+    const cleanTopic = (interest || 'Coding Mastery').trim();
+    const lowerTopic = cleanTopic.toLowerCase();
 
     if (isSimulation) {
+      let subTitle = 'Player Health & Damage System';
+      let icon = '🎮';
+      let starterCode = `# ${cleanTopic}: Player Health System\nplayer_hp = 100\ndamage = 25\n\n# TODO: Compute remaining_hp\nremaining_hp = player_hp - damage\n\nprint("Player HP:", remaining_hp)`;
+      let solutionCode = `# ${cleanTopic}: Player Health System\nplayer_hp = 100\ndamage = 25\n\nremaining_hp = player_hp - damage\n\nprint("Player HP:", remaining_hp)`;
+      let expectedOutput = `Player HP: 75`;
+      let desc = `Calculate remaining_hp (100 - 25) and print "Player HP: 75".`;
+
+      if (lowerTopic.includes('space') || lowerTopic.includes('rocket') || lowerTopic.includes('astro')) {
+        subTitle = 'Spacecraft Telemetry & Altitude';
+        icon = '🚀';
+        starterCode = `# Spacecraft Telemetry\nlaunch_alt = 120\nbooster_gain = 380\n\n# TODO: Calculate orbital_alt\norbital_alt = launch_alt + booster_gain\n\nprint("Orbital Telemetry:", orbital_alt, "km")`;
+        solutionCode = `# Spacecraft Telemetry\nlaunch_alt = 120\nbooster_gain = 380\n\norbital_alt = launch_alt + booster_gain\n\nprint("Orbital Telemetry:", orbital_alt, "km")`;
+        expectedOutput = `Orbital Telemetry: 500 km`;
+        desc = `Add launch_alt (120) and booster_gain (380) to print "Orbital Telemetry: 500 km".`;
+      } else if (lowerTopic.includes('robot') || lowerTopic.includes('ai') || lowerTopic.includes('autonomous')) {
+        subTitle = 'Rover Obstacle Sonar Distance';
+        icon = '🤖';
+        starterCode = `# Autonomous Rover Distance Sensor\nsensor_reading = 50\nsafety_buffer = 15\n\n# TODO: Calculate safety_margin = sensor_reading - safety_buffer\nsafety_margin = sensor_reading - safety_buffer\n\nprint("Safety Margin:", safety_margin, "cm")`;
+        solutionCode = `# Autonomous Rover Distance Sensor\nsensor_reading = 50\nsafety_buffer = 15\n\nsafety_margin = sensor_reading - safety_buffer\n\nprint("Safety Margin:", safety_margin, "cm")`;
+        expectedOutput = `Safety Margin: 35 cm`;
+        desc = `Calculate safety_margin (50 - 15) and print "Safety Margin: 35 cm".`;
+      } else if (lowerTopic.includes('cyber') || lowerTopic.includes('security') || lowerTopic.includes('shield') || lowerTopic.includes('crypto')) {
+        subTitle = 'Cipher Secret Key Verification';
+        icon = '🔐';
+        starterCode = `# Cipher Secret Key Shift\nbase_token = 200\nshift_key = 15\n\n# TODO: Compute encrypted_hash = base_token + shift_key\nencrypted_hash = base_token + shift_key\n\nprint("Encrypted Token:", encrypted_hash)`;
+        solutionCode = `# Cipher Secret Key Shift\nbase_token = 200\nshift_key = 15\n\nencrypted_hash = base_token + shift_key\n\nprint("Encrypted Token:", encrypted_hash)`;
+        expectedOutput = `Encrypted Token: 215`;
+        desc = `Compute 200 + 15 and print "Encrypted Token: 215".`;
+      }
+
+      if (targetPath === 'javascript' || targetPath === 'web_dev') {
+        starterCode = starterCode.replace(/#/g, '//').replace(/print\((.*?)\)/g, 'console.log($1)');
+        solutionCode = solutionCode.replace(/#/g, '//').replace(/print\((.*?)\)/g, 'console.log($1)');
+      }
+
       const mockLesson = {
         id: Math.floor(Math.random() * 90000) + 10000,
         level: Math.max(1, Math.min(10, Math.floor(userProgressContext.xp / 100) + 1)),
-        titleKey: `AI Quest: ${topicTitle}`,
-        title: `AI Quest: ${topicTitle}`,
-        interest: topicTitle,
-        icon: '🚀',
-        xp: 30,
+        titleKey: `AI Quest: ${cleanTopic} - ${subTitle}`,
+        title: `AI Quest: ${cleanTopic} - ${subTitle}`,
+        interest: cleanTopic,
+        icon,
+        xp: 150,
         color: '#10B981',
         type: 'lesson',
         nodeType: 'standard',
         difficulty: userProgressContext.xp > 200 ? 'Intermediate' : 'Beginner',
-        introduction: `Welcome to your personalized AI coding adventure on **${topicTitle}**!\n\nIn this custom mission, you will build a functional program step-by-step applying core programming concepts to solve a real-world scenario in **${topicTitle}**.\n\n### 📌 Key Concepts:\n1. **Data Formatting & Output**: Writing clean, readable stdout.\n2. **Logic Flow**: Structuring code execution sequentially.\n3. **Variable Assignment**: Storing and calculating dynamic values.`,
-        starterCode: targetPath === 'c++' 
-          ? `// AI Quest: ${topicTitle}\n#include <iostream>\n\nint main() {\n  std::cout << "${topicTitle} Ready!";\n  return 0;\n}`
-          : targetPath === 'javascript' || targetPath === 'web_dev'
-          ? `// AI Quest: ${topicTitle}\nconsole.log("${topicTitle} Ready!");`
-          : `# AI Quest: ${topicTitle}\nprint("${topicTitle} Ready!")`,
-        solutionCode: targetPath === 'c++' 
-          ? `#include <iostream>\n\nint main() {\n  std::cout << "${topicTitle} Ready!";\n  return 0;\n}`
-          : targetPath === 'javascript' || targetPath === 'web_dev'
-          ? `console.log("${topicTitle} Ready!");`
-          : `print("${topicTitle} Ready!")`,
-        expectedOutput: `${topicTitle} Ready!`,
-        challengeDescriptionKey: `Create a program that outputs "${topicTitle} Ready!"`,
-        challengeDescription: `Write code to print "${topicTitle} Ready!" to complete your custom AI mission.`
+        introduction: `Welcome to your custom AI coding quest on **${cleanTopic}** (${subTitle})!\n\nIn this interactive mission, you will write functional code applying core logic in **${targetPath.toUpperCase()}**.\n\n### 📌 Key Objectives:\n1. Declare variables accurately.\n2. Execute arithmetic/logical calculations.\n3. Verify output string matches specification.`,
+        starterCode,
+        solutionCode,
+        expectedOutput,
+        challengeDescriptionKey: desc,
+        challengeDescription: desc
       };
       return res.json({ lesson: mockLesson, source: 'simulation' });
     }
@@ -213,30 +241,33 @@ export const generatePersonalizedContent = async (req: Request, res: Response) =
     const ai = new GoogleGenAI({ apiKey });
     const model = "gemini-2.5-flash";
 
-    const prompt = `You are an expert AI Curriculum Designer for a student learning programming (${targetPath}).
+    const prompt = `You are an expert AI Curriculum Designer for a student learning programming in ${targetPath.toUpperCase()}.
 Student Context:
-- Student Interest: "${topicTitle}"
+- Specific Student Interest: "${cleanTopic}"
 - Programming Language: "${targetPath}"
 - Current XP: ${userProgressContext.xp}
 - Lessons Completed: ${userProgressContext.completedLessonsCount}
 
-Create a single personalized interactive coding lesson tailored to their interest. Return ONLY a valid JSON object matching this schema:
+Create a unique, creative, non-generic personalized coding lesson specifically tailored to "${cleanTopic}".
+DO NOT use generic "Game Physics & Mechanics" unless explicitly requested. Make the title unique!
+
+Return ONLY a valid JSON object matching this schema:
 {
-  "id": 99999,
+  "id": ${Math.floor(Math.random() * 90000) + 10000},
   "level": 1,
-  "title": "Short Catchy Title",
-  "titleKey": "Short Catchy Title",
+  "title": "AI Quest: [Unique Title matching ${cleanTopic}]",
+  "titleKey": "AI Quest: [Unique Title matching ${cleanTopic}]",
   "icon": "🚀",
-  "xp": 30,
+  "xp": 150,
   "color": "#10B981",
   "type": "lesson",
   "nodeType": "standard",
   "difficulty": "Beginner",
-  "introduction": "Multi-paragraph rich concept overview applying the interest to programming syntax.",
-  "starterCode": "// Starter code for language",
-  "solutionCode": "// Solution code",
+  "introduction": "Multi-paragraph rich concept overview connecting ${cleanTopic} to ${targetPath} syntax.",
+  "starterCode": "// Starter code with TODO comment",
+  "solutionCode": "// Working solution code",
   "expectedOutput": "Exact expected output string",
-  "challengeDescription": "Task instructions for student"
+  "challengeDescription": "Step-by-step challenge instructions"
 }`;
 
     const response = await ai.models.generateContent({

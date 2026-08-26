@@ -75,8 +75,100 @@ const LANGUAGE_TRACKS: LanguageTrack[] = [
   }
 ];
 
+const speakingHubTranslations = {
+  en: {
+    badge: 'Google AI Voice Tutor',
+    titlePrefix: 'Speaking Hub ',
+    titleSuffix: 'Language Practice',
+    subtitle: 'Master conversational French, English, and Arabic with interactive AI voice practice, speech recognition, and instant pronunciation scoring!',
+    french: 'French',
+    english: 'English',
+    arabic: 'Arabic',
+    languageTracks: 'Language Tracks',
+    languagesAvailable: '3 Languages Available',
+    startVoiceTutor: 'Start Voice Tutor',
+    learnAndPractice: 'Learn & Practice',
+    backToAllLanguages: 'Back to All Languages',
+    voiceStudio: 'Voice Studio',
+    practiceSpoken: 'Practice Spoken',
+    listenNativeSpeaker: 'Listen Native Speaker',
+    stopAudio: 'Stop Audio',
+    phrase: 'Phrase',
+    of: 'of',
+    translation: 'Translation:',
+    pronunciationScore: 'Pronunciation Score:',
+    recordMyVoice: 'Record My Voice',
+    listening: 'Listening (3s)...',
+    nextPhrase: 'Next Phrase',
+    ttsNotSupported: 'Text-to-speech is not supported in this browser.',
+    listeningPrompt: 'Listening... Speak into your microphone!',
+    greatJob: 'Great job! Pronunciation score:',
+    voiceModules: 'Voice Modules'
+  },
+  fr: {
+    badge: 'Tuteur Vocal Google AI',
+    titlePrefix: 'Hub d\'Oral ',
+    titleSuffix: 'Pratique des Langues',
+    subtitle: 'Maîtrisez le français, l\'anglais et l\'arabe avec la pratique vocale IA interactive, la reconnaissance vocale et l\'évaluation instantanée de la prononciation !',
+    french: 'Français',
+    english: 'Anglais',
+    arabic: 'Arabe',
+    languageTracks: 'Parcours linguistiques',
+    languagesAvailable: '3 Langues Disponibles',
+    startVoiceTutor: 'Démarrer le Tuteur Vocal',
+    learnAndPractice: 'Apprendre & Pratiquer',
+    backToAllLanguages: 'Retour à toutes les langues',
+    voiceStudio: 'Studio Vocal',
+    practiceSpoken: 'Pratiquez l\'oral de',
+    listenNativeSpeaker: 'Écouter un locuteur natif',
+    stopAudio: 'Arrêter l\'audio',
+    phrase: 'Phrase',
+    of: 'sur',
+    translation: 'Traduction :',
+    pronunciationScore: 'Score de prononciation :',
+    recordMyVoice: 'Enregistrer ma voix',
+    listening: 'Écoute en cours (3s)...',
+    nextPhrase: 'Phrase suivante',
+    ttsNotSupported: 'La synthèse vocale n\'est pas prise en charge dans ce navigateur.',
+    listeningPrompt: 'Écoute... Parlez dans votre micro !',
+    greatJob: 'Bravo ! Score de prononciation :',
+    voiceModules: 'Modules Vocaux'
+  },
+  ar: {
+    badge: 'معلم الصوت بالذكاء الاصطناعي من جوجل',
+    titlePrefix: 'مركز التحدث ',
+    titleSuffix: 'ممارسة اللغات',
+    subtitle: 'أتقن المحادثة باللغات الفرنسية والإنجليزية والعربية من خلال الممارسة الصوتية التفاعلية بالذكاء الاصطناعي وتقييم النطق الفوري!',
+    french: 'الفرنسية',
+    english: 'الإنجليزية',
+    arabic: 'العربية',
+    languageTracks: 'مسارات اللغات',
+    languagesAvailable: '3 لغات متاحة',
+    startVoiceTutor: 'ابدأ المعلم الصوتي',
+    learnAndPractice: 'تعلم ومارس',
+    backToAllLanguages: 'العودة إلى جميع اللغات',
+    voiceStudio: 'استوديو الصوت',
+    practiceSpoken: 'مارس التحدث بـ',
+    listenNativeSpeaker: 'استمع إلى متحدث أصلي',
+    stopAudio: 'إيقاف الصوت',
+    phrase: 'العبارة',
+    of: 'من',
+    translation: 'الترجمة:',
+    pronunciationScore: 'درجة تقييم النطق:',
+    recordMyVoice: 'تسجيل صوتي',
+    listening: 'جاري الاستماع (3 ثوانٍ)...',
+    nextPhrase: 'العبارة التالية',
+    ttsNotSupported: 'الميزة الصوتية غير مدعومة في هذا المتصفح.',
+    listeningPrompt: 'جاري الاستماع... تحدث في الميكروفون!',
+    greatJob: 'عمل رائع! درجة تقييم النطق:',
+    voiceModules: 'وحدات صوتية'
+  }
+};
+
 export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) => {
-  const { t } = useLanguage();
+  const { language } = useLanguage();
+  const tHub = speakingHubTranslations[language as 'fr' | 'ar' | 'en'] || speakingHubTranslations.en;
+  const isAr = language === 'ar';
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -112,7 +204,7 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
         setIsPlayingAudio(true);
       }
     } else {
-      showToast('Text-to-speech is not supported in this browser.', 'info');
+      showToast(tHub.ttsNotSupported, 'info');
     }
   };
 
@@ -124,13 +216,13 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
 
     setIsRecording(true);
     setScore(null);
-    showToast('Listening... Speak into your microphone!', 'info');
+    showToast(tHub.listeningPrompt, 'info');
 
     setTimeout(() => {
       setIsRecording(false);
       const generatedScore = Math.floor(Math.random() * 12) + 88; // 88% - 99%
       setScore(generatedScore);
-      showToast(`Great job! Pronunciation score: ${generatedScore}% 🎉`, 'success');
+      showToast(`${tHub.greatJob} ${generatedScore}% 🎉`, 'success');
     }, 3000);
   };
 
@@ -147,34 +239,34 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
                   onClick={handleBack}
                   className="p-2 rounded-full bg-[#F1F3F4] dark:bg-[#3C4043] text-[#5F6368] dark:text-[#9AA0A6] hover:text-[#202124] dark:hover:text-white transition-colors cursor-pointer"
                 >
-                  <ArrowLeft className="w-4 h-4" />
+                  <ArrowLeft className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
                 </button>
 
                 <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-blue-500/20 text-[#1A73E8] dark:text-[#8AB4F8] text-xs font-medium">
                   <Globe className="w-3.5 h-3.5 text-[#1A73E8] dark:text-[#8AB4F8]" />
-                  <span className="font-semibold tracking-wide">Google AI Voice Tutor</span>
+                  <span className="font-semibold tracking-wide">{tHub.badge}</span>
                 </div>
               </div>
               
               <h1 className="text-3xl sm:text-4xl font-extrabold text-[#202124] dark:text-white tracking-tight">
-                Speaking Hub <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1A73E8] via-[#8AB4F8] to-[#C58AF9]">Language Practice</span>
+                {tHub.titlePrefix}<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1A73E8] via-[#8AB4F8] to-[#C58AF9]">{tHub.titleSuffix}</span>
               </h1>
               
               <p className="text-[#5F6368] dark:text-[#9AA0A6] text-xs sm:text-sm max-w-xl leading-relaxed font-normal">
-                Master conversational French, English, and Arabic with interactive AI voice practice, speech recognition, and instant pronunciation scoring!
+                {tHub.subtitle}
               </p>
             </div>
 
             {/* Language Badges Summary */}
             <div className="flex items-center gap-2 overflow-x-auto">
               <span className="px-3 py-1 rounded-full bg-[#E8F0FE] text-[#1A73E8] dark:bg-[#3C4043] dark:text-[#8AB4F8] text-xs font-bold font-mono">
-                🇫🇷 French
+                🇫🇷 {tHub.french}
               </span>
               <span className="px-3 py-1 rounded-full bg-[#E6F4EA] text-[#137333] dark:bg-[#3C4043] dark:text-[#81C995] text-xs font-bold font-mono">
-                🇬🇧 English
+                🇬🇧 {tHub.english}
               </span>
               <span className="px-3 py-1 rounded-full bg-[#FCE8E6] text-[#C5221F] dark:bg-[#3C4043] dark:text-[#F28B82] text-xs font-bold font-mono">
-                🇲🇦 Arabic
+                🇲🇦 {tHub.arabic}
               </span>
             </div>
           </div>
@@ -184,70 +276,74 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
         {!activeTrack && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xs font-bold text-[#5F6368] dark:text-[#9AA0A6] uppercase tracking-wider">Language Tracks</h2>
-              <span className="text-xs font-mono text-[#1A73E8] dark:text-[#8AB4F8]">3 Languages Available</span>
+              <h2 className="text-xs font-bold text-[#5F6368] dark:text-[#9AA0A6] uppercase tracking-wider">{tHub.languageTracks}</h2>
+              <span className="text-xs font-mono text-[#1A73E8] dark:text-[#8AB4F8]">{tHub.languagesAvailable}</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {LANGUAGE_TRACKS.map(track => (
-                <motion.div
-                  key={track.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.2 }}
-                  onClick={() => {
-                    setActiveTrack(track);
-                    setActivePhraseIndex(0);
-                    setScore(null);
-                  }}
-                  className="group bg-white dark:bg-[#292A2D] rounded-3xl overflow-hidden shadow-[0_1px_3px_rgba(60,64,67,0.08)] hover:shadow-[0_6px_16px_rgba(60,64,67,0.14)] transition-all border border-[#E8EAED] dark:border-[#3C4043] hover:border-[#1A73E8]/50 text-left cursor-pointer flex flex-col justify-between gemini-halo-subtle"
-                >
-                  <div>
-                    {/* Illustration Container */}
-                    <div className="aspect-[16/10] bg-[#E3F2FD] dark:bg-[#202124] overflow-hidden relative flex items-center justify-center p-6">
-                      <img
-                        src={track.illustrationUrl}
-                        alt={track.name}
-                        className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <span className="absolute top-3 left-3 text-2xl shadow-sm">
-                        {track.flagEmoji}
-                      </span>
-                      <span className="absolute top-3 right-3 bg-white/90 dark:bg-black/60 backdrop-blur-md text-[#202124] dark:text-white text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border border-black/5">
-                        {track.totalModules} Voice Modules
-                      </span>
-                    </div>
-
-                    {/* Track Info */}
-                    <div className="p-6 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className={`text-[11px] font-medium uppercase tracking-wider px-3 py-0.5 rounded-full border border-[#E8EAED] dark:border-[#3C4043] ${track.badgeBg}`}>
-                          {track.name}
+              {LANGUAGE_TRACKS.map(track => {
+                const trackTitle = isAr && track.code === 'ar' ? 'العربية' : isAr && track.code === 'fr' ? 'الفرنسية' : isAr && track.code === 'en' ? 'الإنجليزية' : track.name;
+                return (
+                  <motion.div
+                    key={track.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.2 }}
+                    onClick={() => {
+                      setActiveTrack(track);
+                      setActivePhraseIndex(0);
+                      setScore(null);
+                    }}
+                    className={`group bg-white dark:bg-[#292A2D] rounded-3xl overflow-hidden shadow-[0_1px_3px_rgba(60,64,67,0.08)] hover:shadow-[0_6px_16px_rgba(60,64,67,0.14)] transition-all border border-[#E8EAED] dark:border-[#3C4043] hover:border-[#1A73E8]/50 cursor-pointer flex flex-col justify-between gemini-halo-subtle ${isAr ? 'text-right' : 'text-left'}`}
+                    dir={isAr ? 'rtl' : 'ltr'}
+                  >
+                    <div>
+                      {/* Illustration Container */}
+                      <div className="aspect-[16/10] bg-[#E3F2FD] dark:bg-[#202124] overflow-hidden relative flex items-center justify-center p-6">
+                        <img
+                          src={track.illustrationUrl}
+                          alt={track.name}
+                          className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <span className={`absolute top-3 ${isAr ? 'right-3' : 'left-3'} text-2xl shadow-sm`}>
+                          {track.flagEmoji}
                         </span>
-                        <span className="text-xs font-bold text-[#202124] dark:text-white font-mono">
-                          {track.nativeName}
+                        <span className={`absolute top-3 ${isAr ? 'left-3' : 'right-3'} bg-white/90 dark:bg-black/60 backdrop-blur-md text-[#202124] dark:text-white text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border border-black/5`}>
+                          {track.totalModules} {tHub.voiceModules}
                         </span>
                       </div>
 
-                      <h3 className="text-xl font-bold text-[#202124] dark:text-white group-hover:text-[#1A73E8] dark:group-hover:text-[#8AB4F8] transition-colors">
-                        Learn & Practice {track.name}
-                      </h3>
+                      {/* Track Info */}
+                      <div className="p-6 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className={`text-[11px] font-medium uppercase tracking-wider px-3 py-0.5 rounded-full border border-[#E8EAED] dark:border-[#3C4043] ${track.badgeBg}`}>
+                            {trackTitle}
+                          </span>
+                          <span className="text-xs font-bold text-[#202124] dark:text-white font-mono">
+                            {track.nativeName}
+                          </span>
+                        </div>
 
-                      <p className="text-xs text-[#5F6368] dark:text-[#9AA0A6] leading-relaxed font-normal">
-                        {track.description}
-                      </p>
-                    </div>
-                  </div>
+                        <h3 className="text-xl font-bold text-[#202124] dark:text-white group-hover:text-[#1A73E8] dark:group-hover:text-[#8AB4F8] transition-colors">
+                          {tHub.learnAndPractice} {trackTitle}
+                        </h3>
 
-                  <div className="p-6 pt-0 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-[#1A73E8] dark:text-[#8AB4F8]">Start Voice Tutor</span>
-                    <div className="w-8 h-8 rounded-full border border-[#E8EAED] dark:border-[#3C4043] flex items-center justify-center text-[#202124] dark:text-white group-hover:bg-[#1A73E8] group-hover:text-white group-hover:border-[#1A73E8] transition-all shadow-sm">
-                      <span className="text-base font-bold">→</span>
+                        <p className="text-xs text-[#5F6368] dark:text-[#9AA0A6] leading-relaxed font-normal">
+                          {track.description}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+
+                    <div className="p-6 pt-0 flex items-center justify-between">
+                      <span className="text-xs font-semibold text-[#1A73E8] dark:text-[#8AB4F8]">{tHub.startVoiceTutor}</span>
+                      <div className="w-8 h-8 rounded-full border border-[#E8EAED] dark:border-[#3C4043] flex items-center justify-center text-[#202124] dark:text-white group-hover:bg-[#1A73E8] group-hover:text-white group-hover:border-[#1A73E8] transition-all shadow-sm">
+                        <span className={`text-base font-bold ${isAr ? 'rotate-180' : ''}`}>→</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -259,20 +355,20 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
               onClick={() => setActiveTrack(null)}
               className="inline-flex items-center gap-2 text-xs font-semibold text-[#1A73E8] dark:text-[#8AB4F8] hover:underline cursor-pointer"
             >
-              <ArrowLeft className="w-4 h-4" /> Back to All Languages
+              <ArrowLeft className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} /> {tHub.backToAllLanguages}
             </button>
 
             {/* Language Arena Card */}
-            <div className="bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] rounded-3xl p-6 sm:p-8 space-y-6 shadow-md relative overflow-hidden">
+            <div className={`bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] rounded-3xl p-6 sm:p-8 space-y-6 shadow-md relative overflow-hidden ${isAr ? 'text-right' : 'text-left'}`} dir={isAr ? 'rtl' : 'ltr'}>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#F1F3F4] dark:border-[#3C4043] pb-6">
                 <div className="flex items-center gap-4">
                   <span className="text-4xl">{activeTrack.flagEmoji}</span>
                   <div>
                     <div className="text-xs font-mono text-[#1A73E8] dark:text-[#8AB4F8] uppercase tracking-wider font-semibold">
-                      {activeTrack.name} Voice Studio • {activeTrack.nativeName}
+                      {isAr && activeTrack.code === 'ar' ? 'العربية' : isAr && activeTrack.code === 'fr' ? 'الفرنسية' : isAr && activeTrack.code === 'en' ? 'الإنجليزية' : activeTrack.name} {tHub.voiceStudio} • {activeTrack.nativeName}
                     </div>
                     <h2 className="text-2xl font-bold text-[#202124] dark:text-white">
-                      Practice Spoken {activeTrack.name}
+                      {tHub.practiceSpoken} {isAr && activeTrack.code === 'ar' ? 'العربية' : isAr && activeTrack.code === 'fr' ? 'الفرنسية' : isAr && activeTrack.code === 'en' ? 'الإنجليزية' : activeTrack.name}
                     </h2>
                   </div>
                 </div>
@@ -286,22 +382,22 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
                   }`}
                 >
                   <Volume2 className="w-4 h-4" />
-                  <span>{isPlayingAudio ? 'Stop Audio' : 'Listen Native Speaker'}</span>
+                  <span>{isPlayingAudio ? tHub.stopAudio : tHub.listenNativeSpeaker}</span>
                 </button>
               </div>
 
               {/* Phrase Card */}
               <div className="bg-[#F8F9FA] dark:bg-[#202124] border border-[#E8EAED] dark:border-[#3C4043] rounded-2xl p-6 space-y-4 text-center relative">
                 <span className="text-[10px] font-mono uppercase tracking-wider px-3 py-0.5 rounded-full bg-white dark:bg-[#292A2D] border text-[#5F6368] dark:text-[#9AA0A6]">
-                  Phrase {activePhraseIndex + 1} of {activeTrack.samplePhrases.length}
+                  {tHub.phrase} {activePhraseIndex + 1} {tHub.of} {activeTrack.samplePhrases.length}
                 </span>
 
-                <h3 className="text-xl sm:text-2xl font-bold text-[#202124] dark:text-white leading-snug">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#202124] dark:text-white leading-snug" dir="ltr">
                   "{activeTrack.samplePhrases[activePhraseIndex].text}"
                 </h3>
 
                 <p className="text-xs text-[#5F6368] dark:text-[#9AA0A6] font-mono">
-                  Translation: {activeTrack.samplePhrases[activePhraseIndex].translation}
+                  {tHub.translation} {activeTrack.samplePhrases[activePhraseIndex].translation}
                 </p>
 
                 {score !== null && (
@@ -311,7 +407,7 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
                     className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E6F4EA] text-[#137333] dark:bg-[#3C4043] dark:text-[#81C995] text-xs font-bold font-mono mt-2"
                   >
                     <Award className="w-4 h-4" />
-                    <span>Pronunciation Score: {score}% Excellent! 🌟</span>
+                    <span>{tHub.pronunciationScore} {score}% 🌟</span>
                   </motion.div>
                 )}
               </div>
@@ -345,7 +441,7 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
                     }`}
                   >
                     <Mic className="w-4 h-4" />
-                    <span>{isRecording ? 'Listening (3s)...' : 'Record My Voice'}</span>
+                    <span>{isRecording ? tHub.listening : tHub.recordMyVoice}</span>
                   </button>
 
                   <button
@@ -357,7 +453,7 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
                     }}
                     className="px-4 py-3 bg-[#F1F3F4] dark:bg-[#3C4043] hover:bg-[#E8EAED] text-[#202124] dark:text-white rounded-full text-xs font-semibold uppercase tracking-wider transition cursor-pointer"
                   >
-                    Next Phrase
+                    {tHub.nextPhrase}
                   </button>
                 </div>
               </div>

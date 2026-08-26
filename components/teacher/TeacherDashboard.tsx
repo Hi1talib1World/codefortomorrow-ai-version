@@ -60,7 +60,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [activeAlerts, setActiveAlerts] = useState([
     { id: 1, user: 'Adam K.', action: 'completed Python Quiz', time: '2m ago', type: 'success' },
     { id: 2, user: 'Sara M.', action: 'needs help with Loops', time: '15m ago', type: 'warning' },
@@ -143,17 +143,20 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser, onLogo
     }
   };
 
+  const isAr = language === 'ar';
+  const isFr = language === 'fr';
+
   const sidebarItems = [
-    { id: 'overview', icon: LayoutDashboard, label: 'Overview' },
-    { id: 'students', icon: Users, label: 'Students' },
-    { id: 'classes', icon: BookOpen, label: 'My Classes' },
-    { id: 'assignments', icon: ListChecks, label: 'Quizzes' },
-    { id: 'activities', icon: Zap, label: 'Activities' },
-    { id: 'planner', icon: Calendar, label: 'Lesson Planner' },
-    { id: 'gradebook', icon: GraduationCap, label: 'Gradebook' },
-    { id: 'messages', icon: MessageSquare, label: 'Messages' },
-    { id: 'reports', icon: BarChart3, label: 'Analytics' },
-    { id: 'settings', icon: Settings, label: 'Settings' },
+    { id: 'overview', icon: LayoutDashboard, label: isAr ? 'نظرة عامة' : isFr ? 'Vue d\'ensemble' : 'Overview' },
+    { id: 'students', icon: Users, label: isAr ? 'الطلاب' : isFr ? 'Élèves' : 'Students' },
+    { id: 'classes', icon: BookOpen, label: isAr ? 'فصولي' : isFr ? 'Mes Classes' : 'My Classes' },
+    { id: 'assignments', icon: ListChecks, label: isAr ? 'الاختبارات' : isFr ? 'Quiz' : 'Quizzes' },
+    { id: 'activities', icon: Zap, label: isAr ? 'الأنشطة' : isFr ? 'Activités' : 'Activities' },
+    { id: 'planner', icon: Calendar, label: isAr ? 'مخطط الدروس' : isFr ? 'Planificateur' : 'Lesson Planner' },
+    { id: 'gradebook', icon: GraduationCap, label: isAr ? 'سجل الدرجات' : isFr ? 'Carnet de notes' : 'Gradebook' },
+    { id: 'messages', icon: MessageSquare, label: isAr ? 'الرسائل' : isFr ? 'Messages' : 'Messages' },
+    { id: 'reports', icon: BarChart3, label: isAr ? 'التحليلات' : isFr ? 'Analytiques' : 'Analytics' },
+    { id: 'settings', icon: Settings, label: isAr ? 'الإعدادات' : isFr ? 'Paramètres' : 'Settings' },
   ];
 
   const renderView = () => {

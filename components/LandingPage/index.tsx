@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { User } from '../../types';
+import { User, Language } from '../../types';
 import { motion, useInView, useAnimation } from 'motion/react';
-import { Terminal, Play, CheckCircle, Menu, X, ArrowRight, BookOpen, Layers, Users, Star, MessageSquare, ChevronUp, Check, Zap, ShieldCheck, Building2 } from 'lucide-react';
+import { Terminal, Play, CheckCircle, Menu, X, ArrowRight, BookOpen, Layers, Users, Star, MessageSquare, ChevronUp, Check, Zap, ShieldCheck, Building2, Globe, ChevronDown } from 'lucide-react';
 import Mascot from '../Mascot';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { RadialOrbitalTimelineDemo } from '@/components/ui/demo';
@@ -70,9 +70,187 @@ const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
   }
 };
 
+const LANDING_I18N: Record<Language, Record<string, string>> = {
+  en: {
+    heroTitle1: 'Building the Tech',
+    heroTitle2: 'Ecosystem for Tomorrow.',
+    heroDesc: 'An all-in-one platform for interactive learning, open-source collaboration, and advanced technical documentation.',
+    navAcademy: 'Academy',
+    navOS: 'Open Source',
+    navDocs: 'Docs & Blog',
+    navPricing: 'Pricing',
+    navAbout: 'About',
+    launchBtn: 'Launch Ecosystem',
+    academyTitle: 'CFT Academy',
+    academyDesc: 'Interactive coding adventures, gamified lessons, and curriculum builders tailored for all skill levels.',
+    enterAcademy: 'Enter Academy',
+    osTitle: 'CFTOS',
+    osDesc: 'A collaborative environment for building autonomous AI agents and contributing to open-source software.',
+    openPlatform: 'Open Platform',
+    docsTitle: 'Docs & Blog',
+    docsDesc: 'In-depth technical guides, tutorials, and insights authored by our community of engineers.',
+    readDocs: 'Read Docs',
+    unifiedTitle: 'Unified Ecosystem',
+    unifiedHeading: 'Learn, Build, and Ship together.',
+    unifiedSub: 'We remove the friction between learning syntax and deploying real applications. Our platform seamlessly connects interactive education with robust open-source collaboration tools.',
+    structuredCurr: 'Structured Curriculum',
+    structuredCurrDesc: 'Gamified lessons that build a strong foundation in logic and syntax.',
+    realWorldEnv: 'Real-World Environments',
+    realWorldEnvDesc: 'Transition from block coding directly into our robust IDE workspaces.',
+    communityCollab: 'Community Collaboration',
+    communityCollabDesc: 'Join open-source projects and get code reviews from experienced mentors.',
+    writeCodeTitle: 'Write code, instantly.',
+    writeCodeDesc: 'Our in-browser editor provides a safe, fully-featured sandbox. Experience live syntax highlighting, instant execution, and comprehensive error reporting without configuring a local environment.',
+    zeroSetup: 'Zero setup required',
+    instantExecution: 'Instant execution feedback',
+    safeSandbox: 'Safe sandbox architecture',
+    aiAgentsBadge: 'Running 24/7 Every Single Day',
+    aiAgentsTitle: 'Powered by 3 Specialized AI Agents',
+    aiAgentsDesc: 'Our autonomous AI agents work non-stop 24 hours a day, 7 days a week, 365 days a year to personalize learning, synthesize curriculum, and support school partners every single day.',
+    pricingBadge: 'Transparent & Accessible Pricing',
+    pricingTitle: 'Flexible Plans for Every Learner & Institution',
+    pricingDesc: 'Start learning for free, upgrade for unlimited AI tutoring, or deploy an offline-first CS lab in your school.',
+    monthly: 'Monthly',
+    yearly: 'Yearly',
+    save20: 'Save 20%',
+    starterTitle: 'Free Explorer',
+    starterDesc: 'Essential coding challenges and playground for self-directed learners.',
+    proTitle: 'Pro Mastery',
+    proDesc: 'Full AI agent suite, 100+ challenges, unlimited diagnostics & multi-language support.',
+    enterpriseTitle: 'School & Club Lab',
+    enterpriseDesc: 'Complete turn-key CS lab setup for primary & secondary schools.',
+    getStartedFree: 'Get Started Free',
+    upgradePro: 'Upgrade to Pro',
+    contactSales: 'Contact Sales',
+  },
+  fr: {
+    heroTitle1: 'Construire l\'Écosystème',
+    heroTitle2: 'Technologique de Demain.',
+    heroDesc: 'Une plateforme tout-en-un pour l\'apprentissage interactif, la collaboration open source et la documentation technique avancée.',
+    navAcademy: 'Académie',
+    navOS: 'Open Source',
+    navDocs: 'Docs & Blog',
+    navPricing: 'Tarifs',
+    navAbout: 'À propos',
+    launchBtn: 'Lancer l\'Écosystème',
+    academyTitle: 'Académie CFT',
+    academyDesc: 'Aventures de code interactives, leçons ludiques et générateurs de programmes adaptés à tous les niveaux.',
+    enterAcademy: 'Entrer dans l\'Académie',
+    osTitle: 'CFTOS',
+    osDesc: 'Un environnement collaboratif pour créer des agents IA autonomes et contribuer à des logiciels open source.',
+    openPlatform: 'Ouvrir la Plateforme',
+    docsTitle: 'Docs & Blog',
+    docsDesc: 'Guides techniques approfondis, tutoriels et analyses rédigés par notre communauté d\'ingénieurs.',
+    readDocs: 'Lire les Docs',
+    unifiedTitle: 'Écosystème Unifié',
+    unifiedHeading: 'Apprendre, Construire et Déployer ensemble.',
+    unifiedSub: 'Nous éliminons la friction entre l\'apprentissage de la syntaxe et le déploiement d\'applications réelles.',
+    structuredCurr: 'Programme Structuré',
+    structuredCurrDesc: 'Des leçons ludiques qui construisent une base solide en logique et syntaxe.',
+    realWorldEnv: 'Environnements Réels',
+    realWorldEnvDesc: 'Passez directement du code en bloc à nos espaces de travail IDE complets.',
+    communityCollab: 'Collaboration Communautaire',
+    communityCollabDesc: 'Rejoignez des projets open source et obtenez des révisions de code par des mentors expérimentés.',
+    writeCodeTitle: 'Écrivez du code, instantanément.',
+    writeCodeDesc: 'Notre éditeur dans le navigateur offre un environnement sécurisé et complet sans configuration.',
+    zeroSetup: 'Aucune configuration requise',
+    instantExecution: 'Retour d\'exécution instantané',
+    safeSandbox: 'Architecture sandbox sécurisée',
+    aiAgentsBadge: 'En fonctionnement 24/7 tous les jours',
+    aiAgentsTitle: 'Propulsé par 3 Agents IA Spécialisés',
+    aiAgentsDesc: 'Nos agents IA autonomes travaillent 24h/24 et 7j/7 pour personnaliser l\'apprentissage et soutenir nos partenaires.',
+    pricingBadge: 'Tarifs Transparents & Accessibles',
+    pricingTitle: 'Des Offres Flexibles pour Chaque Apprenant & Établissement',
+    pricingDesc: 'Commencez gratuitement, passez au niveau supérieur avec un tutorat IA illimité.',
+    monthly: 'Mensuel',
+    yearly: 'Annuel',
+    save20: 'Économisez 20%',
+    starterTitle: 'Explorateur Gratuit',
+    starterDesc: 'Défis de code essentiels et environnement pour apprenants autonomes.',
+    proTitle: 'Maîtrise Pro',
+    proDesc: 'Suite complète d\'agents IA, +100 défis et support multilingue.',
+    enterpriseTitle: 'Lab École & Club',
+    enterpriseDesc: 'Installation clé en main de laboratoire informatique pour écoles.',
+    getStartedFree: 'Commencer Gratuitement',
+    upgradePro: 'Passer à Pro',
+    contactSales: 'Contacter les Ventes',
+  },
+  ar: {
+    heroTitle1: 'بناء منظومة التكنولوجيا',
+    heroTitle2: 'من أجل الغد.',
+    heroDesc: 'منصة متكاملة للتعلم التفاعلي، والتعاون في المشاريع مفتوحة المصدر، والتوثيق التقني المتقدم.',
+    navAcademy: 'الأكاديمية',
+    navOS: 'المصدر المفتوح',
+    navDocs: 'الوثائق والمدونة',
+    navPricing: 'الأسعار',
+    navAbout: 'عن المنصة',
+    launchBtn: 'إطلاق المنظومة',
+    academyTitle: 'أكاديمية Code for Tomorrow',
+    academyDesc: 'مغامرات برمجة تفاعلية، دروس ممتعة، ومولدات مناهج مخصصة لكل المستويات.',
+    enterAcademy: 'دخول الأكاديمية',
+    osTitle: 'CFTOS',
+    osDesc: 'بيئة تعاونية لبناء وكلاء الذكاء الاصطناعي والمساهمة في البرمجيات مفتوحة المصدر.',
+    openPlatform: 'فتح المنصة',
+    docsTitle: 'الوثائق والمدونة',
+    docsDesc: 'أدلة تقنية متعمقة، دروس معمارية، ورؤى من مجتمع مهندسينا.',
+    readDocs: 'قراءة الوثائق',
+    unifiedTitle: 'منظومة موحدة',
+    unifiedHeading: 'تعلم، وابنِ، وانشر تطبيقك معًا.',
+    unifiedSub: 'نزيل العقبات بين تعلم قواعد البرمجة ونشر التطبيقات الفعليه بسهولة ويسر.',
+    structuredCurr: 'منهج مخصص ومبسط',
+    structuredCurrDesc: 'دروس ممتعة تبني أساسًا قويًا في المنطق والبرمجة.',
+    realWorldEnv: 'بيئات عمل حقيقية',
+    realWorldEnvDesc: 'الانتقال المباشر من البرمجة بالكتل إلى محرر الكود الاحترافي.',
+    communityCollab: 'تعاون مجتمعي',
+    communityCollabDesc: 'انضم لمشاريع مفتوحة المصدر واحصل على مراجعات الكود من موجهين خبراء.',
+    writeCodeTitle: 'اكتب الكود، فوراً.',
+    writeCodeDesc: 'يوفر محررنا في المتصفح بيئة تفاعلية آمنة كاملة الميزات مع تشغيل فوري وتنبيهات الأخطاء.',
+    zeroSetup: 'بدون الحاجة لأي إعدادات',
+    instantExecution: 'نتائج تشغيل فورية',
+    safeSandbox: 'بنية بيئة تشغيل آمنة',
+    aiAgentsBadge: 'يعمل 24/7 كل يوم بدون توقف',
+    aiAgentsTitle: 'مدعوم بـ 3 وكلاء ذكاء اصطناعي متخصصين',
+    aiAgentsDesc: 'يعمل وكلاء الذكاء الاصطناعي المستقلون لدينا على مدار 24 ساعة يوميًا لتخصيص التعلم ودعم الشركاء.',
+    pricingBadge: 'أسعار شفافة ومتاحة للجميع',
+    pricingTitle: 'خطط مرنة لكل متعلم ومؤسسة تعليمية',
+    pricingDesc: 'ابدأ التعلم مجانًا، وقم بالترقية للحصول على معلم ذكاء اصطناعي غير محدود.',
+    monthly: 'شهري',
+    yearly: 'سنوي',
+    save20: 'وفر 20%',
+    starterTitle: 'المستكشف المجاني',
+    starterDesc: 'تحديات برمجة أساسية وتجربة تفاعلية للمتعلمين الذاتيين.',
+    proTitle: 'الاحترافي Pro',
+    proDesc: 'مجموعة وكلاء الذكاء الاصطناعي الكاملة، +100 تحدي ودعم لغات متعددة.',
+    enterpriseTitle: 'مختبر المدارس والأندية',
+    enterpriseDesc: 'إعداد مختبر برمجيات كامل ومتاح بدون إنترنت للمدارس.',
+    getStartedFree: 'ابدأ مجانًا',
+    upgradePro: 'الترقية إلى Pro',
+    contactSales: 'تواصل مع المبيعات',
+  }
+};
+
+const LANGUAGES: { code: Language; label: string; flag: string }[] = [
+  { code: Language.EN, label: 'English', flag: '🇺🇸' },
+  { code: Language.FR, label: 'Français', flag: '🇫🇷' },
+  { code: Language.AR, label: 'العربية', flag: '🇲🇦' },
+];
+
 const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void }> = ({ currentUser, onGetStarted }) => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
+  const txt = LANDING_I18N[language] || LANDING_I18N.en;
   const [isYearlyBilling, setIsYearlyBilling] = useState(false);
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const langDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(event.target as Node)) {
+        setIsLangDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const detectUserCurrency = (): CurrencyCode => {
     try {
@@ -162,33 +340,78 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
 
           <nav className="hidden lg:flex items-center gap-4">
             <a href={getPlatformHref('academy', '/dashboard')} onClick={(e) => handleCardClick(e, 'academy', '/dashboard')} className="text-white hover:text-sky-400 transition-colors text-sm font-bold tracking-wide">
-              Academy
+              {txt.navAcademy}
             </a>
             <div className="w-[1px] h-4 bg-slate-800 self-center" />
             <a href={getPlatformHref('os', '/cftos')} onClick={(e) => handleCardClick(e, 'os', '/cftos')} className="text-white hover:text-sky-400 transition-colors text-sm font-bold tracking-wide">
-              Open Source
+              {txt.navOS}
             </a>
             <div className="w-[1px] h-4 bg-slate-800 self-center" />
             <a href={getPlatformHref('docs', '/blog')} onClick={(e) => handleCardClick(e, 'docs', '/blog')} className="text-white hover:text-sky-400 transition-colors text-sm font-bold tracking-wide">
-              Docs & Blog
+              {txt.navDocs}
             </a>
             <div className="w-[1px] h-4 bg-slate-800 self-center" />
             <a href="#pricing" className="text-white hover:text-sky-400 transition-colors text-sm font-bold tracking-wide">
-              Pricing
+              {txt.navPricing}
             </a>
             <div className="w-[1px] h-4 bg-slate-800 self-center" />
             <a href="/about" className="text-white hover:text-sky-400 transition-colors text-sm font-bold tracking-wide">
-              About
+              {txt.navAbout}
             </a>
           </nav>
 
-          <div className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center gap-3">
+            {/* Top-Right Language Switcher */}
+            <div className="relative" ref={langDropdownRef}>
+              <button
+                onClick={() => setIsLangDropdownOpen(prev => !prev)}
+                className="flex items-center gap-2 bg-[#0b132b] hover:bg-[#121c3d] text-slate-200 border border-sky-500/30 px-3.5 py-2 rounded-full text-xs font-bold transition-all shadow-sm cursor-pointer"
+                title="Switch Language"
+              >
+                <Globe className="w-3.5 h-3.5 text-sky-400" />
+                <span>{LANGUAGES.find(l => l.code === language)?.flag} {language.toUpperCase()}</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
+              </button>
+
+              {isLangDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-[#0b132b] border border-sky-500/40 rounded-2xl shadow-2xl py-2 z-50 overflow-hidden backdrop-blur-xl">
+                  {LANGUAGES.map(lang => (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        setIsLangDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-4 py-2 text-xs font-bold flex items-center justify-between hover:bg-sky-500/20 transition-colors cursor-pointer ${language === lang.code ? 'text-sky-400 bg-sky-500/10' : 'text-slate-200'}`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <span className="text-sm">{lang.flag}</span>
+                        <span>{lang.label}</span>
+                      </span>
+                      {language === lang.code && <Check className="w-3.5 h-3.5 text-sky-400" />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <button onClick={onGetStarted} className="bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 text-white font-bold px-6 py-2.5 rounded-full hover:brightness-110 transition-all flex items-center gap-2 active:scale-95 shadow-lg shadow-sky-500/25 cursor-pointer">
-              Launch Ecosystem
+              {txt.launchBtn}
             </button>
           </div>
 
-          <div className="flex md:hidden items-center">
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              onClick={() => {
+                const nextLang = language === Language.EN ? Language.FR : language === Language.FR ? Language.AR : Language.EN;
+                setLanguage(nextLang);
+              }}
+              className="flex items-center gap-1.5 bg-[#0b132b] text-slate-200 border border-sky-500/30 px-3 py-1.5 rounded-full text-xs font-bold cursor-pointer"
+            >
+              <Globe className="w-3.5 h-3.5 text-sky-400" />
+              <span>{language.toUpperCase()}</span>
+            </button>
+
             <button className="p-1 text-white hover:text-sky-400" onClick={() => setIsMenuOpen(true)}>
               <Menu className="w-8 h-8" />
             </button>
@@ -203,14 +426,29 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             <X className="w-8 h-8" />
           </button>
           <nav className="flex flex-col space-y-6 mt-16 text-center">
-            <a href={getPlatformHref('academy', '/dashboard')} className="text-2xl font-bold text-white hover:text-sky-400">Academy</a>
-            <a href={getPlatformHref('os', '/cftos')} className="text-2xl font-bold text-white hover:text-sky-400">Open Source</a>
-            <a href={getPlatformHref('docs', '/blog')} className="text-2xl font-bold text-white hover:text-sky-400">Docs & Blog</a>
-            <a href="#pricing" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold text-white hover:text-sky-400">Pricing</a>
-            <a href="/about" className="text-2xl font-bold text-white hover:text-sky-400">About</a>
+            <a href={getPlatformHref('academy', '/dashboard')} className="text-2xl font-bold text-white hover:text-sky-400">{txt.navAcademy}</a>
+            <a href={getPlatformHref('os', '/cftos')} className="text-2xl font-bold text-white hover:text-sky-400">{txt.navOS}</a>
+            <a href={getPlatformHref('docs', '/blog')} className="text-2xl font-bold text-white hover:text-sky-400">{txt.navDocs}</a>
+            <a href="#pricing" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold text-white hover:text-sky-400">{txt.navPricing}</a>
+            <a href="/about" className="text-2xl font-bold text-white hover:text-sky-400">{txt.navAbout}</a>
             <button onClick={() => { setIsMenuOpen(false); onGetStarted(); }} className="mt-8 bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 text-white font-bold px-8 py-4 rounded-full text-xl hover:brightness-110 shadow-lg shadow-sky-500/30">
-              Launch Ecosystem
+              {txt.launchBtn}
             </button>
+            <div className="flex justify-center items-center gap-3 pt-6 mt-4 border-t border-slate-800/80">
+              {LANGUAGES.map(lang => (
+                <button
+                  key={lang.code}
+                  onClick={() => {
+                    setLanguage(lang.code);
+                    setIsMenuOpen(false);
+                  }}
+                  className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 border transition-all cursor-pointer ${language === lang.code ? 'bg-sky-500/20 text-sky-300 border-sky-400' : 'bg-slate-900/60 text-slate-300 border-slate-700'}`}
+                >
+                  <span>{lang.flag}</span>
+                  <span>{lang.label}</span>
+                </button>
+              ))}
+            </div>
           </nav>
         </div>
       )}
@@ -224,12 +462,12 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
         <div className="container mx-auto px-6 relative z-10 text-center">
           <AnimatedSection>
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-tight tracking-tight mb-6">
-              Building the Tech
+              {txt.heroTitle1}
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-cyan-300 to-blue-400">Ecosystem for Tomorrow.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-cyan-300 to-blue-400">{txt.heroTitle2}</span>
             </h1>
             <p className="max-w-2xl mx-auto text-slate-300 text-lg md:text-xl leading-relaxed mb-8 font-medium">
-              An all-in-one platform for interactive learning, open-source collaboration, and advanced technical documentation.
+              {txt.heroDesc}
             </p>
 
             {/* Built-in Portal Grid */}
@@ -240,10 +478,10 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
                     <div className="w-12 h-12 rounded-xl bg-[#0b132b] border border-sky-500/20 flex items-center justify-center overflow-hidden mb-6">
                       <img src="/assets/code-for-tomorrow-logo.png" alt="CFT Academy" className="w-full h-full object-contain p-1" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-sky-400 transition-colors">CFT Academy</h3>
-                    <p className="text-slate-400 leading-relaxed mb-6">Interactive coding adventures, gamified lessons, and curriculum builders tailored for all skill levels.</p>
+                    <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-sky-400 transition-colors">{txt.academyTitle}</h3>
+                    <p className="text-slate-400 leading-relaxed mb-6">{txt.academyDesc}</p>
                   </div>
-                  <span className="inline-flex items-center text-sky-400 font-bold text-sm">Enter Academy <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" /></span>
+                  <span className="inline-flex items-center text-sky-400 font-bold text-sm">{txt.enterAcademy} <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" /></span>
                 </GlowCard>
               </a>
 
@@ -253,10 +491,10 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
                     <div className="w-12 h-12 rounded-xl bg-[#0b132b] border border-sky-500/20 flex items-center justify-center overflow-hidden mb-6">
                       <img src="/assets/images/cftos_logo.jpg" alt="CFTOS" className="w-full h-full object-cover" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-sky-400 transition-colors">CFTOS</h3>
-                    <p className="text-slate-400 leading-relaxed mb-6">A collaborative environment for building autonomous AI agents and contributing to open-source software.</p>
+                    <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-sky-400 transition-colors">{txt.osTitle}</h3>
+                    <p className="text-slate-400 leading-relaxed mb-6">{txt.osDesc}</p>
                   </div>
-                  <span className="inline-flex items-center text-sky-400 font-bold text-sm">Open Platform <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" /></span>
+                  <span className="inline-flex items-center text-sky-400 font-bold text-sm">{txt.openPlatform} <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" /></span>
                 </GlowCard>
               </a>
 
@@ -266,10 +504,10 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
                     <div className="w-12 h-12 rounded-xl bg-[#0b132b] border border-sky-500/20 flex items-center justify-center text-sky-400 mb-6">
                       <Terminal className="w-6 h-6" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-sky-400 transition-colors">Docs & Blog</h3>
-                    <p className="text-slate-400 leading-relaxed mb-6">In-depth technical guides, tutorials, and insights authored by our community of engineers.</p>
+                    <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-sky-400 transition-colors">{txt.docsTitle}</h3>
+                    <p className="text-slate-400 leading-relaxed mb-6">{txt.docsDesc}</p>
                   </div>
-                  <span className="inline-flex items-center text-sky-400 font-bold text-sm">Read Docs <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" /></span>
+                  <span className="inline-flex items-center text-sky-400 font-bold text-sm">{txt.readDocs} <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" /></span>
                 </GlowCard>
               </a>
             </div>

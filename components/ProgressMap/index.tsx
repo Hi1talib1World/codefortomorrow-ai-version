@@ -236,6 +236,11 @@ export const LearnScreen: React.FC<LearnScreenProps> = ({
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTooltipId, setActiveTooltipId] = useState<number | null>(null);
+
+  React.useEffect(() => {
+    setActiveTooltipId(null);
+  }, [path, searchQuery]);
 
   if (path === 'ai_engineering') {
     return <AiEngineeringRoadmapView onStartLesson={onStartLesson} />;
@@ -304,6 +309,7 @@ export const LearnScreen: React.FC<LearnScreenProps> = ({
           const isCurrent = isFirstUncompleted;
           const isLockedNode = sectionLocked || (!isDone && !isCurrent);
           const snakeOffset = getSnakeOffset(globalIdx);
+          const isTooltipOpen = activeTooltipId === lesson.id;
 
           return (
             <React.Fragment key={lesson.id}>
@@ -312,15 +318,23 @@ export const LearnScreen: React.FC<LearnScreenProps> = ({
               )}
 
               <div
-                style={{ transform: `translateX(${snakeOffset}px)` }}
-                className="transition-transform duration-300 relative group flex justify-center items-center"
+                style={{
+                  transform: `translateX(${snakeOffset}px)`,
+                  zIndex: isTooltipOpen ? 40 : 1,
+                }}
+                className={`transition-transform duration-300 relative group flex justify-center items-center ${isTooltipOpen ? 'z-40' : 'z-1'}`}
               >
                 <LessonNode
                   lesson={lesson}
                   isCompleted={isDone}
                   isUnlocked={!isLockedNode}
                   isNext={isCurrent}
+                  isTooltipOpen={isTooltipOpen}
+                  onToggleTooltip={(open) => {
+                    setActiveTooltipId(open ? lesson.id : null);
+                  }}
                   onStartLesson={() => {
+                    setActiveTooltipId(null);
                     if (!isLockedNode) onStartLesson(lesson);
                   }}
                 />

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import api from '../../services/api';
 import GameStudioScreen from '../GameStudioScreen';
 import QuestionLabScreen from '../QuestionLabScreen';
 import SmartBooksScreen from '../SmartBooksScreen';
@@ -154,12 +155,52 @@ const CreationsScreen: React.FC<{ currentUser?: any }> = ({ currentUser }) => {
         }
     }, []);
 
-    const handleSaveCreation = (newCreation: Creation) => {
+    const handleSaveCreation = async (newCreation: Creation) => {
         const updated = [newCreation, ...creations];
         setCreations(updated);
         localStorage.setItem('user_creations', JSON.stringify(updated));
         setSelectedCreationId(newCreation.id);
         setActiveTool(null);
+
+        // Auto-save and publish every user creation as a Community Feed post!
+        try {
+            const typeLabel = newCreation.contentType ? newCreation.contentType.toUpperCase() : 'INTERACTIVE QUIZ';
+            const postText = `🚀 Created a new ${typeLabel} "${newCreation.title}" with ${newCreation.questionCount || 0} questions!`;
+            const milestone = {
+                type: 'general' as const,
+                title: `New ${typeLabel}: ${newCreation.title}`,
+                value: `${newCreation.questionCount || 1} Questions`
+            };
+
+            let feedPost: any;
+            try {
+                feedPost = await api.createPost(postText, milestone, 'milestone');
+            } catch (err) {
+                feedPost = {
+                    _id: `creation_post_${Date.now()}`,
+                    author: {
+                        _id: currentUser?._id || 'guest',
+                        name: currentUser?.name || 'Creator',
+                        profilePictureUrl: currentUser?.profilePictureUrl || `https://ui-avatars.com/api/?name=Creator`,
+                        role: currentUser?.role || 'student',
+                        professionalTitle: 'Content Creator'
+                    },
+                    content: postText,
+                    tag: 'Student Project',
+                    milestone,
+                    likes: [],
+                    comments: [],
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+            }
+
+            const stored = localStorage.getItem('user_feed_posts');
+            const existingFeed = stored ? JSON.parse(stored) : [];
+            localStorage.setItem('user_feed_posts', JSON.stringify([feedPost, ...existingFeed]));
+        } catch (e) {
+            console.warn('Failed to publish creation feed post:', e);
+        }
     };
 
     const creationTools = [

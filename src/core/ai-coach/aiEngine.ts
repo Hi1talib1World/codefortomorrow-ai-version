@@ -613,34 +613,35 @@ ${activePersona}`;
         throw new Error("No valid Gemini API key configured.");
       }
 
-      // Safeguard: Ensure history turns alternate and start with 'user'
-      let filteredHistory = (history || []).map(h => ({
+      // Safeguard: Filter valid turns and ensure history starts with 'user'
+      const rawTurns = (history || []).map(h => ({
         role: h.role === 'model' ? 'model' as const : 'user' as const,
         parts: h.parts || []
       })).filter(h => h.parts && h.parts.length > 0 && h.parts[0]?.text);
 
-      if (filteredHistory.length > 0 && filteredHistory[0].role === 'model') {
-        filteredHistory.shift(); // Remove model welcome message to ensure history starts with user
-      }
-
-      // strictly alternate turns
-      const finalHistory: typeof filteredHistory = [];
-      for (const turn of filteredHistory) {
-        if (finalHistory.length === 0) {
-          if (turn.role === 'user') {
-            finalHistory.push(turn);
-          }
+      // Filter to strictly alternating turns
+      const contents: Array<{ role: 'user' | 'model'; parts: { text: string }[] }> = [];
+      for (const turn of rawTurns) {
+        if (contents.length === 0) {
+          if (turn.role === 'user') contents.push(turn);
         } else {
-          const lastTurn = finalHistory[finalHistory.length - 1];
+          const lastTurn = contents[contents.length - 1];
           if (lastTurn.role !== turn.role) {
-            finalHistory.push(turn);
+            contents.push(turn);
           }
         }
       }
 
+      // Ensure the payload ends with the current user message without duplicate user turns
+      if (contents.length === 0 || contents[contents.length - 1].role === 'model') {
+        contents.push({ role: 'user', parts: [{ text: message }] });
+      } else {
+        contents[contents.length - 1] = { role: 'user', parts: [{ text: message }] };
+      }
+
       const response = await getAi().models.generateContent({
         model: this.model,
-        contents: [...finalHistory, { role: 'user', parts: [{ text: message }] }],
+        contents,
         config: {
           systemInstruction: systemInstruction,
         }
@@ -788,15 +789,17 @@ function flow(tide) {
   }
 
   static async generateHint(titleKey: string, expectedOutput: string, failedCode: string): Promise<string> {
-    const promptText = `You are a helpful and encouraging coding teacher for children (ages 8-15) on the "Code for Tomorrow" platform. 
-The student is working on a lesson about: "${titleKey}".
-Their goal is to write code that outputs EXACTLY: "${expectedOutput}".
-They wrote the following code which failed:
+    const promptText = `You are an expert AI Coding Teacher for students on the "Code for Tomorrow" platform. 
+The student is working on lesson: "${titleKey}".
+Target Expected Output: "${expectedOutput}".
+Student's Current Failed Code:
 \`\`\`
 ${failedCode}
 \`\`\`
-Provide a concise, encouraging hint (1-2 sentences) of what is wrong and how they can fix it.
-Do not give them the complete solution code directly. Focus on guidance and debug clues.`;
+
+CRITICAL RULE: DO NOT GIVE AWAY THE ENTIRE ANSWER OR COMPLETE SOLUTION CODE.
+Give a partial clue (1-2 sentences) and a fill-in-the-blanks snippet using '___' for missing values or operators so the student completes the code themselves.
+Example format: "Check your calculation logic! Partial Clue: \`remaining = 100 - ___\`"`;
 
     try {
       if (!hasValidGeminiKey()) {

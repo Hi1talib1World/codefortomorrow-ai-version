@@ -16,6 +16,8 @@ interface LessonNodeProps {
   isUnlocked: boolean;
   isNext: boolean;
   onStartLesson: (lesson: Lesson) => void;
+  isTooltipOpen?: boolean;
+  onToggleTooltip?: (open: boolean) => void;
 }
 
 /** Map from lesson.icon key → emoji for the node center. */
@@ -33,10 +35,29 @@ const EMOJI_MAP: Record<string, string> = {
   zellige: '🧱',
 };
 
-const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked, isNext, onStartLesson }) => {
+const LessonNode: React.FC<LessonNodeProps> = ({
+  lesson,
+  isCompleted,
+  isUnlocked,
+  isNext,
+  onStartLesson,
+  isTooltipOpen,
+  onToggleTooltip,
+}) => {
   const { t } = useLanguage();
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [internalShowTooltip, setInternalShowTooltip] = useState(false);
   const nodeRef = useRef<HTMLDivElement>(null);
+
+  const showTooltip = isTooltipOpen !== undefined ? isTooltipOpen : internalShowTooltip;
+
+  const toggleTooltip = (val?: boolean) => {
+    const nextVal = val !== undefined ? val : !showTooltip;
+    if (onToggleTooltip) {
+      onToggleTooltip(nextVal);
+    } else {
+      setInternalShowTooltip(nextVal);
+    }
+  };
 
   const emoji = EMOJI_MAP[lesson.icon] ?? '';
   const lessonTitle = t(lesson.titleKey as any) || lesson.titleKey;
@@ -45,7 +66,7 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (nodeRef.current && !nodeRef.current.contains(e.target as Node)) {
-        setShowTooltip(false);
+        toggleTooltip(false);
       }
     };
     if (showTooltip) {
@@ -77,12 +98,12 @@ const LessonNode: React.FC<LessonNodeProps> = ({ lesson, isCompleted, isUnlocked
         : 'shadow-[0_4px_0_#cbd5e1] dark:shadow-[0_4px_0_#1e293b]';
 
   const handleNodeClick = () => {
-    setShowTooltip(prev => !prev);
+    toggleTooltip();
   };
 
   const handleActionClick = () => {
     if (isUnlocked) {
-      setShowTooltip(false);
+      toggleTooltip(false);
       onStartLesson(lesson);
     }
   };

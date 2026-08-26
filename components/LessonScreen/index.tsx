@@ -142,8 +142,77 @@ const VisualStage: React.FC<{ output: string, isCorrect: boolean | null, mood: s
     );
 };
 
+const createPartialMaskedCode = (code: string): string => {
+    if (!code) return '';
+    return code
+        .replace(/(=|\+|\-|\*|\/)\s*([0-9]+|"[^"]*"|'[^']*')/g, '$1 ___')
+        .replace(/print\((["'][^"']+["'])\)/g, 'print("___")')
+        .replace(/console\.log\((["'][^"']+["'])\)/g, 'console.log("___");');
+};
+
+const getLessonHint = (lesson: Lesson, pathName: string): string => {
+    const expected = (lesson.expectedOutput || '').trim();
+    const solution = (lesson.solutionCode || '').trim();
+
+    if (solution) {
+        const lines = solution.split('\n').filter(l => l.trim() && !l.trim().startsWith('//') && !l.trim().startsWith('#'));
+        const clueLine = lines[0] ? lines[0].replace(/(=|\+|\-|\*|\/).*/, '$1 ___') : '';
+        return `💡 Partial Clue: Your program should output '${expected}'. Partial structure: \`${clueLine || '___'}\`. Fill in the missing values!`;
+    }
+
+    if (expected) {
+        if (pathName === 'python') {
+            return `💡 Partial Hint: Structure your output stream using \`print("___", ___)\`. Combine labels and values to match '${expected}'.`;
+        } else if (pathName === 'javascript' || pathName === 'typescript' || pathName === 'block_coding') {
+            return `💡 Partial Hint: Structure your output using \`console.log("___", ___);\`. Combine text and variables!`;
+        } else if (pathName === 'c++') {
+            return `💡 Partial Hint: Structure your output using \`std::cout << "___" << ___;\`. Combine labels and calculations!`;
+        }
+        return `💡 Partial Hint: Format your output to match target: '${expected}'. Fill in the missing operators and variables!`;
+    }
+
+    return `💡 Partial Hint: Check your variable names and calculation logic. Fill in the missing blanks in your editor!`;
+};
+
+const renderMarkdownText = (text: string, isAr: boolean = false) => {
+    if (!text) return null;
+    const blocks = text.split(/\n\n+/);
+    return blocks.map((block, bIdx) => {
+        let trimmed = block.trim();
+        if (!trimmed) return null;
+
+        const isHeader = /^#{1,4}\s+/.test(trimmed);
+        if (isHeader) {
+            trimmed = trimmed.replace(/^#{1,4}\s+/, '');
+        }
+
+        const parts = trimmed.split(/(\*\*.*?\*\*)/g);
+        const parsedParts = parts.map((part, pIdx) => {
+            if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+                return <strong key={pIdx} className="text-white font-bold">{part.slice(2, -2)}</strong>;
+            }
+            return part;
+        });
+
+        if (isHeader) {
+            return (
+                <h4 key={bIdx} className={`text-xs font-extrabold text-cyan-400 uppercase tracking-wider mt-3 mb-1 ${isAr ? 'text-right' : 'text-left'}`} dir={isAr ? 'rtl' : 'ltr'}>
+                    {parsedParts}
+                </h4>
+            );
+        }
+
+        return (
+            <p key={bIdx} className={`text-xs text-slate-300 leading-relaxed font-normal ${isAr ? 'text-right' : 'text-left'}`} dir={isAr ? 'rtl' : 'ltr'}>
+                {parsedParts}
+            </p>
+        );
+    });
+};
+
 const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit, path, onSwitchPath, currentUser, onStartLesson }) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
+    const isAr = language === 'ar';
     const [code, setCode] = useState("");
     const [output, setOutput] = useState('');
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -678,7 +747,8 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                 {/* 1. Left Panel: Theory, Instructions & Challenge */}
                 <aside 
                     style={{ width: `${leftWidth}%` }}
-                    className="hidden lg:flex flex-col bg-[#181818] border-r border-[#282828] p-6 overflow-y-auto space-y-6 shrink-0 text-slate-300 text-sm leading-relaxed"
+                    className={`hidden lg:flex flex-col bg-[#181818] border-r border-[#282828] p-6 overflow-y-auto space-y-6 shrink-0 text-slate-300 text-sm leading-relaxed ${isAr ? 'text-right' : 'text-left'}`}
+                    dir={isAr ? 'rtl' : 'ltr'}
                 >
                     {/* Path & Expanded Detailed Lesson Introduction Header */}
                     <div className="space-y-5">
@@ -687,65 +757,73 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 {t(lesson.titleKey as any) || lesson.titleKey || path.toUpperCase()}
                             </h1>
                             <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#262626] text-slate-400 border border-[#333]">TL;DR</span>
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#262626] text-slate-400 border border-[#333] cursor-pointer hover:text-white">Hide</span>
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#262626] text-slate-400 border border-[#333]">{isAr ? 'الملخص' : 'TL;DR'}</span>
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#262626] text-slate-400 border border-[#333] cursor-pointer hover:text-white">{isAr ? 'إخفاء' : 'Hide'}</span>
                             </div>
                         </div>
 
-                        {/* Multi-Paragraph Detailed Concept Overview */}
+                        {/* Multi-Paragraph Detailed Concept Overview with Markdown Formatting */}
                         <div className="space-y-3 text-xs text-slate-300 leading-relaxed font-normal">
-                            <p>
-                                {lesson.introduction || (lesson.explanationKey ? t(lesson.explanationKey as any) : `${path.toUpperCase()} is a powerful, high-performance programming language used in everything from game development and operating systems to scientific computing and artificial intelligence. It is known worldwide for its efficiency, precision, and flexibility.`)}
-                            </p>
-                            <p>
-                                In computer science, mastering {t(lesson.titleKey as any) || lesson.titleKey || 'this concept'} builds the foundation for algorithmic thinking and structured software design. When you write and execute code in {path.toUpperCase()}, the engine compiles your statements into ordered machine instructions.
-                            </p>
-                            <p>
-                                Understanding how syntax rules govern program state, how data is declared in memory, and how output streams interface with the system console enables you to build robust, scalable applications.
-                            </p>
+                            {lesson.introduction ? (
+                                renderMarkdownText(lesson.introduction, isAr)
+                            ) : lesson.explanationKey ? (
+                                renderMarkdownText(t(lesson.explanationKey as any), isAr)
+                            ) : (
+                                <>
+                                    <p>
+                                        {path.toUpperCase()} {isAr ? 'لغة برمجة عالية الأداء ومؤثرة تُستخدم في الألعاب، الأنظمة الحديثة، والذكاء الاصطناعي.' : 'is a powerful, high-performance programming language used in everything from game development and operating systems to scientific computing and artificial intelligence. It is known worldwide for its efficiency, precision, and flexibility.'}
+                                    </p>
+                                    <p>
+                                        In computer science, mastering {t(lesson.titleKey as any) || lesson.titleKey || 'this concept'} builds the foundation for algorithmic thinking and structured software design. When you write and execute code in {path.toUpperCase()}, the engine compiles your statements into ordered machine instructions.
+                                    </p>
+                                    <p>
+                                        Understanding how syntax rules govern program state, how data is declared in memory, and how output streams interface with the system console enables you to build robust, scalable applications.
+                                    </p>
+                                </>
+                            )}
                         </div>
 
                         {/* Key Concepts Learning Card */}
                         <div className="bg-[#141414] p-3.5 rounded-xl border border-[#282828] space-y-2">
                             <h3 className="text-[11px] font-extrabold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
-                                📌 Key Concepts:
+                                📌 {isAr ? 'المفاهيم الرئيسية:' : 'Key Concepts:'}
                             </h3>
                             <ul className="space-y-1 text-[11px] text-slate-300 list-disc list-inside">
-                                <li><strong className="text-slate-200">Syntax & Rules:</strong> Structuring keywords and expressions correctly.</li>
-                                <li><strong className="text-slate-200">Execution Flow:</strong> How control passes sequentially through statements.</li>
-                                <li><strong className="text-slate-200">Console I/O:</strong> Streaming text outputs and values to standard output.</li>
+                                <li><strong className="text-slate-200">{isAr ? 'الصياغة والقواعد:' : 'Syntax & Rules:'}</strong> {isAr ? 'هيكلة الكلمات المفتاحية والتعبيرات بشكل صحيح.' : 'Structuring keywords and expressions correctly.'}</li>
+                                <li><strong className="text-slate-200">{isAr ? 'تسلسل التنفيذ:' : 'Execution Flow:'}</strong> {isAr ? 'كيفية انتقال التحكم تسلسلياً عبر الجمل البرمجية.' : 'How control passes sequentially through statements.'}</li>
+                                <li><strong className="text-slate-200">{isAr ? 'الإدخال والإخراج:' : 'Console I/O:'}</strong> {isAr ? 'تدفق النصوص والقيم إلى شاشة المخرجات.' : 'Streaming text outputs and values to standard output.'}</li>
                             </ul>
                         </div>
 
                         {/* "Here is what the starter code does:" Comprehensive Breakdown */}
                         {lesson.starterCode && lesson.starterCode.trim() && (
                             <div className="space-y-3 pt-2">
-                                <h3 className="text-xs font-bold text-slate-200">Here is what the starter code does:</h3>
-                                <div className="space-y-2 text-xs text-slate-300 leading-relaxed">
+                                <h3 className="text-xs font-bold text-slate-200">{isAr ? 'ما يفعله كود البداية:' : 'Here is what the starter code does:'}</h3>
+                                <div className="space-y-2 text-xs text-slate-300 leading-relaxed font-mono">
                                     {lesson.starterCode.trim().split('\n').filter(line => line.trim().length > 0).map((line, idx) => {
                                         const trimmed = line.trim();
-                                        let explanation = "executes a foundational command statement in this program.";
+                                        let explanation = isAr ? "ينفذ أمرًا برمجيًا أساسيًا في هذا البرنامج." : "executes a foundational command statement in this program.";
                                         if (trimmed.startsWith('//') || trimmed.startsWith('#')) {
-                                            explanation = "code comment explaining the objective of this step.";
+                                            explanation = isAr ? "تعليق توضيحي يحدد هدف هذه الخطوة." : "code comment explaining the objective of this step.";
                                         } else if (trimmed.startsWith('#include') || trimmed.startsWith('import ') || trimmed.startsWith('require(') || trimmed.startsWith('using ')) {
-                                            explanation = "loads the library header that enables console I/O and utility functions.";
+                                            explanation = isAr ? "استدعاء مكتبة تمكّن عمليات الإدخال والإخراج." : "loads the library header that enables console I/O and utility functions.";
                                         } else if (trimmed.includes('main()') || trimmed.startsWith('def main') || trimmed.startsWith('fn main') || trimmed.includes('int main')) {
-                                            explanation = "this is the main function, where every program starts running.";
+                                            explanation = isAr ? "الدالة الرئيسية التي يبدأ منها تنفيذ البرنامج." : "this is the main function, where every program starts running.";
                                         } else if (trimmed.includes('print') || trimmed.includes('cout') || trimmed.includes('console.log') || trimmed.includes('System.out')) {
-                                            explanation = "prints the text or numerical values directly to the screen console.";
+                                            explanation = isAr ? "طباعة النصوص أو القيم الحسابية على شاشة المخرجات." : "prints the text or numerical values directly to the screen console.";
                                         } else if (trimmed.includes('return 0') || trimmed.includes('return;')) {
-                                            explanation = "returns exit status code 0, signaling clean program completion.";
+                                            explanation = isAr ? "إرجاع حالة الانتهاء 0 لإشارة إتمام الكود بنجاح." : "returns exit status code 0, signaling clean program completion.";
                                         } else if (trimmed.includes('=')) {
-                                            explanation = "declares and initializes a variable with data in memory.";
+                                            explanation = isAr ? "تعريف متغير وحفظ البيانات في الذاكرة." : "declares and initializes a variable with data in memory.";
                                         } else if (trimmed.includes('{') || trimmed.includes('}')) {
-                                            explanation = "defines scope boundaries for function blocks and control logic.";
+                                            explanation = isAr ? "تحديد حدود ودوال النطاق البرمجي." : "defines scope boundaries for function blocks and control logic.";
                                         }
                                         return (
-                                            <div key={idx} className="flex items-start gap-2">
+                                            <div key={idx} className="flex items-start gap-2 text-left" dir="ltr">
                                                 <code className="bg-[#262626] text-amber-300 font-mono text-[11px] px-2 py-0.5 rounded border border-[#383838] shrink-0 max-w-[210px] truncate" title={trimmed}>
                                                     {trimmed}
                                                 </code>
-                                                <span className="text-slate-300 text-[11px] leading-tight flex-grow pt-0.5">
+                                                <span className="text-slate-300 text-[11px] leading-tight flex-grow pt-0.5 font-sans">
                                                     — {explanation}
                                                 </span>
                                             </div>
@@ -758,9 +836,9 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         {/* Outcome & Execution Preview */}
                         {lesson.expectedOutput && (
                             <div className="pt-2 text-xs text-slate-300 leading-relaxed space-y-1">
-                                <p className="font-semibold text-slate-200">Execution Output Preview:</p>
-                                <p>
-                                    When you run the code, you will see <code className="bg-[#262626] text-emerald-400 font-mono px-2 py-0.5 rounded border border-[#383838]">{lesson.expectedOutput.replace(/\n/g, ' ')}</code> appear in the output.
+                                <p className="font-semibold text-slate-200">{isAr ? 'معاينة المخرجات المتوقعة:' : 'Execution Output Preview:'}</p>
+                                <p dir="ltr" className="text-left">
+                                    {isAr ? 'عند تشغيل الكود، ستظهر النتيجة التالية: ' : 'When you run the code, you will see '}<code className="bg-[#262626] text-emerald-400 font-mono px-2 py-0.5 rounded border border-[#383838]">{lesson.expectedOutput.replace(/\n/g, ' ')}</code> {isAr ? 'في شاشة المخرجات.' : 'appear in the output.'}
                                 </p>
                             </div>
                         )}
@@ -770,7 +848,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                     <div className="pt-4 border-t border-[#282828] space-y-3">
                         <div className="flex items-center gap-2">
                             <span className="text-base">💡</span>
-                            <h2 className="text-base font-bold text-white">Challenge</h2>
+                            <h2 className="text-base font-bold text-white">{isAr ? 'التحدي البرمجي' : 'Challenge'}</h2>
                             {lesson.difficulty && (
                                 <span className="text-[10px] font-black px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 uppercase">
                                     {lesson.difficulty}
@@ -782,11 +860,21 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                             {t(lesson.challengeDescriptionKey as any)}
                         </p>
 
+                        {/* Dedicated Inline Hint Box for Every Lesson */}
+                        <div className="bg-amber-950/30 border border-amber-500/30 p-3.5 rounded-xl space-y-1 text-xs">
+                            <div className="flex items-center gap-1.5 text-amber-400 font-bold text-[11px] uppercase tracking-wider">
+                                <span>💡 {isAr ? 'تلميح الدرس:' : 'Lesson Hint:'}</span>
+                            </div>
+                            <p className="text-amber-200/90 leading-relaxed text-[11px]">
+                                {aiHint || (lesson.hintKey ? t(lesson.hintKey as any) : null) || getLessonHint(lesson, path)}
+                            </p>
+                        </div>
+
                         <button 
                             onClick={() => setShowHintModal(true)}
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#262626] hover:bg-[#333] border border-[#383838] text-cyan-400 text-xs font-bold transition-all cursor-pointer"
                         >
-                            <span>🤖 Explain challenge</span>
+                            <span>🤖 {isAr ? 'شرح التحدي وإظهار نموذج الحل' : 'Explain challenge & Show Solution Blueprint'}</span>
                         </button>
                     </div>
 
@@ -795,10 +883,10 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         <div className="pt-2">
                             <details className="group border border-[#282828] bg-[#141414] rounded-lg overflow-hidden">
                                 <summary className="px-4 py-2.5 text-xs font-bold text-slate-400 cursor-pointer flex items-center justify-between hover:text-white select-none">
-                                    <span>💡 Solution</span>
+                                    <span>💡 {isAr ? 'كود الحل' : 'Solution'}</span>
                                     <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
                                 </summary>
-                                <div className="p-3 bg-[#1a1a1a] font-mono text-xs text-slate-300 overflow-x-auto whitespace-pre border-t border-[#282828]">
+                                <div className="p-3 bg-[#1a1a1a] font-mono text-xs text-slate-300 overflow-x-auto whitespace-pre border-t border-[#282828]" dir="ltr">
                                     {lesson.solutionCode}
                                 </div>
                             </details>
@@ -823,7 +911,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                     </div>
 
                     {/* Code Editor Body */}
-                    <div className="flex-grow flex relative overflow-hidden bg-[#1e1e1e]">
+                    <div className="flex-grow flex relative overflow-hidden bg-[#1e1e1e]" dir="ltr">
                         
                         {/* Editor Line Numbers Gutter */}
                         <div className="w-12 bg-[#1e1e1e] border-r border-[#2a2a2a] flex flex-col items-center py-4 select-none font-mono text-xs text-slate-500 space-y-0 z-10">
@@ -838,12 +926,12 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         <div className="flex-grow h-full relative overflow-hidden bg-[#1e1e1e]">
                             <div 
                                 ref={editorScrollRef}
-                                className="absolute inset-0 p-4 pointer-events-none overflow-auto font-mono text-sm leading-6 whitespace-pre select-none bg-[#1e1e1e] text-slate-200"
+                                className="absolute inset-0 p-4 pointer-events-none overflow-auto font-mono text-sm leading-6 whitespace-pre select-none bg-[#1e1e1e] text-slate-200 text-left"
                                 style={{ fontSize: `${fontSize}px` }}
                                 dangerouslySetInnerHTML={highlightCode(code)}
                             />
                             {!code.trim() && (
-                                <div className="absolute top-4 left-4 text-slate-500/70 font-mono text-sm pointer-events-none select-none italic">
+                                <div className="absolute top-4 left-4 text-slate-500/70 font-mono text-sm pointer-events-none select-none italic text-left">
                                     // Write your solution code here...
                                 </div>
                             )}
@@ -855,8 +943,9 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 onScroll={handleScroll}
                                 style={{ fontSize: `${fontSize}px` }}
                                 wrap={lineWrap ? "soft" : "off"}
-                                className="absolute inset-0 p-4 font-mono bg-transparent focus:outline-none resize-none text-transparent caret-cyan-400 selection:bg-cyan-500/30 overflow-auto leading-6 whitespace-pre text-sm"
+                                className="absolute inset-0 p-4 font-mono bg-transparent focus:outline-none resize-none text-transparent caret-cyan-400 selection:bg-cyan-500/30 overflow-auto leading-6 whitespace-pre text-sm text-left"
                                 spellCheck={false}
+                                dir="ltr"
                             />
                         </div>
 
@@ -866,7 +955,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 onClick={() => setShowHintModal(true)}
                                 className="px-4 py-2.5 rounded-xl bg-white text-slate-900 border-2 border-slate-900 text-xs font-black flex items-center gap-1.5 shadow-[3px_3px_0px_0px_#0F172A] hover:bg-[#FFE87C] transition-all cursor-pointer"
                             >
-                                <span>💡 Need a hint?</span>
+                                <span>💡 {isAr ? 'تحتاج إلى تلميح؟' : 'Need a hint?'}</span>
                             </button>
                             <button
                                 onClick={handleRunCode}
@@ -874,7 +963,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 className="px-6 py-2.5 rounded-xl bg-[#00D2D3] hover:bg-[#00c0c1] text-slate-900 border-2 border-slate-900 text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-[4px_4px_0px_0px_#0F172A] transition-all cursor-pointer active:translate-x-[2px] active:translate-y-[2px] active:shadow-none disabled:opacity-50"
                             >
                                 <Play className="w-4 h-4 fill-current stroke-[2.5]" />
-                                <span>{isRunning ? t('running') : t('run_code')}</span>
+                                <span>{isRunning ? (isAr ? 'جاري التشغيل...' : t('running')) : (isAr ? 'تشغيل الكود' : t('run_code'))}</span>
                             </button>
                         </div>
                     </div>
@@ -887,28 +976,28 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                     onClick={() => setActiveConsoleTab('console')}
                                     className={`h-9 flex items-center border-b-2 ${activeConsoleTab === 'console' ? 'border-cyan-400 text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
                                 >
-                                    TEST CASES
+                                    {isAr ? 'حالات الاختبار' : 'TEST CASES'}
                                 </button>
                                 <button 
                                     onClick={() => setActiveConsoleTab('terminal')}
                                     className={`h-9 flex items-center border-b-2 ${activeConsoleTab === 'terminal' ? 'border-cyan-400 text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
                                 >
-                                    CONSOLE
+                                    {isAr ? 'شاشة المخرجات' : 'CONSOLE'}
                                 </button>
                             </div>
                         </div>
 
-                        <div className="flex-grow p-4 grid grid-cols-2 gap-4 overflow-y-auto">
+                        <div className="flex-grow p-4 grid grid-cols-2 gap-4 overflow-y-auto" dir="ltr">
                             <div>
-                                <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Output</span>
-                                <div className="text-slate-300 whitespace-pre-wrap font-mono">
-                                    {output || 'No output yet. Click "Run Code" to execute.'}
+                                <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">{isAr ? 'المخرجات المتوقعة' : 'EXPECTED OUTPUT'}</span>
+                                <div className="text-[#00D2D3] whitespace-pre-wrap font-mono">
+                                    {lesson.expectedOutput || (isAr ? 'النتيجة المطابقة متوقعة' : 'Output matches expected result')}
                                 </div>
                             </div>
-                            <div className="border-l border-[#282828] pl-4">
-                                <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Expected Output</span>
-                                <div className="text-emerald-400 font-bold font-mono">
-                                    {lesson.solutionCode ? 'Output matches expected result' : 'Ready'}
+                            <div>
+                                <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">{isAr ? 'المخرجات الحالية' : 'OUTPUT'}</span>
+                                <div className="text-slate-300 whitespace-pre-wrap font-mono">
+                                    {output || (isAr ? 'لا توجد مخرجات بعد. انقر على "تشغيل الكود" للتنفيذ.' : 'No output yet. Click "Run Code" to execute.')}
                                 </div>
                             </div>
                         </div>
@@ -944,25 +1033,24 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                                 </p>
                             </div>
 
-                            {/* Dynamic AI / DB Hint */}
-                            {(lesson.hintKey || aiHint) && (
-                                <div className="bg-amber-950/20 p-3.5 rounded-xl border border-amber-500/10">
-                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-amber-400 mb-1">Coach Tip</h4>
-                                    <p className="text-xs text-amber-300 font-semibold leading-relaxed">
-                                        {aiHint || t(lesson.hintKey as any)}
-                                    </p>
-                                </div>
-                            )}
+                            {/* Dynamic AI / DB / Helper Hint */}
+                            <div className="bg-amber-950/20 p-3.5 rounded-xl border border-amber-500/10">
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-amber-400 mb-1">Coach Tip & Hint</h4>
+                                <p className="text-xs text-amber-300 font-semibold leading-relaxed">
+                                    {aiHint || (lesson.hintKey ? t(lesson.hintKey as any) : null) || getLessonHint(lesson, path)}
+                                </p>
+                            </div>
 
                             {/* solutionCode blueprint */}
+                            {/* Partial Skeleton Blueprint (Fill Blanks) */}
                             {lesson.solutionCode && (
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center">
-                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Sample Code Blueprint</h4>
-                                        <span className="text-[9px] text-amber-500 font-bold uppercase">Ready to use</span>
+                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Partial Code Skeleton (Fill-in-the-blanks)</h4>
+                                        <span className="text-[9px] text-amber-500 font-bold uppercase">Guided Clue</span>
                                     </div>
-                                    <div className="bg-slate-950 p-3 rounded-xl font-mono text-xs text-slate-350 border border-slate-850 overflow-x-auto whitespace-pre max-h-48 scrollbar-thin">
-                                        {lesson.solutionCode}
+                                    <div className="bg-slate-950 p-3 rounded-xl font-mono text-xs text-amber-300 border border-slate-850 overflow-x-auto whitespace-pre max-h-48 scrollbar-thin">
+                                        {createPartialMaskedCode(lesson.solutionCode)}
                                     </div>
                                 </div>
                             )}
@@ -971,13 +1059,13 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                         {lesson.solutionCode && (
                             <button
                                 onClick={() => {
-                                    handleCodeChange(lesson.solutionCode);
+                                    handleCodeChange(createPartialMaskedCode(lesson.solutionCode));
                                     setShowHintModal(false);
-                                    showToast('Sample blueprint inserted! ', 'success');
+                                    showToast('Partial skeleton inserted! Fill in the blanks (___) to complete your code. 🧩', 'info');
                                 }}
                                 className="w-full py-3.5 bg-amber-500 hover:bg-amber-600 active:translate-y-0.5 border-b-4 border-amber-700 text-slate-950 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-lg"
                             >
-                                <span></span> Insert Sample into Editor
+                                <span>🧩</span> Insert Partial Skeleton (Fill Blanks)
                             </button>
                         )}
                     </div>

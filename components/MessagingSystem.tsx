@@ -4,6 +4,55 @@ import { motion, AnimatePresence } from 'motion/react';
 import api from '../services/api';
 import { User } from '../types';
 import GuestLoginBanner from './GuestLoginBanner';
+import { useLanguage } from '../contexts/LanguageContext';
+
+const msgTranslations = {
+  en: {
+    title: 'Messages',
+    searchConv: 'Search conversations...',
+    searchUsers: 'Search registered users...',
+    noMessages: 'No messages yet.',
+    contactTeacher: 'Contact a teacher',
+    searchResults: 'Search Results',
+    availableContacts: 'Available Contacts',
+    noUsersFound: 'No users found.',
+    noContacts: 'No available contacts.',
+    yourInbox: 'Your Inbox',
+    inboxDesc: 'Select a conversation to start chatting with your teacher or students.',
+    typeMessage: 'Type a message...',
+    startConv: 'Start a conversation',
+  },
+  fr: {
+    title: 'Messages',
+    searchConv: 'Rechercher des conversations...',
+    searchUsers: 'Rechercher des utilisateurs...',
+    noMessages: 'Aucun message pour le moment.',
+    contactTeacher: 'Contacter un enseignant',
+    searchResults: 'Résultats de recherche',
+    availableContacts: 'Contacts disponibles',
+    noUsersFound: 'Aucun utilisateur trouvé.',
+    noContacts: 'Aucun contact disponible.',
+    yourInbox: 'Votre Boîte de Réception',
+    inboxDesc: 'Sélectionnez une conversation pour commencer à discuter.',
+    typeMessage: 'Écrivez un message...',
+    startConv: 'Démarrer une conversation',
+  },
+  ar: {
+    title: 'الرسائل',
+    searchConv: 'ابحث عن المحادثات...',
+    searchUsers: 'ابحث عن المستخدمين المسجلين...',
+    noMessages: 'لا توجد رسائل بعد.',
+    contactTeacher: 'التواصل مع معلم',
+    searchResults: 'نتائج البحث',
+    availableContacts: 'جهات الاتصال المتاحة',
+    noUsersFound: 'لم يتم العثور على مستخدمين.',
+    noContacts: 'لا توجد جهات اتصال متاحة.',
+    yourInbox: 'صندوق الرسائل',
+    inboxDesc: 'اختر محادثة لبدء الدردشة مع معلمك أو زملائك.',
+    typeMessage: 'اكتب رسالة...',
+    startConv: 'ابدأ محادثة جديدة',
+  }
+};
 
 interface MessagingSystemProps {
   currentUser: User;
@@ -37,6 +86,8 @@ interface Message {
 }
 
 const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose }) => {
+  const { language } = useLanguage();
+  const tMsg = msgTranslations[language] || msgTranslations.en;
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedUser, setSelectedUser] = useState<Conversation['user'] | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -176,7 +227,7 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
       <div className={`w-full md:w-80 border-r border-slate-100 dark:border-slate-800 flex flex-col bg-white dark:bg-slate-900 ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
         <div className="p-6 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Messages</h2>
+            <h2 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">{tMsg.title}</h2>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setView(view === 'conversations' ? 'contacts' : 'conversations')}
@@ -196,7 +247,7 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
-              placeholder={view === 'conversations' ? "Search conversations..." : "Search registered users..."}
+              placeholder={view === 'conversations' ? tMsg.searchConv : tMsg.searchUsers}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-bold border-none focus:ring-2 focus:ring-brand-500"
@@ -213,13 +264,13 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
             filteredConversations.length === 0 ? (
               <div className="p-8 text-center">
                 <MessageSquare className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                <p className="text-slate-400 font-bold text-sm">No messages yet.</p>
+                <p className="text-slate-400 font-bold text-sm">{tMsg.noMessages}</p>
                 {currentUser.role === 'student' && (
                   <button
                     onClick={() => setView('contacts')}
                     className="mt-4 text-brand-600 font-black text-xs uppercase hover:underline"
                   >
-                    Contact a teacher
+                    {tMsg.contactTeacher}
                   </button>
                 )}
               </div>
@@ -251,7 +302,7 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
                       </span>
                     </div>
                     <p className={`text-xs truncate ${conv.unreadCount > 0 ? 'text-slate-800 dark:text-slate-200 font-black' : 'text-slate-400 font-bold'}`}>
-                      {conv.lastMessage?.content || 'Start a conversation'}
+                      {conv.lastMessage?.content || tMsg.startConv}
                     </p>
                   </div>
                 </button>
@@ -261,7 +312,7 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
             <div className="p-2">
               <div className="px-4 py-2 mb-2">
                 <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                  {searchQuery.trim().length > 0 ? 'Search Results' : 'Available Contacts'}
+                  {searchQuery.trim().length > 0 ? tMsg.searchResults : tMsg.availableContacts}
                 </h3>
               </div>
               {isSearchingUsers ? (
@@ -270,7 +321,7 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
                 </div>
               ) : searchResults.length === 0 ? (
                 <div className="p-8 text-center text-slate-400 font-bold text-sm">
-                  {searchQuery.trim().length > 0 ? 'No users found.' : 'No available contacts.'}
+                  {searchQuery.trim().length > 0 ? tMsg.noUsersFound : tMsg.noContacts}
                 </div>
               ) : (
                 searchResults.map((user) => (
@@ -307,8 +358,8 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
             <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-xl flex items-center justify-center mx-auto mb-6">
               <MessageSquare className="w-10 h-10 text-brand-600" />
             </div>
-            <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Your Inbox</h3>
-            <p className="text-slate-400 font-bold max-w-xs mx-auto mt-2">Select a conversation to start chatting with your teacher or students.</p>
+            <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">{tMsg.yourInbox}</h3>
+            <p className="text-slate-400 font-bold max-w-xs mx-auto mt-2">{tMsg.inboxDesc}</p>
           </div>
         ) : (
           <>
@@ -379,7 +430,7 @@ const MessagingSystem: React.FC<MessagingSystemProps> = ({ currentUser, onClose 
               <form onSubmit={handleSendMessage} className="flex items-center gap-2">
                 <input
                   type="text"
-                  placeholder="Type a message..."
+                  placeholder={tMsg.typeMessage}
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   className="flex-1 bg-slate-50 dark:bg-slate-900 border-none focus:ring-2 focus:ring-brand-500 rounded-2xl px-6 py-3 text-sm font-bold text-slate-800 dark:text-white"
