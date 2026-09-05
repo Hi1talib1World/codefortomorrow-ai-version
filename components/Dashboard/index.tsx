@@ -218,12 +218,10 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onStartLesson, onLog
     }
   }, [location.pathname]);
 
-  const mainContentBg = (activeView === 'learn' && (path || pathId))
-    ? 'bg-slate-50 dark:bg-slate-900'
-    : (activeView === 'home' ? 'bg-transparent' : 'bg-slate-50 dark:bg-slate-900');
+  const mainContentBg = 'bg-slate-50 dark:bg-[#0B132B]';
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+    <div className="flex flex-col h-screen bg-slate-50 dark:bg-[#0B132B] transition-colors duration-300">
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header
           activeView={activeView}

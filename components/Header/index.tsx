@@ -585,7 +585,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
   };
 
   return (
-    <header className="sticky top-0 bg-[#111827] dark:bg-slate-900 px-6 py-3 z-20 border-b border-[#1f2937] dark:border-slate-800 transition-colors text-white">
+    <header className="sticky top-0 bg-[#111827] dark:bg-slate-900 px-6 py-3 z-[100] border-b border-[#1f2937] dark:border-slate-800 transition-colors text-white">
       <DbSetupGuide
         isOpen={isDbGuideOpen}
         onClose={() => setIsDbGuideOpen(false)}
@@ -627,7 +627,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
               </button>
 
               {isExploreOpen && (
-                <div className="absolute top-full left-0 mt-3 w-[460px] bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 z-50 grid grid-cols-2 gap-6 animate-[fade-in_0.2s_ease-out]">
+                <div className="absolute top-full left-0 mt-3 w-[460px] bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 z-[150] grid grid-cols-2 gap-6 animate-[fade-in_0.2s_ease-out]">
                   {/* Column 1: Ecosystem Portals */}
                   <div className="flex flex-col gap-3">
                     <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 border-b border-slate-800 pb-2">
@@ -643,13 +643,12 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                               setActiveView(item.id as DashboardView);
                               setIsExploreOpen(false);
                             }}
-                            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-left text-sm font-bold transition-all w-full cursor-pointer hover:bg-slate-800/80 ${
+                            className={`flex items-center px-3 py-2 rounded-xl text-left text-sm font-bold transition-all w-full cursor-pointer hover:bg-slate-800/80 ${
                               isActive
                                 ? 'text-blue-400 bg-slate-850'
                                 : 'text-slate-300 hover:text-white'
                             }`}
                           >
-                            <span className={isActive ? 'text-blue-400' : 'text-slate-450'}>{item.icon}</span>
                             <span>{item.label}</span>
                           </button>
                         );
@@ -677,7 +676,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                               }
                               setIsExploreOpen(false);
                             }}
-                            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-left text-sm font-bold transition-all w-full cursor-pointer hover:bg-slate-800/80 ${
+                            className={`flex items-center px-3 py-2 rounded-xl text-left text-sm font-bold transition-all w-full cursor-pointer hover:bg-slate-800/80 ${
                               isActive
                                 ? 'text-blue-400 bg-slate-850'
                                 : isLogout
@@ -685,7 +684,6 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onSwitchPath, on
                                   : 'text-slate-305 hover:text-white'
                             }`}
                           >
-                            <span className={isActive ? 'text-blue-400' : isLogout ? 'text-red-400' : 'text-slate-450'}>{item.icon}</span>
                             <span>{item.label}</span>
                           </button>
                         );

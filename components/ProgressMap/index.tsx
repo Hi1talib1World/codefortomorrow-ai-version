@@ -33,7 +33,7 @@ function getSnakeOffset(index: number): number {
 /** Google Material 3 Section Banner */
 const SectionBanner: React.FC<{ title: string; index: number; isLocked: boolean; lessonCount: number }> = ({ title, index, isLocked }) => {
   return (
-    <div className="relative mx-auto mb-4 rounded-2xl bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] px-5 py-3.5 shadow-[0_1px_2px_rgba(60,64,67,0.06)] overflow-hidden max-w-xs transition-all">
+    <div className="relative mx-auto mb-4 rounded-2xl bg-white dark:bg-slate-900/80 border border-[#E8EAED] dark:border-slate-800 px-5 py-3.5 shadow-[0_1px_2px_rgba(60,64,67,0.06)] overflow-hidden max-w-xs transition-all">
       <div className="relative z-10 flex items-center justify-between">
         <div>
           {isLocked && <Lock className="w-3.5 h-3.5 text-[#5F6368] dark:text-[#9AA0A6] mb-0.5" />}
@@ -62,11 +62,11 @@ const ProgressHeader: React.FC<{
 }> = ({ completed, total, pathLabel, pathIcon, onBackToSelection }) => {
   const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
   return (
-    <div className="px-6 py-4 bg-white/90 dark:bg-[#292A2D]/90 border-b border-[#E8EAED] dark:border-[#3C4043] backdrop-blur-md sticky top-0 z-50 transition-all shadow-sm">
+    <div className="px-6 py-4 bg-white/90 dark:bg-slate-900/90 border-b border-[#E8EAED] dark:border-slate-800 backdrop-blur-md sticky top-0 z-50 transition-all shadow-sm">
       <div className="flex items-center justify-between mb-3 max-w-2xl mx-auto">
         <div className="flex items-center space-x-3">
           {pathIcon && (
-            <div className="w-10 h-10 flex items-center justify-center bg-[#F8F9FA] dark:bg-[#202124] rounded-2xl p-1.5 border border-[#E8EAED] dark:border-[#3C4043]">
+            <div className="w-10 h-10 flex items-center justify-center bg-[#F8F9FA] dark:bg-slate-950 rounded-2xl p-1.5 border border-[#E8EAED] dark:border-slate-800">
               {pathIcon.startsWith('http') || pathIcon.startsWith('/') ? (
                 <img src={pathIcon} alt="" className="w-7 h-7 object-contain" referrerPolicy="no-referrer" />
               ) : (
@@ -347,7 +347,7 @@ export const LearnScreen: React.FC<LearnScreenProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#202124] text-[#202124] dark:text-[#E8EAED] font-sans pb-28 transition-colors">
+    <div className="min-h-screen bg-[#F8F9FA] dark:bg-slate-950 text-[#202124] dark:text-[#E8EAED] font-sans pb-28 transition-colors">
       <ProgressHeader
         completed={completedLessons.length}
         total={allLessons.length}

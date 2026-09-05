@@ -227,11 +227,11 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#202124] text-[#202124] dark:text-[#E8EAED] font-sans pb-28 pt-6 px-4 md:px-8 transition-colors">
+    <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#0B132B] text-[#202124] dark:text-[#E8EAED] font-sans pb-28 pt-6 px-4 md:px-8 transition-colors">
       <div className="max-w-7xl mx-auto space-y-8">
 
         {/* Google Material 3 Header Banner */}
-        <div className="bg-white dark:bg-[#292A2D] border border-[#E8EAED] dark:border-[#3C4043] rounded-3xl p-6 sm:p-8 shadow-[0_1px_3px_rgba(60,64,67,0.08)] relative overflow-hidden transition-all gemini-halo-subtle">
+        <div className="bg-white dark:bg-slate-900 border border-[#E8EAED] dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-[0_1px_3px_rgba(60,64,67,0.08)] relative overflow-hidden transition-all gemini-halo-subtle">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -295,12 +295,12 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
                       setActivePhraseIndex(0);
                       setScore(null);
                     }}
-                    className={`group bg-white dark:bg-[#292A2D] rounded-3xl overflow-hidden shadow-[0_1px_3px_rgba(60,64,67,0.08)] hover:shadow-[0_6px_16px_rgba(60,64,67,0.14)] transition-all border border-[#E8EAED] dark:border-[#3C4043] hover:border-[#1A73E8]/50 cursor-pointer flex flex-col justify-between gemini-halo-subtle ${isAr ? 'text-right' : 'text-left'}`}
+                    className={`group bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-[0_1px_3px_rgba(60,64,67,0.08)] hover:shadow-[0_6px_16px_rgba(60,64,67,0.14)] transition-all border border-[#E8EAED] dark:border-slate-800 hover:border-[#1A73E8]/50 cursor-pointer flex flex-col justify-between gemini-halo-subtle ${isAr ? 'text-right' : 'text-left'}`}
                     dir={isAr ? 'rtl' : 'ltr'}
                   >
                     <div>
                       {/* Illustration Container */}
-                      <div className="aspect-[16/10] bg-[#E3F2FD] dark:bg-[#202124] overflow-hidden relative flex items-center justify-center p-6">
+                      <div className="aspect-[16/10] bg-[#E3F2FD] dark:bg-slate-950 overflow-hidden relative flex items-center justify-center p-6">
                         <img
                           src={track.illustrationUrl}
                           alt={track.name}
@@ -436,7 +436,7 @@ export const SpeakingHubScreen: React.FC<SpeakingHubScreenProps> = ({ onBack }) 
                     onClick={simulateVoiceRecording}
                     className={`px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center gap-2 transition cursor-pointer ${
                       isRecording
-                        ? 'bg-[#EA4335] text-white animate-bounce'
+                        ? 'bg-[#EA4335] text-white shadow-md'
                         : 'bg-[#1A73E8] hover:bg-[#1557B0] text-white shadow-sm'
                     }`}
                   >

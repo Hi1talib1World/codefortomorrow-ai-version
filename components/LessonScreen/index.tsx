@@ -52,7 +52,7 @@ const SuccessModal: React.FC<{ lesson: Lesson, onContinue: () => void }> = ({ le
                 {/* Earning Points Card */}
                 <div className="bg-[#141414] border border-[#282828] p-4 rounded-2xl space-y-1 shadow-inner">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">XP Points Earned</p>
-                    <div className="text-3xl font-black text-amber-400 flex items-center justify-center gap-2 animate-bounce">
+                    <div className="text-3xl font-black text-amber-400 flex items-center justify-center gap-2">
                         <span>⚡</span>
                         <span>+{lesson.xp} XP</span>
                     </div>
@@ -245,6 +245,7 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
     const [foldedLines, setFoldedLines] = useState<Set<number>>(new Set());
     const [breakpoints, setBreakpoints] = useState<Set<number>>(new Set());
     const [isXpHovered, setIsXpHovered] = useState(false);
+    const [mobileTab, setMobileTab] = useState<'instructions' | 'editor' | 'console'>('editor');
 
     const [activeConsoleTab, setActiveConsoleTab] = useState<'console' | 'terminal'>('console');
     const [executionMetrics, setExecutionMetrics] = useState<{ time: number, memory: number } | null>(null);
@@ -708,6 +709,34 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                 </div>
             </header>
 
+            {/* Mobile Responsive IDE Navigation Bar (< lg screens) */}
+            <div className="flex lg:hidden bg-[#141414] border-b border-[#282828] px-2 py-1.5 justify-around text-xs font-bold text-slate-400 shrink-0 select-none">
+                <button
+                    onClick={() => setMobileTab('instructions')}
+                    className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                        mobileTab === 'instructions' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' : 'hover:text-white'
+                    }`}
+                >
+                    <span>📖</span> <span>{isAr ? 'التعليمات' : 'Theory'}</span>
+                </button>
+                <button
+                    onClick={() => setMobileTab('editor')}
+                    className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                        mobileTab === 'editor' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' : 'hover:text-white'
+                    }`}
+                >
+                    <span>⚡</span> <span>{isAr ? 'المحرر' : 'Editor'}</span>
+                </button>
+                <button
+                    onClick={() => setMobileTab('console')}
+                    className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                        mobileTab === 'console' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' : 'hover:text-white'
+                    }`}
+                >
+                    <span>💻</span> <span>{isAr ? 'المخرجات' : 'Console'}</span>
+                </button>
+            </div>
+
             {/* Coddy Main Workspace Container */}
             <div ref={containerRef} className="flex-grow flex flex-col lg:flex-row overflow-hidden relative bg-[#1e1e1e]">
                 
@@ -746,8 +775,10 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
 
                 {/* 1. Left Panel: Theory, Instructions & Challenge */}
                 <aside 
-                    style={{ width: `${leftWidth}%` }}
-                    className={`hidden lg:flex flex-col bg-[#181818] border-r border-[#282828] p-6 overflow-y-auto space-y-6 shrink-0 text-slate-300 text-sm leading-relaxed ${isAr ? 'text-right' : 'text-left'}`}
+                    style={{ width: undefined }}
+                    className={`flex-col bg-[#181818] border-r border-[#282828] p-4 sm:p-6 overflow-y-auto space-y-6 shrink-0 text-slate-300 text-sm leading-relaxed ${
+                        mobileTab === 'instructions' ? 'flex w-full h-full lg:w-[30%]' : 'hidden lg:flex lg:w-[30%]'
+                    } ${isAr ? 'text-right' : 'text-left'}`}
                     dir={isAr ? 'rtl' : 'ltr'}
                 >
                     {/* Path & Expanded Detailed Lesson Introduction Header */}
@@ -901,7 +932,9 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                 />
 
                 {/* 2. Center Panel: Code Editor (Coddy style) */}
-                <main className="flex-grow flex flex-col bg-[#1e1e1e] overflow-hidden relative shrink-0">
+                <main className={`flex-grow flex-col bg-[#1e1e1e] overflow-hidden relative shrink-0 ${
+                    mobileTab === 'editor' ? 'flex w-full h-full' : 'hidden lg:flex'
+                }`}>
                     
                     {/* Editor File Tab Bar */}
                     <div className="h-10 bg-[#181818] border-b border-[#282828] px-4 flex items-center justify-between text-xs font-bold text-slate-400 select-none">
@@ -969,7 +1002,9 @@ const LessonScreen: React.FC<LessonScreenProps> = ({ lesson, onComplete, onExit,
                     </div>
 
                     {/* 3. Bottom Panel: Test Cases & Console */}
-                    <div className="h-48 bg-[#181818] border-t border-[#282828] flex flex-col font-mono text-xs text-slate-300">
+                    <div className={`bg-[#181818] border-t border-[#282828] font-mono text-xs text-slate-300 ${
+                        mobileTab === 'console' ? 'flex flex-col w-full h-full' : 'h-48 hidden lg:flex flex-col'
+                    }`}>
                         <div className="h-9 bg-[#141414] border-b border-[#282828] px-4 flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                             <div className="flex gap-4">
                                 <button 

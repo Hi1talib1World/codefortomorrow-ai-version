@@ -8,6 +8,7 @@ import { RadialOrbitalTimelineDemo } from '@/components/ui/demo';
 import { GlowCard } from '@/components/ui/spotlight-card';
 import { HeroScrollDemo } from '@/components/ui/scroll-demo';
 import { PaymentModal } from '../PaymentModal';
+import { ContactModal } from '../ContactModal';
 
 
 const AnimatedSection: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
@@ -269,6 +270,11 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
   const [currency, setCurrency] = useState<CurrencyCode>(detectUserCurrency);
 
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isPilotModalOpen, setIsPilotModalOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [pilotSubmitted, setPilotSubmitted] = useState(false);
+  const [pilotForm, setPilotForm] = useState({ schoolName: '', contactName: '', email: '', phone: '', studentCount: '100-500', lang: 'fr' });
+
   const [selectedPlanDetails, setSelectedPlanDetails] = useState<{ name: string; price: string; interval: 'monthly' | 'yearly' }>({
     name: 'Pioneer Pro',
     price: '$19',
@@ -841,10 +847,10 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
                 </div>
 
                 <button
-                  onClick={() => handleOpenCheckout('Schools & Enterprise', CURRENCIES[currency].enterprisePrice)}
-                  className="w-full py-4 mt-8 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm transition-all shadow-md shadow-blue-600/20 cursor-pointer"
+                  onClick={() => setIsPilotModalOpen(true)}
+                  className="w-full py-4 mt-8 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 hover:brightness-110 text-white font-bold text-sm transition-all shadow-md shadow-blue-600/20 cursor-pointer flex items-center justify-center gap-2"
                 >
-                  Contact Sales & Onboard
+                  <Building2 className="w-4 h-4" /> Request 14-Day School Pilot
                 </button>
               </div>
             </AnimatedSection>
@@ -969,7 +975,12 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
               <a href="#" className="text-slate-500 hover:text-sky-400 transition-colors">Privacy Policy</a>
               <a href="#" className="text-slate-500 hover:text-sky-400 transition-colors">Terms of Service</a>
               <a href="#" className="text-slate-500 hover:text-sky-400 transition-colors">Cookie Policy</a>
-              <a href="#" className="text-slate-500 hover:text-sky-400 transition-colors">Contact Us</a>
+              <button 
+                onClick={() => setIsContactModalOpen(true)} 
+                className="text-slate-300 hover:text-sky-400 transition-colors font-bold flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
+              >
+                <span>Contact Us Form</span>
+              </button>
             </div>
           </div>
         </div>
@@ -994,6 +1005,141 @@ const LandingPage: React.FC<{ currentUser: User | null, onGetStarted: () => void
             onGetStarted();
           }, 2000);
         }}
+      />
+
+      {/* 🏛️ B2B 14-DAY INSTITUTIONAL SCHOOL PILOT MODAL */}
+      {isPilotModalOpen && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-[120] p-4">
+          <div className="bg-[#0b132b] border border-blue-500/30 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl relative space-y-6 text-left animate-pop-in">
+            <button
+              onClick={() => {
+                setIsPilotModalOpen(false);
+                setPilotSubmitted(false);
+              }}
+              className="absolute top-5 right-5 text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer border-0 bg-transparent"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-blue-500/10 rounded-2xl border border-blue-500/20 text-blue-400">
+                <Building2 className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-xl font-extrabold text-white">14-Day Free School Pilot</h3>
+                <p className="text-xs text-slate-400">Turnkey CS & AI curriculum for Private & International Schools</p>
+              </div>
+            </div>
+
+            {pilotSubmitted ? (
+              <div className="bg-emerald-950/40 border border-emerald-500/30 p-6 rounded-2xl text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-2xl">
+                  🎉
+                </div>
+                <h4 className="text-lg font-bold text-white">Pilot Application Received!</h4>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Our academic partnership team will activate your institutional class codes and send onboarding materials to <strong className="text-emerald-400">{pilotForm.email}</strong> within 24 hours.
+                </p>
+                <button
+                  onClick={() => {
+                    setIsPilotModalOpen(false);
+                    setPilotSubmitted(false);
+                  }}
+                  className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all"
+                >
+                  Close & Return to Site
+                </button>
+              </div>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setPilotSubmitted(true);
+                }}
+                className="space-y-4 text-xs text-slate-300"
+              >
+                <div>
+                  <label className="block text-slate-400 font-bold uppercase tracking-wider mb-1">School / Institution Name</label>
+                  <input
+                    required
+                    type="text"
+                    placeholder="e.g. Groupe Scolaire Al Madina / Lycée Descartes"
+                    value={pilotForm.schoolName}
+                    onChange={e => setPilotForm({ ...pilotForm, schoolName: e.target.value })}
+                    className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-400 font-bold uppercase tracking-wider mb-1">Contact Person</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="Director / Teacher Name"
+                      value={pilotForm.contactName}
+                      onChange={e => setPilotForm({ ...pilotForm, contactName: e.target.value })}
+                      className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 font-bold uppercase tracking-wider mb-1">Work Email</label>
+                    <input
+                      required
+                      type="email"
+                      placeholder="director@school.ma"
+                      value={pilotForm.email}
+                      onChange={e => setPilotForm({ ...pilotForm, email: e.target.value })}
+                      className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-400 font-bold uppercase tracking-wider mb-1">Phone / WhatsApp</label>
+                    <input
+                      required
+                      type="tel"
+                      placeholder="+212 600-000000"
+                      value={pilotForm.phone}
+                      onChange={e => setPilotForm({ ...pilotForm, phone: e.target.value })}
+                      className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 font-bold uppercase tracking-wider mb-1">Target Students</label>
+                    <select
+                      value={pilotForm.studentCount}
+                      onChange={e => setPilotForm({ ...pilotForm, studentCount: e.target.value })}
+                      className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                    >
+                      <option value="50-100">50 - 100 Students</option>
+                      <option value="100-500">100 - 500 Students</option>
+                      <option value="500+">500+ Students (School-wide)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-sky-500 hover:brightness-110 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-sky-500/25 active:scale-98 cursor-pointer mt-2"
+                >
+                  🚀 Activate 14-Day Free Pilot
+                </button>
+                <p className="text-[10px] text-slate-500 text-center">
+                  Includes 2 pilot class rosters, automated code grading & 15-minute teacher onboarding briefing.
+                </p>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 📧 CONTACT US FORM MODAL */}
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
       />
 
     </div>

@@ -196,7 +196,7 @@ const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ currentUser }) =>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h1 className="text-4xl font-black text-slate-800 dark:text-white uppercase tracking-tighter flex items-center gap-2">
-            <Trophy className="w-10 h-10 text-yellow-500 animate-bounce" />
+            <Trophy className="w-10 h-10 text-yellow-500" />
             {t('leaderboard')}
           </h1>
           <p className="text-slate-500 dark:text-slate-400 font-semibold text-lg mt-1">

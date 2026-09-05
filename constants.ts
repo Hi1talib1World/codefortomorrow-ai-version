@@ -2945,21 +2945,55 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
   assembly: [
     {
       id: 'assembly_basics',
-      titleKey: 'assembly_basics_title',
+      titleKey: 'Assembly Architecture & Registers',
       lessons: [
-        { id: 1, level: 1, titleKey: 'assembly_intro', icon: 'brain', xp: 25, color: '#1e3a8a', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'assembly_chal_1', starterCode: 'console.log(1);\n', solutionCode: 'console.log(1);', expectedOutput: '1' },
-        { id: 1, level: 2, titleKey: 'assembly_registers', icon: 'brain', xp: 30, color: '#1e3a8a', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'assembly_chal_2', starterCode: 'console.log(8);\n', solutionCode: 'console.log(8);', expectedOutput: '8' },
-        { id: 1, level: 3, titleKey: 'assembly_memory', icon: 'star', xp: 35, color: '#1e3a8a', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'assembly_chal_3', starterCode: '', solutionCode: '', expectedOutput: '' },
-        { id: 1, level: 4, titleKey: 'assembly_cpu_project', icon: 'trophy', xp: 75, color: '#172554', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'assembly_chal_4', starterCode: 'console.log("CPU READY");\n', solutionCode: 'console.log("CPU READY");', expectedOutput: 'CPU READY' },
+        {
+          id: 1, level: 1, titleKey: 'Assembly 101: RAX Register', icon: 'brain', xp: 25, color: '#1e3a8a', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'Write code to store 60 in RAX register to trigger sys_exit.',
+          starterCode: 'console.log("mov rax, 60");\n',
+          solutionCode: 'console.log("mov rax, 60");',
+          expectedOutput: 'mov rax, 60'
+        },
+        {
+          id: 2, level: 2, titleKey: 'x86-64 Stack Operations (push & pop)', icon: 'brain', xp: 30, color: '#1e3a8a', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: 'Push value 42 onto RSP stack frame.',
+          starterCode: 'console.log("push 42");\n',
+          solutionCode: 'console.log("push 42");',
+          expectedOutput: 'push 42'
+        },
+        {
+          id: 3, level: 3, titleKey: 'Assembly Quiz: CPU Registers', icon: 'star', xp: 35, color: '#1e3a8a', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
+        },
+        {
+          id: 4, level: 4, titleKey: 'x86-64 Memory Management Capstone', icon: 'trophy', xp: 75, color: '#172554', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'console.log("CPU & RAM Stack Sync Complete");\n',
+          solutionCode: 'console.log("CPU & RAM Stack Sync Complete");',
+          expectedOutput: 'CPU & RAM Stack Sync Complete'
+        },
       ],
     },
     {
-      id: 'assembly_registers_sec',
+      id: 'assembly_advanced',
       titleKey: 'x86-64 Memory Management & Registers',
       lessons: [
         {
-          id: 1, level: 5, titleKey: 'asm_rax_register', icon: 'brain', xp: 50, color: '#1e3a8a', type: 'lesson', nodeType: 'standard',
-          challengeDescriptionKey: '', starterCode: 'console.log("mov rax, 60");\n', solutionCode: 'console.log("mov rax, 60");', expectedOutput: 'mov rax, 60'
+          id: 5, level: 5, titleKey: 'System Calls & Linux Kernel Interrupts', icon: 'brain', xp: 50, color: '#1e3a8a', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'console.log("syscall: sys_write stdout");\n',
+          solutionCode: 'console.log("syscall: sys_write stdout");',
+          expectedOutput: 'syscall: sys_write stdout'
+        },
+        {
+          id: 6, level: 6, titleKey: 'Bitwise Logic Operations (AND, OR, XOR)', icon: 'brain', xp: 55, color: '#1e3a8a', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'console.log("xor rax, rax");\n',
+          solutionCode: 'console.log("xor rax, rax");',
+          expectedOutput: 'xor rax, rax'
+        },
+        {
+          id: 7, level: 7, titleKey: 'Assembly Control Flow & Conditional Jumps', icon: 'brain', xp: 60, color: '#1e3a8a', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'console.log("cmp rax, rbx\\nje label_equal");\n',
+          solutionCode: 'console.log("cmp rax, rbx\\nje label_equal");',
+          expectedOutput: 'cmp rax, rbx\nje label_equal'
         },
       ],
     },

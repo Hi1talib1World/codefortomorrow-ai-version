@@ -254,9 +254,9 @@ const AgentsPage: React.FC = () => {
           <div className="absolute w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] rounded-full border border-slate-700/40 pointer-events-none" />
           <div className="absolute w-[160px] h-[160px] sm:w-[210px] sm:h-[210px] rounded-full border border-slate-800/60 pointer-events-none" />
 
-          <div className="relative z-20 w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-tr from-[#00D2FF] via-[#008BE3] to-[#8B5CF6] animate-pulse shadow-[0_0_60px_rgba(0,210,255,0.5)] flex items-center justify-center">
+          <div className="relative z-20 w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-tr from-[#00D2FF] via-[#008BE3] to-[#8B5CF6] shadow-[0_0_40px_rgba(0,210,255,0.4)] flex items-center justify-center">
             <div className="w-12 h-12 rounded-full bg-blue-100/90 shadow-inner backdrop-blur-md flex items-center justify-center">
-              <div className="w-5 h-5 rounded-full bg-blue-600 animate-ping opacity-75" />
+              <div className="w-5 h-5 rounded-full bg-blue-600 opacity-90" />
             </div>
           </div>
 

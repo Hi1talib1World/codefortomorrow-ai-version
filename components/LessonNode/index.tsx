@@ -114,7 +114,7 @@ const LessonNode: React.FC<LessonNodeProps> = ({
       {/* "START" static badge above next lesson */}
       {isNext && (
         <div
-          className="absolute -top-7 left-1/2 -translate-x-1/2 z-20 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black px-3 py-1 rounded-lg shadow-md border border-slate-100 dark:border-slate-700 uppercase tracking-widest flex items-center gap-1 whitespace-nowrap animate-bounce select-none"
+          className="absolute -top-7 left-1/2 -translate-x-1/2 z-20 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black px-3 py-1 rounded-lg shadow-md border border-slate-100 dark:border-slate-700 uppercase tracking-widest flex items-center gap-1 whitespace-nowrap select-none"
         >
           START 🚀
         </div>

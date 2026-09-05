@@ -20,6 +20,7 @@ import {
   ChevronRight, 
   Smile 
 } from 'lucide-react';
+import ContactModal from '../ContactModal';
 
 const content = {
   en: {
@@ -251,6 +252,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
   const [gridOn, setGridOn] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   const isDashboard = window.location.pathname.startsWith('/dashboard');
   const port = window.location.port ? `:${window.location.port}` : '';
@@ -976,6 +978,22 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
       {/* FOOTER BAND */}
       <section className="spread border-none">
         <div className="wrap py-12">
+          <div className="max-w-xl mx-auto mb-10 p-8 bg-slate-900/90 border border-blue-500/30 rounded-3xl text-center space-y-4 shadow-xl">
+            <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center mx-auto text-xl">
+              ✉️
+            </div>
+            <h3 className="text-xl font-extrabold text-white">Have Questions or Want to Partner?</h3>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Reach out directly to our lead coordinator & academic support team for inquiries, school pilots, or feedback.
+            </p>
+            <button
+              onClick={() => setIsContactModalOpen(true)}
+              className="inline-flex items-center gap-2 px-6 py-3.5 bg-gradient-to-r from-blue-600 to-sky-500 hover:brightness-110 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-sky-500/25 active:scale-95 cursor-pointer border-none"
+            >
+              <span>📧 Send Direct Message Form</span>
+            </button>
+          </div>
+
           <div className="muller-grid">
             <div className="band justify-center">
               <button
@@ -1048,6 +1066,12 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ currentUser }) => {
           </button>
         </div>
       )}
+
+      {/* 📧 CONTACT US FORM MODAL */}
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
     </div>
   );
 };

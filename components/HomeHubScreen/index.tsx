@@ -199,7 +199,7 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
                     {allCompleted && !chestOpenedToday && (
                         <button
                             onClick={handleClaimChest}
-                            className="bg-[#00D2D3] hover:bg-[#FFE87C] text-slate-900 font-black text-xs px-3 py-1 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] transition-all cursor-pointer animate-bounce flex items-center gap-1"
+                            className="bg-[#00D2D3] hover:bg-[#FFE87C] text-slate-900 font-black text-xs px-3 py-1 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] transition-all cursor-pointer flex items-center gap-1"
                         >
                             <span>🎁 {isAr ? 'استلام +50 XP' : isFr ? 'Réclamer +50 XP' : 'Claim +50 XP'}</span>
                         </button>
@@ -280,16 +280,24 @@ const HomeHubScreen: React.FC<HomeHubScreenProps> = ({ onNavigate, currentUser, 
         const isEmoji = !pathInfo.icon.startsWith('/');
 
         return (
-            <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md rounded-[2rem] p-6 border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-lg transition-all relative overflow-hidden group">
+            <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md rounded-[2rem] p-6 border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-lg transition-all relative overflow-hidden group z-0">
                 <div className="absolute right-0 top-0 w-48 h-48 bg-gradient-to-br from-[#FBBF24]/10 to-brand-500/10 dark:from-[#FBBF24]/5 dark:to-brand-500/5 rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-700"></div>
                 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-1">
                     <div className="flex items-center space-x-5 flex-1 min-w-0">
                         <div className="w-16 h-16 shrink-0 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-500">
                             {isEmoji ? (
                                 <span className="text-3xl select-none">{pathInfo.icon}</span>
                             ) : (
-                                <img src={pathInfo.icon} alt={t(pathInfo.titleKey as any)} className="w-10 h-10 object-contain select-none" />
+                                <img 
+                                  src={pathInfo.icon} 
+                                  alt={t(pathInfo.titleKey as any)} 
+                                  className="w-10 h-10 object-contain select-none" 
+                                  onError={(e) => {
+                                    (e.currentTarget as HTMLImageElement).onerror = null;
+                                    (e.currentTarget as HTMLImageElement).src = '/assets/code-for-tomorrow-logo.png';
+                                  }}
+                                />
                             )}
                         </div>
                         
