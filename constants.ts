@@ -844,7 +844,10 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 31, titleKey: 'fastapi_endpoint', icon: 'brain', xp: 60, color: '#009688', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '# Log "FastAPI Server Running on uvicorn"\n', solutionCode: 'print("FastAPI Server Running on uvicorn")', expectedOutput: 'FastAPI Server Running on uvicorn'
         },
-      ],
+              { id: 2, level: 32, titleKey: 'FastAPI Async Routes & Request Validation', icon: 'brain', xp: 50, color: '#3498db', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("FastAPI Async Endpoint Executed")\n', solutionCode: 'print("FastAPI Async Endpoint Executed")', expectedOutput: 'FastAPI Async Endpoint Executed' },
+        { id: 3, level: 33, titleKey: 'FastAPI Concepts & Pydantic Quiz', icon: 'star', xp: 35, color: '#3498db', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 34, titleKey: 'FastAPI Microservice Capstone', icon: 'trophy', xp: 200, color: '#3498db', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("FastAPI REST Microservice Running")\n', solutionCode: 'print("FastAPI REST Microservice Running")', expectedOutput: 'FastAPI REST Microservice Running' },
+],
     },
     {
       id: 'py_computer_vision_sec',
@@ -854,7 +857,10 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 32, titleKey: 'cnn_forward', icon: 'brain', xp: 70, color: '#ee4c2c', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '# Log "Conv2d Feature Map Shape: [16, 3, 224, 224]"\n', solutionCode: 'print("Conv2d Feature Map Shape: [16, 3, 224, 224]")', expectedOutput: 'Conv2d Feature Map Shape: [16, 3, 224, 224]'
         },
-      ],
+              { id: 2, level: 33, titleKey: 'OpenCV Edge Detection & Image Filters', icon: 'brain', xp: 55, color: '#3498db', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("OpenCV Edge Detection Matrix Applied")\n', solutionCode: 'print("OpenCV Edge Detection Matrix Applied")', expectedOutput: 'OpenCV Edge Detection Matrix Applied' },
+        { id: 3, level: 34, titleKey: 'Computer Vision & OpenCV Quiz', icon: 'star', xp: 35, color: '#3498db', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 35, titleKey: 'Real-Time Vision Pipeline Capstone', icon: 'trophy', xp: 200, color: '#3498db', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Real-Time Face Detection Pipeline Ready")\n', solutionCode: 'print("Real-Time Face Detection Pipeline Ready")', expectedOutput: 'Real-Time Face Detection Pipeline Ready' },
+],
     },
     {
       id: 'py_django_sec',
@@ -864,7 +870,10 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 33, titleKey: 'django_orm_query', icon: 'brain', xp: 60, color: '#092e20', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '# Log "User.objects.filter(is_active=True)"\n', solutionCode: 'print("User.objects.filter(is_active=True)")', expectedOutput: 'User.objects.filter(is_active=True)'
         },
-      ],
+              { id: 2, level: 34, titleKey: 'Django Views, URL Routing & Serializers', icon: 'brain', xp: 50, color: '#3498db', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Django ORM Filter Executed: 5 Users Found")\n', solutionCode: 'print("Django ORM Filter Executed: 5 Users Found")', expectedOutput: 'Django ORM Filter Executed: 5 Users Found' },
+        { id: 3, level: 35, titleKey: 'Django Framework & ORM Quiz', icon: 'star', xp: 35, color: '#3498db', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 36, titleKey: 'Django Fullstack E-Commerce API Capstone', icon: 'trophy', xp: 200, color: '#3498db', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Django Fullstack E-Commerce API Ready")\n', solutionCode: 'print("Django Fullstack E-Commerce API Ready")', expectedOutput: 'Django Fullstack E-Commerce API Ready' },
+],
     },
     {
       id: 'py_scikit_sec',
@@ -874,7 +883,10 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 34, titleKey: 'rf_classifier', icon: 'brain', xp: 65, color: '#f89939', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '# Log "RandomForestClassifier(n_estimators=100) Trained"\n', solutionCode: 'print("RandomForestClassifier(n_estimators=100) Trained")', expectedOutput: 'RandomForestClassifier(n_estimators=100) Trained'
         },
-      ],
+              { id: 2, level: 35, titleKey: 'Scikit-Learn Model Training & Hyperparameters', icon: 'brain', xp: 55, color: '#3498db', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Scikit Random Forest Accuracy: 96.5%")\n', solutionCode: 'print("Scikit Random Forest Accuracy: 96.5%")', expectedOutput: 'Scikit Random Forest Accuracy: 96.5%' },
+        { id: 3, level: 36, titleKey: 'Scikit-Learn & ML Pipelines Quiz', icon: 'star', xp: 35, color: '#3498db', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 37, titleKey: 'Scikit-Learn Predictor Capstone', icon: 'trophy', xp: 200, color: '#3498db', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Scikit ML Predictor Pipeline Deployed")\n', solutionCode: 'print("Scikit ML Predictor Pipeline Deployed")', expectedOutput: 'Scikit ML Predictor Pipeline Deployed' },
+],
     },
     {
       id: 'py_playwright_sec',
@@ -884,7 +896,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 35, titleKey: 'playwright_goto', icon: 'brain', xp: 55, color: '#2e4053', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '# Log "page.goto(\'https://example.com\') Loaded"\n', solutionCode: 'print("page.goto(\'https://example.com\') Loaded")', expectedOutput: "page.goto('https://example.com') Loaded"
         },
-      ],
+              { id: 2, level: 36, titleKey: 'Playwright E2E Automation Capstone', icon: 'trophy', xp: 200, color: '#3498db', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Playwright End-to-End Automation Suite Passed")\n', solutionCode: 'print("Playwright End-to-End Automation Suite Passed")', expectedOutput: 'Playwright End-to-End Automation Suite Passed' },
+],
     },
     {
       id: 'python_masterclass',
@@ -1247,15 +1260,23 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       titleKey: 'React & Component State Systems',
       lessons: [
         {
-          id: 1, level: 30, titleKey: 'react_state', icon: 'brain', xp: 50, color: '#61dafb', type: 'lesson', nodeType: 'standard',
+          id: 1, level: 30, titleKey: 'useState Hook & State Immutability', icon: 'brain', xp: 50, color: '#61dafb', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'js_challenge_1',
           starterCode: '// Simulate useState: log "State initialized to 0"\n',
           solutionCode: 'console.log("State initialized to 0");',
           expectedOutput: 'State initialized to 0'
         },
         {
-          id: 1, level: 31, titleKey: 'react_effect', icon: 'star', xp: 45, color: '#61dafb', type: 'quiz', nodeType: 'quiz',
-          challengeDescriptionKey: 'js_challenge_2', starterCode: '', solutionCode: '', expectedOutput: ''
+          id: 2, level: 31, titleKey: 'useEffect Lifecycle & Dependency Arrays', icon: 'brain', xp: 55, color: '#61dafb', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'console.log("Effect Mounted & Subscription Active");\n', solutionCode: 'console.log("Effect Mounted & Subscription Active");', expectedOutput: 'Effect Mounted & Subscription Active'
+        },
+        {
+          id: 3, level: 32, titleKey: 'React Component Architecture Quiz', icon: 'star', xp: 40, color: '#61dafb', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
+        },
+        {
+          id: 4, level: 33, titleKey: 'Interactive React Dashboard Capstone', icon: 'trophy', xp: 125, color: '#61dafb', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'console.log("React Component Tree Rendered Successfully");\n', solutionCode: 'console.log("React Component Tree Rendered Successfully");', expectedOutput: 'React Component Tree Rendered Successfully'
         },
       ],
     },
@@ -1264,11 +1285,26 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       titleKey: 'Next.js App Router & Server Actions',
       lessons: [
         {
-          id: 1, level: 32, titleKey: 'server_action', icon: 'brain', xp: 55, color: '#000000', type: 'lesson', nodeType: 'standard',
+          id: 1, level: 34, titleKey: 'App Router Layouts & Server Components', icon: 'brain', xp: 55, color: '#000000', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'js_challenge_3',
-          starterCode: '// Write a server action string: "use server"; log "Action Executed!"\n',
-          solutionCode: 'console.log("Action Executed!");',
-          expectedOutput: 'Action Executed!'
+          starterCode: '// Define a Server Component layout\nconsole.log("Server Component Rendered");\n',
+          solutionCode: 'console.log("Server Component Rendered");',
+          expectedOutput: 'Server Component Rendered'
+        },
+        {
+          id: 2, level: 35, titleKey: 'Server Actions & Mutating Data with "use server"', icon: 'brain', xp: 60, color: '#000000', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '',
+          starterCode: 'console.log("\'use server\'; async function createItem()");\n',
+          solutionCode: 'console.log("\'use server\'; async function createItem()");',
+          expectedOutput: "'use server'; async function createItem()"
+        },
+        {
+          id: 3, level: 36, titleKey: 'Next.js Caching & Revalidation Quiz', icon: 'star', xp: 40, color: '#000000', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
+        },
+        {
+          id: 4, level: 37, titleKey: 'Fullstack Next.js App Router Capstone', icon: 'trophy', xp: 150, color: '#000000', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'console.log("Next.js App Deployed & Server Actions Verified");\n', solutionCode: 'console.log("Next.js App Deployed & Server Actions Verified");', expectedOutput: 'Next.js App Deployed & Server Actions Verified'
         },
       ],
     },
@@ -1277,13 +1313,24 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       titleKey: 'Fullstack API & Database Profiles',
       lessons: [
         {
-          id: 1, level: 33, titleKey: 'express_route', icon: 'brain', xp: 60, color: '#68a063', type: 'lesson', nodeType: 'standard',
+          id: 1, level: 38, titleKey: 'Express REST Endpoints & Controllers', icon: 'brain', xp: 60, color: '#68a063', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: 'js_challenge_4',
           starterCode: '// Log "GET /api/user 200 OK"\n',
           solutionCode: 'console.log("GET /api/user 200 OK");',
           expectedOutput: 'GET /api/user 200 OK'
         },
-        { id: 1, level: 34, titleKey: 'fullstack_architect_trophy', icon: 'trophy', xp: 200, color: '#00b894', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        {
+          id: 2, level: 39, titleKey: 'MongoDB Schema Validation & Indexing', icon: 'brain', xp: 65, color: '#68a063', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'console.log("Mongoose Schema Validated & Saved");\n', solutionCode: 'console.log("Mongoose Schema Validated & Saved");', expectedOutput: 'Mongoose Schema Validated & Saved'
+        },
+        {
+          id: 3, level: 40, titleKey: 'Fullstack Security & CORS Quiz', icon: 'star', xp: 40, color: '#68a063', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
+        },
+        {
+          id: 4, level: 41, titleKey: 'Fullstack Architect Certification Capstone', icon: 'trophy', xp: 200, color: '#00b894', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'console.log("Fullstack Microservice Deployed");\n', solutionCode: 'console.log("Fullstack Microservice Deployed");', expectedOutput: 'Fullstack Microservice Deployed'
+        },
       ],
     },
     {
@@ -1291,8 +1338,20 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       titleKey: 'WebAssembly (Wasm) & V8 Engine Optimization',
       lessons: [
         {
-          id: 1, level: 35, titleKey: 'wasm_instantiate', icon: 'brain', xp: 70, color: '#f7df1e', type: 'lesson', nodeType: 'standard',
+          id: 1, level: 42, titleKey: 'WebAssembly Module Instantiation', icon: 'brain', xp: 70, color: '#f7df1e', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "WebAssembly Module Instantiated"\n', solutionCode: 'console.log("WebAssembly Module Instantiated");', expectedOutput: 'WebAssembly Module Instantiated'
+        },
+        {
+          id: 2, level: 43, titleKey: 'V8 JIT Compiler Hidden Classes & Inline Caching', icon: 'brain', xp: 75, color: '#f7df1e', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'console.log("V8 Monomorphic Callsite Optimized");\n', solutionCode: 'console.log("V8 Monomorphic Callsite Optimized");', expectedOutput: 'V8 Monomorphic Callsite Optimized'
+        },
+        {
+          id: 3, level: 44, titleKey: 'Engine Performance Quiz', icon: 'star', xp: 40, color: '#f7df1e', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
+        },
+        {
+          id: 4, level: 45, titleKey: 'High-Performance Wasm Engine Capstone', icon: 'trophy', xp: 200, color: '#f7df1e', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'console.log("Wasm Computation Executed at Native Speed");\n', solutionCode: 'console.log("Wasm Computation Executed at Native Speed");', expectedOutput: 'Wasm Computation Executed at Native Speed'
         },
       ],
     },
@@ -1301,8 +1360,20 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       titleKey: 'GraphQL Queries & Apollo Client Integration',
       lessons: [
         {
-          id: 1, level: 36, titleKey: 'graphql_query', icon: 'brain', xp: 60, color: '#e10098', type: 'lesson', nodeType: 'standard',
+          id: 1, level: 46, titleKey: 'GraphQL Schema & Query Execution', icon: 'brain', xp: 60, color: '#e10098', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "query { user { id name } }"\n', solutionCode: 'console.log("query { user { id name } }");', expectedOutput: 'query { user { id name } }'
+        },
+        {
+          id: 2, level: 47, titleKey: 'GraphQL Mutations & Cache Updates', icon: 'brain', xp: 65, color: '#e10098', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'console.log("Mutation Executed: userUpdated");\n', solutionCode: 'console.log("Mutation Executed: userUpdated");', expectedOutput: 'Mutation Executed: userUpdated'
+        },
+        {
+          id: 3, level: 48, titleKey: 'GraphQL Schema Design Quiz', icon: 'star', xp: 40, color: '#e10098', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
+        },
+        {
+          id: 4, level: 49, titleKey: 'Apollo GraphQL Server Capstone', icon: 'trophy', xp: 175, color: '#e10098', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'console.log("GraphQL Federated Schema Active");\n', solutionCode: 'console.log("GraphQL Federated Schema Active");', expectedOutput: 'GraphQL Federated Schema Active'
         },
       ],
     },
@@ -1311,18 +1382,20 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       titleKey: 'Web Workers & Multithreaded Processing',
       lessons: [
         {
-          id: 1, level: 37, titleKey: 'worker_postmessage', icon: 'brain', xp: 65, color: '#f7df1e', type: 'lesson', nodeType: 'standard',
+          id: 1, level: 50, titleKey: 'Web Worker Message Passing', icon: 'brain', xp: 65, color: '#f7df1e', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "worker.postMessage({ task: \'compute\' })"\n', solutionCode: 'console.log("worker.postMessage({ task: \'compute\' })");', expectedOutput: "worker.postMessage({ task: 'compute' })"
         },
-      ],
-    },
-    {
-      id: 'js_nextjs_sec',
-      titleKey: 'Next.js App Router & Server Actions',
-      lessons: [
         {
-          id: 1, level: 38, titleKey: 'next_server_action', icon: 'brain', xp: 60, color: '#000000', type: 'lesson', nodeType: 'standard',
-          challengeDescriptionKey: '', starterCode: '// Log "\'use server\'; async function createItem()"\n', solutionCode: 'console.log("\'use server\'; async function createItem()");', expectedOutput: "'use server'; async function createItem()"
+          id: 2, level: 51, titleKey: 'SharedArrayBuffer & Atomic Locks', icon: 'brain', xp: 75, color: '#f7df1e', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'console.log("Atomics.add(buffer, 0, 1)");\n', solutionCode: 'console.log("Atomics.add(buffer, 0, 1)");', expectedOutput: 'Atomics.add(buffer, 0, 1)'
+        },
+        {
+          id: 3, level: 52, titleKey: 'Multithreaded JS Quiz', icon: 'star', xp: 40, color: '#f7df1e', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
+        },
+        {
+          id: 4, level: 53, titleKey: 'Multithreaded Image Processing Engine', icon: 'trophy', xp: 200, color: '#f7df1e', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'console.log("Parallel Web Worker Image Filter Passed");\n', solutionCode: 'console.log("Parallel Web Worker Image Filter Passed");', expectedOutput: 'Parallel Web Worker Image Filter Passed'
         },
       ],
     },
@@ -1331,8 +1404,20 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       titleKey: 'Redux Toolkit & RTK Query Engines',
       lessons: [
         {
-          id: 1, level: 39, titleKey: 'redux_slice', icon: 'brain', xp: 55, color: '#764abc', type: 'lesson', nodeType: 'standard',
+          id: 1, level: 54, titleKey: 'Redux Slices & Action Creators', icon: 'brain', xp: 55, color: '#764abc', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "createSlice({ name: \'counter\', initialState: 0 })"\n', solutionCode: 'console.log("createSlice({ name: \'counter\', initialState: 0 })");', expectedOutput: "createSlice({ name: 'counter', initialState: 0 })"
+        },
+        {
+          id: 2, level: 55, titleKey: 'RTK Query Auto-Fetching & Cache Invalidation', icon: 'brain', xp: 60, color: '#764abc', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'console.log("createApi Endpoint Fetching Data");\n', solutionCode: 'console.log("createApi Endpoint Fetching Data");', expectedOutput: 'createApi Endpoint Fetching Data'
+        },
+        {
+          id: 3, level: 56, titleKey: 'Redux State Management Quiz', icon: 'star', xp: 40, color: '#764abc', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
+        },
+        {
+          id: 4, level: 57, titleKey: 'Global State Store Capstone', icon: 'trophy', xp: 150, color: '#764abc', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'console.log("Global Redux Store Hydrated");\n', solutionCode: 'console.log("Global Redux Store Hydrated");', expectedOutput: 'Global Redux Store Hydrated'
         },
       ],
     },
@@ -1341,8 +1426,20 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       titleKey: 'Three.js 3D WebGL Graphics & Shaders',
       lessons: [
         {
-          id: 1, level: 40, titleKey: 'three_scene_render', icon: 'brain', xp: 70, color: '#049ef4', type: 'lesson', nodeType: 'standard',
+          id: 1, level: 58, titleKey: 'Three.js Scene, Camera & Renderer Setup', icon: 'brain', xp: 70, color: '#049ef4', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "const scene = new THREE.Scene(); renderer.render()"\n', solutionCode: 'console.log("const scene = new THREE.Scene(); renderer.render()");', expectedOutput: 'const scene = new THREE.Scene(); renderer.render()'
+        },
+        {
+          id: 2, level: 59, titleKey: 'Custom GLSL Fragment & Vertex Shaders', icon: 'brain', xp: 75, color: '#049ef4', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'console.log("GLSL Shader Material Compiled");\n', solutionCode: 'console.log("GLSL Shader Material Compiled");', expectedOutput: 'GLSL Shader Material Compiled'
+        },
+        {
+          id: 3, level: 60, titleKey: '3D WebGL Graphics Quiz', icon: 'star', xp: 45, color: '#049ef4', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
+        },
+        {
+          id: 4, level: 61, titleKey: '3D Interactive Portfolio Capstone', icon: 'trophy', xp: 250, color: '#049ef4', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'console.log("3D Interactive Scene Rendered");\n', solutionCode: 'console.log("3D Interactive Scene Rendered");', expectedOutput: '3D Interactive Scene Rendered'
         },
       ],
     },
@@ -1398,7 +1495,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 17, titleKey: 'lua_roblox_datastore', icon: 'brain', xp: 60, color: '#000080', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: 'print("DataStoreService:GetDataAsync(key)")\n', solutionCode: 'print("DataStoreService:GetDataAsync(key)")', expectedOutput: 'DataStoreService:GetDataAsync(key)'
         },
-      ],
+              { id: 2, level: 18, titleKey: 'Roblox Studio Game Engine Capstone', icon: 'trophy', xp: 200, color: '#00a2ff', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Roblox Studio Game Loop Mastered")\n', solutionCode: 'print("Roblox Studio Game Loop Mastered")', expectedOutput: 'Roblox Studio Game Loop Mastered' },
+],
     },
     {
       id: 'lua_masterclass',
@@ -1762,7 +1860,10 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           solutionCode: 'console.log("Class Inherited");',
           expectedOutput: 'Class Inherited'
         },
-      ],
+              { id: 2, level: 14, titleKey: 'C++ Inheritance, Polymorphism & Virtual Functions', icon: 'brain', xp: 50, color: '#f34b7d', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("C++ Class Inheritance Executed");\n', solutionCode: 'console.log("C++ Class Inheritance Executed");', expectedOutput: 'C++ Class Inheritance Executed' },
+        { id: 3, level: 15, titleKey: 'C++ OOP Concepts Quiz', icon: 'star', xp: 35, color: '#f34b7d', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 16, titleKey: 'C++ OOP Banking System Capstone', icon: 'trophy', xp: 200, color: '#f34b7d', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("C++ OOP Bank System Verified");\n', solutionCode: 'console.log("C++ OOP Bank System Verified");', expectedOutput: 'C++ OOP Bank System Verified' },
+],
     },
     {
       id: 'cpp_stl_sec',
@@ -1775,7 +1876,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           solutionCode: 'console.log("std::vector<int> initialized");',
           expectedOutput: 'std::vector<int> initialized'
         },
-      ],
+              { id: 2, level: 15, titleKey: 'C++ STL Data Processing Capstone', icon: 'trophy', xp: 200, color: '#f34b7d', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("C++ High Performance STL Pipeline Ready");\n', solutionCode: 'console.log("C++ High Performance STL Pipeline Ready");', expectedOutput: 'C++ High Performance STL Pipeline Ready' },
+],
     },
     {
       id: 'c++_masterclass',
@@ -1828,7 +1930,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'csharp_api_controller', icon: 'brain', xp: 50, color: '#9b4993', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "[HttpGet] api/users 200 OK"\n', solutionCode: 'Console.WriteLine("[HttpGet] api/users 200 OK");', expectedOutput: '[HttpGet] api/users 200 OK'
         },
-      ],
+              { id: 2, level: 17, titleKey: '.NET Enterprise Web API Capstone', icon: 'trophy', xp: 200, color: '#9b4993', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log(".NET Enterprise Web API Running");\n', solutionCode: 'console.log(".NET Enterprise Web API Running");', expectedOutput: '.NET Enterprise Web API Running' },
+],
     },
     {
       id: 'c_sharp_masterclass',
@@ -1873,7 +1976,10 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           solutionCode: 'System.out.println("Interface Implemented");',
           expectedOutput: 'Interface Implemented'
         },
-      ],
+              { id: 2, level: 6, titleKey: 'Java Polymorphism & Interface Design', icon: 'brain', xp: 50, color: '#b07219', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'System.out.println("Java Polymorphism Method Overriding Passed");\n', solutionCode: 'System.out.println("Java Polymorphism Method Overriding Passed");', expectedOutput: 'Java Polymorphism Method Overriding Passed' },
+        { id: 3, level: 7, titleKey: 'Java Object-Oriented Programming Quiz', icon: 'star', xp: 35, color: '#b07219', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 8, titleKey: 'Java Enterprise System Capstone', icon: 'trophy', xp: 200, color: '#b07219', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'System.out.println("Java OOP Enterprise System Built");\n', solutionCode: 'System.out.println("Java OOP Enterprise System Built");', expectedOutput: 'Java OOP Enterprise System Built' },
+],
     },
     {
       id: 'java_streams_sec',
@@ -1940,7 +2046,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'kotlin_compose_view', icon: 'brain', xp: 50, color: '#7f52ff', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "@Composable fun App() UI Rendered"\n', solutionCode: 'println("@Composable fun App() UI Rendered")', expectedOutput: '@Composable fun App() UI Rendered'
         },
-      ],
+              { id: 2, level: 17, titleKey: 'Android Jetpack Compose App Capstone', icon: 'trophy', xp: 200, color: '#A97BFF', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'println("Android Jetpack Compose App Launched")\n', solutionCode: 'println("Android Jetpack Compose App Launched")', expectedOutput: 'Android Jetpack Compose App Launched' },
+],
     },
     {
       id: 'kotlin_masterclass',
@@ -1993,7 +2100,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'swift_publisher', icon: 'brain', xp: 50, color: '#f05138', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "Combine AnyPublisher Subscribed"\n', solutionCode: 'print("Combine AnyPublisher Subscribed")', expectedOutput: 'Combine AnyPublisher Subscribed'
         },
-      ],
+              { id: 2, level: 17, titleKey: 'iOS Reactive Combine Pipeline Capstone', icon: 'trophy', xp: 200, color: '#F05138', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("iOS Reactive Combine Pipeline Active")\n', solutionCode: 'print("iOS Reactive Combine Pipeline Active")', expectedOutput: 'iOS Reactive Combine Pipeline Active' },
+],
     },
     {
       id: 'swift_masterclass',
@@ -2046,7 +2154,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'go_grpc_proto', icon: 'brain', xp: 50, color: '#00add8', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "gRPC Server Listening on :50051"\n', solutionCode: 'fmt.Println("gRPC Server Listening on :50051")', expectedOutput: 'gRPC Server Listening on :50051'
         },
-      ],
+              { id: 2, level: 17, titleKey: 'Go Microservices & gRPC Engine Capstone', icon: 'trophy', xp: 200, color: '#00ADD8', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'fmt.Println("Go gRPC Microservice Online")\n', solutionCode: 'fmt.Println("Go gRPC Microservice Online")', expectedOutput: 'Go gRPC Microservice Online' },
+],
     },
     {
       id: 'go_masterclass',
@@ -2099,7 +2208,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'rust_tokio_spawn', icon: 'brain', xp: 55, color: '#000000', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "Tokio Task Spawned!"\n', solutionCode: 'println!("Tokio Task Spawned!");', expectedOutput: 'Tokio Task Spawned!'
         },
-      ],
+              { id: 2, level: 17, titleKey: 'Rust Async Tokio Network Engine Capstone', icon: 'trophy', xp: 200, color: '#dea584', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'println!("Rust Tokio Async Runtime Initialized");\n', solutionCode: 'println!("Rust Tokio Async Runtime Initialized");', expectedOutput: 'Rust Tokio Async Runtime Initialized' },
+],
     },
     {
       id: 'rust_masterclass',
@@ -2152,7 +2262,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'php_eloquent', icon: 'brain', xp: 50, color: '#ff2d20', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "User::all() Returned 10 Records"\n', solutionCode: 'echo "User::all() Returned 10 Records";', expectedOutput: 'User::all() Returned 10 Records'
         },
-      ],
+              { id: 2, level: 17, titleKey: 'Laravel Enterprise Web Application Capstone', icon: 'trophy', xp: 200, color: '#4F5D95', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'echo "Laravel Web Portal Online";\n', solutionCode: 'echo "Laravel Web Portal Online";', expectedOutput: 'Laravel Web Portal Online' },
+],
     },
     {
       id: 'php_masterclass',
@@ -2205,7 +2316,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'ruby_active_record', icon: 'brain', xp: 50, color: '#cc342d', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '# Log "User.where(active: true)"\n', solutionCode: 'puts "User.where(active: true)"', expectedOutput: 'User.where(active: true)'
         },
-      ],
+              { id: 2, level: 17, titleKey: 'Ruby on Rails MVC Application Capstone', icon: 'trophy', xp: 200, color: '#701516', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'puts "Ruby on Rails App Booted"\n', solutionCode: 'puts "Ruby on Rails App Booted"', expectedOutput: 'Ruby on Rails App Booted' },
+],
     },
     {
       id: 'ruby_masterclass',
@@ -2270,7 +2382,10 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'ts_class_decorator', icon: 'brain', xp: 50, color: '#3178c6', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "Decorator Applied"\n', solutionCode: 'console.log("Decorator Applied");', expectedOutput: 'Decorator Applied'
         },
-      ],
+              { id: 2, level: 17, titleKey: 'TypeScript Reflect Metadata & Method Interceptors', icon: 'brain', xp: 50, color: '#3178c6', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("TypeScript Reflect Metadata Evaluated");\n', solutionCode: 'console.log("TypeScript Reflect Metadata Evaluated");', expectedOutput: 'TypeScript Reflect Metadata Evaluated' },
+        { id: 3, level: 18, titleKey: 'TypeScript Decorators Quiz', icon: 'star', xp: 35, color: '#3178c6', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 19, titleKey: 'TypeScript Decorator Framework Capstone', icon: 'trophy', xp: 200, color: '#3178c6', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("TypeScript Decorator Framework Deployed");\n', solutionCode: 'console.log("TypeScript Decorator Framework Deployed");', expectedOutput: 'TypeScript Decorator Framework Deployed' },
+],
     },
     {
       id: 'ts_ast_sec',
@@ -2280,7 +2395,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 17, titleKey: 'ts_ast_parse', icon: 'brain', xp: 65, color: '#3178c6', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: '// Log "ts.createSourceFile AST Created"\n', solutionCode: 'console.log("ts.createSourceFile AST Created");', expectedOutput: 'ts.createSourceFile AST Created'
         },
-      ],
+              { id: 2, level: 18, titleKey: 'TypeScript Compiler Plugin & AST Transformer Capstone', icon: 'trophy', xp: 200, color: '#3178c6', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("TypeScript Compiler Plugin Built");\n', solutionCode: 'console.log("TypeScript Compiler Plugin Built");', expectedOutput: 'TypeScript Compiler Plugin Built' },
+],
     },
     {
       id: 'typescript_masterclass',
@@ -2329,7 +2445,9 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 6, titleKey: 'sql_group_by', icon: 'star', xp: 30, color: '#336791', type: 'quiz', nodeType: 'quiz',
           challengeDescriptionKey: 'sql_challenge_3', starterCode: '', solutionCode: '', expectedOutput: ''
         },
-      ],
+              { id: 2, level: 7, titleKey: 'SQL Multi-Table Joins & Grouping Quiz', icon: 'star', xp: 35, color: '#e38c00', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 3, level: 8, titleKey: 'SQL Relational Database Analytics Capstone', icon: 'trophy', xp: 200, color: '#e38c00', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'SELECT \'SQL Analytics Engine Executed\' AS result;\n', solutionCode: 'SELECT \'SQL Analytics Engine Executed\' AS result;', expectedOutput: 'SQL Analytics Engine Executed' },
+],
     },
     {
       id: 'sql_schema_sec',
@@ -2396,7 +2514,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'r_ggplot', icon: 'brain', xp: 50, color: '#276dc3', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: 'print("ggplot(data) + geom_point()")\n', solutionCode: 'print("ggplot(data) + geom_point()")', expectedOutput: 'ggplot(data) + geom_point()'
         },
-      ],
+              { id: 2, level: 17, titleKey: 'R ggplot2 Publication Data Graphics Capstone', icon: 'trophy', xp: 200, color: '#198CE7', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'cat("R ggplot2 Publication Plot Rendered\\n")\n', solutionCode: 'cat("R ggplot2 Publication Plot Rendered\\n")', expectedOutput: 'R ggplot2 Publication Plot Rendered' },
+],
     },
     {
       id: 'r_masterclass',
@@ -2449,7 +2568,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'flutter_anim', icon: 'brain', xp: 50, color: '#00d2b8', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: 'print("AnimationController Forward")\n', solutionCode: 'print("AnimationController Forward")', expectedOutput: 'AnimationController Forward'
         },
-      ],
+              { id: 2, level: 17, titleKey: 'Flutter Mobile & Desktop Application Capstone', icon: 'trophy', xp: 200, color: '#00B4AB', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print(\'Flutter Cross-Platform App Ready\');\n', solutionCode: 'print(\'Flutter Cross-Platform App Ready\');', expectedOutput: 'Flutter Cross-Platform App Ready' },
+],
     },
     {
       id: 'dart_masterclass',
@@ -2502,7 +2622,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'scala_actor', icon: 'brain', xp: 55, color: '#de3423', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: 'println("Akka Actor System Active")\n', solutionCode: 'println("Akka Actor System Active")', expectedOutput: 'Akka Actor System Active'
         },
-      ],
+              { id: 2, level: 17, titleKey: 'Scala Akka Distributed Actor System Capstone', icon: 'trophy', xp: 200, color: '#c7254e', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'println("Scala Akka Cluster System Live")\n', solutionCode: 'println("Scala Akka Cluster System Live")', expectedOutput: 'Scala Akka Cluster System Live' },
+],
     },
     {
       id: 'scala_masterclass',
@@ -2567,7 +2688,8 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 16, titleKey: 'derivative_puzzle', icon: 'brain', xp: 50, color: '#6366f1', type: 'lesson', nodeType: 'quiz',
           challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
         },
-      ],
+              { id: 2, level: 17, titleKey: 'Calculus Optimization Engine Capstone', icon: 'trophy', xp: 200, color: '#00bcd4', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Calculus Optimization Engine Solved");\n', solutionCode: 'console.log("Calculus Optimization Engine Solved");', expectedOutput: 'Calculus Optimization Engine Solved' },
+],
     },
     {
       id: 'math_masterclass',
@@ -2597,7 +2719,10 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 5, titleKey: 'shell_grep_sed', icon: 'brain', xp: 40, color: '#334155', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: 'echo "DEPLOY_SUCCESS"\n', solutionCode: 'echo "DEPLOY_SUCCESS"', expectedOutput: 'DEPLOY_SUCCESS'
         },
-      ],
+              { id: 2, level: 6, titleKey: 'Shell Grep, Awk & Text Processing Filters', icon: 'brain', xp: 45, color: '#89e051', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'echo "Shell Text Processing Pipeline Completed"\n', solutionCode: 'echo "Shell Text Processing Pipeline Completed"', expectedOutput: 'Shell Text Processing Pipeline Completed' },
+        { id: 3, level: 7, titleKey: 'Linux Shell & Pipelines Quiz', icon: 'star', xp: 30, color: '#89e051', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 8, titleKey: 'Bash Scripting Automation Suite Capstone', icon: 'trophy', xp: 200, color: '#89e051', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'echo "Bash Automation Suite Verified"\n', solutionCode: 'echo "Bash Automation Suite Verified"', expectedOutput: 'Bash Automation Suite Verified' },
+],
     },
   ],
   ai_ml: [
@@ -2770,154 +2895,220 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           id: 1, level: 5, titleKey: 'pytorch_tensor', icon: 'brain', xp: 55, color: '#059669', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: 'print("Tensor shape: [32, 512]")\n', solutionCode: 'print("Tensor shape: [32, 512]")', expectedOutput: 'Tensor shape: [32, 512]'
         },
-      ],
+              { id: 2, level: 6, titleKey: 'PyTorch Tensors, Autograd & Loss Backprop', icon: 'brain', xp: 60, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("PyTorch Tensor Autograd Graph Compiled")\n', solutionCode: 'print("PyTorch Tensor Autograd Graph Compiled")', expectedOutput: 'PyTorch Tensor Autograd Graph Compiled' },
+        { id: 3, level: 7, titleKey: 'PyTorch Framework & Autograd Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 8, titleKey: 'PyTorch Neural Network Trainer Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("PyTorch Deep Model Deployed")\n', solutionCode: 'print("PyTorch Deep Model Deployed")', expectedOutput: 'PyTorch Deep Model Deployed' },
+],
     },
     {
       id: 'ai_ml_diffusion_sec',
       titleKey: 'Diffusion Models & Generative Image AI',
       lessons: [
         { id: 1, level: 6, titleKey: 'diffusion_step', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Latent Denoising Step t=500")\n', solutionCode: 'print("Latent Denoising Step t=500")', expectedOutput: 'Latent Denoising Step t=500' },
-      ],
+              { id: 2, level: 7, titleKey: 'U-Net Noise Predictor & Classifier-Free Guidance', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("U-Net Latent Noise Step 50/50 Complete")\n', solutionCode: 'print("U-Net Latent Noise Step 50/50 Complete")', expectedOutput: 'U-Net Latent Noise Step 50/50 Complete' },
+        { id: 3, level: 8, titleKey: 'Diffusion Models & Latent Sampling Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 9, titleKey: 'Stable Diffusion Generator Engine Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Stable Diffusion Generator Complete")\n', solutionCode: 'print("Stable Diffusion Generator Complete")', expectedOutput: 'Stable Diffusion Generator Complete' },
+],
     },
     {
       id: 'ai_ml_attention_sec',
       titleKey: 'Transformer Self-Attention Mechanisms',
       lessons: [
         { id: 1, level: 7, titleKey: 'self_attention_qkv', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Q * K.T / sqrt(d_k) Softmax Matrix")\n', solutionCode: 'print("Q * K.T / sqrt(d_k) Softmax Matrix")', expectedOutput: 'Q * K.T / sqrt(d_k) Softmax Matrix' },
-      ],
+              { id: 2, level: 8, titleKey: 'Multi-Head Attention Matrices & Masking', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Softmax(Q K^T / sqrt(d)) Multi-Head Matrix Computed")\n', solutionCode: 'print("Softmax(Q K^T / sqrt(d)) Multi-Head Matrix Computed")', expectedOutput: 'Softmax(Q K^T / sqrt(d)) Multi-Head Matrix Computed' },
+        { id: 3, level: 9, titleKey: 'Self-Attention & Transformer Mechanics Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 10, titleKey: 'Transformer Self-Attention Block Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Transformer Self-Attention Block Verified")\n', solutionCode: 'print("Transformer Self-Attention Block Verified")', expectedOutput: 'Transformer Self-Attention Block Verified' },
+],
     },
     {
       id: 'ai_ml_rlhf_sec',
       titleKey: 'Reinforcement Learning from Human Feedback (RLHF)',
       lessons: [
         { id: 1, level: 8, titleKey: 'ppo_reward_model', icon: 'brain', xp: 75, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("PPO Policy Loss: Reward Score +0.92")\n', solutionCode: 'print("PPO Policy Loss: Reward Score +0.92")', expectedOutput: 'PPO Policy Loss: Reward Score +0.92' },
-      ],
+              { id: 2, level: 9, titleKey: 'Direct Preference Optimization (DPO) Mechanics', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Direct Preference Optimization (DPO) Loss Evaluated")\n', solutionCode: 'print("Direct Preference Optimization (DPO) Loss Evaluated")', expectedOutput: 'Direct Preference Optimization (DPO) Loss Evaluated' },
+        { id: 3, level: 10, titleKey: 'RLHF & Model Alignment Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 11, titleKey: 'RLHF Preference Alignment Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("RLHF Alignment Pipeline Complete")\n', solutionCode: 'print("RLHF Alignment Pipeline Complete")', expectedOutput: 'RLHF Alignment Pipeline Complete' },
+],
     },
     {
       id: 'ai_ml_gnn_sec',
       titleKey: 'Graph Neural Networks (GNNs) & Molecular AI',
       lessons: [
         { id: 1, level: 9, titleKey: 'gnn_conv', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("GCNConv Message Passing Complete")\n', solutionCode: 'print("GCNConv Message Passing Complete")', expectedOutput: 'GCNConv Message Passing Complete' },
-      ],
+              { id: 2, level: 10, titleKey: 'Message Passing & Graph Convolutional Networks (GCN)', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("GCN Message Passing Node Features Aggregated")\n', solutionCode: 'print("GCN Message Passing Node Features Aggregated")', expectedOutput: 'GCN Message Passing Node Features Aggregated' },
+        { id: 3, level: 11, titleKey: 'Graph Neural Networks Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 12, titleKey: 'GNN Node & Graph Classifier Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Graph Neural Network Classifier Ready")\n', solutionCode: 'print("Graph Neural Network Classifier Ready")', expectedOutput: 'Graph Neural Network Classifier Ready' },
+],
     },
     {
       id: 'ai_ml_timeseries_sec',
       titleKey: 'Deep Learning Time Series & Forecasting',
       lessons: [
         { id: 1, level: 10, titleKey: 'lstm_forecast', icon: 'brain', xp: 60, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("TFT Forecast Horizon: 30 Days Out")\n', solutionCode: 'print("TFT Forecast Horizon: 30 Days Out")', expectedOutput: 'TFT Forecast Horizon: 30 Days Out' },
-      ],
+              { id: 2, level: 11, titleKey: 'Temporal Fusion Transformers & Trend Decomposition', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Temporal Fusion Transformer Horizon Forecasted")\n', solutionCode: 'print("Temporal Fusion Transformer Horizon Forecasted")', expectedOutput: 'Temporal Fusion Transformer Horizon Forecasted' },
+        { id: 3, level: 12, titleKey: 'Time Series AI & Forecasting Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 13, titleKey: 'Time Series Forecasting Engine Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Time Series AI Engine Verified")\n', solutionCode: 'print("Time Series AI Engine Verified")', expectedOutput: 'Time Series AI Engine Verified' },
+],
     },
     {
       id: 'ai_ml_autoencoder_sec',
       titleKey: 'Autoencoders & Latent Space Embeddings',
       lessons: [
         { id: 1, level: 11, titleKey: 'vae_latent', icon: 'brain', xp: 60, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("VAE Latent Vector Sampling: N(0, 1)")\n', solutionCode: 'print("VAE Latent Vector Sampling: N(0, 1)")', expectedOutput: 'VAE Latent Vector Sampling: N(0, 1)' },
-      ],
+              { id: 2, level: 12, titleKey: 'Variational Autoencoders (VAE) & Latent Reparameterization', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Variational Autoencoder Reparameterization Trick Done")\n', solutionCode: 'print("Variational Autoencoder Reparameterization Trick Done")', expectedOutput: 'Variational Autoencoder Reparameterization Trick Done' },
+        { id: 3, level: 13, titleKey: 'Autoencoders & Latent Representations Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 14, titleKey: 'VAE Anomaly Detection Engine Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("VAE Latent Space Anomaly Detector Active")\n', solutionCode: 'print("VAE Latent Space Anomaly Detector Active")', expectedOutput: 'VAE Latent Space Anomaly Detector Active' },
+],
     },
     {
       id: 'ai_ml_optuna_sec',
       titleKey: 'Automated Hyperparameter Optimization (Optuna)',
       lessons: [
         { id: 1, level: 12, titleKey: 'optuna_study', icon: 'brain', xp: 55, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Best Trial: learning_rate=0.0003")\n', solutionCode: 'print("Best Trial: learning_rate=0.0003")', expectedOutput: 'Best Trial: learning_rate=0.0003' },
-      ],
+              { id: 2, level: 13, titleKey: 'Optuna Tree-Structured Parzen Estimators & Pruning', icon: 'brain', xp: 60, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Optuna Hyperband Trial Pruned Best Parameters Found")\n', solutionCode: 'print("Optuna Hyperband Trial Pruned Best Parameters Found")', expectedOutput: 'Optuna Hyperband Trial Pruned Best Parameters Found' },
+        { id: 3, level: 14, titleKey: 'Hyperparameter Tuning & Optuna Quiz', icon: 'star', xp: 35, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 15, titleKey: 'Automated Model Tuning Suite Capstone', icon: 'trophy', xp: 200, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Automated Hyperparameter Tuning Complete")\n', solutionCode: 'print("Automated Hyperparameter Tuning Complete")', expectedOutput: 'Automated Hyperparameter Tuning Complete' },
+],
     },
     {
       id: 'ai_ml_mlflow_sec',
       titleKey: 'MLflow Model Tracking & Experiment Registry',
       lessons: [
         { id: 1, level: 13, titleKey: 'mlflow_log', icon: 'brain', xp: 55, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("MLflow Run Logged: Val Loss 0.012")\n', solutionCode: 'print("MLflow Run Logged: Val Loss 0.012")', expectedOutput: 'MLflow Run Logged: Val Loss 0.012' },
-      ],
+              { id: 2, level: 14, titleKey: 'MLflow Model Registry & Stage Transitions', icon: 'brain', xp: 60, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("MLflow Model Registered: Production Stage")\n', solutionCode: 'print("MLflow Model Registered: Production Stage")', expectedOutput: 'MLflow Model Registered: Production Stage' },
+        { id: 3, level: 15, titleKey: 'MLflow & Experiment Tracking Quiz', icon: 'star', xp: 35, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 16, titleKey: 'MLOps Pipeline & Registry Capstone', icon: 'trophy', xp: 200, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("MLflow MLOps Pipeline Initialized")\n', solutionCode: 'print("MLflow MLOps Pipeline Initialized")', expectedOutput: 'MLflow MLOps Pipeline Initialized' },
+],
     },
     {
       id: 'ai_ml_onnx_sec',
       titleKey: 'ONNX Runtime & Edge AI Deployment',
       lessons: [
         { id: 1, level: 14, titleKey: 'onnx_export', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("ONNX Model Exported & Optimized")\n', solutionCode: 'print("ONNX Model Exported & Optimized")', expectedOutput: 'ONNX Model Exported & Optimized' },
-      ],
+              { id: 2, level: 15, titleKey: 'ONNX INT8 Quantization & TensorRT Acceleration', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("ONNX INT8 Dynamic Quantization 4x Speedup")\n', solutionCode: 'print("ONNX INT8 Dynamic Quantization 4x Speedup")', expectedOutput: 'ONNX INT8 Dynamic Quantization 4x Speedup' },
+        { id: 3, level: 16, titleKey: 'ONNX & Model Compression Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 17, titleKey: 'ONNX Edge Inference Engine Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("ONNX Edge Inference Engine Deployed")\n', solutionCode: 'print("ONNX Edge Inference Engine Deployed")', expectedOutput: 'ONNX Edge Inference Engine Deployed' },
+],
     },
     {
       id: 'ai_ml_whisper_sec',
       titleKey: 'Whisper Audio Models & Speech Recognition',
       lessons: [
         { id: 1, level: 15, titleKey: 'whisper_transcribe', icon: 'brain', xp: 60, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Transcribed Speech to Text 99% Match")\n', solutionCode: 'print("Transcribed Speech to Text 99% Match")', expectedOutput: 'Transcribed Speech to Text 99% Match' },
-      ],
+              { id: 2, level: 16, titleKey: 'Whisper Cross-Attention & Timestamp Extraction', icon: 'brain', xp: 60, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Whisper Word-Level Timestamps Extracted")\n', solutionCode: 'print("Whisper Word-Level Timestamps Extracted")', expectedOutput: 'Whisper Word-Level Timestamps Extracted' },
+        { id: 3, level: 17, titleKey: 'Whisper & Speech Recognition Quiz', icon: 'star', xp: 35, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 18, titleKey: 'Speech-to-Text Subtitle Generator Capstone', icon: 'trophy', xp: 200, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Speech-to-Text Subtitle Generator Built")\n', solutionCode: 'print("Speech-to-Text Subtitle Generator Built")', expectedOutput: 'Speech-to-Text Subtitle Generator Built' },
+],
     },
     {
       id: 'ai_ml_yolo_sec',
       titleKey: 'Object Detection & Segment Anything (SAM)',
       lessons: [
         { id: 1, level: 16, titleKey: 'yolo_detect', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("YOLOv8 Bounding Boxes Extracted")\n', solutionCode: 'print("YOLOv8 Bounding Boxes Extracted")', expectedOutput: 'YOLOv8 Bounding Boxes Extracted' },
-      ],
+              { id: 2, level: 17, titleKey: 'YOLO Instance Segmentation & Polygon Masks', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("YOLO Segmentation Polygons Masked")\n', solutionCode: 'print("YOLO Segmentation Polygons Masked")', expectedOutput: 'YOLO Segmentation Polygons Masked' },
+        { id: 3, level: 18, titleKey: 'Object Detection & YOLO Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 19, titleKey: 'Real-Time Object Tracking Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Real-Time Object Tracking System Active")\n', solutionCode: 'print("Real-Time Object Tracking System Active")', expectedOutput: 'Real-Time Object Tracking System Active' },
+],
     },
     {
       id: 'ai_ml_nerf_sec',
       titleKey: 'Neural Radiance Fields (NeRF) & 3D AI',
       lessons: [
         { id: 1, level: 17, titleKey: 'nerf_ray', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("NeRF Ray Marching Volumetric Render")\n', solutionCode: 'print("NeRF Ray Marching Volumetric Render")', expectedOutput: 'NeRF Ray Marching Volumetric Render' },
-      ],
+              { id: 2, level: 18, titleKey: 'NeRF High-Frequency Positional Encodings', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("High-Frequency Positional Encoding Applied")\n', solutionCode: 'print("High-Frequency Positional Encoding Applied")', expectedOutput: 'High-Frequency Positional Encoding Applied' },
+        { id: 3, level: 19, titleKey: 'Neural Radiance Fields Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 20, titleKey: '3D Scene Volumetric Synthesizer Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("3D Scene Volumetric Synthesizer Complete")\n', solutionCode: 'print("3D Scene Volumetric Synthesizer Complete")', expectedOutput: '3D Scene Volumetric Synthesizer Complete' },
+],
     },
     {
       id: 'ai_ml_vit_sec',
       titleKey: 'Vision Transformers (ViT) & Patch Embeddings',
       lessons: [
         { id: 1, level: 20, titleKey: 'vit_patch', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("16x16 Image Patch Linear Projection")\n', solutionCode: 'print("16x16 Image Patch Linear Projection")', expectedOutput: '16x16 Image Patch Linear Projection' },
-      ],
+              { id: 2, level: 21, titleKey: 'Vision Transformer Attention Map Visualization', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Vision Transformer Class Attention Map Visualized")\n', solutionCode: 'print("Vision Transformer Class Attention Map Visualized")', expectedOutput: 'Vision Transformer Class Attention Map Visualized' },
+        { id: 3, level: 22, titleKey: 'Vision Transformers (ViT) Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 23, titleKey: 'ViT Image Classifier Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("ViT Image Classifier Deployed")\n', solutionCode: 'print("ViT Image Classifier Deployed")', expectedOutput: 'ViT Image Classifier Deployed' },
+],
     },
     {
       id: 'ai_ml_liquid_sec',
       titleKey: 'Liquid Neural Networks (LNNs) & Continuous Time',
       lessons: [
         { id: 1, level: 25, titleKey: 'liquid_step', icon: 'brain', xp: 75, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("LNN Continuous-Time ODE State Transition")\n', solutionCode: 'print("LNN Continuous-Time ODE State Transition")', expectedOutput: 'LNN Continuous-Time ODE State Transition' },
-      ],
+              { id: 2, level: 26, titleKey: 'LNN Adaptive Time-Steps & Numerical ODE Solvers', icon: 'brain', xp: 75, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("LNN Adaptive Time-Step Stability Evaluated")\n', solutionCode: 'print("LNN Adaptive Time-Step Stability Evaluated")', expectedOutput: 'LNN Adaptive Time-Step Stability Evaluated' },
+        { id: 3, level: 27, titleKey: 'Liquid Neural Networks Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 28, titleKey: 'Liquid Neural Controller Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Liquid Neural Autonomous Controller Verified")\n', solutionCode: 'print("Liquid Neural Autonomous Controller Verified")', expectedOutput: 'Liquid Neural Autonomous Controller Verified' },
+],
     },
     {
       id: 'ai_ml_snn_sec',
       titleKey: 'Spiking Neural Networks (SNNs) & Neuromorphic AI',
       lessons: [
         { id: 1, level: 26, titleKey: 'snn_fire', icon: 'brain', xp: 75, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("LIF Neuron Membrane Potential Threshold Spike")\n', solutionCode: 'print("LIF Neuron Membrane Potential Threshold Spike")', expectedOutput: 'LIF Neuron Membrane Potential Threshold Spike' },
-      ],
+              { id: 2, level: 27, titleKey: 'SNN Surrogate Gradient Backpropagation', icon: 'brain', xp: 75, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("SNN Backprop via Surrogate Gradient Completed")\n', solutionCode: 'print("SNN Backprop via Surrogate Gradient Completed")', expectedOutput: 'SNN Backprop via Surrogate Gradient Completed' },
+        { id: 3, level: 28, titleKey: 'Spiking Neural Networks Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 29, titleKey: 'Neuromorphic Event Classifier Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Neuromorphic Event Engine Live")\n', solutionCode: 'print("Neuromorphic Event Engine Live")', expectedOutput: 'Neuromorphic Event Engine Live' },
+],
     },
     {
       id: 'ai_ml_clap_sec',
       titleKey: 'Contrastive Language-Audio Pretraining (CLAP)',
       lessons: [
         { id: 1, level: 27, titleKey: 'clap_match', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Audio Spectrogram Text Embedding Match 0.91")\n', solutionCode: 'print("Audio Spectrogram Text Embedding Match 0.91")', expectedOutput: 'Audio Spectrogram Text Embedding Match 0.91' },
-      ],
+              { id: 2, level: 28, titleKey: 'CLAP Zero-Shot Audio & Spectrogram Embeddings', icon: 'brain', xp: 65, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("CLAP Zero-Shot Audio Classification Top 1 Match")\n', solutionCode: 'print("CLAP Zero-Shot Audio Classification Top 1 Match")', expectedOutput: 'CLAP Zero-Shot Audio Classification Top 1 Match' },
+        { id: 3, level: 29, titleKey: 'CLAP Audio-Text Model Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 30, titleKey: 'Multimodal Audio Retrieval Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Multimodal Audio Retrieval System Active")\n', solutionCode: 'print("Multimodal Audio Retrieval System Active")', expectedOutput: 'Multimodal Audio Retrieval System Active' },
+],
     },
     {
       id: 'ai_ml_splat_sec',
       titleKey: 'Gaussian Splatting for Realtime 3D Scene Rendering',
       lessons: [
         { id: 1, level: 28, titleKey: 'splat_render', icon: 'brain', xp: 80, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("3D Gaussian Covariance Ellipsoid Rendered")\n', solutionCode: 'print("3D Gaussian Covariance Ellipsoid Rendered")', expectedOutput: '3D Gaussian Covariance Ellipsoid Rendered' },
-      ],
+              { id: 2, level: 29, titleKey: '3D Gaussian Tile-Based Fast Rasterization', icon: 'brain', xp: 80, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Tile-Based Gaussian Rasterizer 120 FPS Render")\n', solutionCode: 'print("Tile-Based Gaussian Rasterizer 120 FPS Render")', expectedOutput: 'Tile-Based Gaussian Rasterizer 120 FPS Render' },
+        { id: 3, level: 30, titleKey: 'Gaussian Splatting & 3D AI Quiz', icon: 'star', xp: 45, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 31, titleKey: 'Real-Time 3D Splat Engine Capstone', icon: 'trophy', xp: 300, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Gaussian Splatting 3D View Engine Ready")\n', solutionCode: 'print("Gaussian Splatting 3D View Engine Ready")', expectedOutput: 'Gaussian Splatting 3D View Engine Ready' },
+],
     },
     {
       id: 'ai_ml_voice_sec',
       titleKey: 'Zero-Shot Voice Cloning & Audio Synthesis',
       lessons: [
         { id: 1, level: 29, titleKey: 'voice_clone', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Audio Prompt Speaker Embedding Extracted")\n', solutionCode: 'print("Audio Prompt Speaker Embedding Extracted")', expectedOutput: 'Audio Prompt Speaker Embedding Extracted' },
-      ],
+              { id: 2, level: 30, titleKey: 'HiFi-GAN Neural Vocoders & Audio Decoders', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("HiFi-GAN Neural Vocoder Mel-Spectrogram Decoded")\n', solutionCode: 'print("HiFi-GAN Neural Vocoder Mel-Spectrogram Decoded")', expectedOutput: 'HiFi-GAN Neural Vocoder Mel-Spectrogram Decoded' },
+        { id: 3, level: 31, titleKey: 'Voice Synthesis & Audio AI Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 32, titleKey: 'Zero-Shot Voice Cloner Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Zero-Shot Voice Cloning System Verified")\n', solutionCode: 'print("Zero-Shot Voice Cloning System Verified")', expectedOutput: 'Zero-Shot Voice Cloning System Verified' },
+],
     },
     {
       id: 'ai_ml_sac_sec',
       titleKey: 'Soft Actor-Critic (SAC) Deep Reinforcement Learning',
       lessons: [
         { id: 1, level: 30, titleKey: 'sac_entropy', icon: 'brain', xp: 75, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Maximum Entropy SAC Policy Iteration")\n', solutionCode: 'print("Maximum Entropy SAC Policy Iteration")', expectedOutput: 'Maximum Entropy SAC Policy Iteration' },
-      ],
+              { id: 2, level: 31, titleKey: 'Twin Q-Networks & Maximum Entropy Policy', icon: 'brain', xp: 75, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Twin Q-Network Min Estimation Computed")\n', solutionCode: 'print("Twin Q-Network Min Estimation Computed")', expectedOutput: 'Twin Q-Network Min Estimation Computed' },
+        { id: 3, level: 32, titleKey: 'Soft Actor-Critic (SAC) Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 33, titleKey: 'Continuous Robotic Controller Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Continuous Control Robotic Policy Trained")\n', solutionCode: 'print("Continuous Control Robotic Policy Trained")', expectedOutput: 'Continuous Control Robotic Policy Trained' },
+],
     },
     {
       id: 'ai_ml_mae_sec',
       titleKey: 'Masked Autoencoders (MAE) & Vision Pre-Training',
       lessons: [
         { id: 1, level: 31, titleKey: 'mae_reconstruct', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("75% Masked Image Patches Reconstructed")\n', solutionCode: 'print("75% Masked Image Patches Reconstructed")', expectedOutput: '75% Masked Image Patches Reconstructed' },
-      ],
+              { id: 2, level: 32, titleKey: 'MAE Asymmetric Decoder & Reconstruction Loss', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("MAE Lightweight Decoder Reconstruction Evaluated")\n', solutionCode: 'print("MAE Lightweight Decoder Reconstruction Evaluated")', expectedOutput: 'MAE Lightweight Decoder Reconstruction Evaluated' },
+        { id: 3, level: 33, titleKey: 'Masked Autoencoders Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 34, titleKey: 'Self-Supervised Vision Backbone Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Self-Supervised Vision Backbone Ready")\n', solutionCode: 'print("Self-Supervised Vision Backbone Ready")', expectedOutput: 'Self-Supervised Vision Backbone Ready' },
+],
     },
     {
       id: 'ai_ml_musicgen_sec',
       titleKey: 'Generative Audio Models (MusicGen & AudioLDM)',
       lessons: [
         { id: 1, level: 32, titleKey: 'musicgen_decode', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("EnCodec Audio Tokens Decoded to Waveform")\n', solutionCode: 'print("EnCodec Audio Tokens Decoded to Waveform")', expectedOutput: 'EnCodec Audio Tokens Decoded to Waveform' },
-      ],
+              { id: 2, level: 33, titleKey: 'Text-Conditioned Music Synthesis & EnCodec Tokens', icon: 'brain', xp: 70, color: '#059669', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'print("Text-Conditioned Music Generation Audio Synthesized")\n', solutionCode: 'print("Text-Conditioned Music Generation Audio Synthesized")', expectedOutput: 'Text-Conditioned Music Generation Audio Synthesized' },
+        { id: 3, level: 34, titleKey: 'Generative Audio Models Quiz', icon: 'star', xp: 40, color: '#059669', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 35, titleKey: 'Generative Music Studio Capstone', icon: 'trophy', xp: 250, color: '#059669', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'print("Generative Audio Music Model Complete")\n', solutionCode: 'print("Generative Audio Music Model Complete")', expectedOutput: 'Generative Audio Music Model Complete' },
+],
     },
   ],
   cybersecurity: [
@@ -2926,9 +3117,9 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       titleKey: 'cyber_basics_title',
       lessons: [
         { id: 1, level: 1, titleKey: 'cyber_intro', icon: 'brain', xp: 20, color: '#dc2626', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'cyber_chal_1', starterCode: 'print("SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")\n', solutionCode: 'print("SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")', expectedOutput: 'SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' },
-        { id: 1, level: 2, titleKey: 'cyber_encryption', icon: 'brain', xp: 25, color: '#dc2626', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'cyber_chal_2', starterCode: 'print("IBM")\n', solutionCode: 'print("IBM")', expectedOutput: 'IBM' },
-        { id: 1, level: 3, titleKey: 'cyber_firewall', icon: 'star', xp: 30, color: '#dc2626', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'cyber_chal_3', starterCode: '', solutionCode: '', expectedOutput: '' },
-        { id: 1, level: 4, titleKey: 'cyber_ctf_project', icon: 'trophy', xp: 60, color: '#b91c1c', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'cyber_chal_4', starterCode: 'print("FLAG{cyber_hero}")\n', solutionCode: 'print("FLAG{cyber_hero}")', expectedOutput: 'FLAG{cyber_hero}' },
+        { id: 2, level: 2, titleKey: 'cyber_encryption', icon: 'brain', xp: 25, color: '#dc2626', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: 'cyber_chal_2', starterCode: 'print("IBM")\n', solutionCode: 'print("IBM")', expectedOutput: 'IBM' },
+        { id: 3, level: 3, titleKey: 'cyber_firewall', icon: 'star', xp: 30, color: '#dc2626', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: 'cyber_chal_3', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 4, level: 4, titleKey: 'cyber_ctf_project', icon: 'trophy', xp: 60, color: '#b91c1c', type: 'project', nodeType: 'trophy', challengeDescriptionKey: 'cyber_chal_4', starterCode: 'print("FLAG{cyber_hero}")\n', solutionCode: 'print("FLAG{cyber_hero}")', expectedOutput: 'FLAG{cyber_hero}' },
       ],
     },
     {
@@ -2936,8 +3127,20 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       titleKey: 'Penetration Testing & Zero-Trust Defense',
       lessons: [
         {
-          id: 1, level: 5, titleKey: 'cyber_nmap_scan', icon: 'brain', xp: 55, color: '#dc2626', type: 'lesson', nodeType: 'standard',
+          id: 5, level: 5, titleKey: 'Nmap Reconnaissance & Scanning', icon: 'brain', xp: 55, color: '#dc2626', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: 'print("Port 443 OPEN (TLS 1.3)")\n', solutionCode: 'print("Port 443 OPEN (TLS 1.3)")', expectedOutput: 'Port 443 OPEN (TLS 1.3)'
+        },
+        {
+          id: 6, level: 6, titleKey: 'SQL Injection Defense & Sanitization', icon: 'brain', xp: 60, color: '#dc2626', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'print("Prepared Statement Enforced: 100% Sanitized")\n', solutionCode: 'print("Prepared Statement Enforced: 100% Sanitized")', expectedOutput: 'Prepared Statement Enforced: 100% Sanitized'
+        },
+        {
+          id: 7, level: 7, titleKey: 'Zero-Trust Policy Knowledge Check', icon: 'star', xp: 40, color: '#dc2626', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
+        },
+        {
+          id: 8, level: 8, titleKey: 'Red Team CTF Security Capstone', icon: 'trophy', xp: 120, color: '#b91c1c', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'print("FLAG{zero_trust_defense_verified}")\n', solutionCode: 'print("FLAG{zero_trust_defense_verified}")', expectedOutput: 'FLAG{zero_trust_defense_verified}'
         },
       ],
     },
@@ -2990,10 +3193,16 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
           expectedOutput: 'xor rax, rax'
         },
         {
-          id: 7, level: 7, titleKey: 'Assembly Control Flow & Conditional Jumps', icon: 'brain', xp: 60, color: '#1e3a8a', type: 'lesson', nodeType: 'standard',
+          id: 7, level: 7, titleKey: 'Assembly Control Flow & Conditional Jumps', icon: 'star', xp: 40, color: '#1e3a8a', type: 'quiz', nodeType: 'quiz',
           challengeDescriptionKey: '', starterCode: 'console.log("cmp rax, rbx\\nje label_equal");\n',
           solutionCode: 'console.log("cmp rax, rbx\\nje label_equal");',
           expectedOutput: 'cmp rax, rbx\nje label_equal'
+        },
+        {
+          id: 8, level: 8, titleKey: 'Assembly Low-Level Hardware Driver Capstone', icon: 'trophy', xp: 120, color: '#172554', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'console.log("Hardware Interrupt Handler Registered");\n',
+          solutionCode: 'console.log("Hardware Interrupt Handler Registered");',
+          expectedOutput: 'Hardware Interrupt Handler Registered'
         },
       ],
     },
@@ -3014,8 +3223,20 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       titleKey: 'RAG Architecture & Vector Database Search',
       lessons: [
         {
-          id: 5, level: 5, titleKey: 'vector_db_query', icon: 'brain', xp: 60, color: '#d97706', type: 'lesson', nodeType: 'standard',
+          id: 5, level: 5, titleKey: 'Vector DB Similarity Querying', icon: 'brain', xp: 60, color: '#d97706', type: 'lesson', nodeType: 'standard',
           challengeDescriptionKey: '', starterCode: 'console.log("Similarity Search Top-K: 0.94 Match");\n', solutionCode: 'console.log("Similarity Search Top-K: 0.94 Match");', expectedOutput: 'Similarity Search Top-K: 0.94 Match'
+        },
+        {
+          id: 6, level: 6, titleKey: 'Chunking Strategies & Overlap Tuning', icon: 'brain', xp: 60, color: '#d97706', type: 'lesson', nodeType: 'standard',
+          challengeDescriptionKey: '', starterCode: 'console.log("Semantic Chunking 512 Tokens Overlap 50");\n', solutionCode: 'console.log("Semantic Chunking 512 Tokens Overlap 50");', expectedOutput: 'Semantic Chunking 512 Tokens Overlap 50'
+        },
+        {
+          id: 7, level: 7, titleKey: 'Vector Indexing Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz',
+          challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: ''
+        },
+        {
+          id: 8, level: 8, titleKey: 'Enterprise RAG Engine Capstone', icon: 'trophy', xp: 120, color: '#b45309', type: 'project', nodeType: 'trophy',
+          challengeDescriptionKey: '', starterCode: 'console.log("RAG Pipeline Ingestion & Query Verified");\n', solutionCode: 'console.log("RAG Pipeline Ingestion & Query Verified");', expectedOutput: 'RAG Pipeline Ingestion & Query Verified'
         },
       ],
     },
@@ -3023,141 +3244,200 @@ export const LESSONS_BY_PATH: { [key: string]: LessonSection[] } = {
       id: 'ai_eng_lora_sec',
       titleKey: 'Fine-Tuning LLMs with LoRA & QLoRA',
       lessons: [
-        { id: 1, level: 6, titleKey: 'lora_adapter', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("LoRA Adapter rank r=16 attached");\n', solutionCode: 'console.log("LoRA Adapter rank r=16 attached");', expectedOutput: 'LoRA Adapter rank r=16 attached' },
+        { id: 9, level: 9, titleKey: 'LoRA Adapter Parameter Attachment', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("LoRA Adapter rank r=16 attached");\n', solutionCode: 'console.log("LoRA Adapter rank r=16 attached");', expectedOutput: 'LoRA Adapter rank r=16 attached' },
+        { id: 10, level: 10, titleKey: 'QLoRA 4-bit Quantized Fine-Tuning', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("NF4 Quantization Matrix Loaded");\n', solutionCode: 'console.log("NF4 Quantization Matrix Loaded");', expectedOutput: 'NF4 Quantization Matrix Loaded' },
+        { id: 11, level: 11, titleKey: 'Fine-Tuning Loss & Evaluation Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 12, level: 12, titleKey: 'Custom LLM Fine-Tune Capstone', icon: 'trophy', xp: 150, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Custom Adapter Weights Merged");\n', solutionCode: 'console.log("Custom Adapter Weights Merged");', expectedOutput: 'Custom Adapter Weights Merged' },
       ],
     },
     {
       id: 'ai_eng_swarms_sec',
       titleKey: 'AI Agent Swarms & Multi-Agent Teams',
       lessons: [
-        { id: 1, level: 7, titleKey: 'agent_handoff', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Handoff: Researcher -> Coder Agent");\n', solutionCode: 'console.log("Handoff: Researcher -> Coder Agent");', expectedOutput: 'Handoff: Researcher -> Coder Agent' },
+        { id: 13, level: 13, titleKey: 'Agent Role Definitions & Handoffs', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Handoff: Researcher -> Coder Agent");\n', solutionCode: 'console.log("Handoff: Researcher -> Coder Agent");', expectedOutput: 'Handoff: Researcher -> Coder Agent' },
+        { id: 14, level: 14, titleKey: 'Shared Memory & Task Queue State', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Shared Agent Memory Store Synced");\n', solutionCode: 'console.log("Shared Agent Memory Store Synced");', expectedOutput: 'Shared Agent Memory Store Synced' },
+        { id: 15, level: 15, titleKey: 'Multi-Agent Orchestration Quiz', icon: 'star', xp: 45, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 16, level: 16, titleKey: 'Autonomous Software Engineering Swarm', icon: 'trophy', xp: 200, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Multi-Agent Code Generation Task Complete");\n', solutionCode: 'console.log("Multi-Agent Code Generation Task Complete");', expectedOutput: 'Multi-Agent Code Generation Task Complete' },
       ],
     },
     {
       id: 'ai_eng_hnsw_sec',
       titleKey: 'Vector Indexing & HNSW Graph Search',
       lessons: [
-        { id: 1, level: 8, titleKey: 'hnsw_build', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("HNSW Index graph construction M=16");\n', solutionCode: 'console.log("HNSW Index graph construction M=16");', expectedOutput: 'HNSW Index graph construction M=16' },
+        { id: 17, level: 17, titleKey: 'HNSW Graph Index Construction', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("HNSW Index graph construction M=16");\n', solutionCode: 'console.log("HNSW Index graph construction M=16");', expectedOutput: 'HNSW Index graph construction M=16' },
+        { id: 18, level: 18, titleKey: 'Cosine Distance vs L2 Euclidean Metric', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Cosine Similarity Normalized: 0.99");\n', solutionCode: 'console.log("Cosine Similarity Normalized: 0.99");', expectedOutput: 'Cosine Similarity Normalized: 0.99' },
+        { id: 19, level: 19, titleKey: 'Vector Search Benchmarking Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 20, level: 20, titleKey: 'Millisecond Scale Vector Search Capstone', icon: 'trophy', xp: 150, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("1 Million Vector Index Query Time: 2ms");\n', solutionCode: 'console.log("1 Million Vector Index Query Time: 2ms");', expectedOutput: '1 Million Vector Index Query Time: 2ms' },
       ],
     },
     {
       id: 'ai_eng_safety_sec',
       titleKey: 'Guardrails, Prompt Injection & AI Safety',
       lessons: [
-        { id: 1, level: 9, titleKey: 'guardrail_check', icon: 'brain', xp: 60, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Prompt Injection Intercepted & Blocked");\n', solutionCode: 'console.log("Prompt Injection Intercepted & Blocked");', expectedOutput: 'Prompt Injection Intercepted & Blocked' },
+        { id: 21, level: 21, titleKey: 'Prompt Injection Defense & Intercepts', icon: 'brain', xp: 60, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Prompt Injection Intercepted & Blocked");\n', solutionCode: 'console.log("Prompt Injection Intercepted & Blocked");', expectedOutput: 'Prompt Injection Intercepted & Blocked' },
+        { id: 22, level: 22, titleKey: 'Input Sanitization & Output Moderation', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("PII Masked: [REDACTED_EMAIL]");\n', solutionCode: 'console.log("PII Masked: [REDACTED_EMAIL]");', expectedOutput: 'PII Masked: [REDACTED_EMAIL]' },
+        { id: 23, level: 23, titleKey: 'AI Safety & Governance Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 24, level: 24, titleKey: 'Enterprise Guardrail Pipeline Capstone', icon: 'trophy', xp: 150, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Enterprise AI Safety Guardrails Active");\n', solutionCode: 'console.log("Enterprise AI Safety Guardrails Active");', expectedOutput: 'Enterprise AI Safety Guardrails Active' },
       ],
     },
     {
       id: 'ai_eng_tools_sec',
       titleKey: 'Function Calling & Tool Use in LLMs',
       lessons: [
-        { id: 1, level: 10, titleKey: 'tool_call', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Tool Called: get_weather(location=\'NYC\')");\n', solutionCode: 'console.log("Tool Called: get_weather(location=\'NYC\')");', expectedOutput: "Tool Called: get_weather(location='NYC')" }
+        { id: 25, level: 25, titleKey: 'JSON Function Calling Signatures', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Tool Called: get_weather(location=\'NYC\')");\n', solutionCode: 'console.log("Tool Called: get_weather(location=\'NYC\')");', expectedOutput: "Tool Called: get_weather(location='NYC')" },
+        { id: 26, level: 26, titleKey: 'Tool Execution & Response Ingestion', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Tool Execution Result: Temp 22C");\n', solutionCode: 'console.log("Tool Execution Result: Temp 22C");', expectedOutput: 'Tool Execution Result: Temp 22C' },
+        { id: 27, level: 27, titleKey: 'Function Calling Syntax Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 28, level: 28, titleKey: 'Autonomous Tool Engine Capstone', icon: 'trophy', xp: 150, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Autonomous Tool Calling Engine Passed");\n', solutionCode: 'console.log("Autonomous Tool Calling Engine Passed");', expectedOutput: 'Autonomous Tool Calling Engine Passed' },
       ],
     },
     {
       id: 'ai_eng_hybrid_rag_sec',
       titleKey: 'RAG Hybrid Search & Re-Ranking',
       lessons: [
-        { id: 1, level: 11, titleKey: 'bm25_vector_fusion', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Hybrid RRF Score: BM25 + Vector Fusion");\n', solutionCode: 'console.log("Hybrid RRF Score: BM25 + Vector Fusion");', expectedOutput: 'Hybrid RRF Score: BM25 + Vector Fusion' },
+        { id: 29, level: 29, titleKey: 'BM25 Keyword + Vector Embedding Fusion', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Hybrid RRF Score: BM25 + Vector Fusion");\n', solutionCode: 'console.log("Hybrid RRF Score: BM25 + Vector Fusion");', expectedOutput: 'Hybrid RRF Score: BM25 + Vector Fusion' },
+        { id: 30, level: 30, titleKey: 'Cross-Encoder Re-Ranking Models', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Cohere ReRank Top-5 Score: 0.98");\n', solutionCode: 'console.log("Cohere ReRank Top-5 Score: 0.98");', expectedOutput: 'Cohere ReRank Top-5 Score: 0.98' },
+        { id: 31, level: 31, titleKey: 'Hybrid Search Precision Quiz', icon: 'star', xp: 45, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 32, level: 32, titleKey: 'Production Hybrid Search Engine Capstone', icon: 'trophy', xp: 175, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Production Hybrid Search Deployed");\n', solutionCode: 'console.log("Production Hybrid Search Deployed");', expectedOutput: 'Production Hybrid Search Deployed' },
       ],
     },
     {
       id: 'ai_eng_vlm_sec',
       titleKey: 'Multimodal Vision-Language Models (VLM)',
       lessons: [
-        { id: 1, level: 12, titleKey: 'vlm_image_parse', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("VLM Processed Image Patches: 576 Tokens");\n', solutionCode: 'console.log("VLM Processed Image Patches: 576 Tokens");', expectedOutput: 'VLM Processed Image Patches: 576 Tokens' },
+        { id: 33, level: 33, titleKey: 'Image Patching & Vision Transformer Tokens', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("VLM Processed Image Patches: 576 Tokens");\n', solutionCode: 'console.log("VLM Processed Image Patches: 576 Tokens");', expectedOutput: 'VLM Processed Image Patches: 576 Tokens' },
+        { id: 34, level: 34, titleKey: 'Visual Question Answering (VQA)', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("VQA Result: Chart Trend Rising 14%");\n', solutionCode: 'console.log("VQA Result: Chart Trend Rising 14%");', expectedOutput: 'VQA Result: Chart Trend Rising 14%' },
+        { id: 35, level: 35, titleKey: 'Multimodal Embeddings Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 36, level: 36, titleKey: 'Visual Document Parsing Agent Capstone', icon: 'trophy', xp: 200, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("PDF Diagram & Table Extracted");\n', solutionCode: 'console.log("PDF Diagram & Table Extracted");', expectedOutput: 'PDF Diagram & Table Extracted' },
       ],
     },
     {
       id: 'ai_eng_quant_sec',
       titleKey: 'Model Quantization (GGUF, AWQ & EXL2)',
       lessons: [
-        { id: 1, level: 13, titleKey: 'quant_bitsandbytes', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Loaded 4-bit NF4 Quantized Weights");\n', solutionCode: 'console.log("Loaded 4-bit NF4 Quantized Weights");', expectedOutput: 'Loaded 4-bit NF4 Quantized Weights' },
+        { id: 37, level: 37, titleKey: '4-bit NF4 & INT8 Weight Quantization', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Loaded 4-bit NF4 Quantized Weights");\n', solutionCode: 'console.log("Loaded 4-bit NF4 Quantized Weights");', expectedOutput: 'Loaded 4-bit NF4 Quantized Weights' },
+        { id: 38, level: 38, titleKey: 'GGUF Format & llama.cpp Local Inference', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("GGUF Q4_K_M Tensor Execution");\n', solutionCode: 'console.log("GGUF Q4_K_M Tensor Execution");', expectedOutput: 'GGUF Q4_K_M Tensor Execution' },
+        { id: 39, level: 39, titleKey: 'VRAM Memory Calculation Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 40, level: 40, titleKey: 'Edge Device Quantized Model Capstone', icon: 'trophy', xp: 175, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Local LLM Serving at 45 tok/s");\n', solutionCode: 'console.log("Local LLM Serving at 45 tok/s");', expectedOutput: 'Local LLM Serving at 45 tok/s' },
       ],
     },
     {
       id: 'ai_eng_vllm_sec',
       titleKey: 'vLLM & High-Throughput LLM Serving',
       lessons: [
-        { id: 1, level: 14, titleKey: 'paged_attention', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("PagedAttention KV Cache Memory Allocated");\n', solutionCode: 'console.log("PagedAttention KV Cache Memory Allocated");', expectedOutput: 'PagedAttention KV Cache Memory Allocated' },
+        { id: 41, level: 41, titleKey: 'PagedAttention & Virtual KV Cache Memory', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("PagedAttention KV Cache Memory Allocated");\n', solutionCode: 'console.log("PagedAttention KV Cache Memory Allocated");', expectedOutput: 'PagedAttention KV Cache Memory Allocated' },
+        { id: 42, level: 42, titleKey: 'Continuous Batching & Request Scheduling', icon: 'brain', xp: 80, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Continuous Batching: 128 Parallel Streams");\n', solutionCode: 'console.log("Continuous Batching: 128 Parallel Streams");', expectedOutput: 'Continuous Batching: 128 Parallel Streams' },
+        { id: 43, level: 43, titleKey: 'LLM Throughput Optimization Quiz', icon: 'star', xp: 45, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 44, level: 44, titleKey: 'vLLM Enterprise Inference Cluster', icon: 'trophy', xp: 250, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Cluster Throughput: 1400 tokens/sec");\n', solutionCode: 'console.log("Cluster Throughput: 1400 tokens/sec");', expectedOutput: 'Cluster Throughput: 1400 tokens/sec' },
       ],
     },
     {
       id: 'ai_eng_cot_sec',
       titleKey: 'Chain-of-Thought & Reasoning Models',
       lessons: [
-        { id: 1, level: 15, titleKey: 'thought_tokens', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("<thinking>Analyzing step 1...</thinking>");\n', solutionCode: 'console.log("<thinking>Analyzing step 1...</thinking>");', expectedOutput: '<thinking>Analyzing step 1...</thinking>' },
+        { id: 45, level: 45, titleKey: 'Reasoning Thought Tokens & Scaffolding', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("<thinking>Analyzing step 1...</thinking>");\n', solutionCode: 'console.log("<thinking>Analyzing step 1...</thinking>");', expectedOutput: '<thinking>Analyzing step 1...</thinking>' },
+        { id: 46, level: 46, titleKey: 'Self-Consistency & Majority Voting', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Majority Vote: 4/5 Paths Agree");\n', solutionCode: 'console.log("Majority Vote: 4/5 Paths Agree");', expectedOutput: 'Majority Vote: 4/5 Paths Agree' },
+        { id: 47, level: 47, titleKey: 'Reasoning Models Evaluation Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 48, level: 48, titleKey: 'Chain-of-Thought Solver Capstone', icon: 'trophy', xp: 200, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Complex Logic Puzzle Solved with CoT");\n', solutionCode: 'console.log("Complex Logic Puzzle Solved with CoT");', expectedOutput: 'Complex Logic Puzzle Solved with CoT' },
       ],
     },
     {
       id: 'ai_eng_cache_sec',
       titleKey: 'Prompt Caching & Token Optimization',
       lessons: [
-        { id: 1, level: 16, titleKey: 'cache_hit', icon: 'brain', xp: 60, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Prompt Cache Hit: 4096 Tokens Saved");\n', solutionCode: 'console.log("Prompt Cache Hit: 4096 Tokens Saved");', expectedOutput: 'Prompt Cache Hit: 4096 Tokens Saved' },
+        { id: 49, level: 49, titleKey: 'Prefix Prompt Caching Mechanisms', icon: 'brain', xp: 60, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Prompt Cache Hit: 4096 Tokens Saved");\n', solutionCode: 'console.log("Prompt Cache Hit: 4096 Tokens Saved");', expectedOutput: 'Prompt Cache Hit: 4096 Tokens Saved' },
+        { id: 50, level: 50, titleKey: 'Context Trimming & Window Compression', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Context Window Summarized 80%");\n', solutionCode: 'console.log("Context Window Summarized 80%");', expectedOutput: 'Context Window Summarized 80%' },
+        { id: 51, level: 51, titleKey: 'Token Cost Optimization Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 52, level: 52, titleKey: 'Zero-Latency Prompt Cache Architecture', icon: 'trophy', xp: 175, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("API Cost Reduced 90% via Caching");\n', solutionCode: 'console.log("API Cost Reduced 90% via Caching");', expectedOutput: 'API Cost Reduced 90% via Caching' },
       ],
     },
     {
       id: 'ai_eng_json_sec',
       titleKey: 'Structured Outputs & JSON Schema Enforcement',
       lessons: [
-        { id: 1, level: 17, titleKey: 'json_schema_mode', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("JSON Schema Enforced: {\"status\": \"success\"}");\n', solutionCode: 'console.log("JSON Schema Enforced: {\\"status\\": \\"success\\"}");', expectedOutput: 'JSON Schema Enforced: {"status": "success"}' },
+        { id: 53, level: 53, titleKey: 'Grammar Constrained JSON Decoding', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("JSON Schema Enforced: {\"status\": \"success\"}");\n', solutionCode: 'console.log("JSON Schema Enforced: {\\"status\\": \\"success\\"}");', expectedOutput: 'JSON Schema Enforced: {"status": "success"}' },
+        { id: 54, level: 54, titleKey: 'Pydantic Schema Validation Integration', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Pydantic Model Validated 100%");\n', solutionCode: 'console.log("Pydantic Model Validated 100%");', expectedOutput: 'Pydantic Model Validated 100%' },
+        { id: 55, level: 55, titleKey: 'Structured Output Validation Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 56, level: 56, titleKey: 'Guaranteed Output Parser Capstone', icon: 'trophy', xp: 175, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Structured JSON Output Pipeline Passed");\n', solutionCode: 'console.log("Structured JSON Output Pipeline Passed");', expectedOutput: 'Structured JSON Output Pipeline Passed' },
       ],
     },
     {
       id: 'ai_eng_moe_sec',
       titleKey: 'Mixture of Experts (MoE) & Router Gating',
       lessons: [
-        { id: 1, level: 18, titleKey: 'moe_router', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Top-2 Expert Routing: Expert 3 & Expert 7 Active");\n', solutionCode: 'console.log("Top-2 Expert Routing: Expert 3 & Expert 7 Active");', expectedOutput: 'Top-2 Expert Routing: Expert 3 & Expert 7 Active' },
+        { id: 57, level: 57, titleKey: 'Router Gating Networks & Softmax Allocation', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Top-2 Expert Routing: Expert 3 & Expert 7 Active");\n', solutionCode: 'console.log("Top-2 Expert Routing: Expert 3 & Expert 7 Active");', expectedOutput: 'Top-2 Expert Routing: Expert 3 & Expert 7 Active' },
+        { id: 58, level: 58, titleKey: 'Load Balancing & Expert Capacity Limits', icon: 'brain', xp: 80, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Auxiliary Load Balancing Loss Calculated");\n', solutionCode: 'console.log("Auxiliary Load Balancing Loss Calculated");', expectedOutput: 'Auxiliary Load Balancing Loss Calculated' },
+        { id: 59, level: 59, titleKey: 'MoE Architecture Knowledge Check', icon: 'star', xp: 45, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 60, level: 60, titleKey: 'MoE Model Deployment Capstone', icon: 'trophy', xp: 225, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("MoE 8x7B Active Parameters Verified");\n', solutionCode: 'console.log("MoE 8x7B Active Parameters Verified");', expectedOutput: 'MoE 8x7B Active Parameters Verified' },
       ],
     },
     {
       id: 'ai_eng_longctx_sec',
       titleKey: 'Long Context Windows (1M+ Tokens) & YaRN',
       lessons: [
-        { id: 1, level: 19, titleKey: 'yarn_rope', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("RoPE Scaling Factor 8x Applied (128k Context)");\n', solutionCode: 'console.log("RoPE Scaling Factor 8x Applied (128k Context)");', expectedOutput: 'RoPE Scaling Factor 8x Applied (128k Context)' },
+        { id: 61, level: 61, titleKey: 'Rotary Position Embedding (RoPE) Scaling', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("RoPE Scaling Factor 8x Applied (128k Context)");\n', solutionCode: 'console.log("RoPE Scaling Factor 8x Applied (128k Context)");', expectedOutput: 'RoPE Scaling Factor 8x Applied (128k Context)' },
+        { id: 62, level: 62, titleKey: 'Needle In A Haystack (NIAH) Context Test', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Needle Found at 94% Depth: Retrieval 100%");\n', solutionCode: 'console.log("Needle Found at 94% Depth: Retrieval 100%");', expectedOutput: 'Needle Found at 94% Depth: Retrieval 100%' },
+        { id: 63, level: 63, titleKey: 'Long Context Evaluation Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 64, level: 64, titleKey: '1 Million Token Document Analyzer Capstone', icon: 'trophy', xp: 250, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Full Codebase Ingested in 1M Window");\n', solutionCode: 'console.log("Full Codebase Ingested in 1M Window");', expectedOutput: 'Full Codebase Ingested in 1M Window' },
       ],
     },
     {
       id: 'ai_eng_autogen_sec',
       titleKey: 'Agentic Workflows with CrewAI & AutoGen',
       lessons: [
-        { id: 1, level: 20, titleKey: 'autogen_group_chat', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("GroupChatManager: 4 Autonomous Agents Collaborating");\n', solutionCode: 'console.log("GroupChatManager: 4 Autonomous Agents Collaborating");', expectedOutput: 'GroupChatManager: 4 Autonomous Agents Collaborating' },
+        { id: 65, level: 65, titleKey: 'CrewAI Agent Roles & Delegation', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("GroupChatManager: 4 Autonomous Agents Collaborating");\n', solutionCode: 'console.log("GroupChatManager: 4 Autonomous Agents Collaborating");', expectedOutput: 'GroupChatManager: 4 Autonomous Agents Collaborating' },
+        { id: 66, level: 66, titleKey: 'Human-in-the-Loop Approval Intercepts', icon: 'brain', xp: 80, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Human Approval Granted: Executing Code");\n', solutionCode: 'console.log("Human Approval Granted: Executing Code");', expectedOutput: 'Human Approval Granted: Executing Code' },
+        { id: 67, level: 67, titleKey: 'Agentic Workflow Patterns Quiz', icon: 'star', xp: 45, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 68, level: 68, titleKey: 'Autonomous Product Dev Swarm Capstone', icon: 'trophy', xp: 300, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Full Feature Built & Verified by Swarm");\n', solutionCode: 'console.log("Full Feature Built & Verified by Swarm");', expectedOutput: 'Full Feature Built & Verified by Swarm' },
       ],
     },
     {
       id: 'ai_eng_speculative_sec',
       titleKey: 'Speculative Decoding for Ultra-Fast Inference',
       lessons: [
-        { id: 1, level: 21, titleKey: 'speculative_draft', icon: 'brain', xp: 80, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Draft Model Verified by Target Model: 3.2x Speedup");\n', solutionCode: 'console.log("Draft Model Verified by Target Model: 3.2x Speedup");', expectedOutput: 'Draft Model Verified by Target Model: 3.2x Speedup' },
+        { id: 69, level: 69, titleKey: 'Draft Model Candidate Token Generation', icon: 'brain', xp: 80, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Draft Model Verified by Target Model: 3.2x Speedup");\n', solutionCode: 'console.log("Draft Model Verified by Target Model: 3.2x Speedup");', expectedOutput: 'Draft Model Verified by Target Model: 3.2x Speedup' },
+        { id: 70, level: 70, titleKey: 'Verification Accept/Reject Criterion', icon: 'brain', xp: 85, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Acceptance Rate: 82% Tokens Accepted");\n', solutionCode: 'console.log("Acceptance Rate: 82% Tokens Accepted");', expectedOutput: 'Acceptance Rate: 82% Tokens Accepted' },
+        { id: 71, level: 71, titleKey: 'Speculative Decoding Mechanics Quiz', icon: 'star', xp: 45, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 72, level: 72, titleKey: 'High-Speed Speculative Engine Capstone', icon: 'trophy', xp: 250, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Speculative Decoding Engine Active");\n', solutionCode: 'console.log("Speculative Decoding Engine Active");', expectedOutput: 'Speculative Decoding Engine Active' },
       ],
     },
     {
       id: 'ai_eng_graph_rag_sec',
       titleKey: 'Graph RAG & Knowledge Graph Traversal',
       lessons: [
-        { id: 1, level: 22, titleKey: 'graph_rag_traverse', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Knowledge Graph Subgraph Traversal: Entity Nodes Extracted");\n', solutionCode: 'console.log("Knowledge Graph Subgraph Traversal: Entity Nodes Extracted");', expectedOutput: 'Knowledge Graph Subgraph Traversal: Entity Nodes Extracted' },
+        { id: 73, level: 73, titleKey: 'Knowledge Subgraph Traversal & Triples', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Knowledge Graph Subgraph Traversal: Entity Nodes Extracted");\n', solutionCode: 'console.log("Knowledge Graph Subgraph Traversal: Entity Nodes Extracted");', expectedOutput: 'Knowledge Graph Subgraph Traversal: Entity Nodes Extracted' },
+        { id: 74, level: 74, titleKey: 'Neo4j & Cypher Query Retrieval', icon: 'brain', xp: 80, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Cypher MATCH (n:Concept)-[:RELATES]->(m) Executed");\n', solutionCode: 'console.log("Cypher MATCH (n:Concept)-[:RELATES]->(m) Executed");', expectedOutput: 'Cypher MATCH (n:Concept)-[:RELATES]->(m) Executed' },
+        { id: 75, level: 75, titleKey: 'Graph Knowledge Architecture Quiz', icon: 'star', xp: 45, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 76, level: 76, titleKey: 'Graph RAG Reasoning System Capstone', icon: 'trophy', xp: 250, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Graph RAG Engine Verified");\n', solutionCode: 'console.log("Graph RAG Engine Verified");', expectedOutput: 'Graph RAG Engine Verified' },
       ],
     },
     {
       id: 'ai_eng_react_sec',
       titleKey: 'Agentic Reasoning with ReAct (Thought-Action-Observation)',
       lessons: [
-        { id: 1, level: 23, titleKey: 'react_loop', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Thought: Search DB -> Action: execute_sql -> Obs: 14 Rows");\n', solutionCode: 'console.log("Thought: Search DB -> Action: execute_sql -> Obs: 14 Rows");', expectedOutput: 'Thought: Search DB -> Action: execute_sql -> Obs: 14 Rows' },
+        { id: 77, level: 77, titleKey: 'ReAct Loop Mechanics', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Thought: Search DB -> Action: execute_sql -> Obs: 14 Rows");\n', solutionCode: 'console.log("Thought: Search DB -> Action: execute_sql -> Obs: 14 Rows");', expectedOutput: 'Thought: Search DB -> Action: execute_sql -> Obs: 14 Rows' },
+        { id: 78, level: 78, titleKey: 'Observation Parsing & Loop Termination', icon: 'brain', xp: 75, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Final Answer: Query Executed Successfully");\n', solutionCode: 'console.log("Final Answer: Query Executed Successfully");', expectedOutput: 'Final Answer: Query Executed Successfully' },
+        { id: 79, level: 79, titleKey: 'ReAct Framework Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 80, level: 80, titleKey: 'ReAct Autonomous Agent Capstone', icon: 'trophy', xp: 250, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("ReAct Loop Executed 5 Steps to Completion");\n', solutionCode: 'console.log("ReAct Loop Executed 5 Steps to Completion");', expectedOutput: 'ReAct Loop Executed 5 Steps to Completion' },
       ],
     },
     {
       id: 'ai_eng_tot_sec',
       titleKey: 'Multi-Hop Tree-of-Thoughts (ToT) Search',
       lessons: [
-        { id: 1, level: 24, titleKey: 'tot_bfs_search', icon: 'brain', xp: 80, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Tree-of-Thoughts BFS Branching Score: 0.96 Optimal Path");\n', solutionCode: 'console.log("Tree-of-Thoughts BFS Branching Score: 0.96 Optimal Path");', expectedOutput: 'Tree-of-Thoughts BFS Branching Score: 0.96 Optimal Path' },
+        { id: 81, level: 81, titleKey: 'Tree-of-Thoughts BFS Branching', icon: 'brain', xp: 80, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Tree-of-Thoughts BFS Branching Score: 0.96 Optimal Path");\n', solutionCode: 'console.log("Tree-of-Thoughts BFS Branching Score: 0.96 Optimal Path");', expectedOutput: 'Tree-of-Thoughts BFS Branching Score: 0.96 Optimal Path' },
+        { id: 82, level: 82, titleKey: 'State Evaluation & Pruning Heuristics', icon: 'brain', xp: 85, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Sub-Optimal Thought Branches Pruned");\n', solutionCode: 'console.log("Sub-Optimal Thought Branches Pruned");', expectedOutput: 'Sub-Optimal Thought Branches Pruned' },
+        { id: 83, level: 83, titleKey: 'Tree Search Heuristics Quiz', icon: 'star', xp: 45, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 84, level: 84, titleKey: 'Tree-of-Thoughts Problem Solver Capstone', icon: 'trophy', xp: 300, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("Tree-of-Thoughts Search Passed");\n', solutionCode: 'console.log("Tree-of-Thoughts Search Passed");', expectedOutput: 'Tree-of-Thoughts Search Passed' },
       ],
     },
     {
       id: 'ai_eng_ragas_sec',
       titleKey: 'LLM Evaluation & RAG Faithfulness Metrics (Ragas)',
       lessons: [
-        { id: 1, level: 25, titleKey: 'ragas_eval', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Faithfulness: 0.98 | Context Precision: 0.94");\n', solutionCode: 'console.log("Faithfulness: 0.98 | Context Precision: 0.94");', expectedOutput: 'Faithfulness: 0.98 | Context Precision: 0.94' },
-        { id: 1, level: 26, titleKey: 'ai_eng_legend_trophy', icon: 'trophy', xp: 500, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 85, level: 85, titleKey: 'RAG Faithfulness & Context Precision', icon: 'brain', xp: 65, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Faithfulness: 0.98 | Context Precision: 0.94");\n', solutionCode: 'console.log("Faithfulness: 0.98 | Context Precision: 0.94");', expectedOutput: 'Faithfulness: 0.98 | Context Precision: 0.94' },
+        { id: 86, level: 86, titleKey: 'Answer Relevance & Hallucination Scoring', icon: 'brain', xp: 70, color: '#d97706', type: 'lesson', nodeType: 'standard', challengeDescriptionKey: '', starterCode: 'console.log("Hallucination Score: 0.01 (Clean)");\n', solutionCode: 'console.log("Hallucination Score: 0.01 (Clean)");', expectedOutput: 'Hallucination Score: 0.01 (Clean)' },
+        { id: 87, level: 87, titleKey: 'RAG Evaluation Metrics Quiz', icon: 'star', xp: 40, color: '#d97706', type: 'quiz', nodeType: 'quiz', challengeDescriptionKey: '', starterCode: '', solutionCode: '', expectedOutput: '' },
+        { id: 88, level: 88, titleKey: 'AI Engineering Grandmaster Certification Capstone', icon: 'trophy', xp: 500, color: '#b45309', type: 'project', nodeType: 'trophy', challengeDescriptionKey: '', starterCode: 'console.log("AI Engineering Specialization Mastered!");\n', solutionCode: 'console.log("AI Engineering Specialization Mastered!");', expectedOutput: 'AI Engineering Specialization Mastered!' },
       ],
     },
   ],
