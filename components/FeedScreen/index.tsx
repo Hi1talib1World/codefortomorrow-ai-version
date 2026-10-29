@@ -166,6 +166,10 @@ const AUTHENTIC_COMMUNITY_POSTS = (lang: string): Post[] => {
     { _id: 'author_karim', name: 'Karim Alami', city: 'Rabat', profilePictureUrl: 'https://ui-avatars.com/api/?name=Karim+Alami&background=00D2D3&color=fff', role: 'student', professionalTitle: isAr ? 'طالب C++ والخوارزميات • الرباط' : isFr ? 'Étudiant C++ & Algorithmes • Rabat' : 'C++ & Algo Student • Rabat' },
     { _id: 'author_lina', name: 'Lina Tazi', city: 'Tanger', profilePictureUrl: 'https://ui-avatars.com/api/?name=Lina+Tazi&background=E84393&color=fff', role: 'student', professionalTitle: isAr ? 'مطورة جافا وأندرويد • طنجة' : isFr ? 'Développeuse Java & Android • Tanger' : 'Java & Android Dev • Tanger' },
     { _id: 'author_ines', name: 'Inès Chraïbi', city: 'Agadir', profilePictureUrl: 'https://ui-avatars.com/api/?name=Ines+Chraibi&background=6C5CE7&color=fff', role: 'student', professionalTitle: isAr ? 'مطورة Node.js • أغادير' : isFr ? 'Développeuse Full-Stack • Agadir' : 'Full-Stack Dev • Agadir' },
+    { _id: 'author_fatima', name: isAr ? 'الموجهة فاطمة الزهراء' : 'Mentor Fatima-Zahra', city: 'Marrakech', profilePictureUrl: 'https://ui-avatars.com/api/?name=Fatima+Zahra&background=00897B&color=fff', role: 'teacher', professionalTitle: isAr ? 'موجهة الذكاء الاصطناعي وعلوم البيانات • مراكش' : isFr ? 'Mentor IA & Data Science • Marrakech' : 'AI & Data Science Mentor • Marrakech Hub' },
+    { _id: 'author_mehdi', name: isAr ? 'الموجه المهدي' : 'Mentor Mehdi', city: 'Casablanca', profilePictureUrl: 'https://ui-avatars.com/api/?name=Mehdi+Amrani&background=D81B60&color=fff', role: 'teacher', professionalTitle: isAr ? 'موجه الحوسبة السحابية وهندسة الويب • الدار البيضاء' : isFr ? 'Mentor Cloud & Architecture Web • Casablanca' : 'Cloud & Full-Stack Mentor • Casablanca Hub' },
+    { _id: 'author_leila', name: isAr ? 'الموجهة ليلى' : 'Mentor Leila', city: 'Rabat', profilePictureUrl: 'https://ui-avatars.com/api/?name=Leila+Bennani&background=3949AB&color=fff', role: 'teacher', professionalTitle: isAr ? 'موجهة الأمن السيبراني والأنظمة • الرباط' : isFr ? 'Mentor Cybersécurité & Systèmes • Rabat' : 'Cybersecurity & Systems Mentor • Rabat Hub' },
+    { _id: 'author_tariq', name: isAr ? 'الموجه طارق' : 'Mentor Tariq', city: 'Tanger', profilePictureUrl: 'https://ui-avatars.com/api/?name=Tariq+Mansouri&background=F4511E&color=fff', role: 'teacher', professionalTitle: isAr ? 'موجه الخوارزميات وهياكل البيانات • طنجة' : isFr ? 'Mentor Algorithmes & Structures • Tanger' : 'Algorithms & Data Structures Mentor • Tanger Hub' },
   ];
 
   const postsData: Omit<Post, '_id' | 'updatedAt'>[] = [
@@ -186,11 +190,16 @@ const AUTHENTIC_COMMUNITY_POSTS = (lang: string): Post[] => {
         {
           author: authors[3],
           content: isAr ? 'كود ممتاز ونظيف يا آدم! الخطوة التالية: أضف كتلة try-except لحماية الملف عند القراءة 👍' : 'Gestion de fichier très propre Adam ! Prochaine étape : ajoute un bloc try-except au cas où le fichier n\'existe pas encore à la lecture.',
-          createdAt: new Date(Date.now() - 3600000 * 2).toISOString()
+          createdAt: new Date(Date.now() - 3600000 * 2.5).toISOString()
         },
         {
-          author: authors[0],
-          content: isAr ? 'ملاحظة ممتازة أستاذ محمد! جاري إضافة try-except FileNotFoundError الآن 👍' : 'Excellente remarque Mentor Mohamed ! J\'ajoute le try-except FileNotFoundError de ce pas 👍',
+          author: authors[8],
+          content: isAr ? 'رائع جداً يا آدم! نصيحة إضافية من عالم تطوير الألعاب: اعزل كود قراءة وحفظ النتائج في فئة (Class) منفصلة مثل HighscoreManager لتسهيل الصيانة والتطوير مستقبلاً.' : 'Superbe réalisation Adam ! Conseil d\'architecture de jeu : isole la sauvegarde et le chargement dans une classe dédiée comme HighscoreManager pour que ta boucle principale de jeu reste 100% lisible.',
+          createdAt: new Date(Date.now() - 3600000 * 1.8).toISOString()
+        },
+        {
+          author: authors[11],
+          content: isAr ? 'نصيحة إضافية يا آدم: استخدم دائماً مكتبة pathlib (Path) للتعامل مع مسارات الملفات بدلاً من النصوص الخام، لضمان توافق برنامجك تلقائياً بين أنظمة Windows و Linux دون أي تعارض في الفواصل.' : 'Conseil bonus Adam : privilégie le module pathlib (Path) plutôt que des chaînes de caractères brutes pour manipuler les chemins de fichiers. Ton code fonctionnera de manière identique sous Windows, macOS et Linux !',
           createdAt: new Date(Date.now() - 3600000 * 1).toISOString()
         }
       ],
@@ -205,9 +214,19 @@ const AUTHENTIC_COMMUNITY_POSTS = (lang: string): Post[] => {
       likes: ['author_adam', 'author_ghita', 'author_ines'],
       comments: [
         {
-          author: authors[4],
-          content: isAr ? 'جربي إضافة position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px);!' : 'Essaie d\'ajouter position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); ! Ça a parfaitement fonctionné sur mon portfolio.',
+          author: authors[10],
+          content: isAr ? 'سؤال مهم جداً للواجهات سارة! الحل النموذجي هو استخدام position: sticky; top: 0; مع backdrop-filter: blur(8px) و z-index: 50. هذا يحافظ على تدفق الصفحة الطبيعي بدون مشاكل position: fixed المفاجئة.' : 'Excellente question pour le web mobile Sara ! Pour fixer la Navbar proprement, privilégie position: sticky; top: 0; avec un backdrop-filter: blur(8px) et z-index: 50. Cela évite les effets de bord de position: fixed.',
           createdAt: new Date(Date.now() - 3600000 * 4).toISOString()
+        },
+        {
+          author: authors[9],
+          content: isAr ? 'نقطة معمارية دقيقة سارة: احذري وجود transform أو filter أو will-change على الحاويات الأبوية، لأنها تنشئ Stacking Context معزولاً يحبس الـ z-index بداخله مهما كانت قيمته عالية!' : 'Règle d\'or de l\'empilement CSS Sara : vérifie qu\'aucun conteneur parent n\'ait de propriété transform, filter ou will-change. Celles-ci créent un nouveau Stacking Context qui emprisonne le z-index à l\'intérieur !',
+          createdAt: new Date(Date.now() - 3600000 * 3.2).toISOString()
+        },
+        {
+          author: authors[3],
+          content: isAr ? 'أؤكد على نصائح الزملاء: أفضل ممارسة في المشاريع الاحترافية هي توحيد قيم z-index في متغيرات CSS مركزية مثل --z-navbar: 50 و --z-modal: 100 لمنع التضارب العشوائي.' : 'J\'appuie totalement l\'analyse : standardiser les z-index dans des variables CSS globales dédiées (--z-nav: 50, --z-modal: 100) est la méthode professionnelle incontournable pour éviter les conflits.',
+          createdAt: new Date(Date.now() - 3600000 * 2).toISOString()
         }
       ],
       createdAt: new Date(Date.now() - 3600000 * 5).toISOString()
@@ -226,9 +245,14 @@ const AUTHENTIC_COMMUNITY_POSTS = (lang: string): Post[] => {
       likes: ['author_adam', 'author_sara', 'author_mohamed', 'author_ghita'],
       comments: [
         {
-          author: authors[1],
-          content: isAr ? 'مبروك يوسف! 14 يوماً إنجاز رائع 🔥 واصل تقدمك!' : 'Félicitations Youssef ! 14 jours d\'affilée c\'est super impressionnant 🔥 Continue comme ça !',
+          author: authors[8],
+          content: isAr ? 'مبروك يوسف! 14 يوماً من الممارسة المستمرة تصنع فارقاً هائلاً في ترسيخ المنطق البرمجي. إتقان دوال المصفوفات الحديثة كـ map و filter و reduce يمهد لك الطريق لاحتراف React وهندسة البيانات.' : 'Félicitations pour ce cap des 14 jours Youssef ! La constance quotidienne est ce qui forge les automatismes d\'un vrai ingénieur. La maîtrise de .map(), .filter() et .reduce() est le tremplin parfait vers React et l\'analyse de données.',
           createdAt: new Date(Date.now() - 3600000 * 7).toISOString()
+        },
+        {
+          author: authors[3],
+          content: isAr ? 'استمرارية مثالية يوسف! الالتزام اليومي لمدة أسبوعين هو المؤشر الأكبر على النجاح البرمجي. التحدي القادم لك: جرّب إعادة كتابة دوال Array.prototype.map و filter بنفسك من الصفر!' : 'Une régularité exemplaire Youssef ! C\'est la clé absolue pour bâtir des automatismes solides. Pour aller encore plus loin, essaie de recoder toi-même map() et filter() sous forme de fonctions pures pour maîtriser les coulisses !',
+          createdAt: new Date(Date.now() - 3600000 * 6).toISOString()
         }
       ],
       createdAt: new Date(Date.now() - 3600000 * 8).toISOString()
@@ -239,8 +263,19 @@ const AUTHENTIC_COMMUNITY_POSTS = (lang: string): Post[] => {
         ? 'طاقة رائعة في ورشة المنطق اليوم! 🚀 تذكر: لا تحفظ الكود سطرًا بسطر—ركز على فهم نمط حل المشكلة.'
         : 'Superbe énergie lors de notre atelier de logique du week-end ! 🚀 Rappelez-vous : ne mémorisez jamais le code ligne par ligne, concentrez-vous sur la compréhension du pattern de résolution.',
       tag: isAr ? 'نصيحة موجه' : 'Conseil de Mentor',
-      likes: ['author_adam', 'author_sara', 'author_youssef', 'author_ghita', 'author_karim', 'author_lina'],
-      comments: [],
+      likes: ['author_adam', 'author_sara', 'author_youssef', 'author_ghita', 'author_karim', 'author_lina', 'author_fatima', 'author_mehdi'],
+      comments: [
+        {
+          author: authors[8],
+          content: isAr ? 'تماماً أستاذ محمد! في علم البيانات والذكاء الاصطناعي، تمثيل المسألة على الورق وتحديد المدخلات والمخرجات يختصر 80% من وقت كتابة الكود.' : 'Tellement vrai Mohamed ! Que ce soit en IA ou en développement logiciel, formuler le problème mathématiquement ou visuellement résout 80% de la complexité avant même d\'écrire la première ligne.',
+          createdAt: new Date(Date.now() - 3600000 * 11).toISOString()
+        },
+        {
+          author: authors[11],
+          content: isAr ? 'إضافة مهمة إلى ورشة المنطق: عند تصميم الدوال العودية (Recursive Functions)، حدد دائماً الحالة الأساسية (Base Case) وشروط التوقف أولاً لمنع تفيض مكدس الذاكرة (Stack Overflow).' : 'En complément de l\'atelier de logique : lors de la conception d\'un algorithme récursif, verrouillez systématiquement la condition d\'arrêt (Base Case) en premier lieu pour garantir l\'intégrité de la pile d\'appels (Call Stack).',
+          createdAt: new Date(Date.now() - 3600000 * 10).toISOString()
+        }
+      ],
       createdAt: new Date(Date.now() - 3600000 * 12).toISOString()
     },
     {
@@ -254,8 +289,14 @@ const AUTHENTIC_COMMUNITY_POSTS = (lang: string): Post[] => {
         title: isAr ? 'أكمل المستوى 4 في مسار الويب!' : 'Niveau 4 du parcours Web validé !',
         value: 4
       },
-      likes: ['author_sara', 'author_mohamed', 'author_ines'],
-      comments: [],
+      likes: ['author_sara', 'author_mohamed', 'author_ines', 'author_mehdi'],
+      comments: [
+        {
+          author: authors[9],
+          content: isAr ? 'تصميم أنيق ومنظم يا غيثة! الخطوة التالية الرائعة: شغّلي فحص Google Lighthouse للتأكد من سهولة الوصول (Accessibility) وضبط أحجام الصور بصيغة webp لسرعة التحميل.' : 'Magnifique réalisation Ghita ! La hiérarchie visuelle est impeccable. Pense à lancer un audit Lighthouse dans Chrome DevTools pour optimiser le score de performance et d\'accessibilité.',
+          createdAt: new Date(Date.now() - 3600000 * 17).toISOString()
+        }
+      ],
       createdAt: new Date(Date.now() - 3600000 * 18).toISOString()
     },
     {
@@ -270,7 +311,12 @@ const AUTHENTIC_COMMUNITY_POSTS = (lang: string): Post[] => {
         {
           author: authors[3],
           content: isAr ? 'ممتاز كريم! الفهم العميق للذاكرة والمؤشرات يجعل منك مبرمجاً قوياً جدًا 💪' : 'Bravo Karim ! La maîtrise de la mémoire et des pointeurs est ce qui distingue les grands développeurs 💪',
-          createdAt: new Date(Date.now() - 3600000 * 20).toISOString()
+          createdAt: new Date(Date.now() - 3600000 * 20.5).toISOString()
+        },
+        {
+          author: authors[10],
+          content: isAr ? 'إدراك جوهري يا كريم! في الأنظمة منخفضة المستوى والأمن السيبراني، إدارة الذاكرة هي قلب كل شيء. عندما تتقدم في C++ الحديث، ستتعلم نمط RAII و std::unique_ptr لتجنب تسريب الذاكرة (Memory Leaks) تلقائياً.' : 'C\'est un déclic fondamental Karim ! En sécurité des systèmes et programmation bas-niveau, la gestion saine de la mémoire est primordiale. En C++ moderne, tu découvriras le pattern RAII et les smart pointers (std::unique_ptr) qui automatisent la libération de la mémoire.',
+          createdAt: new Date(Date.now() - 3600000 * 19.5).toISOString()
         }
       ],
       createdAt: new Date(Date.now() - 3600000 * 22).toISOString()
@@ -295,9 +341,14 @@ const AUTHENTIC_COMMUNITY_POSTS = (lang: string): Post[] => {
       likes: ['author_youssef', 'author_ghita', 'author_adam'],
       comments: [
         {
-          author: authors[2],
-          content: isAr ? 'متفق معك 100%! الكود يبدو كأنه يتنفذ بشكل متزامن وبسيط 👌' : 'Totalement d\'accord ! Le code devient tellement plus simple à lire et à déboguer 👌',
+          author: authors[10],
+          content: isAr ? 'صحيح تماماً إيناس! async/await أحدثت ثورة في وضوح الكود غير المتزامن. تذكري دائماً تغليف استدعاءات await داخل كتلة try/catch لمعالجة أخطاء الشبكة والـ 404/500 دون إيقاف التطبيق.' : 'Absolument Inès ! async/await apporte une lisibilité remarquable. Veille toujours à envelopper tes appels dans un bloc try/catch pour intercepter proprement les erreurs réseau et les statuts HTTP inattendus.',
           createdAt: new Date(Date.now() - 3600000 * 27).toISOString()
+        },
+        {
+          author: authors[9],
+          content: isAr ? 'نصيحة للمحترفين إيناس: عندما تكون لديك عدة طلبات API مستقلة، استخدمي Promise.all() أو Promise.allSettled() لتنفيذها بالتوازي بدلاً من وضع await بالتتابع، فهذا يكسبك سرعة استجابة هائلة!' : 'Astuce de pro Inès : quand plusieurs requêtes indépendantes doivent être lancées, pense à Promise.all() ou Promise.allSettled() au lieu de chaîner les await les uns après les autres. Tu exécuteras tes appels en parallèle et gagneras de précieuses millisecondes !',
+          createdAt: new Date(Date.now() - 3600000 * 26).toISOString()
         }
       ],
       createdAt: new Date(Date.now() - 3600000 * 28).toISOString()
@@ -572,8 +623,8 @@ const AUTHENTIC_COMMUNITY_POSTS = (lang: string): Post[] => {
       likes: ['author_ghita', 'author_ines', 'author_adam'],
       comments: [
         {
-          author: authors[4],
-          content: isAr ? 'التصميم للهاتف أولاً يسهل التوسع للشاشات الكبيرة لاحقاً بدون فوضى في CSS!' : 'Le Mobile-First simplifie énormément la mise en page responsive ultérieure sur grand écran !',
+          author: authors[9],
+          content: isAr ? 'كموجهين نوصي دائماً بمنهجية Mobile-First: فهي تجبرك على التركيز على جوهر المحتوى والوظائف أولاً، كما أنها أنظف معمارياً في CSS لأنك تبني بأنماط أساسية خفيفة ثم توسع عبر media queries تصاعدية (min-width).' : 'En tant que mentors, nous encourageons vivement la démarche Mobile-First : elle oblige à clarifier l\'essentiel sur écran compact, et produit un CSS beaucoup plus maintenable en enrichissant progressivement avec des min-width ascendants.',
           createdAt: new Date(Date.now() - 3600000 * 120).toISOString()
         }
       ],
@@ -964,7 +1015,13 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ currentUser }) => {
     if (activeCategoryFilter === 'Student Projects') return post.tag?.includes('Project') || post.tag?.includes('مشروع') || post.codeSnippet;
     if (activeCategoryFilter === 'Q&A') return post.tag?.includes('Help') || post.tag?.includes('مساعدة') || post.content.includes('?');
     if (activeCategoryFilter === 'Milestones') return !!post.milestone || post.tag?.includes('Streak') || post.tag?.includes('إنجاز');
-    if (activeCategoryFilter === 'Mentors') return post.author.role === 'teacher' || post.author.role === 'admin';
+    if (activeCategoryFilter === 'Mentors') {
+      return (
+        post.author.role === 'teacher' ||
+        post.author.role === 'admin' ||
+        post.comments.some(c => c.author.role === 'teacher' || c.author.role === 'admin')
+      );
+    }
     return true;
   });
 
@@ -1183,16 +1240,48 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ currentUser }) => {
                 {/* Comments Drawer */}
                 {isCommentsOpen && (
                   <div className="pt-4 border-t border-[#F1F3F4] dark:border-[#3C4043] space-y-3">
-                    <div className="space-y-2">
-                      {post.comments.map((comment, i) => (
-                        <div key={i} className="bg-[#F8F9FA] dark:bg-[#202124] p-3 rounded-2xl border border-[#E8EAED] dark:border-[#3C4043] text-xs space-y-1">
-                          <div className="flex items-center justify-between font-bold text-[#202124] dark:text-white">
-                            <span>{comment.author.name}</span>
-                            <span className="text-[10px] text-[#5F6368] dark:text-[#9AA0A6] font-normal">{comment.author.role === 'teacher' ? tFeed.mentorRole : tFeed.studentRole}</span>
+                    <div className="space-y-2.5">
+                      {post.comments.map((comment, i) => {
+                        const isMentor = comment.author.role === 'teacher' || comment.author.role === 'admin';
+                        return (
+                          <div 
+                            key={i} 
+                            className={`p-3.5 rounded-2xl border text-xs space-y-1.5 transition-colors ${
+                              isMentor
+                                ? 'bg-[#F3E8FD]/50 dark:bg-[#8E24AA]/15 border-[#CE93D8] dark:border-[#8E24AA]/30 shadow-xs'
+                                : 'bg-[#F8F9FA] dark:bg-[#202124] border-[#E8EAED] dark:border-[#3C4043]'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between font-bold text-[#202124] dark:text-white">
+                              <div className="flex items-center gap-2">
+                                {comment.author.profilePictureUrl && (
+                                  <img 
+                                    src={comment.author.profilePictureUrl} 
+                                    alt={comment.author.name} 
+                                    className="w-5 h-5 rounded-full object-cover border border-[#E8EAED] dark:border-[#3C4043]"
+                                  />
+                                )}
+                                <span>{comment.author.name}</span>
+                                {comment.author.city && (
+                                  <span className="text-[10px] text-[#5F6368] dark:text-[#9AA0A6] font-normal">
+                                    • {comment.author.city}
+                                  </span>
+                                )}
+                              </div>
+                              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
+                                isMentor
+                                  ? 'bg-[#8E24AA]/15 text-[#8E24AA] dark:bg-[#8E24AA]/30 dark:text-[#E1BEE7] border-[#8E24AA]/25'
+                                  : 'bg-[#E8F0FE] text-[#1A73E8] dark:bg-[#3C4043] dark:text-[#8AB4F8] border-[#E8EAED] dark:border-[#3C4043]'
+                              }`}>
+                                {isMentor ? `⭐ ${tFeed.mentorRole}` : tFeed.studentRole}
+                              </span>
+                            </div>
+                            <p className="text-[#3C4043] dark:text-[#BDC1C6] font-normal leading-relaxed pl-7">
+                              {comment.content}
+                            </p>
                           </div>
-                          <p className="text-[#5F6368] dark:text-[#9AA0A6] font-normal">{comment.content}</p>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
 
                     <div className="flex gap-2 pt-1">
